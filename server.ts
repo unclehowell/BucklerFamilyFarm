@@ -1,48 +1,14 @@
 import express, { Request, Response } from 'express';
 import path from 'path';
 import { createServer as createViteServer } from 'vite';
-import Stripe from 'stripe';
 import dotenv from 'dotenv';
+import { getStripe } from './functions/_shared/stripe';
+import {
+  registerRuntimeCode,
+  validateEligibilityCode,
+} from './functions/_shared/eligibility';
 
 dotenv.config();
-
-// Lazy Stripe initialization to prevent crashes when STRIPE_SECRET_KEY is not configured
-let stripeClient: Stripe | null = null;
-function getStripe(): Stripe | null {
-  const key = process.env.STRIPE_SECRET_KEY;
-  if (!key) return null;
-  if (!stripeClient) {
-    stripeClient = new Stripe(key);
-  }
-  return stripeClient;
-}
-
-// In-memory registered eligibility codes (supports benchmark + dynamically generated codes)
-const VALID_ELIGIBILITY_CODES: Record<
-  string,
-  {
-    claimant: string;
-    holding: string;
-    location: string;
-    issuedAt: string;
-    rating: string;
-  }
-> = {
-  'ELIG-BUCKLER-1987': {
-    claimant: 'Sion Buckler',
-    holding: 'Great House Farm',
-    location: 'Llandough',
-    issuedAt: '2026-08-15',
-    rating: '96.8% High Restitution Probability',
-  },
-  'ELIG-8842-UK': {
-    claimant: 'Benchmark Estate Representative',
-    holding: 'Ty Mawr Homestead',
-    location: 'Glamorgan',
-    issuedAt: '2026-08-15',
-    rating: '94.2% High Restitution Probability',
-  },
-};
 
 async function startServer() {
   const app = express();
@@ -56,8 +22,9 @@ async function startServer() {
   app.get('/api/health', (_req: Request, res: Response) => {
     res.json({
       status: 'ok',
-      service: 'Ancestral Land Claim Restitution Engine',
+      service: 'Ancestral Land Claim Restitution Engine (Dev Server)',
       stripeConfigured: Boolean(process.env.STRIPE_SECRET_KEY),
+      testMode: Boolean(process.env.TEST_MODE === 'true'),
     });
   });
 
@@ -88,71 +55,34 @@ async function startServer() {
   // Verify Eligibility Code
   app.post('/api/eligibility/validate-code', (req: Request, res: Response) => {
     const { code } = req.body;
-    if (!code || typeof code !== 'string') {
-      res.status(400).json({ valid: false, error: 'Eligibility code is required.' });
-      return;
-    }
-
-    const cleanCode = code.trim().toUpperCase();
-
-    // Check predefined or standard format pattern ELIG-XXXX-XXXX
-    if (VALID_ELIGIBILITY_CODES[cleanCode]) {
-      const data = VALID_ELIGIBILITY_CODES[cleanCode];
-      res.json({
-        valid: true,
-        code: cleanCode,
-        claimant: data.claimant,
-        holding: data.holding,
-        location: data.location,
-        issuedAt: data.issuedAt,
-        rating: data.rating,
-        message: 'Valid £9.99 Eligibility Certificate. Qualified for £49.99/mo Restitution Subscription.',
-      });
-      return;
-    }
-
-    // Dynamic valid format verification (e.g. ELIG-XXXX-XXXX or starts with ELIG-)
-    if (/^ELIG-[A-Z0-9]{3,8}-[A-Z0-9]{3,8}$/.test(cleanCode) || cleanCode.startsWith('ELIG-')) {
-      res.json({
-        valid: true,
-        code: cleanCode,
-        claimant: 'Verified Certificate Holder',
-        holding: 'Registered Ancestral Holding',
-        location: 'United Kingdom',
-        issuedAt: new Date().toISOString().split('T')[0],
-        rating: '95.0% Qualified Restitution Asset',
-        message: 'Valid £9.99 Eligibility Certificate. Qualified for £49.99/mo Restitution Subscription.',
-      });
-      return;
-    }
-
-    res.status(404).json({
-      valid: false,
-      code: cleanCode,
-      error: 'Invalid eligibility certificate code. Please complete the £9.99 Eligibility Check first.',
-    });
+    const isTestMode = process.env.TEST_MODE === 'true';
+    const result = validateEligibilityCode(code, isTestMode);
+    res.status(result.status).json(result.body);
   });
 
-  // Create Checkout Session for £9.99 check or £49.99/mo subscription
+  // Create Checkout Session
   app.post('/api/stripe/create-checkout-session', async (req: Request, res: Response) => {
     try {
       const { type, eligibilityCode, email, name } = req.body;
-      const appUrl = process.env.APP_URL || `http://localhost:${PORT}`;
+      const host = req.get('host') || `localhost:${PORT}`;
+      const protocol = req.protocol || 'http';
+      const origin = req.get('origin') || `${protocol}://${host}`;
 
-      const stripe = getStripe();
+      const isTestMode = process.env.TEST_MODE === 'true';
+      const stripe = getStripe(process.env.STRIPE_SECRET_KEY);
 
-      // If Stripe secret key is not set, provide realistic simulated checkout response with actionable guidance
+      // Simulation mode when Stripe secret key is not set
       if (!stripe) {
-        // Generate simulated checkout session
         if (type === 'eligibility_check') {
           const generatedCode = `ELIG-${Math.random().toString(36).substring(2, 6).toUpperCase()}-${Date.now().toString().slice(-4)}`;
-          VALID_ELIGIBILITY_CODES[generatedCode] = {
+          registerRuntimeCode(generatedCode, {
             claimant: name || 'Sion Buckler',
             holding: 'Great House Farm',
             location: 'Llandough',
             issuedAt: new Date().toISOString().split('T')[0],
             rating: '96.8% High Restitution Probability',
-          };
+            isDemo: true,
+          });
 
           res.json({
             success: true,
@@ -174,6 +104,14 @@ async function startServer() {
             return;
           }
 
+          const validation = validateEligibilityCode(eligibilityCode, isTestMode);
+          if (!validation.body.valid) {
+            res.status(400).json({
+              error: validation.body.error || 'A valid eligibility code is required.',
+            });
+            return;
+          }
+
           res.json({
             success: true,
             mode: 'demo_simulation',
@@ -185,11 +123,14 @@ async function startServer() {
           });
           return;
         }
+
+        res.status(400).json({ error: 'Invalid checkout type specified.' });
+        return;
       }
 
       // Live / Test Stripe Checkout Session
       if (type === 'eligibility_check') {
-        const session = await stripe!.checkout.sessions.create({
+        const session = await stripe.checkout.sessions.create({
           payment_method_types: ['card'],
           mode: 'payment',
           customer_email: email || undefined,
@@ -210,8 +151,8 @@ async function startServer() {
             serviceType: 'eligibility_check',
             claimantName: name || 'Not specified',
           },
-          success_url: `${appUrl}?payment_status=eligibility_success&session_id={CHECKOUT_SESSION_ID}`,
-          cancel_url: `${appUrl}?payment_status=cancelled`,
+          success_url: `${origin}?payment_status=eligibility_success&session_id={CHECKOUT_SESSION_ID}`,
+          cancel_url: `${origin}?payment_status=cancelled`,
         });
 
         res.json({
@@ -230,7 +171,15 @@ async function startServer() {
           return;
         }
 
-        const session = await stripe!.checkout.sessions.create({
+        const validation = validateEligibilityCode(eligibilityCode, isTestMode);
+        if (!validation.body.valid) {
+          res.status(400).json({
+            error: validation.body.error || 'A valid eligibility code is required.',
+          });
+          return;
+        }
+
+        const session = await stripe.checkout.sessions.create({
           payment_method_types: ['card'],
           mode: 'subscription',
           customer_email: email || undefined,
@@ -255,8 +204,8 @@ async function startServer() {
             eligibilityCode,
             claimantName: name || 'Not specified',
           },
-          success_url: `${appUrl}?payment_status=subscription_success&session_id={CHECKOUT_SESSION_ID}`,
-          cancel_url: `${appUrl}?payment_status=cancelled`,
+          success_url: `${origin}?payment_status=subscription_success&session_id={CHECKOUT_SESSION_ID}`,
+          cancel_url: `${origin}?payment_status=cancelled`,
         });
 
         res.json({
@@ -291,7 +240,7 @@ async function startServer() {
   }
 
   app.listen(PORT, '0.0.0.0', () => {
-    console.log(`Ancestral Land Restitution Engine server running on http://0.0.0.0:${PORT}`);
+    console.log(`Ancestral Land Restitution Engine dev server running on http://0.0.0.0:${PORT}`);
   });
 }
 

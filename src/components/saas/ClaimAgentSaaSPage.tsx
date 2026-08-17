@@ -3,10 +3,11 @@ import {
   ArrowRight,
   ShieldCheck,
   Play,
-  UserPlus,
+  LogIn,
   Scale,
   Sparkles,
   Zap,
+  Info,
 } from 'lucide-react';
 import { MockAuthModal } from './MockAuthModal';
 import { MockPortalDashboard } from './MockPortalDashboard';
@@ -18,6 +19,7 @@ import {
 import { WebAppLoginModal } from './WebAppLoginModal';
 import { EligibilityCheckModal } from './EligibilityCheckModal';
 import { AppDownloadModal } from './AppDownloadModal';
+import { CasePrecedentInfoModal } from './CasePrecedentInfoModal';
 import { FOIBranch, FOIStep } from '../../types';
 
 interface ClaimAgentSaaSPageProps {
@@ -47,6 +49,7 @@ export const ClaimAgentSaaSPage: React.FC<ClaimAgentSaaSPageProps> = ({
   const [isNewSearchModalOpen, setIsNewSearchModalOpen] = useState(false);
   const [isWebAppSubscribeModalOpen, setIsWebAppSubscribeModalOpen] = useState(false);
   const [isEligibilityModalOpen, setIsEligibilityModalOpen] = useState(false);
+  const [isCasePrecedentModalOpen, setIsCasePrecedentModalOpen] = useState(false);
 
   // Client-side cache for web form
   const [cachedForm, setCachedForm] = useState<SearchFormData>(() => {
@@ -152,6 +155,9 @@ export const ClaimAgentSaaSPage: React.FC<ClaimAgentSaaSPageProps> = ({
   const handleLogout = () => {
     setCurrentUser(null);
     setIsNewSearchModalOpen(false);
+    setIsExecutingSearch(false);
+    setSearchCompleted(false);
+    setActiveSearchData(null);
   };
 
   // If user is logged into the mock dashboard, render the full portal!
@@ -241,10 +247,22 @@ export const ClaimAgentSaaSPage: React.FC<ClaimAgentSaaSPageProps> = ({
             Ancestral Birthland Reclaimer, for Indigenous Britons.
           </h1>
 
-          {/* Exact Requested Small Print */}
-          <p className="text-base sm:text-xl text-[#EDEFEE]/90 font-medium max-w-2xl mx-auto leading-relaxed">
-            We are these lands! We literally own parcels of land nationwide. Our A.I. agent help you get yours back.
-          </p>
+          {/* Exact Requested Small Print with Info Modal Trigger */}
+          <div className="flex items-center justify-center gap-2 max-w-3xl mx-auto flex-wrap">
+            <p className="text-base sm:text-lg lg:text-xl text-[#EDEFEE]/90 font-medium leading-relaxed inline">
+              We are these lands! We literally own parcels of land nationwide. Our AI agents will autonomously locate, recover and/or assist in reporations for unlawful disspossesion and decades of unlawful occupancy.
+            </p>
+            <button
+              type="button"
+              id="btn-case-precedent-info"
+              onClick={() => setIsCasePrecedentModalOpen(true)}
+              className="inline-flex items-center justify-center p-1.5 rounded-full bg-[#34332F] hover:bg-[#AA210F] text-[#D08856] hover:text-[#EDEFEE] border border-[#484642] transition-all cursor-pointer shadow-md align-middle focus:outline-none focus:ring-2 focus:ring-[#D08856]"
+              title="View BP v Buckler 1987 Legal Precedent & Background"
+              aria-label="View BP v Buckler 1987 Legal Precedent & Background"
+            >
+              <Info className="w-4 h-4" />
+            </button>
+          </div>
 
           {/* Exact Requested Smaller Print */}
           <div className="pt-1">
@@ -253,7 +271,7 @@ export const ClaimAgentSaaSPage: React.FC<ClaimAgentSaaSPageProps> = ({
             </p>
           </div>
 
-          {/* CTA Buttons (Try Now | Subscribe) */}
+          {/* CTA Buttons (Try Now | Sign In) */}
           <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4 max-w-md mx-auto">
             <button
               id="btn-try-now"
@@ -266,12 +284,12 @@ export const ClaimAgentSaaSPage: React.FC<ClaimAgentSaaSPageProps> = ({
             </button>
 
             <button
-              id="btn-subscribe-main"
-              onClick={() => setIsWebAppSubscribeModalOpen(true)}
+              id="btn-signin-main"
+              onClick={handleTryNowClick}
               className="w-full sm:flex-1 py-4 px-8 rounded-2xl bg-[#34332F] hover:bg-[#484642] text-[#EDEFEE] border-2 border-[#484642] hover:border-[#D08856] font-black text-base flex items-center justify-center gap-2.5 shadow-lg transition-all cursor-pointer tracking-wider uppercase"
             >
-              <UserPlus className="w-4 h-4 text-[#D08856]" />
-              <span>Subscribe (£49.99/mo)</span>
+              <LogIn className="w-4 h-4 text-[#D08856]" />
+              <span>Sign In</span>
             </button>
           </div>
         </div>
@@ -287,6 +305,12 @@ export const ClaimAgentSaaSPage: React.FC<ClaimAgentSaaSPageProps> = ({
           </div>
         </div>
       </section>
+
+      {/* BP vs Buckler 1987 Precedent Info Modal */}
+      <CasePrecedentInfoModal
+        isOpen={isCasePrecedentModalOpen}
+        onClose={() => setIsCasePrecedentModalOpen(false)}
+      />
 
       {/* Mock Login Modal on Try Now */}
       <MockAuthModal

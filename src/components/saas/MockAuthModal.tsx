@@ -1,17 +1,9 @@
 import React, { useState } from 'react';
 import {
-  X,
   LogIn,
   Mail,
   Key,
-  ShieldCheck,
-  CheckCircle2,
   ArrowRight,
-  Sparkles,
-  Search,
-  Lock,
-  ArrowLeft,
-  Crown,
 } from 'lucide-react';
 import { useModalAccessibility } from './useModalAccessibility';
 
@@ -26,7 +18,6 @@ export const MockAuthModal: React.FC<MockAuthModalProps> = ({
   isOpen,
   onClose,
   onLoginSuccess,
-  onSwitchToRealRegister,
 }) => {
   const [email, setEmail] = useState('hywelapbuckler@gmail.com');
   const [password, setPassword] = useState('••••••••');
@@ -64,45 +55,19 @@ export const MockAuthModal: React.FC<MockAuthModalProps> = ({
         onClick={(e) => e.stopPropagation()}
       >
         {/* Top Header */}
-        <div className="p-5 sm:p-6 pb-4 border-b border-[#484642] bg-[#2D2C28] flex items-center justify-between gap-3 flex-shrink-0">
-          <div className="flex items-center gap-3 min-w-0">
-            <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-2xl bg-[#AA210F] text-[#EDEFEE] flex items-center justify-center font-black shadow-md flex-shrink-0">
-              <LogIn className="w-5 h-5" />
-            </div>
-            <div className="min-w-0">
-              <div className="flex items-center gap-2">
-                <span className="px-2 py-0.5 rounded bg-[#34332F] text-[#D08856] text-[10px] font-mono font-bold uppercase border border-[#484642]">
-                  Demo Access
-                </span>
-                <span className="text-xs font-mono font-bold text-emerald-400">Pre-Filled Credentials</span>
-              </div>
-              <h3 id="mock-login-title" className="text-lg sm:text-xl font-black text-[#EDEFEE] truncate">
-                Member Portal Sign In
-              </h3>
-            </div>
+        <div className="p-5 sm:p-6 border-b border-[#484642] bg-[#2D2C28] flex items-center gap-3 flex-shrink-0">
+          <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-2xl bg-[#AA210F] text-[#EDEFEE] flex items-center justify-center font-black shadow-md flex-shrink-0">
+            <LogIn className="w-5 h-5" />
           </div>
-
-          <button
-            onClick={onClose}
-            className="flex-shrink-0 min-w-[44px] min-h-[44px] flex items-center justify-center text-[#EDEFEE] hover:text-white p-2 rounded-2xl bg-[#34332F] hover:bg-[#484642] border border-[#52504C] transition-all cursor-pointer focus-visible:ring-2 focus-visible:ring-[#D08856] focus:outline-none"
-            aria-label="Close dialog"
-          >
-            <X className="w-4 h-4" />
-          </button>
+          <div className="min-w-0">
+            <h3 id="mock-login-title" className="text-lg sm:text-xl font-black text-[#EDEFEE] truncate">
+              Member Portal Sign In
+            </h3>
+          </div>
         </div>
 
         {/* Form Body */}
         <div className="flex-1 overflow-y-auto p-5 sm:p-6 space-y-4">
-          <div className="p-3.5 rounded-2xl bg-[#34332F] border border-[#484642] space-y-1 text-xs">
-            <div className="flex items-center gap-2 text-emerald-400 font-bold font-mono text-[11px]">
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>TEST DRIVE DEMO USER LOADED</span>
-            </div>
-            <p className="text-[#C8C7C4] text-[11px] leading-relaxed">
-              Experience the Ancestry Search SaaS portal with pre-loaded archival rights and simulated search capabilities.
-            </p>
-          </div>
-
           <form onSubmit={handleSubmit} className="space-y-4 text-xs">
             <div className="space-y-1.5">
               <label className="block text-[#EDEFEE] font-bold">Username / Email</label>
@@ -135,7 +100,7 @@ export const MockAuthModal: React.FC<MockAuthModalProps> = ({
               </div>
             </div>
 
-            <div className="pt-2 space-y-2">
+            <div className="pt-2">
               <button
                 type="submit"
                 id="btn-modal-login-submit"
@@ -145,27 +110,8 @@ export const MockAuthModal: React.FC<MockAuthModalProps> = ({
                 <span>{isSubmitting ? 'Logging in to Portal...' : 'Login to Dashboard'}</span>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </button>
-
-              {onSwitchToRealRegister && (
-                <button
-                  type="button"
-                  onClick={onSwitchToRealRegister}
-                  className="w-full py-2.5 text-center text-xs font-mono text-[#D08856] hover:text-[#e4a070] underline cursor-pointer"
-                >
-                  Want to register a real account with £9.99 eligibility check? Click here
-                </button>
-              )}
             </div>
           </form>
-        </div>
-
-        {/* Footer */}
-        <div className="p-4 px-6 bg-[#2D2C28] border-t border-[#484642] flex items-center justify-between text-[11px] text-[#A3A29E] font-mono flex-shrink-0">
-          <span className="flex items-center gap-1.5">
-            <Lock className="w-3.5 h-3.5 text-emerald-400" />
-            <span>Interactive Demo Sandbox</span>
-          </span>
-          <span>1-Click Launch</span>
         </div>
       </div>
     </div>

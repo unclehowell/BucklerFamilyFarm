@@ -1,19 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   ArrowRight,
   ShieldCheck,
   Play,
   UserPlus,
-  Lock,
   Scale,
   Sparkles,
-  CheckCircle2,
-  Compass,
+  Zap,
 } from 'lucide-react';
-import { WebToLeadModal } from './WebToLeadModal';
+import { MockAuthModal } from './MockAuthModal';
+import { MockPortalDashboard } from './MockPortalDashboard';
+import {
+  NewSearchWorkflowModal,
+  SearchFormData,
+  DEFAULT_SEARCH_FORM,
+} from './NewSearchWorkflowModal';
 import { WebAppLoginModal } from './WebAppLoginModal';
 import { EligibilityCheckModal } from './EligibilityCheckModal';
-import { CaseStudyResultsModal } from './CaseStudyResultsModal';
 import { AppDownloadModal } from './AppDownloadModal';
 import { FOIBranch, FOIStep } from '../../types';
 
@@ -21,38 +24,207 @@ interface ClaimAgentSaaSPageProps {
   branches: FOIBranch[];
   onSelectStep?: (branch: FOIBranch, step: FOIStep, index: number) => void;
   onSelectBranchOutcome?: (branch: FOIBranch) => void;
-  isWebToLeadOpen?: boolean;
-  onOpenWebToLead?: () => void;
-  onCloseWebToLead?: () => void;
 }
+
+const CACHED_FORM_STORAGE_KEY = 'cached_ancestral_search_form_v1';
+const REAL_ACCOUNT_STEP_PHASE_KEY = 'real_account_search_phase_v1';
+const REAL_ACCOUNT_CODE_KEY = 'real_account_issued_code_v1';
 
 export const ClaimAgentSaaSPage: React.FC<ClaimAgentSaaSPageProps> = ({
   branches,
   onSelectStep,
   onSelectBranchOutcome,
 }) => {
-  const [isWebToLeadModalOpen, setIsWebToLeadModalOpen] = useState(false);
-  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  // Session State: null = Landing Page, object = Logged in Dashboard
+  const [currentUser, setCurrentUser] = useState<{
+    email: string;
+    name: string;
+    isDemo: boolean;
+  } | null>(null);
+
+  // Modals state
+  const [isMockAuthModalOpen, setIsMockAuthModalOpen] = useState(false);
+  const [isNewSearchModalOpen, setIsNewSearchModalOpen] = useState(false);
+  const [isWebAppSubscribeModalOpen, setIsWebAppSubscribeModalOpen] = useState(false);
   const [isEligibilityModalOpen, setIsEligibilityModalOpen] = useState(false);
-  const [isResultsModalOpen, setIsResultsModalOpen] = useState(false);
-  const [activeEligibilityCode, setActiveEligibilityCode] = useState<string>('');
 
-  const handleProceedFromLead = () => {
-    setIsWebToLeadModalOpen(false);
-    setIsResultsModalOpen(true);
+  // Client-side cache for web form
+  const [cachedForm, setCachedForm] = useState<SearchFormData>(() => {
+    try {
+      const saved = localStorage.getItem(CACHED_FORM_STORAGE_KEY);
+      if (saved) return JSON.parse(saved);
+    } catch {
+      // fallback
+    }
+    return DEFAULT_SEARCH_FORM;
+  });
+
+  // Real account search workflow phase: 'form' | 'payment' | 'code'
+  const [realAccountStepPhase, setRealAccountStepPhase] = useState<'form' | 'payment' | 'code'>(() => {
+    try {
+      const saved = localStorage.getItem(REAL_ACCOUNT_STEP_PHASE_KEY);
+      if (saved === 'form' || saved === 'payment' || saved === 'code') return saved;
+    } catch {
+      // fallback
+    }
+    return 'form';
+  });
+
+  // Persisted pending code for real accounts
+  const [persistedIssuedCode, setPersistedIssuedCode] = useState<string>(() => {
+    try {
+      return localStorage.getItem(REAL_ACCOUNT_CODE_KEY) || '';
+    } catch {
+      return '';
+    }
+  });
+
+  // Active search running state inside the dashboard
+  const [isExecutingSearch, setIsExecutingSearch] = useState(false);
+  const [searchCompleted, setSearchCompleted] = useState(false);
+  const [activeSearchData, setActiveSearchData] = useState<SearchFormData | null>(null);
+
+  // Save cached form to localStorage
+  const handleSaveCachedForm = (data: SearchFormData) => {
+    setCachedForm(data);
+    try {
+      localStorage.setItem(CACHED_FORM_STORAGE_KEY, JSON.stringify(data));
+    } catch {
+      // ignore
+    }
   };
 
-  const handleEligibilityConfirmed = (code: string) => {
-    setActiveEligibilityCode(code);
-    setIsEligibilityModalOpen(false);
-    setIsLoginModalOpen(true);
+  // Update step phase and persist across login/logout
+  const handleUpdateStepPhase = (phase: 'form' | 'payment' | 'code') => {
+    setRealAccountStepPhase(phase);
+    try {
+      localStorage.setItem(REAL_ACCOUNT_STEP_PHASE_KEY, phase);
+    } catch {
+      // ignore
+    }
   };
 
+  // Save code
+  const handleCodeValidated = (code: string) => {
+    setPersistedIssuedCode(code);
+    try {
+      localStorage.setItem(REAL_ACCOUNT_CODE_KEY, code);
+    } catch {
+      // ignore
+    }
+  };
+
+  // When Try Now is clicked -> open mock login modal
+  const handleTryNowClick = () => {
+    setIsMockAuthModalOpen(true);
+  };
+
+  // When login is submitted in mock login modal -> transport to dashboard
+  const handleMockLoginSuccess = (user: { email: string; name: string; isDemo: boolean }) => {
+    setCurrentUser(user);
+    setIsMockAuthModalOpen(false);
+
+    // If user has pending search code phase from previous session on a real account, ensure modal behavior is ready
+    if (!user.isDemo && realAccountStepPhase === 'code') {
+      setIsNewSearchModalOpen(true);
+    }
+  };
+
+  // When user clicks 'Generate New Search' inside dashboard
+  const handleOpenNewSearch = () => {
+    setIsNewSearchModalOpen(true);
+  };
+
+  // When search form is submitted (demo accounts or real accounts after code) -> launch search animation in dashboard
+  const handleStartSearchExecution = (data: SearchFormData) => {
+    setActiveSearchData(data);
+    setIsExecutingSearch(true);
+    setSearchCompleted(false);
+
+    // Run animation for 3.6 seconds, then show results in the portal
+    setTimeout(() => {
+      setIsExecutingSearch(false);
+      setSearchCompleted(true);
+    }, 3600);
+  };
+
+  // When user logs out
+  const handleLogout = () => {
+    setCurrentUser(null);
+    setIsNewSearchModalOpen(false);
+  };
+
+  // If user is logged into the mock dashboard, render the full portal!
+  if (currentUser) {
+    return (
+      <div className="w-full py-4 sm:py-6">
+        <MockPortalDashboard
+          currentUser={currentUser}
+          onLogout={handleLogout}
+          onOpenNewSearch={handleOpenNewSearch}
+          onStartFreeTrial={() => setIsWebAppSubscribeModalOpen(true)}
+          onOpenEligibilityCheck={() => setIsEligibilityModalOpen(true)}
+          branches={branches}
+          onSelectStep={onSelectStep}
+          onSelectBranchOutcome={onSelectBranchOutcome}
+          activeSearchQuery={activeSearchData || cachedForm}
+          isExecutingSearch={isExecutingSearch}
+          searchCompleted={searchCompleted}
+        />
+
+        {/* New Search Workflow Modal (Opens only when 'Generate New Search' is selected) */}
+        <NewSearchWorkflowModal
+          isOpen={isNewSearchModalOpen}
+          onClose={() => setIsNewSearchModalOpen(false)}
+          isDemoUser={currentUser.isDemo}
+          cachedFormData={cachedForm}
+          onSaveCachedForm={handleSaveCachedForm}
+          onStartSearchExecution={handleStartSearchExecution}
+          stepPhase={currentUser.isDemo ? 'form' : realAccountStepPhase}
+          onUpdateStepPhase={handleUpdateStepPhase}
+          pendingCode={persistedIssuedCode}
+          onCodeValidated={handleCodeValidated}
+        />
+
+        {/* Real Subscription / Free Trial Modal */}
+        <WebAppLoginModal
+          isOpen={isWebAppSubscribeModalOpen}
+          onClose={() => setIsWebAppSubscribeModalOpen(false)}
+          initialEligibilityCode={persistedIssuedCode}
+          onOpenEligibilityCheck={() => {
+            setIsWebAppSubscribeModalOpen(false);
+            setIsEligibilityModalOpen(true);
+          }}
+          onSuccessLogin={() => {
+            setIsWebAppSubscribeModalOpen(false);
+            setCurrentUser({
+              email: currentUser.email,
+              name: currentUser.name,
+              isDemo: false,
+            });
+          }}
+        />
+
+        {/* £9.99 Eligibility Check Modal */}
+        <EligibilityCheckModal
+          isOpen={isEligibilityModalOpen}
+          onClose={() => setIsEligibilityModalOpen(false)}
+          onEligibilityConfirmed={(code) => {
+            handleCodeValidated(code);
+            setIsEligibilityModalOpen(false);
+            setIsWebAppSubscribeModalOpen(true);
+          }}
+        />
+      </div>
+    );
+  }
+
+  // Otherwise, render the Landing Page Hero
   return (
     <div id="landing-page-root" className="w-full flex flex-col justify-center items-center py-6 sm:py-12 lg:py-16 text-[#EDEFEE] animate-in fade-in duration-200">
       {/* Bold, Clean, Impactful Center Hero Section */}
       <section className="w-full max-w-4xl mx-auto rounded-3xl bg-[#23221F] border-2 border-[#484642] p-8 sm:p-14 lg:p-18 shadow-2xl text-center relative overflow-hidden space-y-8">
-        {/* Subtle Warm Ambient Glow */}
+        {/* Warm Ambient Glow */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[550px] h-[320px] bg-[#AA210F]/15 rounded-full blur-3xl pointer-events-none" />
 
         <div className="relative z-10 space-y-6 max-w-3xl mx-auto">
@@ -64,7 +236,7 @@ export const ClaimAgentSaaSPage: React.FC<ClaimAgentSaaSPageProps> = ({
             </span>
           </div>
 
-          {/* Exact Requested Title: Large, Bold, Impactful */}
+          {/* Exact Requested Title */}
           <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight text-[#EDEFEE] leading-[1.15]">
             Ancestral Birthland Reclaimer, for Indigenous Britons.
           </h1>
@@ -81,11 +253,11 @@ export const ClaimAgentSaaSPage: React.FC<ClaimAgentSaaSPageProps> = ({
             </p>
           </div>
 
-          {/* Bold Impactful CTA Buttons (Try Now | Subscribe) */}
+          {/* CTA Buttons (Try Now | Subscribe) */}
           <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4 max-w-md mx-auto">
             <button
               id="btn-try-now"
-              onClick={() => setIsWebToLeadModalOpen(true)}
+              onClick={handleTryNowClick}
               className="w-full sm:flex-1 py-4 px-8 rounded-2xl bg-[#AA210F] hover:bg-[#8e1b0c] text-[#EDEFEE] font-black text-base flex items-center justify-center gap-2.5 shadow-xl transition-all cursor-pointer tracking-wider uppercase group"
             >
               <Play className="w-4 h-4 fill-current text-[#EDEFEE]" />
@@ -95,7 +267,7 @@ export const ClaimAgentSaaSPage: React.FC<ClaimAgentSaaSPageProps> = ({
 
             <button
               id="btn-subscribe-main"
-              onClick={() => setIsLoginModalOpen(true)}
+              onClick={() => setIsWebAppSubscribeModalOpen(true)}
               className="w-full sm:flex-1 py-4 px-8 rounded-2xl bg-[#34332F] hover:bg-[#484642] text-[#EDEFEE] border-2 border-[#484642] hover:border-[#D08856] font-black text-base flex items-center justify-center gap-2.5 shadow-lg transition-all cursor-pointer tracking-wider uppercase"
             >
               <UserPlus className="w-4 h-4 text-[#D08856]" />
@@ -104,7 +276,7 @@ export const ClaimAgentSaaSPage: React.FC<ClaimAgentSaaSPageProps> = ({
           </div>
         </div>
 
-        {/* Minimal Footer Trust Marks & Copyright */}
+        {/* Minimal Footer Trust Marks */}
         <div className="relative z-10 pt-6 border-t border-[#484642] flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[#EDEFEE]/60 font-mono">
           <div className="flex items-center gap-2">
             <ShieldCheck className="w-4 h-4 text-emerald-400" />
@@ -116,23 +288,33 @@ export const ClaimAgentSaaSPage: React.FC<ClaimAgentSaaSPageProps> = ({
         </div>
       </section>
 
-      {/* Web-to-Lead Popup Modal (Triggered on 'Try Now') */}
-      <WebToLeadModal
-        isOpen={isWebToLeadModalOpen}
-        onClose={() => setIsWebToLeadModalOpen(false)}
-        onProceed={handleProceedFromLead}
+      {/* Mock Login Modal on Try Now */}
+      <MockAuthModal
+        isOpen={isMockAuthModalOpen}
+        onClose={() => setIsMockAuthModalOpen(false)}
+        onLoginSuccess={handleMockLoginSuccess}
+        onSwitchToRealRegister={() => {
+          setIsMockAuthModalOpen(false);
+          setIsEligibilityModalOpen(true);
+        }}
       />
 
-      {/* Case Study Results & AI Scanning Modal (Triggered after 'Proceed' in Try Now) */}
-      <CaseStudyResultsModal
-        isOpen={isResultsModalOpen}
-        onClose={() => setIsResultsModalOpen(false)}
-        branches={branches}
-        onSelectStep={onSelectStep}
-        onSelectBranchOutcome={onSelectBranchOutcome}
+      {/* Real Account Subscription Modal */}
+      <WebAppLoginModal
+        isOpen={isWebAppSubscribeModalOpen}
+        onClose={() => setIsWebAppSubscribeModalOpen(false)}
+        initialEligibilityCode={persistedIssuedCode}
         onOpenEligibilityCheck={() => {
-          setIsResultsModalOpen(false);
+          setIsWebAppSubscribeModalOpen(false);
           setIsEligibilityModalOpen(true);
+        }}
+        onSuccessLogin={() => {
+          setIsWebAppSubscribeModalOpen(false);
+          setCurrentUser({
+            email: 'hywelapbuckler@gmail.com',
+            name: 'Sion Buckler',
+            isDemo: false,
+          });
         }}
       />
 
@@ -140,21 +322,10 @@ export const ClaimAgentSaaSPage: React.FC<ClaimAgentSaaSPageProps> = ({
       <EligibilityCheckModal
         isOpen={isEligibilityModalOpen}
         onClose={() => setIsEligibilityModalOpen(false)}
-        onEligibilityConfirmed={handleEligibilityConfirmed}
-      />
-
-      {/* £49.99/mo Registration / Web App Login Modal (Triggered on 'Signup') */}
-      <WebAppLoginModal
-        isOpen={isLoginModalOpen}
-        onClose={() => setIsLoginModalOpen(false)}
-        initialEligibilityCode={activeEligibilityCode}
-        onOpenEligibilityCheck={() => {
-          setIsLoginModalOpen(false);
-          setIsEligibilityModalOpen(true);
-        }}
-        onSuccessLogin={() => {
-          setIsLoginModalOpen(false);
-          setIsResultsModalOpen(true);
+        onEligibilityConfirmed={(code) => {
+          handleCodeValidated(code);
+          setIsEligibilityModalOpen(false);
+          setIsWebAppSubscribeModalOpen(true);
         }}
       />
     </div>

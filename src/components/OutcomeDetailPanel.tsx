@@ -26,6 +26,7 @@ import {
   FileCode,
   ShieldAlert,
 } from 'lucide-react';
+import { useModalAccessibility } from './saas/useModalAccessibility';
 
 interface OutcomeDetailPanelProps {
   branch: FOIBranch | null;
@@ -47,6 +48,8 @@ export const OutcomeDetailPanel: React.FC<OutcomeDetailPanelProps> = ({
   const [editedOutcome, setEditedOutcome] = useState<OutcomeType>(branch?.outcome ?? null);
   const [editedNote, setEditedNote] = useState(branch?.outcome_note || '');
   const [copied, setCopied] = useState(false);
+
+  useModalAccessibility(isOpen, onClose);
 
   React.useEffect(() => {
     if (branch) {

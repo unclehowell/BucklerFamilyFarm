@@ -16,6 +16,7 @@ import {
   Building2,
   FileCheck2,
 } from 'lucide-react';
+import { useModalAccessibility } from './saas/useModalAccessibility';
 
 interface StepDetailModalProps {
   branch: FOIBranch | null;
@@ -38,6 +39,8 @@ export const StepDetailModal: React.FC<StepDetailModalProps> = ({
 }) => {
   const [copied, setCopied] = React.useState(false);
 
+  useModalAccessibility(isOpen, onClose);
+
   if (!isOpen || !branch || !step) return null;
 
   const typeConfig = getStepTypeConfig(step.type);
@@ -55,22 +58,25 @@ export const StepDetailModal: React.FC<StepDetailModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-in fade-in duration-150">
-      {/* Click outside backdrop */}
-      <div className="absolute inset-0" onClick={onClose} />
-
+    <div
+      role="dialog"
+      aria-modal="true"
+      className="fixed inset-0 z-50 overflow-y-auto bg-black/75 backdrop-blur-sm flex min-h-full items-center justify-center p-3 sm:p-4 animate-in fade-in duration-150"
+      onClick={onClose}
+    >
       <div
         id="step-detail-card"
-        className="relative w-full max-w-xl bg-zinc-900 rounded-2xl shadow-2xl border border-zinc-800 overflow-hidden z-10 animate-in zoom-in-95 duration-200 text-zinc-100"
+        className="relative w-full max-w-xl my-auto max-h-[calc(100dvh-1.5rem)] sm:max-h-[calc(100dvh-3rem)] bg-zinc-900 rounded-3xl shadow-2xl border border-zinc-800 flex flex-col overflow-hidden z-10 animate-in zoom-in-95 duration-200 text-zinc-100"
+        onClick={(e) => e.stopPropagation()}
       >
         {/* Top Accent Stripe based on step type */}
         <div
-          className="h-1.5 w-full"
+          className="h-1.5 w-full flex-shrink-0"
           style={{ backgroundColor: typeConfig.borderColor }}
         />
 
         {/* Header */}
-        <div className="px-6 pt-5 pb-4 border-b border-zinc-800 flex items-start justify-between gap-4">
+        <div className="px-5 sm:px-6 pt-4 sm:pt-5 pb-3 sm:pb-4 border-b border-zinc-800 flex items-center justify-between gap-4 flex-shrink-0">
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 flex-wrap text-xs text-zinc-400 mb-1">
               <span className="font-semibold px-2 py-0.5 rounded-full bg-zinc-800 text-zinc-300 border border-zinc-700">
@@ -78,7 +84,7 @@ export const StepDetailModal: React.FC<StepDetailModalProps> = ({
               </span>
               <span>•</span>
               <span className="flex items-center gap-1">
-                <Building2 className="w-3.5 h-3.5 text-zinc-500" />
+                <Building2 className="w-3.5 h-3.5 text-zinc-400" />
                 {branch.authority}
               </span>
               <span>•</span>
@@ -94,15 +100,15 @@ export const StepDetailModal: React.FC<StepDetailModalProps> = ({
 
           <button
             onClick={onClose}
-            className="p-1.5 rounded-full text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors"
-            title="Close"
+            className="flex-shrink-0 min-w-[44px] min-h-[44px] flex items-center justify-center p-2 rounded-2xl text-zinc-300 hover:text-white bg-zinc-800 hover:bg-zinc-700 transition-colors focus-visible:ring-2 focus-visible:ring-amber-400 focus:outline-none"
+            aria-label="Close dialog"
           >
-            <X className="w-5 h-5" />
+            <X className="w-4 h-4" />
           </button>
         </div>
 
         {/* Body Content */}
-        <div className="px-6 py-5 space-y-5 max-h-[70vh] overflow-y-auto">
+        <div className="px-5 sm:px-6 py-4 sm:py-5 space-y-4 sm:space-y-5 flex-1 overflow-y-auto">
           {/* Milestone Banner */}
           <div className="flex items-center justify-between p-3.5 rounded-xl bg-zinc-950 border border-zinc-800 gap-3">
             <div className="flex items-center gap-3">

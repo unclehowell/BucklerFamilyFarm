@@ -36,6 +36,7 @@ import {
   ChronologySection,
   ChronologyItem,
 } from '../../data/threePlotChronologyData';
+import { useModalAccessibility } from './useModalAccessibility';
 
 interface CaseStudyResultsModalProps {
   isOpen: boolean;
@@ -137,30 +138,37 @@ export const CaseStudyResultsModal: React.FC<CaseStudyResultsModalProps> = ({
       ? THREE_PLOT_CHRONOLOGY_SECTIONS
       : THREE_PLOT_CHRONOLOGY_SECTIONS.filter((s) => s.id === selectedChronologySection);
 
+  useModalAccessibility(isOpen, onClose);
+
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 md:p-6 bg-black/85 backdrop-blur-md animate-in fade-in duration-200">
+    <div
+      role="dialog"
+      aria-modal="true"
+      className="fixed inset-0 z-50 overflow-y-auto bg-black/85 backdrop-blur-md flex min-h-full items-center justify-center p-2 sm:p-4 md:p-6 animate-in fade-in duration-200"
+      onClick={onClose}
+    >
       <div
-        className="w-full max-w-6xl max-h-[94vh] bg-[#23221F] border-2 border-[#484642] rounded-3xl shadow-2xl flex flex-col overflow-hidden text-[#EDEFEE] animate-in zoom-in-95 duration-200"
+        className="w-full max-w-6xl my-auto max-h-[calc(100dvh-1rem)] sm:max-h-[calc(100dvh-2.5rem)] bg-[#23221F] border-2 border-[#484642] rounded-3xl shadow-2xl flex flex-col overflow-hidden text-[#EDEFEE] animate-in zoom-in-95 duration-200"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Modal Top Bar */}
-        <div className="px-5 py-4 bg-[#2D2C28] border-b border-[#484642] flex items-center justify-between gap-4 flex-shrink-0">
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-2xl bg-[#AA210F] text-[#EDEFEE] flex items-center justify-center font-black text-sm shadow-sm">
+        <div className="px-5 py-3.5 sm:py-4 bg-[#2D2C28] border-b border-[#484642] flex items-center justify-between gap-4 flex-shrink-0">
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="w-10 h-10 rounded-2xl bg-[#AA210F] text-[#EDEFEE] flex items-center justify-center font-black text-sm shadow-sm flex-shrink-0">
               <Scale className="w-5 h-5" />
             </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="font-bold text-sm sm:text-base text-[#EDEFEE]">
+            <div className="min-w-0">
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="font-bold text-xs sm:text-base text-[#EDEFEE] truncate">
                   BP Oil Ltd v Buckler (1987) — Land Parcel Restitution Dossier
                 </span>
                 <span className="px-2 py-0.5 rounded bg-[#1C1B18] text-emerald-400 border border-emerald-500/40 text-[10px] font-mono font-bold">
                   96.8% Match
                 </span>
               </div>
-              <p className="text-[11px] text-[#EDEFEE]/70 font-mono hidden sm:block">
+              <p className="text-[11px] text-[#A3A29E] font-mono hidden sm:block truncate">
                 Sion Buckler • Great House Farm (Ty Mawr), Llandough • Title WA240304
               </p>
             </div>
@@ -168,7 +176,7 @@ export const CaseStudyResultsModal: React.FC<CaseStudyResultsModalProps> = ({
 
           <button
             onClick={onClose}
-            className="p-2 rounded-xl bg-[#1C1B18] hover:bg-[#34332F] text-[#EDEFEE]/70 hover:text-[#EDEFEE] border border-[#484642] transition-all cursor-pointer"
+            className="flex-shrink-0 min-w-[44px] min-h-[44px] flex items-center justify-center p-2 rounded-xl bg-[#1C1B18] hover:bg-[#34332F] text-[#EDEFEE] border border-[#484642] transition-all cursor-pointer focus-visible:ring-2 focus-visible:ring-[#D08856] focus:outline-none"
             aria-label="Close modal"
           >
             <X className="w-4 h-4" />

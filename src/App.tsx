@@ -4,16 +4,10 @@ import { INITIAL_FOI_DATA } from './data/initialData';
 import { StepDetailModal } from './components/StepDetailModal';
 import { OutcomeDetailPanel } from './components/OutcomeDetailPanel';
 import { ClaimAgentSaaSPage } from './components/saas/ClaimAgentSaaSPage';
-import { WebAppLoginModal } from './components/saas/WebAppLoginModal';
-import { EligibilityCheckModal } from './components/saas/EligibilityCheckModal';
 
 const STORAGE_KEY = 'foi_pursuits_tree_data_v1';
 
 export default function App() {
-  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-  const [isEligibilityModalOpen, setIsEligibilityModalOpen] = useState(false);
-  const [activeEligibilityCode, setActiveEligibilityCode] = useState<string>('');
-
   // Load initial dataset or saved local storage state
   const [branches, setBranches] = useState<FOIBranch[]>(() => {
     try {
@@ -90,12 +84,6 @@ export default function App() {
     }
   };
 
-  const handleEligibilityConfirmed = (code: string) => {
-    setActiveEligibilityCode(code);
-    setIsEligibilityModalOpen(false);
-    setIsLoginModalOpen(true);
-  };
-
   return (
     <div className="min-h-screen bg-[#181715] flex flex-col justify-center font-sans text-[#EDEFEE] selection:bg-[#AA210F]/40 selection:text-[#EDEFEE]">
       {/* Main Center Minimal Landing Page */}
@@ -130,24 +118,6 @@ export default function App() {
         onSelectStep={(b, s, idx) => {
           setActiveOutcomeBranch(null);
           setActiveStepData({ branch: b, step: s, stepIndex: idx });
-        }}
-      />
-
-      {/* £9.99 Eligibility Check Modal */}
-      <EligibilityCheckModal
-        isOpen={isEligibilityModalOpen}
-        onClose={() => setIsEligibilityModalOpen(false)}
-        onEligibilityConfirmed={handleEligibilityConfirmed}
-      />
-
-      {/* £49.99/mo Web App Login / Registration Modal */}
-      <WebAppLoginModal
-        isOpen={isLoginModalOpen}
-        onClose={() => setIsLoginModalOpen(false)}
-        initialEligibilityCode={activeEligibilityCode}
-        onOpenEligibilityCheck={() => {
-          setIsLoginModalOpen(false);
-          setIsEligibilityModalOpen(true);
         }}
       />
     </div>

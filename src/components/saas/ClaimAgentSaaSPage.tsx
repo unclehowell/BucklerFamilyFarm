@@ -15,6 +15,8 @@ import {
   NewSearchWorkflowModal,
   SearchFormData,
   DEFAULT_SEARCH_FORM,
+  BLANK_SEARCH_FORM,
+  SearchStepPhase,
 } from './NewSearchWorkflowModal';
 import { WebAppLoginModal } from './WebAppLoginModal';
 import { EligibilityCheckModal } from './EligibilityCheckModal';
@@ -46,6 +48,7 @@ export const ClaimAgentSaaSPage: React.FC<ClaimAgentSaaSPageProps> = ({
 
   // Modals state
   const [isMockAuthModalOpen, setIsMockAuthModalOpen] = useState(false);
+  const [authModalMode, setAuthModalMode] = useState<'demo' | 'signin' | 'signup'>('demo');
   const [isNewSearchModalOpen, setIsNewSearchModalOpen] = useState(false);
   const [isWebAppSubscribeModalOpen, setIsWebAppSubscribeModalOpen] = useState(false);
   const [isEligibilityModalOpen, setIsEligibilityModalOpen] = useState(false);
@@ -62,11 +65,13 @@ export const ClaimAgentSaaSPage: React.FC<ClaimAgentSaaSPageProps> = ({
     return DEFAULT_SEARCH_FORM;
   });
 
-  // Real account search workflow phase: 'form' | 'payment' | 'code'
-  const [realAccountStepPhase, setRealAccountStepPhase] = useState<'form' | 'payment' | 'code'>(() => {
+  // Real account search workflow phase: 'form' | 'payment' | 'code' | 'subscription'
+  const [realAccountStepPhase, setRealAccountStepPhase] = useState<SearchStepPhase>(() => {
     try {
       const saved = localStorage.getItem(REAL_ACCOUNT_STEP_PHASE_KEY);
-      if (saved === 'form' || saved === 'payment' || saved === 'code') return saved;
+      if (saved === 'form' || saved === 'payment' || saved === 'code' || saved === 'subscription') {
+        return saved as SearchStepPhase;
+      }
     } catch {
       // fallback
     }
@@ -98,7 +103,7 @@ export const ClaimAgentSaaSPage: React.FC<ClaimAgentSaaSPageProps> = ({
   };
 
   // Update step phase and persist across login/logout
-  const handleUpdateStepPhase = (phase: 'form' | 'payment' | 'code') => {
+  const handleUpdateStepPhase = (phase: SearchStepPhase) => {
     setRealAccountStepPhase(phase);
     try {
       localStorage.setItem(REAL_ACCOUNT_STEP_PHASE_KEY, phase);
@@ -117,8 +122,15 @@ export const ClaimAgentSaaSPage: React.FC<ClaimAgentSaaSPageProps> = ({
     }
   };
 
-  // When Try Now is clicked -> open mock login modal
+  // When Try Now is clicked -> open demo modal (pre-completed, locked)
   const handleTryNowClick = () => {
+    setAuthModalMode('demo');
+    setIsMockAuthModalOpen(true);
+  };
+
+  // When Sign In is clicked -> open real sign in/sign up modal (empty, editable)
+  const handleSignInClick = () => {
+    setAuthModalMode('signin');
     setIsMockAuthModalOpen(true);
   };
 
@@ -127,9 +139,27 @@ export const ClaimAgentSaaSPage: React.FC<ClaimAgentSaaSPageProps> = ({
     setCurrentUser(user);
     setIsMockAuthModalOpen(false);
 
-    // If user has pending search code phase from previous session on a real account, ensure modal behavior is ready
-    if (!user.isDemo && realAccountStepPhase === 'code') {
-      setIsNewSearchModalOpen(true);
+    if (user.isDemo) {
+      setCachedForm(DEFAULT_SEARCH_FORM);
+    } else {
+      // For real accounts, initialize with user's name if form was demo data
+      if (cachedForm.claimantName === DEFAULT_SEARCH_FORM.claimantName && cachedForm.ancestralHolding === DEFAULT_SEARCH_FORM.ancestralHolding) {
+        const initialUserForm: SearchFormData = {
+          claimantName: user.name,
+          ancestralHolding: '',
+          parishLocation: '',
+          historicalCounty: '',
+          approxDateRange: '',
+          knownDocuments: '',
+        };
+        setCachedForm(initialUserForm);
+        handleSaveCachedForm(initialUserForm);
+      }
+
+      // If user has pending search code phase from previous session on a real account, ensure modal behavior is ready
+      if (realAccountStepPhase === 'code' || realAccountStepPhase === 'payment' || realAccountStepPhase === 'subscription') {
+        setIsNewSearchModalOpen(true);
+      }
     }
   };
 
@@ -144,11 +174,11 @@ export const ClaimAgentSaaSPage: React.FC<ClaimAgentSaaSPageProps> = ({
     setIsExecutingSearch(true);
     setSearchCompleted(false);
 
-    // Run animation for 3.6 seconds, then show results in the portal
+    // Run animation for 10.8 seconds (3x longer step duration), then show results in the portal
     setTimeout(() => {
       setIsExecutingSearch(false);
       setSearchCompleted(true);
-    }, 3600);
+    }, 10800);
   };
 
   // When user logs out
@@ -170,6 +200,10 @@ export const ClaimAgentSaaSPage: React.FC<ClaimAgentSaaSPageProps> = ({
           onOpenNewSearch={handleOpenNewSearch}
           onStartFreeTrial={() => setIsWebAppSubscribeModalOpen(true)}
           onOpenEligibilityCheck={() => setIsEligibilityModalOpen(true)}
+          onOpenAuthModal={(mode) => {
+            setAuthModalMode(mode);
+            setIsMockAuthModalOpen(true);
+          }}
           branches={branches}
           onSelectStep={onSelectStep}
           onSelectBranchOutcome={onSelectBranchOutcome}
@@ -183,6 +217,8 @@ export const ClaimAgentSaaSPage: React.FC<ClaimAgentSaaSPageProps> = ({
           isOpen={isNewSearchModalOpen}
           onClose={() => setIsNewSearchModalOpen(false)}
           isDemoUser={currentUser.isDemo}
+          userEmail={currentUser.email}
+          userName={currentUser.name}
           cachedFormData={cachedForm}
           onSaveCachedForm={handleSaveCachedForm}
           onStartSearchExecution={handleStartSearchExecution}
@@ -247,28 +283,26 @@ export const ClaimAgentSaaSPage: React.FC<ClaimAgentSaaSPageProps> = ({
             Locate & Reclaim Ancestral Birthland
           </h1>
 
-          {/* Exact Requested Small Print with Info Modal Trigger */}
-          <div className="flex items-center justify-center gap-2 max-w-3xl mx-auto flex-wrap">
-            <p className="text-base sm:text-lg lg:text-xl text-[#EDEFEE]/90 font-medium leading-relaxed inline">
-              We are these lands! We literally own parcels of land nationwide. Our AI agents will autonomously locate, recover and/or assist in reporations for unlawful disspossesion and decades of unlawful occupancy.
-            </p>
+          {/* Exact Requested Small Print with Details Trigger */}
+          <p className="text-base sm:text-lg lg:text-xl text-[#EDEFEE]/90 font-medium leading-relaxed max-w-3xl mx-auto">
+            We are these lands! We literally own parcels of land nationwide. Our AI agents will autonomously locate, recover and/or assist in reporations for unlawful disspossesion and decades of unlawful occupancy.
+          </p>
+
+          {/* Details & T&C's */}
+          <div className="pt-1 flex items-center justify-center gap-2 text-xs sm:text-sm text-[#EDEFEE]/65 font-mono tracking-wide">
             <button
               type="button"
               id="btn-case-precedent-info"
               onClick={() => setIsCasePrecedentModalOpen(true)}
-              className="inline-flex items-center justify-center p-1.5 rounded-full bg-[#34332F] hover:bg-[#AA210F] text-[#D08856] hover:text-[#EDEFEE] border border-[#484642] transition-all cursor-pointer shadow-md align-middle focus:outline-none focus:ring-2 focus:ring-[#D08856]"
-              title="View BP v Buckler 1987 Legal Precedent & Background"
-              aria-label="View BP v Buckler 1987 Legal Precedent & Background"
+              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#34332F] hover:bg-[#AA210F] text-[#D08856] hover:text-[#EDEFEE] border border-[#484642] transition-all cursor-pointer shadow-sm focus:outline-none focus:ring-2 focus:ring-[#D08856]"
+              title="View case precedent details"
+              aria-label="View case precedent details"
             >
-              <Info className="w-4 h-4" />
+              <Info className="w-3.5 h-3.5" />
+              <span className="font-bold text-xs">details</span>
             </button>
-          </div>
-
-          {/* Exact Requested Smaller Print */}
-          <div className="pt-1">
-            <p className="text-xs sm:text-sm text-[#EDEFEE]/65 font-mono max-w-xl mx-auto tracking-wide">
-              Fully autonomous, A.I. agent powered. £9.99 eligibility checker. £49.99 per month subscription. T&C&apos;s apply.
-            </p>
+            <span className="text-[#484642]">•</span>
+            <span>T&C&apos;s apply.</span>
           </div>
 
           {/* CTA Buttons (Try Now | Sign In) */}
@@ -285,7 +319,7 @@ export const ClaimAgentSaaSPage: React.FC<ClaimAgentSaaSPageProps> = ({
 
             <button
               id="btn-signin-main"
-              onClick={handleTryNowClick}
+              onClick={handleSignInClick}
               className="w-full sm:flex-1 py-4 px-8 rounded-2xl bg-[#34332F] hover:bg-[#484642] text-[#EDEFEE] border-2 border-[#484642] hover:border-[#D08856] font-black text-base flex items-center justify-center gap-2.5 shadow-lg transition-all cursor-pointer tracking-wider uppercase"
             >
               <LogIn className="w-4 h-4 text-[#D08856]" />
@@ -312,10 +346,11 @@ export const ClaimAgentSaaSPage: React.FC<ClaimAgentSaaSPageProps> = ({
         onClose={() => setIsCasePrecedentModalOpen(false)}
       />
 
-      {/* Mock Login Modal on Try Now */}
+      {/* Mock Login / Sign In / Demo Modal */}
       <MockAuthModal
         isOpen={isMockAuthModalOpen}
         onClose={() => setIsMockAuthModalOpen(false)}
+        initialMode={authModalMode}
         onLoginSuccess={handleMockLoginSuccess}
         onSwitchToRealRegister={() => {
           setIsMockAuthModalOpen(false);

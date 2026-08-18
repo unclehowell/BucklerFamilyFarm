@@ -16,13 +16,6 @@ export interface WilliamsGeneration {
   notes?: string;
 }
 
-export interface PwllYPantMilestone {
-  date: string;
-  title: string;
-  details: string;
-  significance?: string;
-}
-
 export interface DisputeTimelineEvent {
   date: string;
   title: string;
@@ -140,69 +133,6 @@ export const REYNOLDS_HERBERT_DATA = [
     name: 'Esther Reynolds (1881–)',
     details: 'Daughter of Evan Reynolds and Blanch Herbert. Married John Williams (1867–), directly linking the Reynolds/Herbert line to the Williams line at Great House Farm.',
     marriage: 'm. John Williams (1867–).',
-  },
-];
-
-export const PWLL_Y_PANT_CHRONOLOGY: PwllYPantMilestone[] = [
-  {
-    date: 'c.1667',
-    title: 'Manorial Roots at Great House Farm',
-    details: 'Manorial roots established at Great House Farm (Ty Mawr), Llandough. The Williams line appears in manorial records as freeholders of ancient standing, holding land by customary tenure predating modern registration.',
-    significance: 'Origin of unextinguished freehold claim to Parcel B.',
-  },
-  {
-    date: 'Late 17th – Early 18th C',
-    title: 'Glamorgan Land Consolidation & Pwll-y-pant Seat',
-    details: 'The family consolidates holdings across Glamorgan through marriage and purchase. Pwll-y-pant ("Hollow of the Basin") in Caerphilly is established as the principal gentry seat.',
-    significance: 'Expansion into county gentry standing.',
-  },
-  {
-    date: '1709 / 1750–1785',
-    title: 'Rev. David Williams (1709–1785)',
-    details: 'Birth and ministry of the Reverend David Williams, a leading light of the mid-18th-century Methodist Revival in Wales. Extends family influence into spiritual and intellectual history.',
-    significance: 'Spiritual authority and county prestige.',
-  },
-  {
-    date: '1806',
-    title: 'Birth of William Evans Williams',
-    details: 'Born at Pwll-y-pant House, son of William Williams Esq. of Caerphilly and Mary, daughter of Thomas Evans of Bultloyd. Established county standing.',
-    significance: 'Heir to extensive mineral and agricultural estates.',
-  },
-  {
-    date: '1830s–1840s',
-    title: 'Justice of the Peace & Bute Docks Expansion',
-    details: 'William Evans Williams commissioned as Justice of the Peace for Glamorgan. Opening of Bute Docks (1839) drives enormous land and mineral value appreciation.',
-    significance: 'Magisterial authority and economic influence.',
-  },
-  {
-    date: '1850s–1860s',
-    title: 'Peak Estate Valuation (£200,000)',
-    details: 'Family holds extensive lands in Caerphilly, Newport, and Breconshire. Estate valued at approximately £200,000 (tens of millions in modern terms).',
-    significance: 'Zenith of family wealth.',
-  },
-  {
-    date: '1865',
-    title: 'Gore-Langton Parliamentary Alliance',
-    details: 'Mary Ann Williams (sister of William Evans Williams) marries William Henry Gore-Langton (1802–1875), MP and Mayor of Bristol, connecting family to Dukes of Buckingham & Chandos.',
-    significance: 'Direct ties to British aristocracy.',
-  },
-  {
-    date: '1866',
-    title: 'Pwll-y-pant Quarry Leased to Marquess of Bute',
-    details: 'Quarry leased to Marquess of Bute trustees for stone to build Cardiff Docks and Cardiff Castle\'s famous Gothic Revival towers designed by William Burges.',
-    significance: 'Material foundation of Victorian Cardiff.',
-  },
-  {
-    date: '1867',
-    title: 'Paris Exposition Universal Tower Clock',
-    details: 'William Evans Williams acquires massive tower clock at Paris Universal Exposition of 1867. Regulates it by personal solar observations using a transit instrument.',
-    significance: 'Emblem of scientific and intellectual independence.',
-  },
-  {
-    date: '1870–1890',
-    title: 'Corbett Solicitors & Bute Administration',
-    details: 'Following death of William Evans Williams (1870), real property enters Bute portfolio; John Stuart Corbett and James Andrew Corbett (authors and Bute Solicitors) reside at Pwll-y-pant.',
-    significance: 'Archival preservation in National Library of Wales.',
   },
 ];
 

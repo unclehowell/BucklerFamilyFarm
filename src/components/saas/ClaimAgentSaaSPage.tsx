@@ -244,7 +244,7 @@ export const ClaimAgentSaaSPage: React.FC<ClaimAgentSaaSPageProps> = ({
 
           {/* Exact Requested Title */}
           <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight text-[#EDEFEE] leading-[1.15]">
-            Ancestral Birthland Reclaimer, for Indigenous Britons.
+            Locate & Reclaim Ancestral Birthland
           </h1>
 
           {/* Exact Requested Small Print with Info Modal Trigger */}

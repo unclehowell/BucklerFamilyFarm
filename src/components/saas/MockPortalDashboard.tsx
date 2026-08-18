@@ -147,68 +147,23 @@ export const MockPortalDashboard: React.FC<MockPortalDashboardProps> = ({
   return (
     <div id="mock-portal-dashboard" className="w-full flex flex-col space-y-6 text-[#EDEFEE] animate-in fade-in duration-200">
       {/* Top Portal Navigation Bar */}
-      <header className="rounded-3xl bg-[#23221F] border-2 border-[#484642] p-4 sm:p-5 shadow-xl flex flex-col md:flex-row items-center justify-between gap-4">
-        <div className="flex items-center gap-3.5 w-full md:w-auto justify-between md:justify-start">
-          <div className="flex items-center gap-3">
-            <div className="w-11 h-11 rounded-2xl bg-[#AA210F] text-[#EDEFEE] flex items-center justify-center font-black shadow-md">
-              <Scale className="w-6 h-6" />
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="font-black text-base sm:text-lg text-[#EDEFEE] tracking-tight">
-                  Ancestral Land Portal
-                </span>
-                <span className="px-2 py-0.5 rounded bg-[#34332F] text-[#D08856] text-[10px] font-mono font-bold uppercase border border-[#484642]">
-                  {currentUser.isDemo ? 'Demo Mode' : 'Subscriber Mode'}
-                </span>
-              </div>
-              <p className="text-xs text-[#A3A29E] font-mono">
-                Active User: <strong className="text-[#EDEFEE]">{currentUser.name}</strong> ({currentUser.email})
-              </p>
-            </div>
+      <header className="rounded-3xl bg-[#23221F] border-2 border-[#484642] p-4 sm:p-5 shadow-xl flex items-center justify-between gap-4">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-2xl bg-[#AA210F] text-[#EDEFEE] flex items-center justify-center font-black shadow-md">
+            <Scale className="w-5 h-5" />
           </div>
-
-          <div className="md:hidden">
-            <button
-              onClick={onLogout}
-              className="p-2 rounded-xl bg-[#34332F] hover:bg-[#484642] text-xs font-mono text-[#EDEFEE] flex items-center gap-1 cursor-pointer"
-              title="Sign Out"
-            >
-              <LogOut className="w-4 h-4 text-red-400" />
-            </button>
-          </div>
+          <span className="font-black text-base sm:text-lg text-[#EDEFEE] tracking-tight">
+            Ancestral Land Restitution
+          </span>
         </div>
 
-        {/* Action Controls & Trial Prompt */}
-        <div className="flex items-center gap-2.5 w-full md:w-auto flex-wrap sm:flex-nowrap justify-end">
-          {/* Primary Action Button: "Generate New Search" */}
-          <button
-            id="btn-generate-new-search"
-            onClick={onOpenNewSearch}
-            className="flex-1 sm:flex-initial py-3 px-5 rounded-2xl bg-[#AA210F] hover:bg-[#8e1b0c] text-[#EDEFEE] font-black text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg transition-all cursor-pointer tracking-wider uppercase group"
-          >
-            <Plus className="w-4 h-4" />
-            <span>Generate New Search</span>
-            <Search className="w-3.5 h-3.5 group-hover:rotate-12 transition-transform" />
-          </button>
-
-          {/* Upsell to Full Real Trial / Subscription */}
-          <button
-            id="btn-start-free-trial"
-            onClick={onStartFreeTrial}
-            className="flex-1 sm:flex-initial py-3 px-4 rounded-2xl bg-gradient-to-r from-[#D08856] to-[#AA210F] text-[#EDEFEE] font-black text-xs sm:text-sm flex items-center justify-center gap-1.5 shadow-md hover:opacity-95 transition-all cursor-pointer tracking-wider uppercase whitespace-nowrap"
-          >
-            <Zap className="w-4 h-4 fill-current text-amber-200" />
-            <span>Start Free Trial</span>
-          </button>
-
-          {/* User Sign Out */}
+        <div className="flex items-center gap-2.5">
           <button
             onClick={onLogout}
-            className="hidden md:flex py-3 px-3.5 rounded-2xl bg-[#34332F] hover:bg-[#484642] border border-[#52504C] text-xs font-mono text-[#C8C7C4] hover:text-[#EDEFEE] items-center gap-1.5 transition-all cursor-pointer"
+            className="py-2.5 px-4 rounded-xl bg-[#34332F] hover:bg-[#484642] border border-[#52504C] text-xs font-mono text-[#C8C7C4] hover:text-[#EDEFEE] flex items-center gap-1.5 transition-all cursor-pointer"
           >
             <LogOut className="w-3.5 h-3.5 text-red-400" />
-            <span>Logout</span>
+            <span>Sign Out</span>
           </button>
         </div>
       </header>
@@ -929,20 +884,6 @@ export const MockPortalDashboard: React.FC<MockPortalDashboardProps> = ({
             </div>
           </>
         )}
-
-        {/* Bottom Status Bar */}
-        <div className="px-6 py-4 bg-[#2D2C28] border-t border-[#484642] flex flex-col sm:flex-row items-center justify-between gap-3 flex-shrink-0 text-xs font-mono text-[#A3A29E]">
-          <div className="flex items-center gap-2">
-            <ShieldCheck className="w-4 h-4 text-emerald-400" />
-            <span>Root-of-Title Archival Restitution AI Engine v3.4</span>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <span className="text-[#D08856]">£9.99 eligibility check</span>
-            <span>•</span>
-            <span>£49.99/mo full restitution agent</span>
-          </div>
-        </div>
       </main>
     </div>
   );

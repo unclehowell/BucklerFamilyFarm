@@ -184,18 +184,8 @@ export const NewSearchWorkflowModal: React.FC<NewSearchWorkflowModalProps> = ({
               <Scale className="w-5 h-5 sm:w-6 sm:h-6" />
             </div>
             <div className="min-w-0">
-              <div className="flex items-center gap-2 flex-wrap">
-                <span className="px-2 py-0.5 rounded bg-[#34332F] text-[#D08856] text-[10px] font-mono font-bold uppercase border border-[#484642]">
-                  {isDemoUser ? 'Demo Portal Search' : 'Real Account Search'}
-                </span>
-                <span className="text-xs font-mono font-bold text-emerald-400">
-                  {stepPhase === 'form' && (isDemoUser ? 'Instant Free Scan' : 'Step 1 of 3: Web Form')}
-                  {stepPhase === 'payment' && 'Step 2 of 3: £9.99 Fee'}
-                  {stepPhase === 'code' && 'Step 3 of 3: Code Verification'}
-                </span>
-              </div>
               <h3 id="search-modal-title" className="text-lg sm:text-xl font-black tracking-tight text-[#EDEFEE] truncate">
-                {stepPhase === 'form' && 'Generate Ancestral Land Search'}
+                {stepPhase === 'form' && 'Ancestral Land Search'}
                 {stepPhase === 'payment' && 'Pay £9.99 Service Eligibility Check'}
                 {stepPhase === 'code' && 'Enter Verification Code'}
               </h3>
@@ -437,15 +427,6 @@ export const NewSearchWorkflowModal: React.FC<NewSearchWorkflowModalProps> = ({
               </div>
             </form>
           )}
-        </div>
-
-        {/* Footer */}
-        <div className="p-4 px-6 bg-[#2D2C28] border-t border-[#484642] flex items-center justify-between text-[11px] text-[#A3A29E] font-mono flex-shrink-0">
-          <span className="flex items-center gap-1.5">
-            <Lock className="w-3.5 h-3.5 text-emerald-400" />
-            <span>National Archives & Cadw FOI Triangulation</span>
-          </span>
-          <span>{isDemoUser ? 'Sandbox Demo' : 'Step 1-3 Funnel'}</span>
         </div>
       </div>
     </div>

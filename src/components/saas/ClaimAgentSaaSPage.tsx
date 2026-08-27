@@ -1,38 +1,38 @@
 import React, { useState, useEffect } from 'react';
 import {
+  Play,
+  User,
   ArrowRight,
   ShieldCheck,
-  Play,
-  LogIn,
-  Scale,
-  Sparkles,
-  Zap,
   Info,
 } from 'lucide-react';
+import { FOIBranch, FOIStep } from '../../types';
 import { MockAuthModal } from './MockAuthModal';
-import { MockPortalDashboard } from './MockPortalDashboard';
-import {
-  NewSearchWorkflowModal,
-  SearchFormData,
-  DEFAULT_SEARCH_FORM,
-  BLANK_SEARCH_FORM,
-  SearchStepPhase,
-} from './NewSearchWorkflowModal';
 import { WebAppLoginModal } from './WebAppLoginModal';
 import { EligibilityCheckModal } from './EligibilityCheckModal';
-import { AppDownloadModal } from './AppDownloadModal';
+import { NewSearchWorkflowModal, SearchFormData, SearchStepPhase } from './NewSearchWorkflowModal';
+import { MockPortalDashboard } from './MockPortalDashboard';
 import { CasePrecedentInfoModal } from './CasePrecedentInfoModal';
-import { FOIBranch, FOIStep } from '../../types';
+import { ShareButton } from './ShareButton';
+
+const CACHED_FORM_STORAGE_KEY = 'ancestral_claim_search_cached_form_v1';
+const REAL_ACCOUNT_STEP_PHASE_KEY = 'ancestral_claim_real_account_step_phase_v1';
+const REAL_ACCOUNT_CODE_KEY = 'ancestral_claim_real_account_code_v1';
+
+const DEFAULT_SEARCH_FORM: SearchFormData = {
+  claimantName: 'Sion Buckler',
+  ancestralHolding: 'Great House Farm (Ty Mawr)',
+  parishLocation: 'Llandough / Glamorgan',
+  historicalCounty: 'Glamorgan (Vale of Glamorgan)',
+  approxDateRange: '1840 – 1988',
+  knownDocuments: 'BP Properties Ltd v Buckler [1987] EWCA Civ 2; 1840 Llandough Tithe Apportionment; Bute Estate Rent Books (1845–1893); 1955 High Court Bailiff Records; 1988 Dawn Demolition Records',
+};
 
 interface ClaimAgentSaaSPageProps {
   branches: FOIBranch[];
-  onSelectStep?: (branch: FOIBranch, step: FOIStep, index: number) => void;
-  onSelectBranchOutcome?: (branch: FOIBranch) => void;
+  onSelectStep: (branch: FOIBranch, step: FOIStep, index: number) => void;
+  onSelectBranchOutcome: (branch: FOIBranch) => void;
 }
-
-const CACHED_FORM_STORAGE_KEY = 'cached_ancestral_search_form_v1';
-const REAL_ACCOUNT_STEP_PHASE_KEY = 'real_account_search_phase_v1';
-const REAL_ACCOUNT_CODE_KEY = 'real_account_issued_code_v1';
 
 export const ClaimAgentSaaSPage: React.FC<ClaimAgentSaaSPageProps> = ({
   branches,
@@ -45,6 +45,9 @@ export const ClaimAgentSaaSPage: React.FC<ClaimAgentSaaSPageProps> = ({
     name: string;
     isDemo: boolean;
   } | null>(null);
+
+  // Portal view mode for deep-linking: 'results' | 'wiki' | 'table' | 'claims'
+  const [portalViewMode, setPortalViewMode] = useState<'results' | 'wiki' | 'table' | 'claims'>('results');
 
   // Modals state
   const [isMockAuthModalOpen, setIsMockAuthModalOpen] = useState(false);
@@ -92,6 +95,96 @@ export const ClaimAgentSaaSPage: React.FC<ClaimAgentSaaSPageProps> = ({
   const [searchCompleted, setSearchCompleted] = useState(false);
   const [activeSearchData, setActiveSearchData] = useState<SearchFormData | null>(null);
 
+  // Deep linking and Direct URL Router (handles #table, #wiki, #results, #login, #signup, #search)
+  useEffect(() => {
+    const handleUrlRoute = () => {
+      const hash = window.location.hash.toLowerCase().replace('#', '').trim();
+      const searchParams = new URLSearchParams(window.location.search);
+      const viewParam = (searchParams.get('view') || hash).toLowerCase();
+
+      if (
+        viewParam === 'court-app' ||
+        viewParam === 'court-application' ||
+        viewParam === 'claim' ||
+        viewParam === 'application'
+      ) {
+        setCurrentUser({
+          email: 'hywelapbuckler@gmail.com',
+          name: 'Sion Buckler (Demo)',
+          isDemo: true,
+        });
+        setSearchCompleted(true);
+        setIsExecutingSearch(false);
+        setPortalViewMode('court-app');
+      } else if (viewParam === 'table') {
+        setCurrentUser({
+          email: 'hywelapbuckler@gmail.com',
+          name: 'Sion Buckler (Demo)',
+          isDemo: true,
+        });
+        setSearchCompleted(true);
+        setIsExecutingSearch(false);
+        setPortalViewMode('table');
+      } else if (
+        viewParam === 'claims' ||
+        viewParam === 'statements' ||
+        viewParam === 'cloud' ||
+        viewParam === 'rival-claims'
+      ) {
+        setCurrentUser({
+          email: 'hywelapbuckler@gmail.com',
+          name: 'Sion Buckler (Demo)',
+          isDemo: true,
+        });
+        setSearchCompleted(true);
+        setIsExecutingSearch(false);
+        setPortalViewMode('claims');
+      } else if (viewParam === 'wiki' || viewParam === 'article') {
+        setCurrentUser({
+          email: 'hywelapbuckler@gmail.com',
+          name: 'Sion Buckler (Demo)',
+          isDemo: true,
+        });
+        setSearchCompleted(true);
+        setIsExecutingSearch(false);
+        setPortalViewMode('wiki');
+      } else if (viewParam === 'results') {
+        setCurrentUser({
+          email: 'hywelapbuckler@gmail.com',
+          name: 'Sion Buckler (Demo)',
+          isDemo: true,
+        });
+        setSearchCompleted(true);
+        setIsExecutingSearch(false);
+        setPortalViewMode('results');
+      } else if (viewParam === 'login' || viewParam === 'signin') {
+        setAuthModalMode('signin');
+        setIsMockAuthModalOpen(true);
+      } else if (viewParam === 'signup' || viewParam === 'register') {
+        setAuthModalMode('signup');
+        setIsMockAuthModalOpen(true);
+      } else if (viewParam === 'demo') {
+        setAuthModalMode('demo');
+        setIsMockAuthModalOpen(true);
+      } else if (viewParam === 'search') {
+        setCurrentUser({
+          email: 'hywelapbuckler@gmail.com',
+          name: 'Sion Buckler (Demo)',
+          isDemo: true,
+        });
+        setIsNewSearchModalOpen(true);
+      }
+    };
+
+    handleUrlRoute();
+    window.addEventListener('hashchange', handleUrlRoute);
+    window.addEventListener('popstate', handleUrlRoute);
+    return () => {
+      window.removeEventListener('hashchange', handleUrlRoute);
+      window.removeEventListener('popstate', handleUrlRoute);
+    };
+  }, []);
+
   // Save cached form to localStorage
   const handleSaveCachedForm = (data: SearchFormData) => {
     setCachedForm(data);
@@ -126,21 +219,27 @@ export const ClaimAgentSaaSPage: React.FC<ClaimAgentSaaSPageProps> = ({
   const handleTryNowClick = () => {
     setAuthModalMode('demo');
     setIsMockAuthModalOpen(true);
+    window.location.hash = 'demo';
   };
 
   // When Sign In is clicked -> open real sign in/sign up modal (empty, editable)
   const handleSignInClick = () => {
     setAuthModalMode('signin');
     setIsMockAuthModalOpen(true);
+    window.location.hash = 'login';
   };
 
   // When login is submitted in mock login modal -> transport to dashboard
   const handleMockLoginSuccess = (user: { email: string; name: string; isDemo: boolean }) => {
     setCurrentUser(user);
     setIsMockAuthModalOpen(false);
+    setSearchCompleted(false);
+    setIsExecutingSearch(false);
+    setActiveSearchData(null);
 
     if (user.isDemo) {
       setCachedForm(DEFAULT_SEARCH_FORM);
+      setIsNewSearchModalOpen(true);
     } else {
       // For real accounts, initialize with user's name if form was demo data
       if (cachedForm.claimantName === DEFAULT_SEARCH_FORM.claimantName && cachedForm.ancestralHolding === DEFAULT_SEARCH_FORM.ancestralHolding) {
@@ -163,34 +262,35 @@ export const ClaimAgentSaaSPage: React.FC<ClaimAgentSaaSPageProps> = ({
     }
   };
 
-  // When user clicks 'Generate New Search' inside dashboard
+  const handleLogout = () => {
+    setCurrentUser(null);
+    setIsExecutingSearch(false);
+    setSearchCompleted(false);
+    setActiveSearchData(null);
+    window.location.hash = '';
+  };
+
   const handleOpenNewSearch = () => {
     setIsNewSearchModalOpen(true);
   };
 
-  // When search form is submitted (demo accounts or real accounts after code) -> launch search animation in dashboard
+  // When a search is submitted in the workflow modal
   const handleStartSearchExecution = (data: SearchFormData) => {
+    setIsNewSearchModalOpen(false);
     setActiveSearchData(data);
     setIsExecutingSearch(true);
     setSearchCompleted(false);
+    setPortalViewMode('results');
 
-    // Run animation for 10.8 seconds (3x longer step duration), then show results in the portal
+    // 10.8s scanning simulator
     setTimeout(() => {
       setIsExecutingSearch(false);
       setSearchCompleted(true);
+      window.location.hash = 'results';
     }, 10800);
   };
 
-  // When user logs out
-  const handleLogout = () => {
-    setCurrentUser(null);
-    setIsNewSearchModalOpen(false);
-    setIsExecutingSearch(false);
-    setSearchCompleted(false);
-    setActiveSearchData(null);
-  };
-
-  // If user is logged into the mock dashboard, render the full portal!
+  // If user is logged in, show the portal dashboard
   if (currentUser) {
     return (
       <div className="w-full py-4 sm:py-6">
@@ -203,6 +303,7 @@ export const ClaimAgentSaaSPage: React.FC<ClaimAgentSaaSPageProps> = ({
           onOpenAuthModal={(mode) => {
             setAuthModalMode(mode);
             setIsMockAuthModalOpen(true);
+            window.location.hash = mode === 'signin' ? 'login' : 'signup';
           }}
           branches={branches}
           onSelectStep={onSelectStep}
@@ -210,6 +311,7 @@ export const ClaimAgentSaaSPage: React.FC<ClaimAgentSaaSPageProps> = ({
           activeSearchQuery={activeSearchData || cachedForm}
           isExecutingSearch={isExecutingSearch}
           searchCompleted={searchCompleted}
+          initialPortalView={portalViewMode}
         />
 
         {/* New Search Workflow Modal (Opens only when 'Generate New Search' is selected) */}
@@ -257,6 +359,18 @@ export const ClaimAgentSaaSPage: React.FC<ClaimAgentSaaSPageProps> = ({
             setIsWebAppSubscribeModalOpen(true);
           }}
         />
+
+        {/* Mock Login / Sign In / Demo Modal */}
+        <MockAuthModal
+          isOpen={isMockAuthModalOpen}
+          onClose={() => setIsMockAuthModalOpen(false)}
+          initialMode={authModalMode}
+          onLoginSuccess={handleMockLoginSuccess}
+          onSwitchToRealRegister={() => {
+            setIsMockAuthModalOpen(false);
+            setIsEligibilityModalOpen(true);
+          }}
+        />
       </div>
     );
   }
@@ -270,12 +384,15 @@ export const ClaimAgentSaaSPage: React.FC<ClaimAgentSaaSPageProps> = ({
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[550px] h-[320px] bg-[#AA210F]/15 rounded-full blur-3xl pointer-events-none" />
 
         <div className="relative z-10 space-y-6 max-w-3xl mx-auto">
-          {/* Tagline Badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#34332F] border border-[#484642] text-xs font-mono">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-            <span className="font-bold text-[#D08856] tracking-wider uppercase">
-              Autonomous Land Restitution Platform
-            </span>
+          {/* Top Tagline Badge & Direct Share Link */}
+          <div className="flex items-center justify-center gap-3 flex-wrap">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#34332F] border border-[#484642] text-xs font-mono">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="font-bold text-[#D08856] tracking-wider uppercase">
+                Autonomous Land Restitution Platform
+              </span>
+            </div>
+            <ShareButton viewTarget="home" buttonLabel="Share App" variant="secondary" />
           </div>
 
           {/* Exact Requested Title */}
@@ -305,7 +422,7 @@ export const ClaimAgentSaaSPage: React.FC<ClaimAgentSaaSPageProps> = ({
             <span>T&C&apos;s apply.</span>
           </div>
 
-          {/* CTA Buttons (Try Now | Sign In) */}
+          {/* CTA Buttons (Try Now | Account) */}
           <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4 max-w-md mx-auto">
             <button
               id="btn-try-now"
@@ -318,12 +435,12 @@ export const ClaimAgentSaaSPage: React.FC<ClaimAgentSaaSPageProps> = ({
             </button>
 
             <button
-              id="btn-signin-main"
+              id="btn-account-main"
               onClick={handleSignInClick}
               className="w-full sm:flex-1 py-4 px-8 rounded-2xl bg-[#34332F] hover:bg-[#484642] text-[#EDEFEE] border-2 border-[#484642] hover:border-[#D08856] font-black text-base flex items-center justify-center gap-2.5 shadow-lg transition-all cursor-pointer tracking-wider uppercase"
             >
-              <LogIn className="w-4 h-4 text-[#D08856]" />
-              <span>Sign In</span>
+              <User className="w-4 h-4 text-[#D08856]" />
+              <span>Account</span>
             </button>
           </div>
         </div>

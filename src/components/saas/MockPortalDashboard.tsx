@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
   Search,
-  Plus,
   Scale,
   LogOut,
   CheckCircle2,
@@ -11,11 +10,13 @@ import {
   Gavel,
   Building2,
   BookOpen,
+  Table as TableIcon,
 } from 'lucide-react';
 import { FOIBranch, FOIStep } from '../../types';
 import { SearchFormData } from './NewSearchWorkflowModal';
 import { MoneyAndConfettiRain } from './MoneyAndConfettiRain';
 import { BPvsBucklerWikiPage } from './BPvsBucklerWikiPage';
+import { ShareButton } from './ShareButton';
 
 interface MockPortalDashboardProps {
   currentUser: { email: string; name: string; isDemo: boolean };
@@ -31,6 +32,7 @@ interface MockPortalDashboardProps {
   activeSearchQuery?: SearchFormData | null;
   isExecutingSearch?: boolean;
   searchCompleted?: boolean;
+  initialPortalView?: 'results' | 'wiki' | 'table' | 'claims' | 'court-app';
 }
 
 export const MockPortalDashboard: React.FC<MockPortalDashboardProps> = ({
@@ -41,9 +43,24 @@ export const MockPortalDashboard: React.FC<MockPortalDashboardProps> = ({
   activeSearchQuery,
   isExecutingSearch = false,
   searchCompleted = false,
+  initialPortalView = 'results',
 }) => {
-  // Search Results view state: false = Results Found Celebration Screen with Money/Confetti, true = Dedicated Dark Wikipedia Archive
-  const [viewingRecords, setViewingRecords] = useState(false);
+  // Search Results view state: false = Results Found Celebration Screen, true = Dedicated Dark Wikipedia / Table / Claims / Court App View
+  const [viewingRecords, setViewingRecords] = useState(
+    initialPortalView === 'wiki' ||
+      initialPortalView === 'table' ||
+      initialPortalView === 'claims' ||
+      initialPortalView === 'court-app'
+  );
+  const [wikiInitialTab, setWikiInitialTab] = useState<'article' | 'table' | 'claims' | 'court-app'>(
+    initialPortalView === 'table'
+      ? 'table'
+      : initialPortalView === 'claims'
+      ? 'claims'
+      : initialPortalView === 'court-app'
+      ? 'court-app'
+      : 'article'
+  );
 
   // Search scanning progress simulator (10.8s = 3x longer duration)
   const [scanProgress, setScanProgress] = useState(0);
@@ -57,6 +74,25 @@ export const MockPortalDashboard: React.FC<MockPortalDashboardProps> = ({
     { title: 'Synthesizing Court of Appeal BP Oil Ltd v Buckler (1987) Precedent...', detail: 'Analyzing s.32 Limitation Act fraud concealment & unextinguished title' },
     { title: 'Assembling Final Archival Restitution Dossier & Proof of Entitlement...', detail: 'Synthesizing evidence docket for immediate statutory disclosure & recovery' },
   ];
+
+  // Respond to external initialPortalView changes
+  useEffect(() => {
+    if (initialPortalView === 'table') {
+      setViewingRecords(true);
+      setWikiInitialTab('table');
+    } else if (initialPortalView === 'claims') {
+      setViewingRecords(true);
+      setWikiInitialTab('claims');
+    } else if (initialPortalView === 'court-app') {
+      setViewingRecords(true);
+      setWikiInitialTab('court-app');
+    } else if (initialPortalView === 'wiki') {
+      setViewingRecords(true);
+      setWikiInitialTab('article');
+    } else if (initialPortalView === 'results') {
+      setViewingRecords(false);
+    }
+  }, [initialPortalView]);
 
   useEffect(() => {
     if (!isExecutingSearch) {
@@ -94,20 +130,52 @@ export const MockPortalDashboard: React.FC<MockPortalDashboardProps> = ({
     };
   }, [isExecutingSearch]);
 
+  const handleOpenWikiArticle = () => {
+    setWikiInitialTab('article');
+    setViewingRecords(true);
+    window.location.hash = 'wiki';
+  };
+
+  const handleOpenTenureTable = () => {
+    setWikiInitialTab('table');
+    setViewingRecords(true);
+    window.location.hash = 'table';
+  };
+
+  const handleOpenRivalClaims = () => {
+    setWikiInitialTab('claims');
+    setViewingRecords(true);
+    window.location.hash = 'claims';
+  };
+
+  const handleOpenCourtApplication = () => {
+    setWikiInitialTab('court-app');
+    setViewingRecords(true);
+    window.location.hash = 'court-app';
+  };
+
   return (
     <div id="mock-portal-dashboard" className="w-full flex flex-col space-y-6 text-[#EDEFEE] animate-in fade-in duration-200">
-      {/* Top Portal Navigation Bar - 'Account (demo)' with exit icon to return to website splash page */}
+      {/* Top Portal Navigation Bar - 'Account (demo)' with exit icon and share link */}
       <header className="rounded-3xl bg-[#23221F] border-2 border-[#484642] p-4 sm:p-5 shadow-xl flex items-center justify-between gap-4">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-2xl bg-[#AA210F] text-[#EDEFEE] flex items-center justify-center font-black shadow-md">
             <Scale className="w-5 h-5" />
           </div>
-          <span className="font-black text-base sm:text-lg text-[#EDEFEE] tracking-tight">
-            {currentUser.isDemo ? 'Account (demo)' : 'Account'}
-          </span>
+          <div>
+            <span className="font-black text-base sm:text-lg text-[#EDEFEE] tracking-tight block">
+              {currentUser.isDemo ? 'Account (demo)' : 'Account'}
+            </span>
+          </div>
         </div>
 
         <div className="flex items-center gap-2.5">
+          <ShareButton
+            viewTarget={viewingRecords ? (wikiInitialTab === 'table' ? 'table' : 'wiki') : 'results'}
+            buttonLabel="Share Page"
+            variant="secondary"
+          />
+
           <button
             onClick={onLogout}
             className="py-2.5 px-4 rounded-xl bg-[#34332F] hover:bg-[#484642] border border-[#52504C] text-xs font-mono text-[#C8C7C4] hover:text-[#EDEFEE] flex items-center gap-1.5 transition-all cursor-pointer"
@@ -137,17 +205,16 @@ export const MockPortalDashboard: React.FC<MockPortalDashboardProps> = ({
                 New Search!
               </h2>
               <p className="text-xs sm:text-sm text-[#A3A29E] leading-relaxed">
-                Start autonomous AI archival agent who will work around the clock on your behalf, searching across national land registers, tithe maps, and historical court precedents.
+                Initialize an autonomous AI agent to scan historical deeds, tithe records, and court precedents across nationwide county registries.
               </p>
             </div>
 
             <button
               onClick={onOpenNewSearch}
-              className="py-3.5 px-8 rounded-2xl bg-[#AA210F] hover:bg-[#8e1b0c] text-[#EDEFEE] font-black text-sm flex items-center gap-2 shadow-xl transition-all cursor-pointer tracking-wider uppercase group"
+              className="py-4 px-8 rounded-2xl bg-[#AA210F] hover:bg-[#8e1b0c] text-[#EDEFEE] font-black text-sm uppercase tracking-wider flex items-center gap-2.5 shadow-xl transition-all cursor-pointer"
             >
-              <Plus className="w-4 h-4" />
-              <span>Generate New Search</span>
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              <Search className="w-4 h-4" />
+              <span>Launch Archival Triangulation</span>
             </button>
           </div>
         )}
@@ -206,7 +273,7 @@ export const MockPortalDashboard: React.FC<MockPortalDashboardProps> = ({
               </div>
             </div>
 
-            {/* Frosted Effect Overlay Mask with the exact Single One-Line Item of Text */}
+            {/* Frosted Effect Overlay Mask */}
             <div className="absolute inset-0 bg-[#181715]/75 backdrop-blur-md flex items-center justify-center p-6 sm:p-10 z-20 animate-in fade-in duration-300">
               <div className="max-w-2xl w-full p-6 sm:p-8 rounded-3xl bg-[#23221F]/90 border-2 border-[#D08856] shadow-2xl space-y-4 text-center">
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#2D2C28] border border-[#D08856]/50 text-[11px] font-mono text-[#D08856] font-bold">
@@ -233,12 +300,15 @@ export const MockPortalDashboard: React.FC<MockPortalDashboardProps> = ({
             {/* Animated Money (£50/£20 bills, gold coins) and Confetti Rain */}
             <MoneyAndConfettiRain />
 
-            {/* Top Success Badge */}
-            <div className="relative z-30 inline-flex items-center gap-2.5 px-5 py-2 rounded-full bg-[#2D2C28]/95 border-2 border-emerald-500/80 shadow-2xl text-xs font-mono">
-              <span className="w-3 h-3 rounded-full bg-emerald-400 animate-pulse" />
-              <span className="font-black text-emerald-300 uppercase tracking-widest">
-                Archival Records & Precedent Found • 96.8% Match
-              </span>
+            {/* Top Success Badge and Direct Share */}
+            <div className="relative z-30 flex items-center justify-center gap-3 flex-wrap">
+              <div className="inline-flex items-center gap-2.5 px-5 py-2 rounded-full bg-[#2D2C28]/95 border-2 border-emerald-500/80 shadow-2xl text-xs font-mono">
+                <span className="w-3 h-3 rounded-full bg-emerald-400 animate-pulse" />
+                <span className="font-black text-emerald-300 uppercase tracking-widest">
+                  Archival Records & Precedent Found • 96.8% Match
+                </span>
+              </div>
+              <ShareButton viewTarget="results" buttonLabel="Share Results" variant="subtle" />
             </div>
 
             {/* Headline */}
@@ -284,29 +354,64 @@ export const MockPortalDashboard: React.FC<MockPortalDashboardProps> = ({
               </div>
             </div>
 
-            {/* Select to View Search Findings Prompt & Button */}
-            <div className="relative z-30 pt-2 flex flex-col items-center justify-center gap-3 w-full">
+            {/* Select to View Search Findings Buttons (Wiki Article & Court Application & Table View & Rival Claims) */}
+            <div className="relative z-30 pt-2 flex flex-col items-center justify-center gap-3.5 w-full">
               <p className="text-xs sm:text-sm text-[#EDEFEE] font-bold">
-                Select below to view the dedicated Wikipedia archive containing all BP vs Buckler case law, transcripts, and evidence findings:
+                Select below to explore the case wiki or high court application:
               </p>
-              <button
-                id="btn-select-view-search-findings"
-                onClick={() => setViewingRecords(true)}
-                className="w-full sm:w-auto py-4 px-10 rounded-2xl bg-[#AA210F] hover:bg-[#8e1b0c] text-[#EDEFEE] font-black text-sm sm:text-base flex items-center justify-center gap-3 shadow-2xl transition-all cursor-pointer tracking-wider uppercase group focus-visible:ring-4 focus-visible:ring-[#D08856] focus:outline-none ring-2 ring-[#D08856]/60 animate-pulse"
-              >
-                <BookOpen className="w-5 h-5 text-[#EDEFEE]" />
-                <span>Select to View Search Findings / Records</span>
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </button>
+
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-3.5 w-full flex-wrap">
+                <button
+                  id="btn-select-view-court-app"
+                  onClick={handleOpenCourtApplication}
+                  className="w-full sm:w-auto py-3.5 px-6 rounded-2xl bg-[#2D2C28] hover:bg-[#3E4446] border-2 border-[#D08856] text-[#EDEFEE] font-black text-xs sm:text-sm flex items-center justify-center gap-2.5 shadow-2xl transition-all cursor-pointer tracking-wider uppercase group"
+                >
+                  <Gavel className="w-4 h-4 text-[#D08856]" />
+                  <span>Court Application</span>
+                  <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                </button>
+
+                <button
+                  id="btn-select-view-search-findings"
+                  onClick={handleOpenWikiArticle}
+                  className="w-full sm:w-auto py-3.5 px-7 rounded-2xl bg-[#AA210F] hover:bg-[#8e1b0c] text-[#EDEFEE] font-black text-xs sm:text-sm flex items-center justify-center gap-2.5 shadow-2xl transition-all cursor-pointer tracking-wider uppercase group"
+                >
+                  <BookOpen className="w-4 h-4 text-[#EDEFEE]" />
+                  <span>Case Wiki</span>
+                  <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                </button>
+
+                <button
+                  id="btn-select-view-claims-matrix"
+                  onClick={handleOpenRivalClaims}
+                  className="w-full sm:w-auto py-3.5 px-5 rounded-2xl bg-[#2D2C28] hover:bg-[#3E4446] border border-[#F59E0B]/60 text-[#EDEFEE] font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-xl transition-all cursor-pointer tracking-wider uppercase group"
+                >
+                  <Scale className="w-3.5 h-3.5 text-[#F59E0B]" />
+                  <span>Rival Claims</span>
+                </button>
+
+                <button
+                  id="btn-select-view-table-findings"
+                  onClick={handleOpenTenureTable}
+                  className="w-full sm:w-auto py-3.5 px-5 rounded-2xl bg-[#2D2C28] hover:bg-[#3E4446] border border-[#484642] text-[#EDEFEE] font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-xl transition-all cursor-pointer tracking-wider uppercase group"
+                >
+                  <TableIcon className="w-3.5 h-3.5 text-[#6B9CD2]" />
+                  <span>Tenure Table</span>
+                </button>
+              </div>
             </div>
           </div>
         )}
 
-        {/* CASE 4: DEDICATED DARK THEME WIKIPEDIA PAGE FOR SEARCH FINDINGS & BP VS BUCKLER */}
+        {/* CASE 4: DEDICATED DARK THEME WIKIPEDIA / TABLE VIEW */}
         {searchCompleted && !isExecutingSearch && viewingRecords && (
           <div className="flex-1 p-3 sm:p-6 bg-[#181A1B] animate-in fade-in duration-200">
             <BPvsBucklerWikiPage
-              onBackToResults={() => setViewingRecords(false)}
+              initialTab={wikiInitialTab}
+              onBackToResults={() => {
+                setViewingRecords(false);
+                window.location.hash = 'results';
+              }}
               onNavigateToAuth={(mode) => {
                 if (onOpenAuthModal) {
                   onOpenAuthModal(mode || 'signup');

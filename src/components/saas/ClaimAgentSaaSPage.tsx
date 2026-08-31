@@ -14,6 +14,7 @@ import { NewSearchWorkflowModal, SearchFormData, SearchStepPhase } from './NewSe
 import { MockPortalDashboard } from './MockPortalDashboard';
 import { CasePrecedentInfoModal } from './CasePrecedentInfoModal';
 import { ShareButton } from './ShareButton';
+import { GlobalPersistentFooter } from './GlobalPersistentFooter';
 
 const CACHED_FORM_STORAGE_KEY = 'ancestral_claim_search_cached_form_v1';
 const REAL_ACCOUNT_STEP_PHASE_KEY = 'ancestral_claim_real_account_step_phase_v1';
@@ -371,13 +372,23 @@ export const ClaimAgentSaaSPage: React.FC<ClaimAgentSaaSPageProps> = ({
             setIsEligibilityModalOpen(true);
           }}
         />
+
+        {/* Constant Global Footer */}
+        <GlobalPersistentFooter
+          currentUser={currentUser}
+          onNavigateToAuth={(mode) => {
+            setAuthModalMode(mode);
+            setIsMockAuthModalOpen(true);
+            window.location.hash = mode === 'signin' ? 'login' : 'signup';
+          }}
+        />
       </div>
     );
   }
 
   // Otherwise, render the Landing Page Hero
   return (
-    <div id="landing-page-root" className="w-full flex flex-col justify-center items-center py-6 sm:py-12 lg:py-16 text-[#EDEFEE] animate-in fade-in duration-200">
+    <div id="landing-page-root" className="w-full flex flex-col justify-center items-center py-6 sm:py-12 lg:py-16 text-[#EDEFEE] animate-in fade-in duration-200 space-y-8">
       {/* Bold, Clean, Impactful Center Hero Section */}
       <section className="w-full max-w-4xl mx-auto rounded-3xl bg-[#23221F] border-2 border-[#484642] p-8 sm:p-14 lg:p-18 shadow-2xl text-center relative overflow-hidden space-y-8">
         {/* Warm Ambient Glow */}
@@ -444,18 +455,17 @@ export const ClaimAgentSaaSPage: React.FC<ClaimAgentSaaSPageProps> = ({
             </button>
           </div>
         </div>
-
-        {/* Minimal Footer Trust Marks */}
-        <div className="relative z-10 pt-6 border-t border-[#484642] flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[#EDEFEE]/60 font-mono">
-          <div className="flex items-center gap-2">
-            <ShieldCheck className="w-4 h-4 text-emerald-400" />
-            <span>Root-of-Title Archival Triangulation</span>
-          </div>
-          <div>
-            <span>© 2026 Ancestral Birthland Reclaimer • All Rights Reserved.</span>
-          </div>
-        </div>
       </section>
+
+      {/* Constant Global Footer */}
+      <GlobalPersistentFooter
+        currentUser={currentUser}
+        onNavigateToAuth={(mode) => {
+          setAuthModalMode(mode);
+          setIsMockAuthModalOpen(true);
+          window.location.hash = mode === 'signin' ? 'login' : 'signup';
+        }}
+      />
 
       {/* BP vs Buckler 1987 Precedent Info Modal */}
       <CasePrecedentInfoModal

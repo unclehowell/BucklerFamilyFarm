@@ -32,7 +32,7 @@ interface MockPortalDashboardProps {
   activeSearchQuery?: SearchFormData | null;
   isExecutingSearch?: boolean;
   searchCompleted?: boolean;
-  initialPortalView?: 'results' | 'wiki' | 'table' | 'claims' | 'court-app';
+  initialPortalView?: 'results' | 'wiki' | 'table' | 'claims' | 'court-app' | 'cadw-wiki';
 }
 
 export const MockPortalDashboard: React.FC<MockPortalDashboardProps> = ({
@@ -50,15 +50,18 @@ export const MockPortalDashboard: React.FC<MockPortalDashboardProps> = ({
     initialPortalView === 'wiki' ||
       initialPortalView === 'table' ||
       initialPortalView === 'claims' ||
-      initialPortalView === 'court-app'
+      initialPortalView === 'court-app' ||
+      initialPortalView === 'cadw-wiki'
   );
-  const [wikiInitialTab, setWikiInitialTab] = useState<'article' | 'table' | 'claims' | 'court-app'>(
+  const [wikiInitialTab, setWikiInitialTab] = useState<'article' | 'table' | 'claims' | 'court-app' | 'cadw-wiki'>(
     initialPortalView === 'table'
       ? 'table'
       : initialPortalView === 'claims'
       ? 'claims'
       : initialPortalView === 'court-app'
       ? 'court-app'
+      : initialPortalView === 'cadw-wiki'
+      ? 'cadw-wiki'
       : 'article'
   );
 
@@ -86,6 +89,9 @@ export const MockPortalDashboard: React.FC<MockPortalDashboardProps> = ({
     } else if (initialPortalView === 'court-app') {
       setViewingRecords(true);
       setWikiInitialTab('court-app');
+    } else if (initialPortalView === 'cadw-wiki') {
+      setViewingRecords(true);
+      setWikiInitialTab('cadw-wiki');
     } else if (initialPortalView === 'wiki') {
       setViewingRecords(true);
       setWikiInitialTab('article');
@@ -152,6 +158,12 @@ export const MockPortalDashboard: React.FC<MockPortalDashboardProps> = ({
     setWikiInitialTab('court-app');
     setViewingRecords(true);
     window.location.hash = 'court-app';
+  };
+
+  const handleOpenCadwWiki = () => {
+    setWikiInitialTab('cadw-wiki');
+    setViewingRecords(true);
+    window.location.hash = 'cadw-wiki';
   };
 
   return (
@@ -354,51 +366,20 @@ export const MockPortalDashboard: React.FC<MockPortalDashboardProps> = ({
               </div>
             </div>
 
-            {/* Select to View Search Findings Buttons (Wiki Article & Court Application & Table View & Rival Claims) */}
-            <div className="relative z-30 pt-2 flex flex-col items-center justify-center gap-3.5 w-full">
-              <p className="text-xs sm:text-sm text-[#EDEFEE] font-bold">
-                Select below to explore the case wiki or high court application:
+            {/* Single Call to Action Button: 'View Results' */}
+            <div className="relative z-30 pt-2 flex flex-col items-center justify-center gap-3 w-full">
+              <button
+                id="btn-select-view-results"
+                onClick={handleOpenWikiArticle}
+                className="w-full sm:w-auto py-4 px-10 rounded-2xl bg-[#AA210F] hover:bg-[#8e1b0c] text-[#FFFFFF] font-black text-sm sm:text-base flex items-center justify-center gap-3 shadow-2xl transition-all cursor-pointer tracking-wider uppercase group hover:scale-[1.02] active:scale-[0.98] border border-[#D08856]/40 ring-4 ring-[#AA210F]/20"
+              >
+                <BookOpen className="w-5 h-5 text-[#FFFFFF]" />
+                <span>View Results</span>
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform text-[#FFFFFF]" />
+              </button>
+              <p className="text-[11px] font-mono text-[#9BA1A6] text-center">
+                Explore the Tree View Navigator, unified Case Wiki, CADW Critique, and High Court Particulars of Claim
               </p>
-
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-3.5 w-full flex-wrap">
-                <button
-                  id="btn-select-view-court-app"
-                  onClick={handleOpenCourtApplication}
-                  className="w-full sm:w-auto py-3.5 px-6 rounded-2xl bg-[#2D2C28] hover:bg-[#3E4446] border-2 border-[#D08856] text-[#EDEFEE] font-black text-xs sm:text-sm flex items-center justify-center gap-2.5 shadow-2xl transition-all cursor-pointer tracking-wider uppercase group"
-                >
-                  <Gavel className="w-4 h-4 text-[#D08856]" />
-                  <span>Court Application</span>
-                  <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
-                </button>
-
-                <button
-                  id="btn-select-view-search-findings"
-                  onClick={handleOpenWikiArticle}
-                  className="w-full sm:w-auto py-3.5 px-7 rounded-2xl bg-[#AA210F] hover:bg-[#8e1b0c] text-[#EDEFEE] font-black text-xs sm:text-sm flex items-center justify-center gap-2.5 shadow-2xl transition-all cursor-pointer tracking-wider uppercase group"
-                >
-                  <BookOpen className="w-4 h-4 text-[#EDEFEE]" />
-                  <span>Case Wiki</span>
-                  <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
-                </button>
-
-                <button
-                  id="btn-select-view-claims-matrix"
-                  onClick={handleOpenRivalClaims}
-                  className="w-full sm:w-auto py-3.5 px-5 rounded-2xl bg-[#2D2C28] hover:bg-[#3E4446] border border-[#F59E0B]/60 text-[#EDEFEE] font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-xl transition-all cursor-pointer tracking-wider uppercase group"
-                >
-                  <Scale className="w-3.5 h-3.5 text-[#F59E0B]" />
-                  <span>Rival Claims</span>
-                </button>
-
-                <button
-                  id="btn-select-view-table-findings"
-                  onClick={handleOpenTenureTable}
-                  className="w-full sm:w-auto py-3.5 px-5 rounded-2xl bg-[#2D2C28] hover:bg-[#3E4446] border border-[#484642] text-[#EDEFEE] font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-xl transition-all cursor-pointer tracking-wider uppercase group"
-                >
-                  <TableIcon className="w-3.5 h-3.5 text-[#6B9CD2]" />
-                  <span>Tenure Table</span>
-                </button>
-              </div>
             </div>
           </div>
         )}

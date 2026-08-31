@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Share2, Check, Copy, Link as LinkIcon } from 'lucide-react';
 
 interface ShareButtonProps {
-  viewTarget?: 'table' | 'wiki' | 'claims' | 'court-app' | 'results' | 'login' | 'signup' | 'home';
+  viewTarget?: 'table' | 'wiki' | 'claims' | 'court-app' | 'cadw-wiki' | 'results' | 'login' | 'signup' | 'home';
   buttonLabel?: string;
   customUrl?: string;
   variant?: 'primary' | 'secondary' | 'subtle' | 'icon-only';
@@ -148,8 +148,19 @@ export const ShareButton: React.FC<ShareButtonProps> = ({
             className="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-[#2D2C28] text-[#E8E6E3] flex items-center justify-between group transition-colors"
           >
             <div>
-              <div className="font-bold text-[#E8E6E3]">Case Wiki</div>
+              <div className="font-bold text-[#E8E6E3]">Main Case Wiki</div>
               <div className="text-[10px] text-[#9BA1A6] font-mono">#wiki</div>
+            </div>
+            <Copy className="w-3.5 h-3.5 text-[#9BA1A6] group-hover:text-[#FFFFFF]" />
+          </button>
+
+          <button
+            onClick={(e) => handleCopyLink('cadw-wiki', e)}
+            className="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-[#2D2C28] text-[#E8E6E3] flex items-center justify-between group transition-colors"
+          >
+            <div>
+              <div className="font-bold text-[#AA210F]">CADW Forensic Wiki</div>
+              <div className="text-[10px] text-[#9BA1A6] font-mono">#cadw-wiki</div>
             </div>
             <Copy className="w-3.5 h-3.5 text-[#9BA1A6] group-hover:text-[#FFFFFF]" />
           </button>

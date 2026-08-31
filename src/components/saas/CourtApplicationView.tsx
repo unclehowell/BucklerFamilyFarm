@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import {
   Scale,
   FileText,
@@ -8,13 +8,15 @@ import {
   Download,
   Copy,
   Printer,
-  RotateCcw,
   ShieldAlert,
   Gavel,
   Check,
-  ChevronRight,
-  ExternalLink,
+  ChevronDown,
+  ChevronUp,
   FastForward,
+  Info,
+  Maximize2,
+  Minimize2,
 } from 'lucide-react';
 
 interface CourtApplicationViewProps {
@@ -24,6 +26,14 @@ interface CourtApplicationViewProps {
   onGenerationComplete?: () => void;
 }
 
+interface SectionItem {
+  id: string;
+  letter: string;
+  title: string;
+  summary: string;
+  paragraphs: (string | { label: string; text: string })[];
+}
+
 export const CourtApplicationView: React.FC<CourtApplicationViewProps> = ({
   onSwitchToWiki,
   isGenerating = false,
@@ -31,7 +41,29 @@ export const CourtApplicationView: React.FC<CourtApplicationViewProps> = ({
   onGenerationComplete,
 }) => {
   const [copied, setCopied] = useState(false);
-  const [activeTab, setActiveTab] = useState<'preview' | 'source'>('preview');
+  const [activeTab, setActiveTab] = useState<'accordion' | 'full' | 'source'>('accordion');
+  const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({
+    A: true,
+    B: true,
+    P: true,
+  });
+
+  const toggleSection = (letter: string) => {
+    setExpandedSections((prev) => ({
+      ...prev,
+      [letter]: !prev[letter],
+    }));
+  };
+
+  const expandAll = () => {
+    const all: Record<string, boolean> = {};
+    sections.forEach((s) => (all[s.letter] = true));
+    setExpandedSections(all);
+  };
+
+  const collapseAll = () => {
+    setExpandedSections({});
+  };
 
   // Multi-step emulation stages during the 30-second drafting period
   const draftingSteps = [
@@ -44,7 +76,7 @@ export const CourtApplicationView: React.FC<CourtApplicationViewProps> = ({
     {
       range: [16, 35],
       title: 'Formulating Chancery Division Jurisdiction & Parties Structure',
-      detail: 'Establishing Claimant intestate succession status, joinder of Current Registered Proprietor (Title WA231076), and The Chief Land Registrar...',
+      detail: 'Pleading Claimant entitlement through the estate and successors of Mary Williams, joinder of Current Registered Proprietor (WA231076), and Chief Land Registrar...',
       icon: Gavel,
     },
     {
@@ -56,19 +88,19 @@ export const CourtApplicationView: React.FC<CourtApplicationViewProps> = ({
     {
       range: [55, 75],
       title: 'Distinguishing BP Properties Ltd v Buckler [1987] EWCA Civ 2 Precedent',
-      detail: 'Segregating assumed paper title from unlitigated proprietary freehold root; precluding issue estoppel and cause-of-action estoppel...',
+      detail: 'Segregating assumed paper title from unlitigated proprietary freehold root; precluding issue estoppel and cause-of-action estoppel on root-of-title...',
       icon: ShieldAlert,
     },
     {
       range: [75, 92],
-      title: 'Structuring Section 10 Relief Sought & Boundary Declarations',
-      detail: 'Drafting declarations of freehold ownership, registered title rectification orders, and proprietary estoppel alternative cases...',
+      title: 'Structuring Sections P & Q Relief & Limitation Exclusions',
+      detail: 'Formulating declarations of freehold ownership, statutory register rectification orders, and formal non-monetary reservations...',
       icon: Sparkles,
     },
     {
       range: [92, 100],
       title: 'Finalizing Chancery Pleading Docket & Statement of Truth',
-      detail: 'Binding Statement of Truth under CPR Part 22 signed by Sion Buckler. Pleading complete and ready for High Court filing...',
+      detail: 'Binding Statement of Truth under CPR Part 22 for Claimants. Pleading complete and ready for High Court filing...',
       icon: CheckCircle2,
     },
   ];
@@ -80,117 +112,354 @@ export const CourtApplicationView: React.FC<CourtApplicationViewProps> = ({
 
   const remainingSeconds = Math.max(0, Math.ceil((30 * (100 - generationProgress)) / 100));
 
+  // The complete updated Particulars of Claim sections A through Q (from the latest court application document)
+  const sections: SectionItem[] = [
+    {
+      id: 'sec-A',
+      letter: 'A',
+      title: 'INTRODUCTION AND NATURE OF THE CLAIM',
+      summary: 'Establishes Claimant entitlement through Mary Williams successors and identifies the central title determination question.',
+      paragraphs: [
+        'The Claimants are the persons presently entitled to the proprietary interest claimed in the parcel comprising the former farmhouse, garden and curtilage at Great House Farm, Llandough ("the House Plot"), by succession from the historical owners and occupiers identified below, including Mary Williams, deceased.',
+        'The Claimants include Sion Buckler, the son of William Buckler, who was the son of Mary Williams. The remaining persons presently entitled through Mary Williams and/or the relevant intermediate estates are to be identified and joined or represented as required by the Court.',
+        'The Claimants do not contend that descent or family relationship, without more, constitutes title. Their case is that the historical instruments establish a proprietary interest in the House Plot which was separate from the agricultural interest subsequently conveyed to Western Ground Rents Ltd ("WGR") and thereafter through the BP title chain.',
+        'The central question for determination is therefore: Whether the House Plot formed part of the proprietary estate conveyed to WGR and subsequently to BP Properties Ltd, or whether it remained outside that chain of title.',
+        'The Claimants seek a judicial determination of that question and, consequentially, such alteration or rectification of registered title WA231076 as the Court considers legally appropriate.',
+      ],
+    },
+    {
+      id: 'sec-B',
+      letter: 'B',
+      title: 'THE PROPERTY',
+      summary: 'Defines the House Plot boundaries and distinguishes it from surrounding agricultural holding.',
+      paragraphs: [
+        'The property claimed is the former farmhouse, garden and curtilage at Great House Farm, Llandough ("the House Plot").',
+        'The precise boundaries of the House Plot will be established by reference to the historical conveyances, leases, plans, court documents and the current Land Registry title plan.',
+        'The Claimants rely in particular upon the distinction historically made between: (a) the House Plot comprising the farmhouse, garden and curtilage; and (b) the agricultural/quarrying land surrounding or adjoining it.',
+        'The distinction is material because the historical instruments did not necessarily convey those interests together.',
+      ],
+    },
+    {
+      id: 'sec-C',
+      letter: 'C',
+      title: 'THE 1877 TRANSACTION AND SUBSEQUENT PROPRIETARY ARRANGEMENTS',
+      summary: 'Severance of the farmhouse and ~10 acres to Daniel Thomas separate from the Bute Estate retained land.',
+      paragraphs: [
+        'In or about 1877 the Bute Estate dealt separately with the land comprising the farmhouse and surrounding land.',
+        'The Claimants rely upon the 1877 instrument relating to Daniel Thomas, together with the evidence concerning the subsequent occupation and tenancy arrangements.',
+        'The precise legal effect of the 1877 instrument will be determined from the instrument itself and its plan.',
+        'The Claimants\' case is that the 1877 transaction created or recognised a proprietary interest in the House Plot distinct from the Bute Estate\'s retained interest in the other land.',
+        'The Claimants further rely upon the subsequent agreement relating to quarrying and the arrangements under which the Williams family continued to occupy the House Plot.',
+        'The Claimants will rely upon the actual wording of those instruments rather than upon any assumption as to their legal effect.',
+      ],
+    },
+    {
+      id: 'sec-D',
+      letter: 'D',
+      title: 'THE 1916 TWO-PLOT TENANCY',
+      summary: 'Two distinct agricultural parcels historically constituting the farm holding.',
+      paragraphs: [
+        'The Claimants rely upon the 1916 agricultural tenancy as evidence that the agricultural holding then comprised two distinct parcels.',
+        'The expression "whole farm" appearing in later proceedings must therefore be construed in its historical context.',
+        'In 1916, the agricultural holding comprised two plots, notwithstanding their being described collectively as the farm.',
+        'The Claimants\' case is that the subsequent proprietary events altered the legal position concerning those two parcels.',
+        'In particular, the Claimants rely upon the 1928 events concerning the Daniel Thomas interest and the subsequent separation of the two parcels.',
+      ],
+    },
+    {
+      id: 'sec-E',
+      letter: 'E',
+      title: 'THE 1928 EVENT',
+      summary: 'Cessation of quarrying, removal of machinery, and triggering of occupier freehold rights.',
+      paragraphs: [
+        'The Claimants rely upon the 1928 agreement and associated documents concerning quarrying. The relevant instrument is relied upon according to its actual terms.',
+        'The Claimants\' case is that the cessation of quarrying and removal of the quarry machinery in or about 1928 triggered the proprietary consequence provided for by that agreement.',
+        'The evidence presently available includes evidence that: (a) quarrying had substantially ceased; (b) machinery remained until approximately 1928; (c) machinery was removed in or about 1928; (d) a final rent payment was made to Alfred Thomas, son of Daniel Thomas; and (e) thereafter John Williams regarded the relevant land as his own.',
+        'The Claimants rely upon those matters as evidence of the operation and subsequent recognition of the 1928 arrangement.',
+        'The precise legal mechanism by which title or an interest passed following the cessation of quarrying will be determined by reference to the original 1928 instrument.',
+      ],
+    },
+    {
+      id: 'sec-F',
+      letter: 'F',
+      title: 'THE 1938 WGR CONVEYANCE',
+      summary: 'Exclusion of the House Plot from the 1938 conveyance to Western Ground Rents Ltd.',
+      paragraphs: [
+        'In 1938 WGR acquired an interest in land at Great House Farm. The Claimants rely upon the 1938 conveyance and its plan.',
+        'The Claimants\' case is that the conveyance must be construed according to its precise property description and plan.',
+        'The Claimants further rely upon the fact that the farmhouse, garden and curtilage were treated separately from the agricultural land in the subsequent documentary history.',
+        'Accordingly, the Claimants contend that the 1938 conveyance did not convey the House Plot unless the First Defendant can establish otherwise from the instrument and its proper construction.',
+      ],
+    },
+    {
+      id: 'sec-G',
+      letter: 'G',
+      title: 'THE 1939 WGR TENANCY',
+      summary: 'May 1939 agricultural tenancy demising only the eastern parcel, not the House Plot.',
+      paragraphs: [
+        'In May 1939 WGR entered into an agricultural tenancy agreement with John Williams. The 1939 agreement and accompanying plan are relied upon.',
+        'The Claimants\' case is that the 1939 agreement concerned the eastern agricultural parcel and did not comprise the House Plot.',
+        'This is significant because it demonstrates that WGR\'s proprietary interest and the Williams family\'s occupation were being dealt with in relation to a particular agricultural parcel rather than necessarily the entire historical farm.',
+        'The Claimants do not rely upon the word "farm" or "whole farm" in isolation. The legal extent of the land must be determined from the contemporaneous instruments and plans.',
+      ],
+    },
+    {
+      id: 'sec-H',
+      letter: 'H',
+      title: 'THE 1969 AND 1975 CONVEYANCES',
+      summary: 'Conveyance to BP Pension Trust Ltd and BP Properties Ltd with express green-edged exclusion of the House Plot.',
+      paragraphs: [
+        'WGR subsequently conveyed its interest to BP Pension Trust Ltd.',
+        'BP Pension Trust Ltd subsequently conveyed its interest to BP Properties Ltd in 1975.',
+        'The Claimants rely upon the 1969 and 1975 conveyances and, critically, their respective plans and property descriptions.',
+        'The 1975 conveyance is relied upon in particular because the Claimants\' present evidence indicates that the farmhouse, garden and curtilage were expressly excluded from the land conveyed.',
+        'If that construction is established, the BP chain did not acquire the House Plot by virtue of those conveyances.',
+        'The Claimants accordingly put the First Defendant to proof of the precise instrument by which it contends that the House Plot became part of its proprietary estate.',
+      ],
+    },
+    {
+      id: 'sec-I',
+      letter: 'I',
+      title: 'THE 1955 POSSESSION PROCEEDINGS',
+      summary: 'Proper construction of "whole farm" in the 1955 order in light of the 1916 tenure separation.',
+      paragraphs: [
+        'The Claimants rely upon the actual 1955 order and proceedings. The 1955 order referred to the "whole farm".',
+        'The Claimants\' case is that the expression must be interpreted in the context of the 1916 tenancy and the subsequent proprietary separation of the two parcels.',
+        'The fact that the 1955 order used the expression "whole farm" does not, without more, establish that every parcel historically associated with Great House Farm was comprised within WGR\'s proprietary title.',
+        'The Claimants therefore invite the Court to construe the 1955 order against the underlying instruments and the land actually comprised within WGR\'s title.',
+        'Nothing in this pleading asks the Court to disregard the 1955 order. The issue is the legal effect and scope of the property to which it related.',
+      ],
+    },
+    {
+      id: 'sec-J',
+      letter: 'J',
+      title: 'THE EVIDENCE OF MARY WILLIAMS',
+      summary: 'Testimony of Mary Williams regarding 1667 ancestry, 1877 Bute sale, 1928 quarry cessation, and continuous occupation.',
+      paragraphs: [
+        'Mary Williams was born at Great House Farm in 1913 and stated that her family had lived and farmed there since 1667.',
+        'In her evidence she stated that, prior to 1877, her grandfather held the farm as tenant of the Bute Estate.',
+        'She stated that the Bute Estate thereafter sold the freehold of the greater part of the farm, comprising the farmhouse, buildings and approximately ten acres, to Daniel Thomas, while retaining another portion of approximately nine acres.',
+        'She stated that her grandfather subsequently entered into separate tenancy arrangements with Daniel Thomas and the Bute Estate.',
+        'She further stated that the Daniel Thomas agreement contained special quarrying provisions and that, when quarrying ceased, the freehold was to belong to her grandfather.',
+        'She stated that quarry machinery remained until 1928, when it was removed, and that the last rent was then paid to Alfred Thomas.',
+        'She stated that thereafter her father regarded the farm as his own and that she, her husband and subsequently she herself continued in occupation without paying rent to, or acknowledging the title of, another landlord.',
+        'The Claimants rely upon this evidence insofar as it is admissible and corroborated by the contemporaneous documentary evidence.',
+      ],
+    },
+    {
+      id: 'sec-K',
+      letter: 'K',
+      title: 'THE LOSS OF THE HISTORICAL TITLE PAPERS',
+      summary: 'Disappearance of family title papers from the farmhouse blanket box prior to possession proceedings.',
+      paragraphs: [
+        'Mary Williams further stated that documents concerning the farm had been kept in a blanket box at the farmhouse.',
+        'She stated that those papers subsequently disappeared.',
+        'She stated that Bruce Sutherland told her that Mr Knapp had asked him to look for papers which her father had relating to the farm and that he had taken the papers from the blanket box and given them to Mr Knapp.',
+        'Mary Williams expressly connected the disappearance of the papers, in her recollection, with the subsequent possession proceedings.',
+        'The Claimants rely upon this evidence as evidence concerning the provenance and disappearance of historical title documents.',
+        'The Claimants do not, unless and until supported by further evidence, plead as an established fact that any particular Defendant deliberately concealed or destroyed those documents. The circumstances surrounding the disappearance of the documents remain a matter for evidence and investigation.',
+      ],
+    },
+    {
+      id: 'sec-L',
+      letter: 'L',
+      title: 'THE 1987 COURT OF APPEAL DECISION',
+      summary: 'Preclusion of issue estoppel: root paper title was assumed, not litigated or determined.',
+      paragraphs: [
+        'The Claimants acknowledge the judgment of the Court of Appeal in BP Properties Ltd v Buckler [1987] EWCA Civ 2.',
+        'The Claimants do not invite the Court to disregard or simply overrule findings actually made and necessary to that judgment.',
+        'The Claimants\' case is instead that the present proceedings require the Court to determine the specific proprietary question now advanced, namely whether the House Plot formed part of the estate conveyed through the WGR/BP chain and subsequently registered under WA231076.',
+        'The Claimants will rely upon the precise pleadings, orders, evidence and judgment in the earlier proceedings to establish what questions were actually determined.',
+        'The Claimants do not presently assert, without examination of the complete court record, that the earlier proceedings finally adjudicated every question concerning the underlying historical root of title.',
+        'The First Defendant is invited to identify the precise finding or determination in the earlier proceedings upon which it relies as finally determining the present root-of-title question.',
+      ],
+    },
+    {
+      id: 'sec-M',
+      letter: 'M',
+      title: 'REGISTRATION OF WA231076',
+      summary: 'November 1982 first registration mistake under Schedule 4 Land Registration Act 2002.',
+      paragraphs: [
+        'BP Properties Ltd became registered proprietor of WA231076 in 1982.',
+        'The Claimants rely upon the official Land Registry material concerning first registration.',
+        'The Claimants\' case is that the registration included the House Plot notwithstanding the documentary chain relied upon above.',
+        'The Claimants do not contend merely that an historic defect in an unregistered title automatically defeats registered title.',
+        'The Claimants instead seek a determination of: (a) what land BP was entitled to register; (b) what land was actually included in the application for first registration; (c) what documents and plans were lodged; (d) whether the inclusion of the House Plot constituted a mistake in the register; (e) the legal consequences of that mistake under the LRA 2002; and (f) whether the statutory conditions for alteration or rectification are satisfied.',
+      ],
+    },
+    {
+      id: 'sec-N',
+      letter: 'N',
+      title: 'THE PRIMARY ISSUE',
+      summary: 'Judicial determination of whether the House Plot was erroneously included in title WA231076.',
+      paragraphs: [
+        'The primary issue is therefore one of title.',
+        'If the Court finds that the House Plot was not comprised within the proprietary interest conveyed to WGR, and consequently was not comprised within the interests subsequently conveyed to BP Properties Ltd, the Claimants contend that the inclusion of the House Plot in WA231076 was erroneous.',
+        'The Claimants then seek the consequential relief available under the LRA 2002.',
+        'The Claimants do not ask the Court to decide historical questions beyond those necessary to determine present proprietary entitlement.',
+      ],
+    },
+    {
+      id: 'sec-O',
+      letter: 'O',
+      title: 'ALTERNATIVE CASES',
+      summary: 'Reservation of alternative proprietary estoppel and adverse possession claims.',
+      paragraphs: [
+        'The Claimants reserve alternative proprietary and equitable arguments insofar as they remain legally available following determination of the primary title question and the effect of the 1987 judgment.',
+        'In particular, the Claimants may rely upon adverse possession, proprietary estoppel or other equitable doctrines only to the extent that the necessary factual and legal elements are established and the claims are not precluded by the earlier litigation or applicable limitation law.',
+        'No alternative doctrine is pleaded as established merely because the primary title case may fail.',
+      ],
+    },
+    {
+      id: 'sec-P',
+      letter: 'P',
+      title: 'RELIEF',
+      summary: 'Declarations of ownership, Schedule 4 LRA 2002 title rectification, boundary directions, and costs.',
+      paragraphs: [
+        'The Claimants seek:',
+        '(1) A declaration as to the legal and/or beneficial ownership of the House Plot;',
+        '(2) A declaration as to whether the House Plot forms part of title WA231076;',
+        '(3) If the Court determines that the House Plot was wrongly included in WA231076, such alteration or rectification of the register as the Court has jurisdiction to order under the Land Registration Act 2002;',
+        '(4) Such further directions as are necessary to identify the boundaries of the House Plot and give effect to the Court\'s determination;',
+        '(5) Costs; and',
+        '(6) Such further or other relief as the Court considers just.',
+      ],
+    },
+    {
+      id: 'sec-Q',
+      letter: 'Q',
+      title: 'MATTERS EXPRESSLY OUTSIDE THE SCOPE OF THESE PROCEEDINGS',
+      summary: 'Confines proceedings strictly to proprietary determination; damages and monetary compensation are excluded.',
+      paragraphs: [
+        'These proceedings are concerned with present proprietary entitlement and consequential proprietary relief.',
+        'The Claimants do not seek an adjudication in these proceedings concerning damages, compensation, restitution, reparations, compensation for historical loss, or any other monetary award arising from the historical events described in this pleading.',
+        'Those matters are deliberately outside the scope of the relief sought in these proceedings.',
+        'Their exclusion from this claim is not intended to invite the Court to adjudicate them, and no monetary award in respect of them is sought.',
+      ],
+    },
+  ];
+
   const rawHtmlCode = `<!DOCTYPE html>
 <html>
 <head>
 <meta charset="utf-8">
-<title>Particulars of Claim – Sion Buckler</title>
+<title>Particulars of Claim – Great House Farm (WA231076)</title>
 <style>
-  body { font-family: Times New Roman, serif; font-size: 12pt; line-height: 1.35; margin: 40px 50px; }
-  h1 { text-align: center; font-size: 14pt; margin-bottom: 6px; }
-  h2 { font-size: 12pt; margin-top: 18px; margin-bottom: 6px; }
-  .court { text-align: center; font-weight: bold; margin-bottom: 4px; }
-  .parties { margin: 16px 0; }
-  .para { margin: 8px 0; text-align: justify; }
-  .indent { margin-left: 20px; }
-  .relief { margin-left: 20px; }
-  .sig { margin-top: 30px; }
+  body { font-family: "Times New Roman", Times, serif; font-size: 12pt; line-height: 1.4; margin: 40px 60px; color: #000; }
+  .court { text-align: center; font-weight: bold; text-transform: uppercase; margin-bottom: 8px; }
+  .claim-no { text-align: center; font-weight: bold; margin-bottom: 20px; }
+  .parties { border: 1px solid #333; padding: 15px 20px; margin: 20px 0; }
+  .party-row { display: flex; justify-content: space-between; margin: 4px 0; }
+  h1 { text-align: center; font-size: 14pt; letter-spacing: 2px; text-transform: uppercase; margin: 24px 0; border-top: 1px solid #000; border-bottom: 1px solid #000; padding: 6px 0; }
+  h2 { font-size: 12pt; font-weight: bold; margin-top: 20px; margin-bottom: 6px; }
+  p { margin: 8px 0; text-align: justify; }
+  .relief-item { margin-left: 25px; margin-bottom: 4px; }
+  .truth { margin-top: 35px; border-top: 1px solid #000; padding-top: 15px; }
 </style>
 </head>
 <body>
 
-<div class="court">IN THE HIGH COURT OF JUSTICE<br>
+<div class="court">
+IN THE HIGH COURT OF JUSTICE<br>
 BUSINESS AND PROPERTY COURTS OF ENGLAND AND WALES<br>
-CHANCERY DIVISION</div>
+CHANCERY DIVISION
+</div>
 
-<p style="text-align:center;">Claim No.: [TO BE ALLOCATED]</p>
+<div class="claim-no">Claim No.: [TO BE ALLOCATED]</div>
 
 <div class="parties">
-BETWEEN:<br><br>
-SION BUCKLER&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Claimant<br><br>
--and-<br><br>
-[CURRENT REGISTERED PROPRIETOR OF TITLE WA231076]&nbsp;&nbsp;&nbsp;&nbsp;First Defendant<br><br>
--and-<br><br>
-THE CHIEF LAND REGISTRAR&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Second Defendant
+  <div style="font-weight:bold; margin-bottom: 6px;">BETWEEN:</div>
+  <div class="party-row"><span><strong>THE PERSONS ENTITLED TO THE PROPRIETARY INTEREST IN THE HOUSE PLOT AT GREAT HOUSE FARM, LLANDOUGH, INCLUDING THE ESTATE AND SUCCESSORS OF MARY WILLIAMS</strong></span> <em>Claimants</em></div>
+  <div style="text-align:center; font-style:italic; margin: 6px 0;">-and-</div>
+  <div class="party-row"><span><strong>[CURRENT REGISTERED PROPRIETOR OF TITLE WA231076]</strong></span> <em>First Defendant</em></div>
+  <div style="text-align:center; font-style:italic; margin: 6px 0;">-and-</div>
+  <div class="party-row"><span><strong>THE CHIEF LAND REGISTRAR</strong></span> <em>Second Defendant</em></div>
 </div>
 
 <h1>PARTICULARS OF CLAIM</h1>
 
-<h2>1. THE CLAIMANT</h2>
-<p class="para">1.1 The Claimant, Sion Buckler, brings this claim personally in respect of the proprietary interest he contends has descended to him through the Buckler line of succession by intestacy.</p>
-<p class="para">1.2 Certified copies of the relevant grants of administration and death certificates will be served herewith.</p>
-<p class="para">1.3 The Claimant does not rely upon descent alone as constituting legal title. His case is that the historical title documents establish that the House Plot was severed from, excluded from, or otherwise outside the proprietary interest subsequently conveyed into the chain leading to registered title WA231076.</p>
+<h2>A. INTRODUCTION AND NATURE OF THE CLAIM</h2>
+<p>The Claimants are the persons presently entitled to the proprietary interest claimed in the parcel comprising the former farmhouse, garden and curtilage at Great House Farm, Llandough ("the House Plot"), by succession from the historical owners and occupiers identified below, including Mary Williams, deceased.</p>
+<p>The Claimants include Sion Buckler, the son of William Buckler, who was the son of Mary Williams. The remaining persons presently entitled through Mary Williams and/or the relevant intermediate estates are to be identified and joined or represented as required by the Court.</p>
+<p>The Claimants do not contend that descent or family relationship, without more, constitutes title. Their case is that the historical instruments establish a proprietary interest in the House Plot which was separate from the agricultural interest subsequently conveyed to Western Ground Rents Ltd ("WGR") and thereafter through the BP title chain.</p>
+<p>The central question for determination is therefore: Whether the House Plot formed part of the proprietary estate conveyed to WGR and subsequently to BP Properties Ltd, or whether it remained outside that chain of title.</p>
+<p>The Claimants seek a judicial determination of that question and, consequentially, such alteration or rectification of registered title WA231076 as the Court considers legally appropriate.</p>
 
-<h2>2. THE NATURE OF THE CLAIM</h2>
-<p class="para">2.1 The Claimant seeks determination of the freehold title to the parcel comprising the former farmhouse and garden at Great House Farm, Llandough (“the House Plot”).</p>
-<p class="para">2.2 The primary case is that the House Plot was historically distinct from the surrounding agricultural holding and that the proprietary interest in the House Plot was separated from the interest later dealt with by Western Ground Rents Ltd (“WGR”) and its successors.</p>
-<p class="para">2.3 The Claimant seeks:</p>
-<p class="indent">(a) a declaration determining the legal and beneficial ownership of the House Plot;</p>
-<p class="indent">(b) a declaration determining whether the House Plot is properly comprised within registered title WA231076; and</p>
-<p class="indent">(c) if the statutory requirements are satisfied, rectification or other alteration of WA231076 under Schedule 4 to the Land Registration Act 2002 (“LRA 2002”).</p>
-<p class="para">2.4 Alternative cases of adverse possession and proprietary estoppel are pleaded only insofar as they remain legally available after determination of the effect of the earlier litigation.</p>
-<p class="para">2.5 No claim is made for damages, compensation, restitution, or any other monetary remedy. Those matters are outside the scope of this claim and are not waived by their exclusion.</p>
+<h2>B. THE PROPERTY</h2>
+<p>The property claimed is the former farmhouse, garden and curtilage at Great House Farm, Llandough ("the House Plot"). The precise boundaries of the House Plot will be established by reference to the historical conveyances, leases, plans, court documents and the current Land Registry title plan.</p>
+<p>The Claimants rely in particular upon the distinction historically made between: (a) the House Plot comprising the farmhouse, garden and curtilage; and (b) the agricultural/quarrying land surrounding or adjoining it. The distinction is material because the historical instruments did not necessarily convey those interests together.</p>
 
-<h2>3. IDENTIFICATION OF THE HOUSE PLOT</h2>
-<p class="para">3.1 The House Plot comprises the former farmhouse and garden at Great House Farm, Llandough.</p>
-<p class="para">3.2 The Court of Appeal in <i>BP Properties Ltd v Buckler</i> [1987] EWCA Civ 2 treated the farmhouse and garden as a separately identifiable parcel.</p>
-<p class="para">3.3 Precise boundaries will be established by the historical instruments, plans, earlier court documents and the current Land Registry title plan. A composite plan identifying the correspondence with the land claimed to be within WA231076 is annexed.</p>
+<h2>C. THE 1877 TRANSACTION AND SUBSEQUENT PROPRIETARY ARRANGEMENTS</h2>
+<p>In or about 1877 the Bute Estate dealt separately with the land comprising the farmhouse and surrounding land. The Claimants rely upon the 1877 instrument relating to Daniel Thomas, together with the evidence concerning the subsequent occupation and tenancy arrangements.</p>
+<p>The precise legal effect of the 1877 instrument will be determined from the instrument itself and its plan. The Claimants' case is that the 1877 transaction created or recognised a proprietary interest in the House Plot distinct from the Bute Estate's retained interest in the other land. The Claimants further rely upon the subsequent agreement relating to quarrying and the arrangements under which the Williams family continued to occupy the House Plot. The Claimants will rely upon the actual wording of those instruments rather than upon any assumption as to their legal effect.</p>
 
-<h2>4. KEY HISTORICAL INSTRUMENTS</h2>
-<p class="para">4.1 The Claimant relies on the following (copies to be served):</p>
-<p class="indent">(a) the 1877 Conveyance (or such instrument as is located) concerning the farmhouse and approximately 10 acres;</p>
-<p class="indent">(b) the 1928 agreement between the Bute Estate Trustees and the Llandough Quarry Company, clause 7 of which provided that upon cessation of quarrying the farmhouse, garden and curtilage should remain the property of the occupier;</p>
-<p class="indent">(c) the 1938 Conveyance to WGR, which described the land conveyed as the quarry land and agricultural land at Great House Farm comprising 19 acres, but excluding the farmhouse, garden and curtilage (shown edged green on the plan);</p>
-<p class="indent">(d) the May 1939 agreement between WGR and John Williams and its plan, which demised only the eastern agricultural parcel;</p>
-<p class="indent">(e) the 1969 conveyance from WGR to BP Pension Trust Ltd and the May 1975 conveyance from BP Pension Trust Ltd to BP Properties Ltd, the latter of which expressly excluded the farmhouse, garden and curtilage (shown edged green on the plan).</p>
-<p class="para">4.2 The Claimant’s primary case is that these instruments show the House Plot was outside the proprietary interest conveyed into the BP chain.</p>
+<h2>D. THE 1916 TWO-PLOT TENANCY</h2>
+<p>The Claimants rely upon the 1916 agricultural tenancy as evidence that the agricultural holding then comprised two distinct parcels. The expression "whole farm" appearing in later proceedings must therefore be construed in its historical context.</p>
+<p>In 1916, the agricultural holding comprised two plots, notwithstanding their being described collectively as the farm. The Claimants' case is that the subsequent proprietary events altered the legal position concerning those two parcels. In particular, the Claimants rely upon the 1928 events concerning the Daniel Thomas interest and the subsequent separation of the two parcels.</p>
 
-<h2>5. THE 1982 REGISTRATION</h2>
-<p class="para">5.1 BP Properties Ltd was registered as proprietor of title WA231076 in November 1982 following first registration.</p>
-<p class="para">5.2 The application was supported by the 1975 Conveyance (but not its plan), an Ordnance Survey plan showing the entire farm, and a solicitor’s certificate stating that the land corresponded to the 1975 Conveyance.</p>
-<p class="para">5.3 The Claimant’s case is that the registration of the House Plot was a mistake because the 1975 Conveyance did not include it, the plan lodged was not the 1975 Conveyance plan, and the registration officer was given an incomplete picture of the root title.</p>
+<h2>E. THE 1928 EVENT</h2>
+<p>The Claimants rely upon the 1928 agreement and associated documents concerning quarrying according to its actual terms. The Claimants' case is that the cessation of quarrying and removal of the quarry machinery in or about 1928 triggered the proprietary consequence provided for by that agreement.</p>
+<p>The evidence presently available includes evidence that: (a) quarrying had substantially ceased; (b) machinery remained until approximately 1928; (c) machinery was removed in or about 1928; (d) a final rent payment was made to Alfred Thomas, son of Daniel Thomas; and (e) thereafter John Williams regarded the relevant land as his own. The precise legal mechanism by which title or an interest passed following the cessation of quarrying will be determined by reference to the original 1928 instrument.</p>
 
-<h2>6. EFFECT OF REGISTRATION AND RECTIFICATION</h2>
-<p class="para">6.1 The Claimant recognises the statutory effect of registration under the LRA 2002 and does not plead that a historical defect in an unregistered root of title automatically defeats a registered estate.</p>
-<p class="para">6.2 If the Court finds that the registered title contains a mistake affecting the registered proprietor’s title, the Claimant relies on Schedule 4 to the LRA 2002 and invites the Court to determine:</p>
-<p class="indent">(a) whether there is a mistake in the register;</p>
-<p class="indent">(b) when and how that mistake arose;</p>
-<p class="indent">(c) whether the House Plot was thereby wrongly included;</p>
-<p class="indent">(d) whether the proposed alteration constitutes rectification;</p>
-<p class="indent">(e) whether the registered proprietor is in possession; and</p>
-<p class="indent">(f) whether the statutory conditions for rectification are satisfied.</p>
+<h2>F. THE 1938 WGR CONVEYANCE</h2>
+<p>In 1938 WGR acquired an interest in land at Great House Farm. The Claimants rely upon the 1938 conveyance and its plan. The Claimants' case is that the conveyance must be construed according to its precise property description and plan.</p>
+<p>The Claimants further rely upon the fact that the farmhouse, garden and curtilage were treated separately from the agricultural land in the subsequent documentary history. Accordingly, the Claimants contend that the 1938 conveyance did not convey the House Plot unless the First Defendant can establish otherwise from the instrument and its proper construction.</p>
 
-<h2>7. EFFECT OF THE 1987 JUDGMENT</h2>
-<p class="para">7.1 The 1987 proceedings concerned adverse possession of the farmhouse and garden. The Court of Appeal proceeded on the common ground that BP Properties Ltd had a paper title and was the registered proprietor.</p>
-<p class="para">7.2 The Claimant accepts the findings of the Court of Appeal on the issues it actually and necessarily determined (adverse possession, limitation, and the effect of the 1974 correspondence).</p>
-<p class="para">7.3 The Claimant does not seek to re-litigate those issues. The question is whether the underlying proprietary title now advanced was itself determined. The paper title was assumed, not litigated or determined. There is therefore no issue estoppel or cause-of-action estoppel on the root-of-title question.</p>
+<h2>G. THE 1939 WGR TENANCY</h2>
+<p>In May 1939 WGR entered into an agricultural tenancy agreement with John Williams. The 1939 agreement and accompanying plan are relied upon. The Claimants' case is that the 1939 agreement concerned the eastern agricultural parcel and did not comprise the House Plot.</p>
+<p>This is significant because it demonstrates that WGR's proprietary interest and the Williams family's occupation were being dealt with in relation to a particular agricultural parcel rather than necessarily the entire historical farm. The Claimants do not rely upon the word "farm" or "whole farm" in isolation.</p>
 
-<h2>8. PRIMARY CASE</h2>
-<p class="para">8.1 The House Plot followed a proprietary chain distinct from the agricultural parcel that remained subject to the landlord-and-tenant relationship.</p>
-<p class="para">8.2 If that chain is established, WGR did not acquire the House Plot merely by acquiring the reversion on the 1916 agricultural tenancy, and neither BP Pension Trust Ltd nor BP Properties Ltd acquired it through the 1969 or 1975 conveyances.</p>
-<p class="para">8.3 The registration of the House Plot in WA231076 therefore requires determination under the LRA 2002.</p>
-<p class="para">8.4 This is the principal issue on which the Claimant seeks judgment.</p>
+<h2>H. THE 1969 AND 1975 CONVEYANCES</h2>
+<p>WGR subsequently conveyed its interest to BP Pension Trust Ltd. BP Pension Trust Ltd subsequently conveyed its interest to BP Properties Ltd in 1975.</p>
+<p>The Claimants rely upon the 1969 and 1975 conveyances and, critically, their respective plans and property descriptions. The 1975 conveyance is relied upon in particular because the Claimants' present evidence indicates that the farmhouse, garden and curtilage were expressly excluded from the land conveyed.</p>
+<p>If that construction is established, the BP chain did not acquire the House Plot by virtue of those conveyances. The Claimants accordingly put the First Defendant to proof of the precise instrument by which it contends that the House Plot became part of its proprietary estate.</p>
 
-<h2>9. ALTERNATIVE CASES</h2>
-<p class="para">9.1 Adverse possession is relied upon only to the extent legally available after the Court determines the effect of the 1987 Judgment, and only in respect of matters not finally adjudicated.</p>
-<p class="para">9.2 Proprietary estoppel is relied upon only insofar as the evidence identifies a legally sufficient assurance, reliance, detriment and unconscionability.</p>
+<h2>I. THE 1955 POSSESSION PROCEEDINGS</h2>
+<p>The Claimants rely upon the actual 1955 order and proceedings. The 1955 order referred to the "whole farm". The Claimants' case is that the expression must be interpreted in the context of the 1916 tenancy and the subsequent proprietary separation of the two parcels.</p>
+<p>The fact that the 1955 order used the expression "whole farm" does not, without more, establish that every parcel historically associated with Great House Farm was comprised within WGR's proprietary title. The Claimants therefore invite the Court to construe the 1955 order against the underlying instruments and the land actually comprised within WGR's title.</p>
 
-<h2>10. RELIEF SOUGHT</h2>
-<p class="para">The Claimant seeks:</p>
-<p class="relief">(1) A declaration determining the legal and beneficial ownership of the House Plot;</p>
-<p class="relief">(2) A declaration determining whether the House Plot is properly comprised within title WA231076;</p>
-<p class="relief">(3) If the statutory requirements are satisfied, an order under Schedule 4 to the LRA 2002 directing such rectification or other alteration of WA231076 as is necessary to give effect to the Court’s determination;</p>
-<p class="relief">(4) Such directions as are necessary concerning the identification and boundaries of the House Plot;</p>
-<p class="relief">(5) Costs.</p>
+<h2>J. THE EVIDENCE OF MARY WILLIAMS</h2>
+<p>Mary Williams was born at Great House Farm in 1913 and stated that her family had lived and farmed there since 1667. In her evidence she stated that, prior to 1877, her grandfather held the farm as tenant of the Bute Estate. She stated that the Bute Estate thereafter sold the freehold of the greater part of the farm, comprising the farmhouse, buildings and approximately ten acres, to Daniel Thomas, while retaining another portion of approximately nine acres.</p>
+<p>She stated that her grandfather subsequently entered into separate tenancy arrangements with Daniel Thomas and the Bute Estate. She further stated that the Daniel Thomas agreement contained special quarrying provisions and that, when quarrying ceased, the freehold was to belong to her grandfather. She stated that quarry machinery remained until 1928, when it was removed, and that the last rent was then paid to Alfred Thomas. She stated that thereafter her father regarded the farm as his own and that she, her husband and subsequently she herself continued in occupation without paying rent to, or acknowledging the title of, another landlord.</p>
 
-<h2>11. MATTERS NOT SUBMITTED FOR ADJUDICATION</h2>
-<p class="para">11.1 These proceedings are confined to the determination of ownership and consequential proprietary relief. No adjudication is sought on damages, compensation, restitution, or any other monetary remedy arising from historical events. Their exclusion is not a waiver of any future cause of action.</p>
+<h2>K. THE LOSS OF THE HISTORICAL TITLE PAPERS</h2>
+<p>Mary Williams further stated that documents concerning the farm had been kept in a blanket box at the farmhouse. She stated that those papers subsequently disappeared. She stated that Bruce Sutherland told her that Mr Knapp had asked him to look for papers which her father had relating to the farm and that he had taken the papers from the blanket box and given them to Mr Knapp.</p>
+<p>Mary Williams expressly connected the disappearance of the papers, in her recollection, with the subsequent possession proceedings. The Claimants rely upon this evidence as evidence concerning the provenance and disappearance of historical title documents. The Claimants do not, unless and until supported by further evidence, plead as an established fact that any particular Defendant deliberately concealed or destroyed those documents.</p>
 
-<div class="sig">
-STATEMENT OF TRUTH<br><br>
-The Claimant believes that the facts stated in these Particulars of Claim are true.<br>
-I understand that proceedings for contempt of court may be brought against anyone who makes, or causes to be made, a false statement in a document verified by a Statement of Truth without an honest belief in its truth.<br><br>
-Sion Buckler
+<h2>L. THE 1987 COURT OF APPEAL DECISION</h2>
+<p>The Claimants acknowledge the judgment of the Court of Appeal in BP Properties Ltd v Buckler [1987] EWCA Civ 2. The Claimants do not invite the Court to disregard or simply overrule findings actually made and necessary to that judgment.</p>
+<p>The Claimants' case is instead that the present proceedings require the Court to determine the specific proprietary question now advanced, namely whether the House Plot formed part of the estate conveyed through the WGR/BP chain and subsequently registered under WA231076. The Claimants do not presently assert, without examination of the complete court record, that the earlier proceedings finally adjudicated every question concerning the underlying historical root of title.</p>
+
+<h2>M. REGISTRATION OF WA231076</h2>
+<p>BP Properties Ltd became registered proprietor of WA231076 in 1982. The Claimants rely upon the official Land Registry material concerning first registration. The Claimants' case is that the registration included the House Plot notwithstanding the documentary chain relied upon above.</p>
+<p>The Claimants do not contend merely that an historic defect in an unregistered title automatically defeats registered title. The Claimants instead seek a determination of: (a) what land BP was entitled to register; (b) what land was actually included in the application for first registration; (c) what documents and plans were lodged; (d) whether the inclusion of the House Plot constituted a mistake in the register; (e) the legal consequences of that mistake under the LRA 2002; and (f) whether the statutory conditions for alteration or rectification are satisfied.</p>
+
+<h2>N. THE PRIMARY ISSUE</h2>
+<p>The primary issue is therefore one of title. If the Court finds that the House Plot was not comprised within the proprietary interest conveyed to WGR, and consequently was not comprised within the interests subsequently conveyed to BP Properties Ltd, the Claimants contend that the inclusion of the House Plot in WA231076 was erroneous. The Claimants then seek the consequential relief available under the LRA 2002.</p>
+
+<h2>O. ALTERNATIVE CASES</h2>
+<p>The Claimants reserve alternative proprietary and equitable arguments insofar as they remain legally available following determination of the primary title question and the effect of the 1987 judgment. In particular, the Claimants may rely upon adverse possession, proprietary estoppel or other equitable doctrines only to the extent that the necessary factual and legal elements are established and the claims are not precluded by the earlier litigation or applicable limitation law.</p>
+
+<h2>P. RELIEF</h2>
+<p>The Claimants seek:</p>
+<div class="relief-item">(1) A declaration as to the legal and/or beneficial ownership of the House Plot;</div>
+<div class="relief-item">(2) A declaration as to whether the House Plot forms part of title WA231076;</div>
+<div class="relief-item">(3) If the Court determines that the House Plot was wrongly included in WA231076, such alteration or rectification of the register as the Court has jurisdiction to order under the Land Registration Act 2002;</div>
+<div class="relief-item">(4) Such further directions as are necessary to identify the boundaries of the House Plot and give effect to the Court's determination;</div>
+<div class="relief-item">(5) Costs; and</div>
+<div class="relief-item">(6) Such further or other relief as the Court considers just.</div>
+
+<h2>Q. MATTERS EXPRESSLY OUTSIDE THE SCOPE OF THESE PROCEEDINGS</h2>
+<p>These proceedings are concerned with present proprietary entitlement and consequential proprietary relief. The Claimants do not seek an adjudication in these proceedings concerning damages, compensation, restitution, reparations, compensation for historical loss, or any other monetary award arising from the historical events described in this pleading. Those matters are deliberately outside the scope of the relief sought in these proceedings.</p>
+
+<div class="truth">
+<strong>STATEMENT OF TRUTH</strong><br><br>
+The Claimants believe that the facts stated in these Particulars of Claim are true.<br>
+The Claimants understand that proceedings for contempt of court may be brought against a person who makes, or causes to be made, a false statement in a document verified by a Statement of Truth without an honest belief in its truth.<br><br>
+Signed: ______________________<br>
+Name: ______________________<br>
+Capacity: ___________________<br>
+Date: _______________________
 </div>
 
 </body>
@@ -205,12 +474,13 @@ Sion Buckler
   const handleDownloadHtml = () => {
     const blob = new Blob([rawHtmlCode], { type: 'text/html;charset=utf-8' });
     const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = 'Particulars_of_Claim_Sion_Buckler_High_Court.html';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    const link = document.createElement('link');
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'High_Court_Particulars_of_Claim_WA231076.html';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
     URL.revokeObjectURL(url);
   };
 
@@ -245,10 +515,10 @@ Sion Buckler
                 <span className="font-bold text-[#D08856]">HIGH COURT OF JUSTICE PLEADING ENGINE</span>
               </div>
               <h2 className="text-xl sm:text-2xl font-serif font-black text-[#FFFFFF] tracking-tight">
-                Emulating Court Application Generation
+                Synthesizing High Court Pleading
               </h2>
               <p className="text-xs sm:text-sm text-[#9BA1A6]">
-                Automating Chancery Division Particulars of Claim formulation across archival deeds & s.4 LRA 2002 rectification statutes.
+                Automating Chancery Division Particulars of Claim formulation across Sections A to Q & Schedule 4 LRA 2002 rectification grounds.
               </p>
             </div>
 
@@ -346,31 +616,11 @@ Sion Buckler
               );
             })}
           </div>
-
-          {/* Live drafting preview skeleton */}
-          <div className="p-4 rounded-2xl bg-[#0B0D0E] border border-[#343A40] font-mono text-[11px] text-[#7E868C] space-y-1 overflow-hidden relative">
-            <div className="text-[10px] text-[#D08856] font-bold uppercase pb-1 border-b border-[#202428] flex items-center justify-between">
-              <span>Streaming Pleading Synthesizer</span>
-              <span className="animate-pulse text-emerald-400">Live Drafting Token Stream</span>
-            </div>
-            <div className="pt-2 text-emerald-300/90 truncate">
-              &gt; Pleading: IN THE HIGH COURT OF JUSTICE (BUSINESS & PROPERTY COURTS - CHANCERY DIVISION)
-            </div>
-            <div className="text-[#A3A29E] truncate">
-              &gt; Parties: Sion Buckler (Claimant) v. Registered Proprietor of WA231076 & Chief Land Registrar
-            </div>
-            <div className="text-[#A3A29E] truncate">
-              &gt; Statutory Grounds: Schedule 4 Land Registration Act 2002 (Alteration & Rectification of Register)
-            </div>
-            <div className="text-[#A3A29E] truncate">
-              &gt; Root of Title: 1877 Conveyance; 1928 Bute Quarry Agmt (cl. 7); 1938 & 1975 green-edged exclusions.
-            </div>
-          </div>
         </div>
       ) : (
         /* CASE B: FINALIZED FORMAL COURT APPLICATION DOCUMENT */
         <div className="space-y-6">
-          {/* Header Action Bar */}
+          {/* Header Action Bar with Accordion vs Full View Toggle */}
           <div className="bg-[#121415] rounded-3xl border border-[#343A40] p-4 sm:p-6 flex flex-wrap items-center justify-between gap-4 shadow-xl">
             <div className="space-y-1">
               <div className="flex items-center gap-2 flex-wrap">
@@ -379,29 +629,43 @@ Sion Buckler
                   <span>Drafting Complete</span>
                 </span>
                 <span className="text-xs font-mono text-[#D08856] font-bold">
-                  Chancery Division Form N1 / CPR Part 7
+                  Chancery Division Form N1 / CPR Part 7 (17 Sections A–Q)
                 </span>
               </div>
               <h2 className="text-xl sm:text-2xl font-serif font-black text-[#FFFFFF]">
-                Particulars of Claim – Sion Buckler
+                Particulars of Claim – Great House Farm (WA231076)
               </h2>
               <p className="text-xs text-[#9BA1A6]">
                 High Court of Justice · Business and Property Courts of England and Wales · Chancery Division
               </p>
             </div>
 
-            {/* Actions: View Toggle, Copy, Download, Print */}
+            {/* Actions: View Toggle, Accordion controls, Copy, Download, Print */}
             <div className="flex items-center gap-2 flex-wrap">
               <div className="flex items-center bg-[#202428] p-1 rounded-xl border border-[#454D55]">
                 <button
-                  onClick={() => setActiveTab('preview')}
-                  className={`py-1.5 px-3 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                    activeTab === 'preview'
+                  onClick={() => setActiveTab('accordion')}
+                  className={`py-1.5 px-3 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+                    activeTab === 'accordion'
                       ? 'bg-[#AA210F] text-[#FFFFFF] shadow-sm'
                       : 'text-[#9BA1A6] hover:text-[#FFFFFF]'
                   }`}
+                  title="Expandable Accordion View (Keeps screen clean & compact)"
                 >
-                  Document View
+                  <Minimize2 className="w-3.5 h-3.5" />
+                  <span>Accordion Mode</span>
+                </button>
+                <button
+                  onClick={() => setActiveTab('full')}
+                  className={`py-1.5 px-3 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+                    activeTab === 'full'
+                      ? 'bg-[#AA210F] text-[#FFFFFF] shadow-sm'
+                      : 'text-[#9BA1A6] hover:text-[#FFFFFF]'
+                  }`}
+                  title="Complete Paper Pleading Document View"
+                >
+                  <Maximize2 className="w-3.5 h-3.5" />
+                  <span>Full Paper View</span>
                 </button>
                 <button
                   onClick={() => setActiveTab('source')}
@@ -418,7 +682,7 @@ Sion Buckler
               <button
                 onClick={handleCopyCode}
                 className="py-1.5 px-3 rounded-xl bg-[#2D2C28] hover:bg-[#3E4446] border border-[#454D55] text-xs font-bold text-[#E8E6E3] hover:text-[#FFFFFF] flex items-center gap-1.5 transition-all cursor-pointer"
-                title="Copy Full HTML"
+                title="Copy Full HTML Pleading"
               >
                 {copied ? (
                   <>
@@ -436,7 +700,7 @@ Sion Buckler
               <button
                 onClick={handleDownloadHtml}
                 className="py-1.5 px-3 rounded-xl bg-[#2D2C28] hover:bg-[#3E4446] border border-[#454D55] text-xs font-bold text-[#E8E6E3] hover:text-[#FFFFFF] flex items-center gap-1.5 transition-all cursor-pointer"
-                title="Download HTML file"
+                title="Download HTML Pleading"
               >
                 <Download className="w-3.5 h-3.5 text-[#6B9CD2]" />
                 <span>Download .html</span>
@@ -453,8 +717,164 @@ Sion Buckler
             </div>
           </div>
 
-          {/* TAB 1: FORMAL COURT PLEADING PAPER PREVIEW */}
-          {activeTab === 'preview' ? (
+          {/* TAB 1: ACCORDION VIEW (DEFAULT - KEPT TO < 2 VIEWPORT HEIGHTS WITH EXPAND/COLLAPSE) */}
+          {activeTab === 'accordion' && (
+            <div className="space-y-4">
+              {/* Header Pleading Summary Card */}
+              <div className="bg-[#181A1B] rounded-2xl border border-[#343A40] p-5 shadow-lg space-y-4 font-serif">
+                <div className="text-center font-bold text-sm tracking-wide text-[#FFFFFF] uppercase border-b border-[#343A40] pb-3">
+                  IN THE HIGH COURT OF JUSTICE · BUSINESS AND PROPERTY COURTS OF ENGLAND AND WALES · CHANCERY DIVISION
+                </div>
+                <div className="text-center font-mono text-xs text-[#D08856] font-semibold">
+                  Claim No.: [TO BE ALLOCATED]
+                </div>
+
+                {/* Parties Preview */}
+                <div className="bg-[#121415] rounded-xl p-4 border border-[#343A40] text-xs space-y-2">
+                  <div className="text-[#9BA1A6] font-sans font-bold uppercase tracking-wider text-[10px]">
+                    Parties to Chancery Proceedings:
+                  </div>
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 text-[#EDEFEE]">
+                    <span className="font-bold">
+                      THE PERSONS ENTITLED TO THE PROPRIETARY INTEREST IN THE HOUSE PLOT AT GREAT HOUSE FARM, INCLUDING THE ESTATE AND SUCCESSORS OF MARY WILLIAMS
+                    </span>
+                    <span className="font-mono text-emerald-400 shrink-0 font-bold">Claimants</span>
+                  </div>
+                  <div className="text-center text-[#9BA1A6] italic">-and-</div>
+                  <div className="flex justify-between items-center text-[#EDEFEE]">
+                    <span className="font-bold">[CURRENT REGISTERED PROPRIETOR OF TITLE WA231076]</span>
+                    <span className="font-mono text-amber-400 shrink-0 font-bold">First Defendant</span>
+                  </div>
+                  <div className="text-center text-[#9BA1A6] italic">-and-</div>
+                  <div className="flex justify-between items-center text-[#EDEFEE]">
+                    <span className="font-bold">THE CHIEF LAND REGISTRAR</span>
+                    <span className="font-mono text-blue-400 shrink-0 font-bold">Second Defendant</span>
+                  </div>
+                </div>
+
+                {/* Accordion Global Controls */}
+                <div className="flex items-center justify-between pt-2 border-t border-[#343A40] text-xs font-sans">
+                  <span className="text-[#9BA1A6] flex items-center gap-1.5">
+                    <Info className="w-3.5 h-3.5 text-[#D08856]" />
+                    <span>Click any section header to expand details or collapse to view concise summary:</span>
+                  </span>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={expandAll}
+                      className="px-2.5 py-1 rounded-lg bg-[#202428] hover:bg-[#2D2C28] text-[11px] font-bold text-[#E8E6E3] border border-[#454D55] transition-colors"
+                    >
+                      Expand All
+                    </button>
+                    <button
+                      onClick={collapseAll}
+                      className="px-2.5 py-1 rounded-lg bg-[#202428] hover:bg-[#2D2C28] text-[11px] font-bold text-[#E8E6E3] border border-[#454D55] transition-colors"
+                    >
+                      Collapse All
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* 17 Expandable Accordion Pleading Sections (A through Q) */}
+              <div className="space-y-2.5">
+                {sections.map((sec) => {
+                  const isOpen = !!expandedSections[sec.letter];
+                  return (
+                    <div
+                      key={sec.id}
+                      className={`rounded-2xl border transition-all ${
+                        isOpen
+                          ? 'bg-[#181A1B] border-[#D08856]/60 shadow-lg'
+                          : 'bg-[#141617] border-[#343A40] hover:border-[#454D55]'
+                      }`}
+                    >
+                      {/* Section Header Accordion Trigger */}
+                      <button
+                        onClick={() => toggleSection(sec.letter)}
+                        className="w-full p-4 text-left flex items-start justify-between gap-3 cursor-pointer select-none"
+                      >
+                        <div className="space-y-1 min-w-0">
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <span className="px-2 py-0.5 rounded bg-[#AA210F] text-[#FFFFFF] font-mono text-xs font-black">
+                              Section {sec.letter}
+                            </span>
+                            <h3 className="text-sm sm:text-base font-serif font-bold text-[#FFFFFF]">
+                              {sec.title}
+                            </h3>
+                          </div>
+                          {!isOpen && (
+                            <p className="text-xs text-[#9BA1A6] font-sans line-clamp-1">
+                              {sec.summary}
+                            </p>
+                          )}
+                        </div>
+
+                        <div className="flex items-center gap-2 shrink-0 mt-1">
+                          <span className="text-[11px] font-mono text-[#D08856] hidden sm:inline">
+                            {isOpen ? 'Collapse' : 'Expand / more...'}
+                          </span>
+                          <div className="p-1 rounded-lg bg-[#202428] text-[#EDEFEE]">
+                            {isOpen ? (
+                              <ChevronUp className="w-4 h-4 text-[#D08856]" />
+                            ) : (
+                              <ChevronDown className="w-4 h-4 text-[#9BA1A6]" />
+                            )}
+                          </div>
+                        </div>
+                      </button>
+
+                      {/* Expanded Section Body */}
+                      {isOpen && (
+                        <div className="px-4 pb-4 pt-1 border-t border-[#343A40]/60 space-y-2.5 text-xs sm:text-sm font-serif leading-relaxed text-[#EDEFEE] bg-[#121415]/40 rounded-b-2xl animate-in fade-in duration-150">
+                          {sec.paragraphs.map((p, pIdx) => {
+                            if (typeof p === 'string') {
+                              return (
+                                <p key={pIdx} className="text-justify">
+                                  {p}
+                                </p>
+                              );
+                            }
+                            return (
+                              <div key={pIdx} className="pl-4 border-l-2 border-[#D08856]/40 py-1">
+                                <span className="font-bold text-[#D08856]">{p.label}: </span>
+                                <span>{p.text}</span>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Statement of Truth Signature Box */}
+              <div className="bg-[#181A1B] rounded-2xl border border-[#343A40] p-6 shadow-md font-serif space-y-3">
+                <div className="text-sm font-bold text-[#FFFFFF] tracking-wider uppercase border-b border-[#343A40] pb-2">
+                  STATEMENT OF TRUTH
+                </div>
+                <p className="text-xs text-[#EDEFEE] leading-relaxed">
+                  The Claimants believe that the facts stated in these Particulars of Claim are true.
+                </p>
+                <p className="text-xs text-[#9BA1A6] leading-relaxed">
+                  The Claimants understand that proceedings for contempt of court may be brought against a person who makes, or causes to be made, a false statement in a document verified by a Statement of Truth without an honest belief in its truth.
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-3 text-xs font-mono text-[#EDEFEE]">
+                  <div>
+                    <span className="text-[#9BA1A6]">Signed: </span>
+                    <span className="font-bold text-[#D08856]">Sion Buckler & Representatives</span>
+                  </div>
+                  <div>
+                    <span className="text-[#9BA1A6]">Capacity: </span>
+                    <span>Claimant / Successor in Title</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* TAB 2: FULL PAPER PREVIEW (TRADITIONAL HIGH COURT DOCUMENT) */}
+          {activeTab === 'full' && (
             <div className="bg-[#FAF9F6] text-[#111827] rounded-3xl p-6 sm:p-12 lg:p-16 shadow-2xl border-4 border-[#2D2C28] max-w-4xl mx-auto font-serif selection:bg-[#E5E7EB]">
               {/* Top Court Heading */}
               <div className="text-center font-bold text-sm sm:text-base leading-relaxed tracking-wide text-black uppercase border-b-2 border-black pb-4 mb-6">
@@ -470,19 +890,21 @@ Sion Buckler
               {/* Parties Box */}
               <div className="my-6 text-xs sm:text-sm leading-relaxed border border-gray-400 p-4 sm:p-6 bg-white rounded-lg shadow-sm font-serif">
                 <div className="font-bold text-gray-900 mb-3 tracking-wider">BETWEEN:</div>
-                <div className="flex justify-between items-center py-1">
-                  <span className="font-bold tracking-wide">SION BUCKLER</span>
-                  <span className="font-semibold italic text-gray-700">Claimant</span>
+                <div className="flex justify-between items-start py-1 gap-4">
+                  <span className="font-bold tracking-wide leading-tight">
+                    THE PERSONS ENTITLED TO THE PROPRIETARY INTEREST IN THE HOUSE PLOT AT GREAT HOUSE FARM, LLANDOUGH, INCLUDING THE ESTATE AND SUCCESSORS OF MARY WILLIAMS
+                  </span>
+                  <span className="font-semibold italic text-gray-700 shrink-0">Claimants</span>
                 </div>
                 <div className="text-center my-2 font-bold italic text-gray-600">-and-</div>
                 <div className="flex justify-between items-center py-1">
                   <span className="font-bold tracking-wide">[CURRENT REGISTERED PROPRIETOR OF TITLE WA231076]</span>
-                  <span className="font-semibold italic text-gray-700">First Defendant</span>
+                  <span className="font-semibold italic text-gray-700 shrink-0">First Defendant</span>
                 </div>
                 <div className="text-center my-2 font-bold italic text-gray-600">-and-</div>
                 <div className="flex justify-between items-center py-1">
                   <span className="font-bold tracking-wide">THE CHIEF LAND REGISTRAR</span>
-                  <span className="font-semibold italic text-gray-700">Second Defendant</span>
+                  <span className="font-semibold italic text-gray-700 shrink-0">Second Defendant</span>
                 </div>
               </div>
 
@@ -491,218 +913,51 @@ Sion Buckler
                 PARTICULARS OF CLAIM
               </h1>
 
-              {/* Section 1 */}
-              <div className="space-y-3 my-6">
-                <h2 className="text-sm sm:text-base font-bold text-black border-b border-gray-300 pb-1">
-                  1. THE CLAIMANT
-                </h2>
-                <p className="text-xs sm:text-sm text-justify leading-relaxed text-gray-900">
-                  <strong>1.1</strong> The Claimant, Sion Buckler, brings this claim personally in respect of the proprietary interest he contends has descended to him through the Buckler line of succession by intestacy.
-                </p>
-                <p className="text-xs sm:text-sm text-justify leading-relaxed text-gray-900">
-                  <strong>1.2</strong> Certified copies of the relevant grants of administration and death certificates will be served herewith.
-                </p>
-                <p className="text-xs sm:text-sm text-justify leading-relaxed text-gray-900">
-                  <strong>1.3</strong> The Claimant does not rely upon descent alone as constituting legal title. His case is that the historical title documents establish that the House Plot was severed from, excluded from, or otherwise outside the proprietary interest subsequently conveyed into the chain leading to registered title WA231076.
-                </p>
-              </div>
-
-              {/* Section 2 */}
-              <div className="space-y-3 my-6">
-                <h2 className="text-sm sm:text-base font-bold text-black border-b border-gray-300 pb-1">
-                  2. THE NATURE OF THE CLAIM
-                </h2>
-                <p className="text-xs sm:text-sm text-justify leading-relaxed text-gray-900">
-                  <strong>2.1</strong> The Claimant seeks determination of the freehold title to the parcel comprising the former farmhouse and garden at Great House Farm, Llandough (“the House Plot”).
-                </p>
-                <p className="text-xs sm:text-sm text-justify leading-relaxed text-gray-900">
-                  <strong>2.2</strong> The primary case is that the House Plot was historically distinct from the surrounding agricultural holding and that the proprietary interest in the House Plot was separated from the interest later dealt with by Western Ground Rents Ltd (“WGR”) and its successors.
-                </p>
-                <p className="text-xs sm:text-sm leading-relaxed text-gray-900">
-                  <strong>2.3</strong> The Claimant seeks:
-                </p>
-                <div className="pl-6 space-y-1.5 text-xs sm:text-sm text-gray-900">
-                  <p>(a) a declaration determining the legal and beneficial ownership of the House Plot;</p>
-                  <p>(b) a declaration determining whether the House Plot is properly comprised within registered title WA231076; and</p>
-                  <p>(c) if the statutory requirements are satisfied, rectification or other alteration of WA231076 under Schedule 4 to the Land Registration Act 2002 (“LRA 2002”).</p>
-                </div>
-                <p className="text-xs sm:text-sm text-justify leading-relaxed text-gray-900">
-                  <strong>2.4</strong> Alternative cases of adverse possession and proprietary estoppel are pleaded only insofar as they remain legally available after determination of the effect of the earlier litigation.
-                </p>
-                <p className="text-xs sm:text-sm text-justify leading-relaxed text-gray-900">
-                  <strong>2.5</strong> No claim is made for damages, compensation, restitution, or any other monetary remedy. Those matters are outside the scope of this claim and are not waived by their exclusion.
-                </p>
-              </div>
-
-              {/* Section 3 */}
-              <div className="space-y-3 my-6">
-                <h2 className="text-sm sm:text-base font-bold text-black border-b border-gray-300 pb-1">
-                  3. IDENTIFICATION OF THE HOUSE PLOT
-                </h2>
-                <p className="text-xs sm:text-sm text-justify leading-relaxed text-gray-900">
-                  <strong>3.1</strong> The House Plot comprises the former farmhouse and garden at Great House Farm, Llandough.
-                </p>
-                <p className="text-xs sm:text-sm text-justify leading-relaxed text-gray-900">
-                  <strong>3.2</strong> The Court of Appeal in <em>BP Properties Ltd v Buckler</em> [1987] EWCA Civ 2 treated the farmhouse and garden as a separately identifiable parcel.
-                </p>
-                <p className="text-xs sm:text-sm text-justify leading-relaxed text-gray-900">
-                  <strong>3.3</strong> Precise boundaries will be established by the historical instruments, plans, earlier court documents and the current Land Registry title plan. A composite plan identifying the correspondence with the land claimed to be within WA231076 is annexed.
-                </p>
-              </div>
-
-              {/* Section 4 */}
-              <div className="space-y-3 my-6">
-                <h2 className="text-sm sm:text-base font-bold text-black border-b border-gray-300 pb-1">
-                  4. KEY HISTORICAL INSTRUMENTS
-                </h2>
-                <p className="text-xs sm:text-sm leading-relaxed text-gray-900">
-                  <strong>4.1</strong> The Claimant relies on the following (copies to be served):
-                </p>
-                <div className="pl-6 space-y-2 text-xs sm:text-sm text-gray-900 text-justify">
-                  <p>(a) the 1877 Conveyance (or such instrument as is located) concerning the farmhouse and approximately 10 acres;</p>
-                  <p>(b) the 1928 agreement between the Bute Estate Trustees and the Llandough Quarry Company, clause 7 of which provided that upon cessation of quarrying the farmhouse, garden and curtilage should remain the property of the occupier;</p>
-                  <p>(c) the 1938 Conveyance to WGR, which described the land conveyed as the quarry land and agricultural land at Great House Farm comprising 19 acres, but excluding the farmhouse, garden and curtilage (shown edged green on the plan);</p>
-                  <p>(d) the May 1939 agreement between WGR and John Williams and its plan, which demised only the eastern agricultural parcel;</p>
-                  <p>(e) the 1969 conveyance from WGR to BP Pension Trust Ltd and the May 1975 conveyance from BP Pension Trust Ltd to BP Properties Ltd, the latter of which expressly excluded the farmhouse, garden and curtilage (shown edged green on the plan).</p>
-                </div>
-                <p className="text-xs sm:text-sm text-justify leading-relaxed text-gray-900 pt-1">
-                  <strong>4.2</strong> The Claimant’s primary case is that these instruments show the House Plot was outside the proprietary interest conveyed into the BP chain.
-                </p>
-              </div>
-
-              {/* Section 5 */}
-              <div className="space-y-3 my-6">
-                <h2 className="text-sm sm:text-base font-bold text-black border-b border-gray-300 pb-1">
-                  5. THE 1982 REGISTRATION
-                </h2>
-                <p className="text-xs sm:text-sm text-justify leading-relaxed text-gray-900">
-                  <strong>5.1</strong> BP Properties Ltd was registered as proprietor of title WA231076 in November 1982 following first registration.
-                </p>
-                <p className="text-xs sm:text-sm text-justify leading-relaxed text-gray-900">
-                  <strong>5.2</strong> The application was supported by the 1975 Conveyance (but not its plan), an Ordnance Survey plan showing the entire farm, and a solicitor’s certificate stating that the land corresponded to the 1975 Conveyance.
-                </p>
-                <p className="text-xs sm:text-sm text-justify leading-relaxed text-gray-900">
-                  <strong>5.3</strong> The Claimant’s case is that the registration of the House Plot was a mistake because the 1975 Conveyance did not include it, the plan lodged was not the 1975 Conveyance plan, and the registration officer was given an incomplete picture of the root title.
-                </p>
-              </div>
-
-              {/* Section 6 */}
-              <div className="space-y-3 my-6">
-                <h2 className="text-sm sm:text-base font-bold text-black border-b border-gray-300 pb-1">
-                  6. EFFECT OF REGISTRATION AND RECTIFICATION
-                </h2>
-                <p className="text-xs sm:text-sm text-justify leading-relaxed text-gray-900">
-                  <strong>6.1</strong> The Claimant recognises the statutory effect of registration under the LRA 2002 and does not plead that a historical defect in an unregistered root of title automatically defeats a registered estate.
-                </p>
-                <p className="text-xs sm:text-sm text-justify leading-relaxed text-gray-900">
-                  <strong>6.2</strong> If the Court finds that the registered title contains a mistake affecting the registered proprietor’s title, the Claimant relies on Schedule 4 to the LRA 2002 and invites the Court to determine:
-                </p>
-                <div className="pl-6 space-y-1.5 text-xs sm:text-sm text-gray-900">
-                  <p>(a) whether there is a mistake in the register;</p>
-                  <p>(b) when and how that mistake arose;</p>
-                  <p>(c) whether the House Plot was thereby wrongly included;</p>
-                  <p>(d) whether the proposed alteration constitutes rectification;</p>
-                  <p>(e) whether the registered proprietor is in possession; and</p>
-                  <p>(f) whether the statutory conditions for rectification are satisfied.</p>
-                </div>
-              </div>
-
-              {/* Section 7 */}
-              <div className="space-y-3 my-6">
-                <h2 className="text-sm sm:text-base font-bold text-black border-b border-gray-300 pb-1">
-                  7. EFFECT OF THE 1987 JUDGMENT
-                </h2>
-                <p className="text-xs sm:text-sm text-justify leading-relaxed text-gray-900">
-                  <strong>7.1</strong> The 1987 proceedings concerned adverse possession of the farmhouse and garden. The Court of Appeal proceeded on the common ground that BP Properties Ltd had a paper title and was the registered proprietor.
-                </p>
-                <p className="text-xs sm:text-sm text-justify leading-relaxed text-gray-900">
-                  <strong>7.2</strong> The Claimant accepts the findings of the Court of Appeal on the issues it actually and necessarily determined (adverse possession, limitation, and the effect of the 1974 correspondence).
-                </p>
-                <p className="text-xs sm:text-sm text-justify leading-relaxed text-gray-900">
-                  <strong>7.3</strong> The Claimant does not seek to re-litigate those issues. The question is whether the underlying proprietary title now advanced was itself determined. The paper title was assumed, not litigated or determined. There is therefore no issue estoppel or cause-of-action estoppel on the root-of-title question.
-                </p>
-              </div>
-
-              {/* Section 8 */}
-              <div className="space-y-3 my-6">
-                <h2 className="text-sm sm:text-base font-bold text-black border-b border-gray-300 pb-1">
-                  8. PRIMARY CASE
-                </h2>
-                <p className="text-xs sm:text-sm text-justify leading-relaxed text-gray-900">
-                  <strong>8.1</strong> The House Plot followed a proprietary chain distinct from the agricultural parcel that remained subject to the landlord-and-tenant relationship.
-                </p>
-                <p className="text-xs sm:text-sm text-justify leading-relaxed text-gray-900">
-                  <strong>8.2</strong> If that chain is established, WGR did not acquire the House Plot merely by acquiring the reversion on the 1916 agricultural tenancy, and neither BP Pension Trust Ltd nor BP Properties Ltd acquired it through the 1969 or 1975 conveyances.
-                </p>
-                <p className="text-xs sm:text-sm text-justify leading-relaxed text-gray-900">
-                  <strong>8.3</strong> The registration of the House Plot in WA231076 therefore requires determination under the LRA 2002.
-                </p>
-                <p className="text-xs sm:text-sm text-justify leading-relaxed text-gray-900">
-                  <strong>8.4</strong> This is the principal issue on which the Claimant seeks judgment.
-                </p>
-              </div>
-
-              {/* Section 9 */}
-              <div className="space-y-3 my-6">
-                <h2 className="text-sm sm:text-base font-bold text-black border-b border-gray-300 pb-1">
-                  9. ALTERNATIVE CASES
-                </h2>
-                <p className="text-xs sm:text-sm text-justify leading-relaxed text-gray-900">
-                  <strong>9.1</strong> Adverse possession is relied upon only to the extent legally available after the Court determines the effect of the 1987 Judgment, and only in respect of matters not finally adjudicated.
-                </p>
-                <p className="text-xs sm:text-sm text-justify leading-relaxed text-gray-900">
-                  <strong>9.2</strong> Proprietary estoppel is relied upon only insofar as the evidence identifies a legally sufficient assurance, reliance, detriment and unconscionability.
-                </p>
-              </div>
-
-              {/* Section 10 */}
-              <div className="space-y-3 my-6">
-                <h2 className="text-sm sm:text-base font-bold text-black border-b border-gray-300 pb-1">
-                  10. RELIEF SOUGHT
-                </h2>
-                <p className="text-xs sm:text-sm leading-relaxed text-gray-900">
-                  The Claimant seeks:
-                </p>
-                <div className="pl-6 space-y-1.5 text-xs sm:text-sm text-gray-900">
-                  <p>(1) A declaration determining the legal and beneficial ownership of the House Plot;</p>
-                  <p>(2) A declaration determining whether the House Plot is properly comprised within title WA231076;</p>
-                  <p>(3) If the statutory requirements are satisfied, an order under Schedule 4 to the LRA 2002 directing such rectification or other alteration of WA231076 as is necessary to give effect to the Court’s determination;</p>
-                  <p>(4) Such directions as are necessary concerning the identification and boundaries of the House Plot;</p>
-                  <p>(5) Costs.</p>
-                </div>
-              </div>
-
-              {/* Section 11 */}
-              <div className="space-y-3 my-6">
-                <h2 className="text-sm sm:text-base font-bold text-black border-b border-gray-300 pb-1">
-                  11. MATTERS NOT SUBMITTED FOR ADJUDICATION
-                </h2>
-                <p className="text-xs sm:text-sm text-justify leading-relaxed text-gray-900">
-                  <strong>11.1</strong> These proceedings are confined to the determination of ownership and consequential proprietary relief. No adjudication is sought on damages, compensation, restitution, or any other monetary remedy arising from historical events. Their exclusion is not a waiver of any future cause of action.
-                </p>
+              {/* Sections A through Q */}
+              <div className="space-y-6 text-xs sm:text-sm leading-relaxed text-gray-900">
+                {sections.map((sec) => (
+                  <div key={sec.id} className="space-y-2">
+                    <h2 className="text-sm sm:text-base font-bold text-black border-b border-gray-300 pb-1">
+                      {sec.letter}. {sec.title}
+                    </h2>
+                    {sec.paragraphs.map((p, idx) => (
+                      <p key={idx} className="text-justify">
+                        {p}
+                      </p>
+                    ))}
+                  </div>
+                ))}
               </div>
 
               {/* Statement of Truth Signature */}
               <div className="mt-12 pt-6 border-t-2 border-black text-xs sm:text-sm leading-relaxed text-gray-900 space-y-3">
                 <div className="font-bold tracking-wider text-black">STATEMENT OF TRUTH</div>
-                <p>The Claimant believes that the facts stated in these Particulars of Claim are true.</p>
+                <p>The Claimants believe that the facts stated in these Particulars of Claim are true.</p>
                 <p>
-                  I understand that proceedings for contempt of court may be brought against anyone who makes, or causes to be made, a false statement in a document verified by a Statement of Truth without an honest belief in its truth.
+                  The Claimants understand that proceedings for contempt of court may be brought against a person who makes, or causes to be made, a false statement in a document verified by a Statement of Truth without an honest belief in its truth.
                 </p>
-                <div className="pt-6">
-                  <div className="font-bold text-sm text-black">Sion Buckler</div>
-                  <div className="text-xs text-gray-600 italic">Claimant / Litigant in Person</div>
+                <div className="pt-6 grid grid-cols-2 gap-4">
+                  <div>
+                    <div><strong>Signed:</strong> ______________________</div>
+                    <div><strong>Name:</strong> ______________________</div>
+                  </div>
+                  <div>
+                    <div><strong>Capacity:</strong> ___________________</div>
+                    <div><strong>Date:</strong> _______________________</div>
+                  </div>
                 </div>
               </div>
             </div>
-          ) : (
-            /* TAB 2: RAW HTML CODE VIEW */
+          )}
+
+          {/* TAB 3: RAW HTML CODE VIEW */}
+          {activeTab === 'source' && (
             <div className="bg-[#0B0D0E] rounded-3xl border border-[#343A40] p-6 shadow-2xl space-y-4">
               <div className="flex items-center justify-between text-xs text-[#9BA1A6] font-mono border-b border-[#202428] pb-3">
-                <span className="text-[#D08856] font-bold">Particulars_of_Claim_Sion_Buckler.html</span>
+                <span className="text-[#D08856] font-bold">High_Court_Particulars_of_Claim_WA231076.html</span>
                 <button
                   onClick={handleCopyCode}
-                  className="hover:text-[#FFFFFF] flex items-center gap-1"
+                  className="hover:text-[#FFFFFF] flex items-center gap-1 cursor-pointer"
                 >
                   <Copy className="w-3.5 h-3.5" />
                   <span>{copied ? 'Copied' : 'Copy HTML'}</span>

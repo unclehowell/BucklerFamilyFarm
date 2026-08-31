@@ -134,10 +134,10 @@ export const HISTORICAL_TENURE_TABLE_DATA: HistoricalTenureRecord[] = [
     id: 'rec-2002-present',
     year: '2002–Present',
     owner: 'Successor Commercial Freeholders / HM Land Registry Registered Titles',
-    occupant: 'Buckler & Williams Heirs-at-Law (Claimants for Multi-Million Pound Indemnity)',
-    details: 'Unextinguished Statutory Restitution Claim: Under Section 32 of the Limitation Act 1980 (Fraud & Concealment) and Schedule 8 of the Land Registration Act 2002 (Statutory Indemnity for Registry Error), claimants assert £3.8M–£7.2M in financial compensation, indexing, and exemplary damages for unlawful conversion.',
+    occupant: 'Buckler & Williams Heirs-at-Law (Claimants for Statutory Indemnity & Reparations)',
+    details: 'Unextinguished Statutory Restitution Claim: Under Section 32 of the Limitation Act 1980 (Fraud & Concealment) and Schedule 8 of the Land Registration Act 2002 (Statutory Indemnity for Registry Error), claimants assert financial compensation, indexing, and exemplary damages for unlawful conversion.',
     parcelContext: 'Entire Holding',
-    legalSignificance: 'Statutory financial indemnity & High Court tort claim for multi-million pound reparations',
+    legalSignificance: 'Statutory financial indemnity & High Court tort claim for reparations',
     archivalSource: 'Land Registration Act 2002 Sch 8; Limitation Act 1980 s.32; Senior Courts Act 1981 s.35A',
   },
 ];

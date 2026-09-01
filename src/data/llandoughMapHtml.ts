@@ -236,8 +236,8 @@ input[type=range]::-webkit-slider-thumb{
 .unproven-list li:before{content:"?";color:var(--warn);}
 
 footer.credits{
-  padding:6px 16px;background:var(--ink);border-top:1px solid var(--line);font-family:'IBM Plex Mono',monospace;
-  font-size:0.6rem;color:var(--text-lo);flex-shrink:0;
+  padding:3px 12px;background:var(--ink);border-top:1px solid var(--line);font-family:'IBM Plex Mono',monospace;
+  font-size:0.55rem;color:var(--text-lo);flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
 }
 
 /* ---------- Mobile drawer buttons (hidden on desktop) ---------- */
@@ -392,8 +392,8 @@ footer.credits{
   </aside>
 </div>
 
-<footer class="credits">
-  Basemap © OpenStreetMap contributors · H3 spatial indexing (Uber H3) · Reconstruction for research orientation only — not a legal record of title or boundary. Cross-check every claim against the Source field before relying on it.
+<footer class="credits" title="Basemap © OpenStreetMap · Uber H3 · Historical reconstruction for research orientation only — not a legal record of title.">
+  Basemap © OpenStreetMap · Uber H3 · Historical research reconstruction only — not a legal record of title.
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>

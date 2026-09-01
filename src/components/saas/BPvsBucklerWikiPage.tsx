@@ -6,12 +6,14 @@ import {
   ShieldAlert,
   Terminal,
   Map,
+  Landmark,
 } from 'lucide-react';
 import { THREE_PLOT_PARCELS } from '../../data/bucklerWilliamsFamilyDossier';
 import { HistoricalTenureTableView } from './HistoricalTenureTableView';
 import { RivalClaimsWordCloudPage } from './RivalClaimsWordCloudPage';
 import { CourtApplicationView } from './CourtApplicationView';
 import { CadwForensicWikiView } from './CadwForensicWikiView';
+import { CedfinHistoricalDossierView } from './CedfinHistoricalDossierView';
 import { ShareButton } from './ShareButton';
 import { LlandoughInteractiveMapModal } from './LlandoughInteractiveMapModal';
 
@@ -39,6 +41,7 @@ export const BPvsBucklerWikiPage: React.FC<BPvsBucklerWikiPageProps> = ({
 
   // Clean collapsible segment states inside the Overall Case Wiki (collapsed by default or simple to expand)
   const [wikiSegments, setWikiSegments] = useState<Record<string, boolean>>({
+    cedfin: true,
     summary: true,
     lineage: false,
     tenureTable: false,
@@ -55,6 +58,9 @@ export const BPvsBucklerWikiPage: React.FC<BPvsBucklerWikiPageProps> = ({
       } else if (hash === 'cadw' || hash === 'cadw-wiki') {
         setActiveView('cadw-wiki');
         setIsTreeExpanded(true);
+      } else if (hash === 'cedfin' || hash === 'cedfin-dossier' || hash === 'cedfin-wiki') {
+        setActiveView('overall-wiki');
+        setWikiSegments((prev) => ({ ...prev, cedfin: true }));
       } else if (hash === 'map' || hash === 'interactive-map' || hash === 'gis-map') {
         setIsMapModalOpen(true);
       } else {
@@ -68,6 +74,9 @@ export const BPvsBucklerWikiPage: React.FC<BPvsBucklerWikiPageProps> = ({
     } else if (initialTab === 'cadw-wiki') {
       setActiveView('cadw-wiki');
       setIsTreeExpanded(true);
+    } else if (initialTab === 'cedfin' || initialTab === 'cedfin-dossier') {
+      setActiveView('overall-wiki');
+      setWikiSegments((prev) => ({ ...prev, cedfin: true }));
     } else if (initialTab === 'map') {
       setIsMapModalOpen(true);
     } else {
@@ -186,7 +195,7 @@ export const BPvsBucklerWikiPage: React.FC<BPvsBucklerWikiPageProps> = ({
               </button>
             </div>
 
-            {/* Sub-entries: 'court form' & 'CADW wiki' (When expanded, no further submenus) */}
+            {/* Sub-entries: 'court form' & 'CADW wiki' (When expanded, exactly 2 sub-documents) */}
             {isTreeExpanded && (
               <div className="space-y-1 pl-4 sm:pl-6">
                 {/* Entry 1: court form */}
@@ -288,6 +297,37 @@ export const BPvsBucklerWikiPage: React.FC<BPvsBucklerWikiPageProps> = ({
                   <Map className="w-4 h-4" />
                   <span>Open Full Screen Map</span>
                 </button>
+              </div>
+
+              {/* Segment 0: Cedfin / St Cedwyn Reconstruction (v0.4) */}
+              <div className="rounded-2xl bg-[#1A1D20] border border-[#3A4459] overflow-hidden shadow-lg">
+                <button
+                  id="btn-toggle-cedfin"
+                  onClick={() => toggleWikiSegment('cedfin')}
+                  className="w-full p-4 text-left flex items-center justify-between gap-3 hover:bg-[#22262B] transition-colors cursor-pointer bg-[#171B22]"
+                >
+                  <div className="flex items-center gap-2">
+                    <span className="text-[#5FA3A7] font-mono font-bold text-sm">
+                      {wikiSegments.cedfin ? '▾' : '▸'}
+                    </span>
+                    <Landmark className="w-4 h-4 text-[#5FA3A7]" />
+                    <span className="font-bold text-sm text-[#F2ECDD]">
+                      Unearthing Cedfin: St Cedwyn, Llandough, Tŷ Mawr & Williams Lineage (v0.4 Dossier)
+                    </span>
+                    <span className="hidden sm:inline-flex text-[10px] font-mono px-2 py-0.5 rounded bg-[#293347] text-[#D9A95C] border border-[#3A4459]">
+                      PDF Evidence Matrix
+                    </span>
+                  </div>
+                  <span className="text-xs text-[#9BA1A6] font-mono">
+                    {wikiSegments.cedfin ? 'collapse' : 'expand'}
+                  </span>
+                </button>
+
+                {wikiSegments.cedfin && (
+                  <div className="p-3 sm:p-5 border-t border-[#2D3238] bg-[#14171A]">
+                    <CedfinHistoricalDossierView />
+                  </div>
+                )}
               </div>
 
               {/* Segment 1: Case Summary & Fraud Concealment */}

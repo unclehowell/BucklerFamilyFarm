@@ -159,7 +159,7 @@ export const EligibilityCheckModal: React.FC<EligibilityCheckModalProps> = ({
                     {generatedCode}
                   </div>
                   <div className="text-[10px] text-[#C8C7C4] font-mono">
-                    Sion Buckler • Great House Farm, Llandough (WA240304)
+                    Heirs of Mary Williams • Great House Farm, Llandough (WA231076)
                   </div>
                 </div>
               </div>
@@ -187,7 +187,7 @@ export const EligibilityCheckModal: React.FC<EligibilityCheckModalProps> = ({
                 <div className="space-y-0.5">
                   <div className="font-bold text-[#EDEFEE]">Statutory Deed Archival Audit</div>
                   <div className="text-[11px] text-[#C8C7C4]">
-                    Includes full WA240304 register analysis & certificate code
+                    Includes full WA231076 register analysis & certificate code
                   </div>
                 </div>
                 <div className="text-right font-mono">

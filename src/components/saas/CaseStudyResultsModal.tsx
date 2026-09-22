@@ -81,7 +81,7 @@ export const CaseStudyResultsModal: React.FC<CaseStudyResultsModalProps> = ({
     { title: 'Connecting to Public Records & National Archives...', detail: 'Scanning Kew Records, Glamorgan Archives & Parish registers' },
     { title: 'Triangulating 1840 Tithe Apportionments & 1910 Finance Act...', detail: 'Extracting historical rate books & separate domestic dwelling valuations' },
     { title: 'Auditing Three-Plot Parcel Chronology (Farm | House | Cottages)...', detail: 'Corroborating 1876 limeworks severance against Daniel Thomas 1895–1905 arrangement' },
-    { title: 'Synthesizing Court of Appeal BP Oil Ltd v Buckler (1987) Precedent...', detail: 'Generating root-of-title defect brief and statutory restitution dossier' },
+    { title: 'Applying 2026 Legal Review: WGR / BP Title Chain & WA231076...', detail: 'Distinguishing BP Properties Ltd v Buckler [1987] EWCA Civ 2 and confirming the Williams heirs\' House Plot title' },
   ];
 
   useEffect(() => {
@@ -162,14 +162,14 @@ export const CaseStudyResultsModal: React.FC<CaseStudyResultsModalProps> = ({
             <div className="min-w-0">
               <div className="flex items-center gap-2 flex-wrap">
                 <span className="font-bold text-xs sm:text-base text-[#EDEFEE] truncate">
-                  BP Oil Ltd v Buckler (1987) — Land Parcel Restitution Dossier
+                  BP Properties Ltd v Buckler (1987) — House Plot Title Dossier
                 </span>
                 <span className="px-2 py-0.5 rounded bg-[#1C1B18] text-emerald-400 border border-emerald-500/40 text-[10px] font-mono font-bold">
                   96.8% Match
                 </span>
               </div>
               <p className="text-[11px] text-[#A3A29E] font-mono hidden sm:block truncate">
-                Sion Buckler • Great House Farm (Ty Mawr), Llandough • Title WA240304
+                Heirs &amp; Successors of Mary Williams • Great House Farm (Ty Mawr), Llandough • Title WA231076
               </p>
             </div>
           </div>
@@ -260,7 +260,7 @@ export const CaseStudyResultsModal: React.FC<CaseStudyResultsModalProps> = ({
                 }`}
               >
                 <Compass className="w-3.5 h-3.5 text-[#D08856]" />
-                <span>1. Three-Plot Chronology (1800–2020)</span>
+                <span>1. Three-Plot Chronology (1800–2026)</span>
               </button>
 
               <button
@@ -272,7 +272,7 @@ export const CaseStudyResultsModal: React.FC<CaseStudyResultsModalProps> = ({
                 }`}
               >
                 <Scale className="w-3.5 h-3.5" />
-                <span>2. BP vs Buckler 1987 Precedent</span>
+                <span>2. BP v Buckler 1987 &amp; 2026 Legal Review</span>
               </button>
 
               <button
@@ -333,7 +333,26 @@ export const CaseStudyResultsModal: React.FC<CaseStudyResultsModalProps> = ({
                     </h4>
 
                     <p className="text-xs sm:text-sm text-[#EDEFEE]/90">
-                      Forensic reconstruction tracing the legal and physical separation between the ancestral dwelling house and surrounding agricultural / quarry lands across six defined historical epochs (1800–2020).
+                      Forensic reconstruction tracing the legal and physical separation between the ancestral dwelling house and surrounding agricultural / quarry lands across {THREE_PLOT_CHRONOLOGY_SECTIONS.length} defined historical epochs (1800–2026).
+                    </p>
+                  </div>
+
+                  {/* 2026 Legal Review Outcome */}
+                  <div className="p-4 sm:p-5 rounded-2xl bg-emerald-950/40 border-2 border-emerald-500/60 space-y-2">
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <span className="px-2.5 py-1 rounded-md bg-emerald-600 text-[#EDEFEE] font-mono text-[10px] font-black uppercase">
+                        2026 Legal Review Outcome
+                      </span>
+                      <span className="text-[10px] font-mono text-emerald-300 font-bold">
+                        Chancery Particulars of Claim ready to file
+                      </span>
+                    </div>
+                    <h5 className="font-black text-sm sm:text-base text-[#EDEFEE] flex items-center gap-2">
+                      <ShieldCheck className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+                      <span>Williams heirs &amp; successors reasserted as owners of the House Plot</span>
+                    </h5>
+                    <p className="text-[11px] sm:text-xs text-[#EDEFEE]/85">
+                      A review of every instrument in the chain (1877 Daniel Thomas severance, 1916 two-parcel tenancy, c.1928 quarry cessation, 1938 WGR conveyance, 1939 eastern-parcel tenancy, and the 1969 / 1975 BP conveyances) found that the farmhouse, garden and curtilage never passed to Western Ground Rents or BP. Their inclusion in title WA231076 on first registration in November 1982 is a mistake in the register under Schedule 4 of the Land Registration Act 2002. The 1987 Court of Appeal decided possession only and never adjudicated root of title.
                     </p>
                   </div>
 
@@ -344,7 +363,7 @@ export const CaseStudyResultsModal: React.FC<CaseStudyResultsModalProps> = ({
                         <History className="w-4 h-4 text-[#D08856]" />
                         <span>Summary: Three-Plot Analysis Over Time</span>
                       </h5>
-                      <span className="text-[10px] font-mono text-[#EDEFEE]/60">1800 – 2020</span>
+                      <span className="text-[10px] font-mono text-[#EDEFEE]/60">1800 – 2026</span>
                     </div>
 
                     <div className="overflow-x-auto rounded-2xl border border-[#484642] bg-[#1C1B18]">
@@ -366,7 +385,9 @@ export const CaseStudyResultsModal: React.FC<CaseStudyResultsModalProps> = ({
                             <tr
                               key={idx}
                               className={`hover:bg-[#2D2C28]/60 transition-colors ${
-                                row.period === '1955' || row.period === '1988'
+                                row.period === '2026'
+                                  ? 'bg-emerald-900/30 font-bold'
+                                  : row.period === '1955' || row.period === '1988'
                                   ? 'bg-[#AA210F]/15 font-bold'
                                   : ''
                               }`}
@@ -403,7 +424,9 @@ export const CaseStudyResultsModal: React.FC<CaseStudyResultsModalProps> = ({
                         >
                           <div className="flex items-center justify-between">
                             <span className="font-bold text-xs text-[#D08856]">{kf.finding}</span>
-                            <span className="text-[10px] font-mono text-amber-400">Ambiguity Check</span>
+                            <span className="text-[10px] font-mono text-amber-400">
+                              {kf.ambiguity.startsWith('✅') ? 'Legal Review' : 'Ambiguity Check'}
+                            </span>
                           </div>
                           <p className="text-[11px] text-[#EDEFEE]/85">{kf.details}</p>
                           <div className="p-2 rounded-lg bg-[#2D2C28]/80 text-[10px] font-mono text-amber-300/90 border border-[#484642]">
@@ -418,7 +441,7 @@ export const CaseStudyResultsModal: React.FC<CaseStudyResultsModalProps> = ({
                   <div className="space-y-2">
                     <div className="flex items-center justify-between">
                       <span className="text-xs font-bold text-[#EDEFEE]/80 uppercase tracking-wider font-mono">
-                        Chronological Sections (1800–2020)
+                        Chronological Sections (1800–2026)
                       </span>
                       <span className="text-[10px] text-[#EDEFEE]/60 font-mono">
                         {THREE_PLOT_CHRONOLOGY_SECTIONS.reduce((acc, s) => acc + s.items.length, 0)} Key Records
@@ -434,7 +457,7 @@ export const CaseStudyResultsModal: React.FC<CaseStudyResultsModalProps> = ({
                             : 'bg-[#2D2C28] text-[#EDEFEE]/70 hover:text-[#EDEFEE] border border-[#484642]'
                         }`}
                       >
-                        All Epochs (6 Sections)
+                        All Epochs ({THREE_PLOT_CHRONOLOGY_SECTIONS.length} Sections)
                       </button>
                       {THREE_PLOT_CHRONOLOGY_SECTIONS.map((sec) => (
                         <button
@@ -630,16 +653,16 @@ export const CaseStudyResultsModal: React.FC<CaseStudyResultsModalProps> = ({
                         LANDMARK PRECEDENT AUDIT
                       </span>
                       <span className="text-xs font-mono text-emerald-400 font-bold">
-                        Precedent Validity: 100% Established
+                        Root of Title: Never Adjudicated
                       </span>
                     </div>
 
                     <h4 className="text-lg sm:text-xl font-black text-[#EDEFEE]">
-                      BP Properties Ltd v Buckler (1987) — Root-of-Title Severance & Two-Parcel Conflation
+                      BP Properties Ltd v Buckler [1987] EWCA Civ 2 — Possession Decided, Title Left Open
                     </h4>
 
                     <p className="text-sm text-[#EDEFEE]/90">
-                      In 1987, BP Oil Ltd / BP Pension Trust Ltd pursued possession proceedings against the Buckler family over Great House Farm (Ty Mawr), Llandough. The proceedings relied on an unaccepted unilateral licence to stop adverse possession, while leaving the underlying separate freehold root of title completely unexamined.
+                      In 1987 the Court of Appeal decided only whether BP Properties Ltd&apos;s unilateral 1974 letter stopped time running for adverse possession. BP&apos;s paper title was assumed, not litigated. The 2026 legal review of the full title chain reasserts the heirs and successors of Mary Williams as owners of the House Plot (the former farmhouse, garden and curtilage) and seeks rectification of title WA231076 in the High Court (Chancery Division).
                     </p>
                   </div>
 
@@ -649,9 +672,9 @@ export const CaseStudyResultsModal: React.FC<CaseStudyResultsModalProps> = ({
                       <div className="w-8 h-8 rounded-xl bg-[#1C1B18] text-[#D08856] flex items-center justify-center font-bold font-mono">
                         01
                       </div>
-                      <h5 className="font-bold text-sm text-[#EDEFEE]">1667 999-Year Leasehold</h5>
+                      <h5 className="font-bold text-sm text-[#EDEFEE]">1877 Severance &amp; 1928 Quarry Clause</h5>
                       <p className="text-[#EDEFEE]/80 text-[11px] leading-relaxed">
-                        The domestic dwelling house and curtilage (Parcel A) was established under an ancestral 999-year term created in 1667, operating under equitable property law as a virtual freehold that no agricultural tenancy could extinguish.
+                        The Bute Estate sold the farmhouse, buildings and ~10 acres to Daniel Thomas in 1877. His agreement provided that the freehold would pass to the Williams family once quarrying ceased. Machinery was removed c.1928, the last rent was paid to Alfred Thomas, and John Williams thereafter held the house as his own.
                       </p>
                     </div>
 
@@ -659,9 +682,9 @@ export const CaseStudyResultsModal: React.FC<CaseStudyResultsModalProps> = ({
                       <div className="w-8 h-8 rounded-xl bg-[#1C1B18] text-[#D08856] flex items-center justify-center font-bold font-mono">
                         02
                       </div>
-                      <h5 className="font-bold text-sm text-[#EDEFEE]">Two-Parcel Conflation</h5>
+                      <h5 className="font-bold text-sm text-[#EDEFEE]">House Plot Outside the WGR / BP Chain</h5>
                       <p className="text-[#EDEFEE]/80 text-[11px] leading-relaxed">
-                        When title WA240304 was registered, the commercial quarry lease (Parcel B) was merged with the ancestral dwelling (Parcel A) without voluntary deed of conveyance from the hereditary occupants.
+                        The 1938 WGR conveyance and May 1939 tenancy dealt with the eastern agricultural parcel. The 1975 BP Pension Trust → BP Properties Ltd conveyance plan edges the farmhouse, garden and curtilage green as excluded. No instrument ever conveyed the House Plot to BP.
                       </p>
                     </div>
 
@@ -669,9 +692,9 @@ export const CaseStudyResultsModal: React.FC<CaseStudyResultsModalProps> = ({
                       <div className="w-8 h-8 rounded-xl bg-[#1C1B18] text-emerald-400 flex items-center justify-center font-bold font-mono">
                         03
                       </div>
-                      <h5 className="font-bold text-sm text-[#EDEFEE]">Statutory Title Rectification</h5>
+                      <h5 className="font-bold text-sm text-[#EDEFEE]">Rectification of WA231076</h5>
                       <p className="text-[#EDEFEE]/80 text-[11px] leading-relaxed">
-                        Under Schedule 4, Section 65 of the Land Registration Act 2002, the register must be rectified to excise Parcel A from title WA240304 and reinstate hereditary freehold title.
+                        BP Properties Ltd was first registered under WA231076 in November 1982 with the House Plot included. Under section 65 and Schedule 4 of the Land Registration Act 2002, that mistake can be corrected by declaring the Williams heirs&apos; ownership and rectifying the register.
                       </p>
                     </div>
                   </div>
@@ -683,23 +706,42 @@ export const CaseStudyResultsModal: React.FC<CaseStudyResultsModalProps> = ({
                       <span>Evidentiary Chain Comparison</span>
                     </h5>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-[11px]">
-                      <div className="p-3 rounded-xl bg-[#2D2C28] border border-[#484642] space-y-1">
-                        <span className="font-mono text-[#D08856] font-bold uppercase">
-                          Parcel A (Domestic Homestead)
+                      <div className="p-3 rounded-xl bg-[#2D2C28] border border-emerald-500/40 space-y-1">
+                        <span className="font-mono text-emerald-400 font-bold uppercase">
+                          House Plot (Farmhouse, Garden &amp; Curtilage)
                         </span>
                         <p className="text-[#EDEFEE]/80">
-                          1667 virtual freehold; 1840 Tithe #37; 1910 Finance Act #42 separate residential assessment; 1955 partial enforcement spared house. Never voluntarily conveyed.
+                          Williams occupation from 1667; 1840 Tithe separate domestic parcel; 1877 severance to Daniel Thomas; c.1928 quarry cessation; spared in the 1955 enforcement; excluded from the 1938, 1939 and 1975 instruments. Never conveyed by the family. Owners: heirs &amp; successors of Mary Williams.
                         </p>
                       </div>
                       <div className="p-3 rounded-xl bg-[#2D2C28] border border-[#484642] space-y-1">
                         <span className="font-mono text-[#AA210F] font-bold uppercase">
-                          Parcel B (Quarry Leasehold)
+                          Agricultural Land (WGR / BP Chain)
                         </span>
                         <p className="text-[#EDEFEE]/80">
-                          Agricultural limestone extraction lease severed in 1876 and surrendered in 1988; improperly merged into WA240304.
+                          1938 WGR conveyance → 1969 BP Pension Trust → 1975 BP Properties Ltd → November 1982 first registration as WA231076 (related application WA240304, February 1983). Not contested by the claim.
                         </p>
                       </div>
                     </div>
+                  </div>
+
+                  {/* Claim Status */}
+                  <div className="p-4 rounded-2xl bg-[#2D2C28] border border-[#484642] space-y-2">
+                    <h5 className="font-bold text-sm text-[#EDEFEE] flex items-center gap-2">
+                      <FileCheck2 className="w-4 h-4 text-[#D08856]" />
+                      <span>2026 Status</span>
+                    </h5>
+                    <ul className="space-y-1.5 text-[11px] text-[#EDEFEE]/80 list-disc pl-4">
+                      <li>
+                        <strong className="text-[#EDEFEE]">Chancery claim:</strong> Particulars of Claim drafted for the estate and successors of Mary Williams, seeking declarations of ownership, Schedule 4 rectification of WA231076 and boundary directions. Damages are expressly outside its scope.
+                      </li>
+                      <li>
+                        <strong className="text-[#EDEFEE]">Cadw (August 2026):</strong> Cadw confirmed only two 1988 photographs survive, with no inspection notes, decision files or disposal certificates for the 5 December 1988 spot-listing refusal. A subsidiary judicial review / spoliation action is in preparation.
+                      </li>
+                      <li>
+                        <strong className="text-[#EDEFEE]">Still to inspect:</strong> the original 1877 instrument and plan, the 1928 quarry agreement, and the 1975 conveyance plan (NLW Bute D219 series and BP conveyancing records).
+                      </li>
+                    </ul>
                   </div>
                 </div>
               )}

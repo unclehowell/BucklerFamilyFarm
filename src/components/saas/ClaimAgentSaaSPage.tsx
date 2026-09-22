@@ -25,8 +25,8 @@ const DEFAULT_SEARCH_FORM: SearchFormData = {
   ancestralHolding: 'Great House Farm (Ty Mawr)',
   parishLocation: 'Llandough / Glamorgan',
   historicalCounty: 'Glamorgan (Vale of Glamorgan)',
-  approxDateRange: '1840 – 1988',
-  knownDocuments: 'BP Properties Ltd v Buckler [1987] EWCA Civ 2; 1840 Llandough Tithe Apportionment; Bute Estate Rent Books (1845–1893); 1955 High Court Bailiff Records; 1988 Dawn Demolition Records',
+  approxDateRange: '1667 – 2026',
+  knownDocuments: 'BP Properties Ltd v Buckler [1987] EWCA Civ 2; 1840 Llandough Tithe Apportionment; Bute Estate Rent Books (1845–1893); 1877 / 1928 Daniel Thomas instruments; 1938 WGR & 1975 BP conveyances; Title WA231076 (1982 first registration); Cadw 1988 records & 2026 admissions',
 };
 
 interface ClaimAgentSaaSPageProps {

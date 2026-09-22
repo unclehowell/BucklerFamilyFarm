@@ -1501,7 +1501,139 @@ export const THREE_PLOT_CHRONOLOGY_SECTIONS: ChronologySection[] = [
             owner: 'Various private owners',
           },
         },
-        notes: 'The property is now fully developed as a residential estate. The Williams/Buckler family is no longer associated with the physical site.',
+        notes: 'The property is now fully developed as a residential estate. Physical redevelopment did not determine title: the House Plot root of title was never adjudicated, and the Williams heirs and successors never surrendered their ownership claim (see Section 7).',
+      },
+    ],
+  },
+  {
+    id: 'sec-7',
+    sectionNumber: 'SECTION 7',
+    period: '2021–2026',
+    title: 'Legal Review & Reassertion of Title',
+    items: [
+      {
+        id: '2026-cedfin-dossier',
+        year: '2026',
+        title: 'Cedfin / Tŷ Mawr Historical Dossier (v0.4) Compiled',
+        textCitation:
+          '"NLW Bute Estate deeds and leases for \'Cydfin Farm or Ty Mawr Farm\' (107 acres), collection 1806151, D219 series; David Stewart 1824 Atlas of the Bute Glamorgan Estate, Map No. 10, confirming Williams tenure predating the 1916 tenancy grant."',
+        propertyArrangement:
+          'The review separated manorial lordship (Herbert, then Bute from 1793) from freehold farm ownership, and traced the Williams family occupation of Great House Farm from 1667 to 1988.',
+        table: {
+          farmLand: {
+            status: 'Researched: Bute D219 leases & 1824 Atlas',
+            occupier: 'Church View Close (developed)',
+            owner: 'Registered proprietor(s) under WA231076',
+          },
+          houseGarden: {
+            status: 'Researched: Separate domestic freehold holding',
+            occupier: 'Church View Close (developed)',
+            owner: 'Williams heirs & successors (claimed)',
+          },
+          cottages: {
+            status: 'Unknown',
+            occupier: 'Unknown',
+            owner: 'Unknown',
+          },
+        },
+        notes: 'Lordship of the manor is distinct from ownership of the freehold farm, so Bute\'s 1793 purchase of the lordship did not by itself carry the Williams domestic holding.',
+        ambiguities: [
+          'D219/1, D219/4-5 and D219/8 still need physical inspection at the National Library of Wales.',
+        ],
+      },
+      {
+        id: '2026-cadw-admissions',
+        year: 'Aug 2026',
+        title: 'Cadw Admits 1988 Spot-Listing Records Are Lost',
+        textCitation:
+          '"Cadw confirmed in August 2026 that only two 1988 photographs survive. Zero inspection notes, zero decision files, zero disposal certificates."',
+        propertyArrangement:
+          'Cadw cannot explain how the 5 December 1988 spot-listing refusal was reached, or how the records of that decision were disposed of. The demolition went ahead on 5/6 December 1988 within hours of the refusal.',
+        table: {
+          farmLand: {
+            status: 'Heritage record: Lost',
+            occupier: 'Church View Close (developed)',
+            owner: 'Registered proprietor(s) under WA231076',
+          },
+          houseGarden: {
+            status: 'Heritage record: Lost (1974 RCAHMW survey survives)',
+            occupier: 'Church View Close (developed)',
+            owner: 'Williams heirs & successors (claimed)',
+          },
+          cottages: {
+            status: 'Unknown',
+            occupier: 'Unknown',
+            owner: 'Unknown',
+          },
+        },
+        notes: 'A subsidiary judicial review / spoliation action is being prepared. The Chancery title claim remains the main case.',
+        ambiguities: [
+          'Surviving evidence does not prove Cadw acted improperly; it shows the record needed to test the decision no longer exists.',
+        ],
+      },
+      {
+        id: '2026-title-chain-review',
+        year: '2026',
+        title: 'Legal Review: House Plot Never Entered the WGR / BP Title Chain',
+        isCriticalEvent: true,
+        textCitation:
+          '"The central question for determination is therefore: Whether the House Plot formed part of the proprietary estate conveyed to WGR and subsequently to BP Properties Ltd, or whether it remained outside that chain of title."',
+        propertyArrangement:
+          'The review traced each instrument: the 1877 Bute severance of the farmhouse and ~10 acres to Daniel Thomas; the 1916 tenancy covering two distinct parcels; the c.1928 cessation of quarrying (machinery removed, last rent paid to Alfred Thomas); the 1938 WGR conveyance and May 1939 tenancy, which dealt with the eastern agricultural parcel; and the 1969 and 1975 BP conveyances, whose plans exclude the farmhouse, garden and curtilage (edged green). On that chain, BP acquired the farmland but not the House Plot.',
+        table: {
+          farmLand: {
+            status: 'Conveyed: 1938 WGR → 1969 BP Pension Trust → 1975 BP Properties',
+            occupier: 'Church View Close (developed)',
+            owner: 'Registered proprietor(s) under WA231076',
+          },
+          houseGarden: {
+            status: 'EXCLUDED from 1938, 1939 & 1975 instruments',
+            occupier: 'Church View Close (developed)',
+            owner: 'Williams heirs & successors (estate of Mary Williams)',
+          },
+          cottages: {
+            status: 'Unknown',
+            occupier: 'Unknown',
+            owner: 'Unknown',
+          },
+        },
+        criticalAmbiguity:
+          'In November 1982 BP Properties Ltd was first registered under WA231076 with the House Plot included, although no instrument in its chain conveyed it. The review treats this as a mistake in the register under Schedule 4 of the Land Registration Act 2002.',
+        notes: 'The 1955 "whole farm" order must be read against the 1916 two-parcel tenancy; the phrase alone does not bring the House Plot into WGR\'s title. Mary Williams stated that the family title papers were taken from the farmhouse blanket box before the possession proceedings.',
+        ambiguities: [
+          'The original 1877 instrument and plan, the 1928 quarry agreement, and the 1975 conveyance plan must be inspected to confirm the exclusion.',
+        ],
+      },
+      {
+        id: '2026-ownership-reasserted',
+        year: '2026',
+        title: 'Williams Heirs & Successors Reasserted as Owners of the House Plot',
+        isCriticalEvent: true,
+        textCitation:
+          '"The Claimants are the persons presently entitled to the proprietary interest claimed in the parcel comprising the former farmhouse, garden and curtilage at Great House Farm, Llandough (\'the House Plot\'), by succession from the historical owners and occupiers identified below, including Mary Williams, deceased."',
+        propertyArrangement:
+          'The review concluded that ownership of the House Plot remains with the heirs and successors of Mary Williams. BP Properties Ltd v Buckler [1987] EWCA Civ 2 decided only that the 1974 unilateral licence stopped adverse possession; BP\'s paper title was assumed, not litigated, so no issue estoppel bars the title claim. Chancery Division Particulars of Claim have been drafted seeking declarations of ownership and rectification of WA231076.',
+        table: {
+          farmLand: {
+            status: 'Not contested',
+            occupier: 'Church View Close (developed)',
+            owner: 'Registered proprietor(s) under WA231076',
+          },
+          houseGarden: {
+            status: 'OWNERSHIP REASSERTED: Rectification of WA231076 sought',
+            occupier: 'Church View Close (developed)',
+            owner: 'Williams heirs & successors (estate of Mary Williams)',
+          },
+          cottages: {
+            status: 'Unknown',
+            occupier: 'Unknown',
+            owner: 'Unknown',
+          },
+        },
+        notes: 'Claimants include Sion Buckler (son of William Buckler, son of Mary Williams), with the other persons entitled through Mary Williams to be joined or represented. The claim seeks proprietary relief only: declarations, Schedule 4 LRA 2002 rectification and boundary directions. Damages and compensation are expressly outside its scope.',
+        ambiguities: [
+          'Ownership has been reasserted but not yet determined by a court; the Particulars of Claim are ready for filing in the High Court (Chancery Division).',
+        ],
       },
     ],
   },
@@ -1545,6 +1677,12 @@ export const THREE_PLOT_SUMMARY_TABLE: ThreePlotSummaryRow[] = [
     parcel3Cottages: 'Unknown',
   },
   {
+    period: '1982',
+    parcel1Farm: 'BP Properties Ltd first registered (WA231076)',
+    parcel2HouseGarden: 'Included in WA231076 without a conveying instrument (register mistake)',
+    parcel3Cottages: 'Unknown',
+  },
+  {
     period: '1988',
     parcel1Farm: 'BP (possession)',
     parcel2HouseGarden: 'EVICTED & DEMOLISHED',
@@ -1562,13 +1700,19 @@ export const THREE_PLOT_SUMMARY_TABLE: ThreePlotSummaryRow[] = [
     parcel2HouseGarden: 'Church View Close (20 houses)',
     parcel3Cottages: 'Church View Close (20 houses)',
   },
+  {
+    period: '2026',
+    parcel1Farm: 'Registered proprietor(s) under WA231076 (not contested)',
+    parcel2HouseGarden: 'REASSERTED: Williams heirs & successors (rectification of WA231076 sought)',
+    parcel3Cottages: 'Unknown',
+  },
 ];
 
 export const THREE_PLOT_KEY_FINDINGS: KeyFindingItem[] = [
   {
-    finding: 'Separate Plot Hypothesis',
-    details: 'House & garden separated from farmland after 1876, formalised by Daniel Thomas arrangement (1895–1905).',
-    ambiguity: '⚠️ Deeds missing - cannot be proven.',
+    finding: 'Separate Plot (1877 Severance)',
+    details: 'Bute Estate sold the farmhouse, buildings and ~10 acres to Daniel Thomas in 1877, retaining ~9 acres. The 1916 tenancy still treated the holding as two distinct parcels.',
+    ambiguity: '✅ Legal review 2026: separation traced through the 1877, 1916, 1938, 1939 and 1975 instruments. Original 1877 plan still to be inspected.',
   },
   {
     finding: 'Dual Listing (1845–1892/93)',
@@ -1576,18 +1720,33 @@ export const THREE_PLOT_KEY_FINDINGS: KeyFindingItem[] = [
     ambiguity: '⚠️ Whether this reflected legal or accounting separation is unclear.',
   },
   {
-    finding: '1955 Partial Enforcement',
-    details: 'Farmland taken; house & garden spared (Mary\'s illness / amputation).',
-    ambiguity: '⚠️ Whether this was legal or compassionate is unclear.',
+    finding: 'Daniel Thomas Quarry Arrangement (1928)',
+    details: 'Quarrying clause: the freehold was to pass to the Williams family once quarrying ceased. Machinery was removed c.1928 and the last rent paid to Alfred Thomas; John Williams then treated the farm as his own.',
+    ambiguity: '⚠️ The original 1928 instrument must be produced. Family title papers were taken from the farmhouse blanket box before the possession proceedings.',
+  },
+  {
+    finding: '1955 "Whole Farm" Order',
+    details: 'Farmland taken; house & garden spared. The order\'s "whole farm" wording must be read against the 1916 two-parcel tenancy.',
+    ambiguity: '✅ Legal review 2026: the phrase alone does not bring the House Plot into WGR\'s title.',
+  },
+  {
+    finding: '1975 Conveyance Exclusion',
+    details: 'The BP Pension Trust → BP Properties Ltd conveyance plan edges the farmhouse, garden and curtilage green as excluded land.',
+    ambiguity: '✅ Legal review 2026: BP did not acquire the House Plot through its conveyances. Actual 1975 plan to be inspected to confirm.',
+  },
+  {
+    finding: '1982 First Registration (WA231076)',
+    details: 'BP Properties Ltd was registered in November 1982 with the House Plot included, although no instrument in its chain conveyed it.',
+    ambiguity: '✅ Legal review 2026: a mistake in the register, open to rectification under Schedule 4 LRA 2002.',
   },
   {
     finding: 'Court of Appeal 1987',
-    details: 'Ruled strictly on possession only, not root of title.',
-    ambiguity: '⚠️ Underlying claim of ownership never tested.',
+    details: 'Ruled strictly on possession only (1974 unilateral licence), not root of title.',
+    ambiguity: '✅ Legal review 2026: BP\'s paper title was assumed, not litigated, so no issue estoppel bars the title claim.',
   },
   {
-    finding: 'Daniel Thomas Arrangement',
-    details: 'Quarrying rights exchanged for title to house & garden.',
-    ambiguity: '⚠️ Missing deeds; tree-planting ceremony not corroborated.',
+    finding: 'Ownership Reasserted (2026)',
+    details: 'The heirs and successors of Mary Williams are reasserted as owners of the House Plot. Chancery Particulars of Claim seek declarations of ownership and rectification of WA231076.',
+    ambiguity: '⚠️ Pending determination by the High Court (Chancery Division).',
   },
 ];

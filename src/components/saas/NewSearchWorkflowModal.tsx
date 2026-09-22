@@ -30,8 +30,8 @@ export const DEFAULT_SEARCH_FORM: SearchFormData = {
   ancestralHolding: 'Great House Farm',
   parishLocation: 'Llandough',
   historicalCounty: 'Glamorgan / South Wales',
-  approxDateRange: '1840 – 1987 (BP Oil Precedent)',
-  knownDocuments: 'Tithe Apportionments, WA240304 Registry, CADW aerial survey',
+  approxDateRange: '1667 – 2026 (BP Properties v Buckler & 2026 Legal Review)',
+  knownDocuments: 'Tithe Apportionments, 1877 / 1928 Daniel Thomas instruments, 1975 BP conveyance plan, WA231076 Registry, Cadw 1988 records',
 };
 
 export const BLANK_SEARCH_FORM: SearchFormData = {

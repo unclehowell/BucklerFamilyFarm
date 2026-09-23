@@ -7,6 +7,7 @@ import {
   Terminal,
   Map,
   Landmark,
+  Library,
 } from 'lucide-react';
 import { THREE_PLOT_PARCELS } from '../../data/bucklerWilliamsFamilyDossier';
 import { HistoricalTenureTableView } from './HistoricalTenureTableView';
@@ -14,6 +15,7 @@ import { RivalClaimsWordCloudPage } from './RivalClaimsWordCloudPage';
 import { CourtApplicationView } from './CourtApplicationView';
 import { CadwForensicWikiView } from './CadwForensicWikiView';
 import { CedfinHistoricalDossierView } from './CedfinHistoricalDossierView';
+import { GreatHouseFarmArchiveView } from './GreatHouseFarmArchiveView';
 import { ShareButton } from './ShareButton';
 import { LlandoughInteractiveMapModal } from './LlandoughInteractiveMapModal';
 
@@ -23,7 +25,7 @@ interface BPvsBucklerWikiPageProps {
   initialTab?: string;
 }
 
-type ActiveView = 'overall-wiki' | 'court-form' | 'cadw-wiki';
+type ActiveView = 'overall-wiki' | 'court-form' | 'cadw-wiki' | 'archive-wiki';
 
 export const BPvsBucklerWikiPage: React.FC<BPvsBucklerWikiPageProps> = ({
   onBackToResults,
@@ -57,6 +59,9 @@ export const BPvsBucklerWikiPage: React.FC<BPvsBucklerWikiPageProps> = ({
         setIsTreeExpanded(true);
       } else if (hash === 'cadw' || hash === 'cadw-wiki') {
         setActiveView('cadw-wiki');
+        setIsTreeExpanded(true);
+      } else if (hash === 'archive' || hash.startsWith('archive/') || hash === 'evidence' || hash === 'evidence-library') {
+        setActiveView('archive-wiki');
         setIsTreeExpanded(true);
       } else if (hash === 'cedfin' || hash === 'cedfin-dossier' || hash === 'cedfin-wiki') {
         setActiveView('overall-wiki');
@@ -195,7 +200,7 @@ export const BPvsBucklerWikiPage: React.FC<BPvsBucklerWikiPageProps> = ({
               </button>
             </div>
 
-            {/* Sub-entries: 'court form' & 'CADW wiki' (When expanded, exactly 2 sub-documents) */}
+            {/* Sub-entries: 'court form', 'CADW wiki' & 'wiki archive + evidence' */}
             {isTreeExpanded && (
               <div className="space-y-1 pl-4 sm:pl-6">
                 {/* Entry 1: court form */}
@@ -218,7 +223,7 @@ export const BPvsBucklerWikiPage: React.FC<BPvsBucklerWikiPageProps> = ({
 
                 {/* Entry 2: CADW wiki */}
                 <div className="flex items-center gap-1.5">
-                  <span className="text-[#656D76]">└──</span>
+                  <span className="text-[#656D76]">├──</span>
                   <button
                     id="btn-tree-select-cadw-wiki"
                     onClick={() => handleSelectView('cadw-wiki', 'cadw-wiki')}
@@ -231,6 +236,24 @@ export const BPvsBucklerWikiPage: React.FC<BPvsBucklerWikiPageProps> = ({
                     <Building2 className="w-3.5 h-3.5 text-[#AA210F]" />
                     <span>CADW wiki</span>
                     {activeView === 'cadw-wiki' && <span className="text-[10px] opacity-80">[active]</span>}
+                  </button>
+                </div>
+
+                {/* Entry 3: Great House Farm wiki archive & evidence files */}
+                <div className="flex items-center gap-1.5">
+                  <span className="text-[#656D76]">└──</span>
+                  <button
+                    id="btn-tree-select-archive-wiki"
+                    onClick={() => handleSelectView('archive-wiki', 'archive/main-page')}
+                    className={`px-2 py-1 rounded cursor-pointer transition-all flex items-center gap-1.5 ${
+                      activeView === 'archive-wiki'
+                        ? 'bg-[#AA210F] text-[#FFFFFF] font-bold shadow'
+                        : 'text-[#C5CAD0] hover:bg-[#1C2024] hover:text-[#FFFFFF]'
+                    }`}
+                  >
+                    <Library className="w-3.5 h-3.5 text-[#5FA3A7]" />
+                    <span>wiki archive &amp; evidence</span>
+                    {activeView === 'archive-wiki' && <span className="text-[10px] opacity-80">[active]</span>}
                   </button>
                 </div>
               </div>
@@ -556,6 +579,32 @@ export const BPvsBucklerWikiPage: React.FC<BPvsBucklerWikiPageProps> = ({
               {/* Embedded CADW Forensic Wiki View */}
               <div className="rounded-2xl bg-[#16181B] border border-[#2D3238] p-3 sm:p-5">
                 <CadwForensicWikiView onSelectCourtApp={() => handleSelectView('court-form', 'court-form')} />
+              </div>
+            </div>
+          )}
+
+          {/* VIEW 4: GREAT HOUSE FARM WIKI ARCHIVE & EVIDENCE FILES */}
+          {activeView === 'archive-wiki' && (
+            <div className="space-y-4">
+              <div className="p-4 sm:p-5 rounded-2xl bg-[#1A1D20] border border-[#2D3238] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div>
+                  <span className="text-[11px] font-mono text-[#5FA3A7] uppercase tracking-wider font-bold">
+                    Document: wiki archive &amp; evidence
+                  </span>
+                  <h1 className="font-serif font-black text-lg sm:text-xl text-[#FFFFFF] tracking-tight mt-0.5">
+                    Great House Farm Wiki — Pages &amp; Original Documents
+                  </h1>
+                </div>
+                <button
+                  onClick={() => handleSelectView('overall-wiki', 'overall-wiki')}
+                  className="text-xs text-[#9BA1A6] hover:text-[#FFFFFF] py-1 px-3 rounded-lg bg-[#202428] border border-[#3E444B] transition-colors cursor-pointer self-start sm:self-auto"
+                >
+                  ← Back to overall case - wiki
+                </button>
+              </div>
+
+              <div className="rounded-2xl bg-[#16181B] border border-[#2D3238] p-3 sm:p-5">
+                <GreatHouseFarmArchiveView />
               </div>
             </div>
           )}

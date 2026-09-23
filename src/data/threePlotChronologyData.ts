@@ -1572,6 +1572,65 @@ export const THREE_PLOT_CHRONOLOGY_SECTIONS: ChronologySection[] = [
         ],
       },
       {
+        id: '2026-hmlr-complaint',
+        year: 'Feb–Jul 2026',
+        title: 'HM Land Registry Complaint & First-Registration Files',
+        textCitation:
+          '"Stage two decision by a Land Registrar: \'the title has been registered correctly and there are no grounds for rectification or indemnity\'." (HMLR, 25 May 2026)',
+        propertyArrangement:
+          'The family complained to HM Land Registry of fraud, maladministration and a mistake in the register. HMLR retrieved the paper files (13 Feb), set out the registration history (23 Mar), rejected the complaint at stage one (19 Apr) and stage two (25 May), and on 30 July listed every document on the first-registration files: 30 for WA231076 and 13 for WA240304.',
+        table: {
+          farmLand: {
+            status: 'Registered: WA231076 (Persimmon Homes (Wales) Ltd)',
+            occupier: 'Church View Close (developed)',
+            owner: 'Registered proprietor(s) under WA231076',
+          },
+          houseGarden: {
+            status: 'Complaint not upheld; files now disclosed',
+            occupier: 'Church View Close (developed)',
+            owner: 'Williams heirs & successors (claimed)',
+          },
+          cottages: {
+            status: 'Unknown',
+            occupier: 'Unknown',
+            owner: 'Unknown',
+          },
+        },
+        criticalAmbiguity:
+          'On 30 November 1982 Linklaters & Paines applied to register WA231076 and certified they knew of no question or doubt affecting the title, while Mary Williams was living in the farmhouse and asserting ownership. WA240304 (applied for 23 February 1983 on the 1975 conveyance) was amalgamated into WA231076 on a request of 2 February 1987, during the Court of Appeal proceedings.',
+        notes: 'HMLR said it cannot look behind the 1987 judgment. The 1969 WGR → BP Pension Trust conveyance, recited as the root of title, is not on either file; the 1975 conveyance and its plan are on the WA240304 file and can be ordered on form OC2.',
+        ambiguities: [
+          'The 1975 conveyance plan and the 1905, 1924 and 1961 deeds on the files have still to be obtained and checked.',
+        ],
+      },
+      {
+        id: '2026-records-requests',
+        year: 'Sep 2026',
+        title: 'Records Requests to Heneb & Museum Wales',
+        textCitation:
+          '"Formal complaint and collections enquiry — material held from the Williams/Buckler parcel at Great House Farm, Llandough." (Family letter to Amgueddfa Cymru – Museum Wales, 22 September 2026)',
+        propertyArrangement:
+          'On 20 September 2026 the family asked Heneb – The Trust for Welsh Archaeology for its records on the site (HER GGAT02038s). On 22 September 2026 it wrote to Museum Wales about the human remains, objects and excavation archives from the 1979 and 1994 excavations (accessions 82.44H and 95.56H), which the Cotswold Archaeological Trust offered to the Museum in 1994 "subject to the agreement of the legal landowner".',
+        table: {
+          farmLand: {
+            status: 'Excavated 1979 (Roman villa, 82.44H)',
+            occupier: 'Church View Close (developed)',
+            owner: 'Registered proprietor(s) under WA231076',
+          },
+          houseGarden: {
+            status: 'Excavated 1994 (early medieval cemetery, 95.56H)',
+            occupier: 'Church View Close (developed)',
+            owner: 'Williams heirs & successors (claimed)',
+          },
+          cottages: {
+            status: 'Unknown',
+            occupier: 'Unknown',
+            owner: 'Unknown',
+          },
+        },
+        notes: 'The Museum Wales FOI disclosure, the Heneb schedule and the family letter are in the Evidence Library (wiki archive & evidence).',
+      },
+      {
         id: '2026-title-chain-review',
         year: '2026',
         title: 'Legal Review: House Plot Never Entered the WGR / BP Title Chain',

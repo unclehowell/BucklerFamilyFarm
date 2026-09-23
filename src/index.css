@@ -57,3 +57,26 @@
   animation-play-state: paused !important;
 }
 
+
+/* Great House Farm wiki archive (imported WordPress page HTML) */
+.ghf-archive { color: #C5CAD0; font-size: 0.875rem; line-height: 1.65; }
+.ghf-archive p { margin: 0.6rem 0; }
+.ghf-archive strong { color: #FFFFFF; }
+.ghf-archive a { color: #5FA3A7; text-decoration: underline; text-underline-offset: 2px; }
+.ghf-archive a:hover { color: #F2ECDD; }
+.ghf-archive h2 { color: #FFFFFF; font-family: Georgia, "Times New Roman", serif; font-weight: 800; font-size: 1.15rem; margin: 1.4rem 0 0.5rem; }
+.ghf-archive h3 { color: #F2ECDD; font-weight: 700; font-size: 1rem; margin: 1.1rem 0 0.4rem; }
+.ghf-archive ul, .ghf-archive ol { margin: 0.5rem 0 0.5rem 1.25rem; }
+.ghf-archive ul { list-style: disc; }
+.ghf-archive ol { list-style: decimal; }
+.ghf-archive li { margin: 0.2rem 0; }
+.ghf-archive details { margin: 0.5rem 0; border: 1px solid #2D3238; border-radius: 0.75rem; background: #1A1D20; padding: 0.35rem 0.9rem; }
+.ghf-archive details[open] { padding-bottom: 0.7rem; }
+.ghf-archive summary { cursor: pointer; font-weight: 700; color: #F2ECDD; padding: 0.35rem 0; }
+.ghf-archive summary:hover { color: #FFFFFF; }
+.ghf-archive table { width: 100%; border-collapse: collapse; margin: 0.6rem 0; font-size: 0.8rem; display: block; overflow-x: auto; }
+.ghf-archive th, .ghf-archive td { border: 1px solid #2D3238; padding: 0.4rem 0.55rem; text-align: left; vertical-align: top; }
+.ghf-archive th { background: #202428; color: #FFFFFF; }
+.ghf-archive figure { margin: 0.8rem 0; }
+.ghf-archive img { max-width: min(100%, 360px); height: auto; border-radius: 0.5rem; border: 1px solid #2D3238; }
+.ghf-archive figcaption { font-size: 0.75rem; color: #9BA1A6; margin-top: 0.3rem; }

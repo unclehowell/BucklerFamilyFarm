@@ -378,7 +378,7 @@ export const MockPortalDashboard: React.FC<MockPortalDashboardProps> = ({
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform text-[#FFFFFF]" />
               </button>
               <p className="text-[11px] font-mono text-[#9BA1A6] text-center">
-                Explore the Tree View Navigator, unified Case Wiki, CADW Critique, and High Court Particulars of Claim
+                Explore the Tree View Navigator, unified Case Wiki, CADW Critique, High Court Particulars of Claim, and the Great House Farm Wiki archive with all original evidence files
               </p>
             </div>
           </div>

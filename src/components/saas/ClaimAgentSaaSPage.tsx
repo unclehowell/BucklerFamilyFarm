@@ -140,7 +140,14 @@ export const ClaimAgentSaaSPage: React.FC<ClaimAgentSaaSPageProps> = ({
         setSearchCompleted(true);
         setIsExecutingSearch(false);
         setPortalViewMode('claims');
-      } else if (viewParam === 'wiki' || viewParam === 'article') {
+      } else if (
+        viewParam === 'wiki' ||
+        viewParam === 'article' ||
+        viewParam === 'archive' ||
+        viewParam.startsWith('archive/') ||
+        viewParam === 'evidence' ||
+        viewParam === 'evidence-library'
+      ) {
         setCurrentUser({
           email: 'hywelapbuckler@gmail.com',
           name: 'Sion Buckler (Demo)',

@@ -112,8 +112,8 @@ SHOTS = [
          vo="Nineteen eighty-two. They register her land in their name. She is living in it. No one tells her.",
          prompt="1980s government registry office, a clerk stamps a document with a heavy rubber stamp, "
                 "rows of filing cabinets, fluorescent light, cold and bureaucratic"),
-    dict(id="24_candle", secs=5, year="26.03.1983", label="RECORD",
-         vo="Thirty-one days after the last application, Mary dies. Her claim, never heard.",
+    dict(id="24_candle", secs=5, year="14.03.1983", label="RECORD",
+         vo="Nineteen days after the last application, Mary dies. Her claim, never heard.",
          prompt="a single candle burning out on a windowsill of an old farmhouse at night, the flame "
                 "flickers and goes out, smoke curls, rain outside"),
     dict(id="25_verdict", secs=6, year="1987", label="RECORD",

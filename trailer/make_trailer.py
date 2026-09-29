@@ -290,8 +290,8 @@ def s_court(t, d=6.5):
     im.alpha_composite(Image.new("RGBA", (W, H), (0, 0, 0, 90)))
     shade(im)
     tag(im, "RECORD", fade(t, d, 0.6, 0.5), REC)
-    text(im, "The courts disagreed.", CAP_Y, 44, SERIF_B, fade(t - 0.3, d - 0.3, 0.7, 0.6))
-    text(im, "High Court 1986 · Court of Appeal 1987 · Strasbourg 1989", CAP2_Y, 28, SANS,
+    text(im, "The High Court ruled for BP. The Court of Appeal dismissed the appeal.", CAP_Y, 34, SERIF_B, fade(t - 0.3, d - 0.3, 0.7, 0.6))
+    text(im, "1987 appeal dismissed · 1989 ECHR application inadmissible", CAP2_Y, 28, SANS,
          fade(t - 1.4, d - 1.4, 0.7, 0.6), (200, 215, 235))
     return im
 

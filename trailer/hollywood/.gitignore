@@ -1,0 +1,5 @@
+.build/
+.cache/
+# clips/ holds the AI-generated shots; only commit real generated footage
+clips/
+parcel-a-hollywood-trailer.mp4

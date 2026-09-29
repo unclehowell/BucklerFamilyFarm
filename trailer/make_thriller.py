@@ -528,9 +528,9 @@ def s_death(t, d):
     im = darken(im, 0.55).convert("RGBA")
     text(im, "23 FEBRUARY 1983 — THE LAST APPLICATION.", BAR + 80, 34, OSWALD, win(t, 0.2, d - 0.2),
          weight="Regular")
-    text(im, "26 MARCH 1983 — MARY DIES.", CAP1 - 10, 64, BEBAS, win(t, 1.6, d - 1.6), (255, 240, 215),
+    text(im, "14 MARCH 1983 — MARY DIES.", CAP1 - 10, 64, BEBAS, win(t, 1.6, d - 1.6), (255, 240, 215),
          track=5, glow=10)
-    text(im, "THIRTY-ONE DAYS. HER OWNERSHIP CLAIM NEVER GETS ITS DAY IN COURT.", CAP2 + 8, 26, OSWALD,
+    text(im, "NINETEEN DAYS. HER OWNERSHIP CLAIM NEVER GETS ITS DAY IN COURT.", CAP2 + 8, 26, OSWALD,
          win(t, 3.0, d - 3.0), (255, 120, 100), weight="Regular")
     tag(im, "RECORD · CONTENTION", fade(t, d, 0.3, 0.3), CON)
     return im

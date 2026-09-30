@@ -1,7 +1,7 @@
 """Cut the generated shots, narration and score into the finished trailer.
 
     python3 trailer/hollywood/assemble.py      # -> trailer/hollywood/parcel-a-hollywood-trailer.mp4
-Needs clips/<id>.mp4 for every shot (generate.py) and vo/*.wav (narrate.py).
+Needs stills/<id>.png for every shot (local_stills.py) and vo/*.wav (narrate.py).
 """
 import math
 import os
@@ -154,6 +154,92 @@ yy, xx = np.mgrid[0:H, 0:W]
 VIG = np.clip(1.2 - 0.55 * (((xx - W / 2) / (W / 2)) ** 2 + ((yy - H / 2) / (H / 2)) ** 2), 0.2, 1)[..., None]
 
 
+
+# ------------------------------------------------------------------ still -> camera move
+
+VIS_H = H - 2 * BAR
+# id: (zoom0, zoom1, (cx0, cy0), (cx1, cy1), handheld)
+MOVES = {
+    "01_valley": (1.0, 1.25, (0.5, 0.5), (0.5, 0.42), False),
+    "02_farmhouse": (1.0, 1.3, (0.5, 0.5), (0.5, 0.46), False),
+    "05_silence": (1.3, 1.0, (0.55, 0.46), (0.5, 0.48), False),
+    "07_hospital": (1.0, 1.45, (0.55, 0.42), (0.62, 0.36), False),
+    "08_bailiffs": (1.15, 1.3, (0.4, 0.5), (0.6, 0.5), True),
+    "09_door1": (1.25, 1.1, (0.5, 0.5), (0.5, 0.46), False),
+    "11_refuse1959": (1.05, 1.7, (0.55, 0.45), (0.58, 0.36), False),
+    "22_trap": (1.05, 1.35, (0.5, 0.52), (0.5, 0.52), False),
+    "26_eviction": (1.15, 1.3, (0.55, 0.5), (0.45, 0.5), True),
+    "29_family": (1.25, 1.25, (0.3, 0.46), (0.7, 0.46), False),
+}
+DEFAULT_MOVES = [(1.0, 1.22, (0.5, 0.46), (0.5, 0.44), False), (1.18, 1.18, (0.42, 0.46), (0.58, 0.46), False),
+                 (1.25, 1.0, (0.55, 0.45), (0.5, 0.46), False)]
+FADED = {"01_valley", "02_farmhouse", "03_quarry", "04_handshake", "05_silence", "06_boardroom", "13_unenforced",
+         "18_adjourned", "20_postbox", "21_rejects", "23_register", "24_candle", "28_title"}
+
+
+def has(shot, *words):
+    t = (shot["prompt"] + " " + shot["id"]).lower()
+    return any(w in t for w in words)
+
+
+def soft_noise(w, h, cells, seed):
+    g = np.random.default_rng(seed).random((cells[1], cells[0])).astype(np.float32)
+    im = Image.fromarray((g * 255).astype(np.uint8)).resize((w, h), Image.BICUBIC).filter(ImageFilter.GaussianBlur(20))
+    return np.asarray(im).astype(np.float32) / 255
+
+
+def kb_frames(shot, idx, n):
+    """Animate the still with a camera move and atmosphere (rain, dust, fog, flicker, handheld)."""
+    im = Image.open(os.path.join(HERE, "stills", f"{shot['id']}.png")).convert("RGB")
+    IW, IH = im.size
+    z0, z1, (cx0, cy0), (cx1, cy1), hand = MOVES.get(shot["id"], DEFAULT_MOVES[idx % 3])
+    g = np.random.default_rng(100 + idx)
+    fog = soft_noise(1800, VIS_H + 40, (9, 4), 7 + idx) if has(shot, "mist", "fog", "smoke", "steam") else None
+    motes = g.random((70, 4)) if has(shot, "dust", "sunbeam", "light", "archive", "smoke") else None
+    rain = has(shot, "rain")
+    flick = has(shot, "candle", "fire", "lamp", "flame", "lit by a desk")
+    for k in range(n):
+        p = k / max(n - 1, 1)
+        e = 0.65 * p + 0.35 * p * p * (3 - 2 * p)
+        z = z0 + (z1 - z0) * e
+        cx, cy = cx0 + (cx1 - cx0) * e, cy0 + (cy1 - cy0) * e
+        cw = IW / z
+        ch = cw * VIS_H / W
+        dx = dy = 0.0
+        if hand:
+            dx = 9 * math.sin(k * 0.21) + 5 * math.sin(k * 0.53 + 1)
+            dy = 7 * math.sin(k * 0.17 + 2) + 4 * math.sin(k * 0.47)
+        x0 = min(max(cx * IW - cw / 2 + dx, 0), IW - cw)
+        y0 = min(max(cy * IH - ch / 2 + dy, 0), IH - ch)
+        vis = np.asarray(im.resize((W, VIS_H), Image.BICUBIC, box=(x0, y0, x0 + cw, y0 + ch))).astype(np.float32)
+        if fog is not None:
+            off = int(p * 120)
+            vis += fog[20:20 + VIS_H, off:off + W, None] * np.array([62, 66, 72], np.float32) * 0.55
+        layer = None
+        if rain or motes is not None:
+            layer = Image.new("L", (W, VIS_H), 0)
+            d = ImageDraw.Draw(layer)
+            if rain:
+                r = np.random.default_rng(5000 + k)
+                for _ in range(90):
+                    x, y = r.integers(0, W), r.integers(0, VIS_H)
+                    L = int(r.integers(14, 34))
+                    d.line([(x, y), (x - L * 0.12, y + L)], fill=int(r.integers(40, 95)), width=1)
+            if motes is not None:
+                for m in motes:
+                    mx = (m[0] * W + p * 40 * (m[2] - 0.5) * 6 + k * 0.3 * (m[3] - 0.5)) % W
+                    my = (m[1] * VIS_H - p * 70 * (0.3 + m[2])) % VIS_H
+                    rr = 1 + 2.2 * m[3]
+                    d.ellipse((mx - rr, my - rr, mx + rr, my + rr), fill=int(60 + 120 * m[2]))
+            layer = layer.filter(ImageFilter.GaussianBlur(0.7))
+            vis += np.asarray(layer).astype(np.float32)[..., None] * np.array([1.0, 0.97, 0.9], np.float32)
+        if flick:
+            vis *= 1 + 0.06 * math.sin(k * 0.9) * math.sin(k * 0.37 + 1) + 0.03 * math.sin(k * 2.3)
+        out = np.zeros((H, W, 3), np.uint8)
+        out[BAR:H - BAR] = np.clip(vis, 0, 255).astype(np.uint8)
+        yield out
+
+
 def finish(arr, t, i):
     arr = arr.astype(np.float32)
     lum = arr.mean(2, keepdims=True) / 255
@@ -284,9 +370,9 @@ def audio():
 
 
 def main():
-    missing = [s["id"] for s in SHOTS if not os.path.exists(os.path.join(HERE, "clips", f"{s['id']}.mp4"))]
+    missing = [s["id"] for s in SHOTS if not os.path.exists(os.path.join(HERE, "stills", f"{s['id']}.png"))]
     if missing:
-        sys.exit(f"missing generated clips: {', '.join(missing)} — run generate.py first")
+        sys.exit(f"missing stills: {', '.join(missing)} — run local_stills.py first")
     print(f"length {TOTAL:.1f}s")
     audio()
     out = os.path.join(HERE, "parcel-a-hollywood-trailer.mp4")
@@ -299,9 +385,12 @@ def main():
     for _ in range(int(COLD * FPS)):
         enc.stdin.write(finish(np.zeros((H, W, 3), np.uint8), i / FPS, i).tobytes())
         i += 1
-    for st, d, s in timeline:
+    for si, (st, d, s) in enumerate(timeline):
         n = int(round((st + d) * FPS)) - i
-        for k, fr in enumerate(frames(prep(s, d), n)):
+        for k, fr in enumerate(kb_frames(s, si, n)):
+            if s["id"] in FADED:
+                a = min(ease(k / FPS / 0.3), ease((d - k / FPS) / 0.3))
+                fr = (fr.astype(np.float32) * a).astype(np.uint8)
             enc.stdin.write(finish(overlay(fr, s, k / FPS, d), i / FPS, i).tobytes())
             i += 1
         print(f"  {s['id']}", flush=True)

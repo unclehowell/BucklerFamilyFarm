@@ -807,11 +807,62 @@ def synth_audio():
     sl = seg(at(s_title) - 0.35, at(s_title))
     out[sl] *= 0.03
 
+    # --- recorded narrator: the Hollywood VO assets already committed in this repo.
+    #     Each WAV is converted to mono 44.1 kHz through the same ffmpeg binary used for the render.
+    VO_CACHE = {}
+    def load_vo(sid):
+        if sid in VO_CACHE:
+            return VO_CACHE[sid]
+        p = os.path.join(os.path.dirname(HERE), "hollywood", "vo", f"{sid}.wav")
+        if not os.path.exists(p):
+            return np.zeros(0, dtype=np.float64)
+        raw = subprocess.run(
+            [FFMPEG, "-loglevel", "error", "-i", p, "-ac", "1", "-ar", str(SR), "-f", "s16le", "pipe:1"],
+            check=True, stdout=subprocess.PIPE
+        ).stdout
+        a = np.frombuffer(raw, dtype=np.int16).astype(np.float64) / 32768.0
+        VO_CACHE[sid] = a
+        return a
+
+    def add_vo(t0, sid, gain=1.0):
+        a = load_vo(sid)
+        if len(a):
+            # Small lead-in keeps the narration from feeling glued to the cut.
+            add(t0 + 0.28, gain * a)
+
+    # Intro and history
+    add_vo(at(s_farm), "02_farmhouse", 1.10)
+    add_vo(at(s_1877), "03_quarry", 1.10)
+    add_vo(at(s_1928), "05_silence", 1.05)
+    add_vo(at(s_board), "06_boardroom", 1.05)
+    add_vo(at(s_1955), "07_hospital", 1.08)
+
+    # Six rapid "attempts" — each gets its own recorded line.
+    attempt_vo = ["08_bailiffs", "10_offer1959", "12_court1962", "14_offer1965", "16_sold1969", "18_adjourned"]
+    for idx, sid in enumerate(attempt_vo):
+        add_vo(at(s_attempts, idx * ATT_LEN), sid, 1.08)
+
+    # The 1974 gotcha and the fall.
+    add_vo(at(s_seventh), "19_letter", 1.08)
+    add_vo(at(s_quote), "17_newspaper", 1.05)
+    add_vo(at(s_reply), "21_rejects", 1.08)
+    add_vo(at(s_ruling), "25_verdict", 1.08)
+    add_vo(at(s_register), "23_register", 1.08)
+    add_vo(at(s_death), "24_candle", 1.08)
+    add_vo(at(s_demolish), "27_bulldozer", 1.10)
+    add_vo(at(s_but), "28_title", 1.08)
+    add_vo(at(s_now), "29_family", 1.05)
+    add_vo(at(s_title) + 0.3, "99_title", 1.08)
+
     # --- the ITV clip keeps its own sound; score ducks under it
     sl = seg(at(s_clip), at(s_clip) + 5.0)
     out[sl] *= 0.35
     with wave.open(f"{TMP}/clip.wav") as w:
-        clip = np.frombuffer(w.readframes(w.getnframes()), dtype=np.int16).reshape(-1, 2).mean(1) / 32768
+        clip = np.frombuffer(w.readframes(w.getnframes()), dtype=np.int16)
+        nch = w.getnchannels()
+        if nch > 1:
+            clip = clip.reshape(-1, nch).mean(1)
+        clip = clip / 32768.0
     clip = clip[: int(5.0 * SR)]
     ramp = np.minimum(1, np.minimum(np.arange(len(clip)), len(clip) - np.arange(len(clip))) / (0.2 * SR))
     add(at(s_clip), 0.95 * clip * ramp)

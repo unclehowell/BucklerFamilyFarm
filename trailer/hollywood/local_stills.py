@@ -35,6 +35,8 @@ MARY = ("a resolute Welsh woman in her forties, strong jaw, grey-streaked dark h
 MARY_SHOTS = {"07_hospital", "09_door1", "11_refuse1959", "10_offer1959", "14_offer1965", "15_unsigned",
               "17_newspaper", "21_rejects"}
 
+MARY_SHOTS -= {"09_door1", "10_offer1959"}  # framed without her face; the model duplicates the woman
+
 LOOK = "photorealistic, cinematic film still, anamorphic, natural skin, volumetric light, teal and amber grade, 8k"
 NEG = ("illustration, painting, cartoon, anime, 3d render, cgi, plastic skin, text, watermark, logo, "
        "deformed hands, extra fingers, extra limbs, duplicate, disfigured face, blurry, lowres, oversaturated")

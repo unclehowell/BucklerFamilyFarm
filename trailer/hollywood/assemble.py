@@ -106,7 +106,9 @@ for s in SHOTS:
 TITLE_AT = t
 TOTAL = t + TITLE_LEN + END_LEN
 BIG = {"19_letter", "22_trap", "25_verdict", "27_bulldozer", "07_hospital", "26_eviction"}
-HITS = [(st, s["id"] in BIG) for st, d, s in timeline if s["year"] or s["id"] in BIG] + [(TITLE_AT, True)]
+TRAP_SNAP = 1.2  # seconds into the lock shot at which it clicks shut (matches the on-screen line and the hit)
+HIT_AT = {"22_trap": TRAP_SNAP}
+HITS = [(st + HIT_AT.get(s["id"], 0), s["id"] in BIG) for st, d, s in timeline if s["year"] or s["id"] in BIG] + [(TITLE_AT, True)]
 
 
 def hit_energy(t):
@@ -188,6 +190,9 @@ def soft_noise(w, h, cells, seed):
     return np.asarray(im).astype(np.float32) / 255
 
 
+
+
+
 def kb_frames(shot, idx, n):
     """Animate the still with a camera move and atmosphere (rain, dust, fog, flicker, handheld)."""
     im = Image.open(os.path.join(HERE, "stills", f"{shot['id']}.png")).convert("RGB")
@@ -202,6 +207,8 @@ def kb_frames(shot, idx, n):
         p = k / max(n - 1, 1)
         e = 0.65 * p + 0.35 * p * p * (3 - 2 * p)
         z = z0 + (z1 - z0) * e
+        if shot["id"] == "22_trap" and k / FPS > TRAP_SNAP:  # the lock clicks shut: hard punch-in
+            z *= 1 + 0.10 * min(1.0, (k / FPS - TRAP_SNAP) / 0.06)
         cx, cy = cx0 + (cx1 - cx0) * e, cy0 + (cy1 - cy0) * e
         cw = IW / z
         ch = cw * VIS_H / W

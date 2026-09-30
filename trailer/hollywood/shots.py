@@ -148,3 +148,25 @@ END_LINES = [
     "FAMILY ACCOUNT and CONTENTION items are the family's case and have not been proved in court.",
     "BP Properties Ltd v Buckler [1987] EWCA Civ 2 was decided in BP's favour and remains binding.",
 ]
+
+
+# Sharper prompts for shots whose first render missed the brief (subject first, short enough for CLIP).
+PROMPT_OVERRIDES = {
+    "04_handshake": "two Victorian men in frock coats shaking hands across a wooden desk, rolled deed with red "
+                    "wax seal on the desk, candlelight, 1870s office",
+    "09_door1": "view from inside a dark farmhouse doorway: three men in long dark overcoats and hats stand "
+                "outside on the doorstep in rain, menacing, low angle",
+    "10_offer1959": "close-up of a man's hand in a grey suit sleeve sliding a white envelope across a wooden "
+                    "table towards a woman's hands resting on a tartan blanket, tense, clock on the wall",
+    "12_court1962": "1960s courtroom, elderly judge in a white wig and red robe at the high bench, gavel, "
+                    "wood panelling, dust in window light",
+    "20_postbox": "brass letterbox in an old wooden front door, a white envelope falling through onto a stone "
+                  "floor, close-up, slow motion, dramatic light",
+    "22_trap": "extreme close-up of a heavy rusty iron padlock hanging on a chain on an old weathered wooden gate, "
+               "macro, dramatic light",
+    "28_title": "old leather-bound deed box with its lid open on a desk in a dark archive, beam of light falling "
+                "on old documents inside, dust particles, close-up",
+}
+for _s in SHOTS:
+    if _s["id"] in PROMPT_OVERRIDES:
+        _s["prompt"] = PROMPT_OVERRIDES[_s["id"]]

@@ -18,7 +18,7 @@ THE STORY (keep to these facts)
 - 1969: the land was sold on to BP Pension Trust, treating her house as included.
 - 1974: another possession action — adjourned, her ownership never decided. She told the press: "I will refuse to move… my solicitors tell me I have a valid claim to it."
 - 31 October 1974: BP sent letters saying she "may remain" in the farmhouse "under licence". She never accepted. The family says she wrote back and that reply has never been produced.
-- 1982–83: BP registered the land, house included, while she lived in it; the family says she was not told. 26 March 1983: Mary died, 31 days after the last registration application.
+- 1982–83: BP registered the land, house included, while she lived in it; the family says she was not told. 14 March 1983: Mary died, 19 days after the last registration application.
 - 1987: the Court of Appeal (BP Properties Ltd v Buckler) ruled the 1974 letters made her occupation permissive "whether or not she accepted them" — so her years in the house never counted as ownership.
 - 29 November 1988: the family was evicted; 6 December 1988: the farmhouse was demolished. Houses now stand on the site; an early-medieval cemetery of 814 burials was excavated there in 1994.
 - Today her grandsons are recovering the files. Public bodies' replies have included "Not held", "Out of scope" and "Most likely destroyed".
@@ -58,7 +58,7 @@ THE GOTCHA (music drops to a ticking clock)
 
 ACT THREE — THE FALL
 23. A 1980s registry clerk slams a rubber stamp on a document; rows of filing cabinets under fluorescent light. / Push in on the stamp. / VO: "Nineteen eighty-two. They register her land in their name. She is living in it. No one tells her." / "1982" / RECORD · FAMILY ACCOUNT
-24. A single candle burns out on a farmhouse windowsill at night; smoke curls. / Static. / VO: "Thirty-one days after the last application… Mary dies." / "26 MARCH 1983" / RECORD
+24. A single candle burns out on a farmhouse windowsill at night; smoke curls. / Static. / VO: "Nineteen days after the last application… Mary dies." / "14 MARCH 1983" / RECORD
 25. Three appeal judges in wigs behind a high bench in a gothic London court. / Low angle, slow push. / VO: "Nineteen eighty-seven. The Court of Appeal rules the letters made her a licensee—" then on-screen quote with the VO: "…WHETHER OR NOT SHE ACCEPTED THEM." / "1987" / RECORD
 26. [Use attached 1988 police press photo if provided] Police vans and officers surround the farmhouse at dawn in fog, blue lights. / Handheld. / — / "29 NOVEMBER 1988" / RECORD
 27. A bulldozer smashes through the farmhouse wall; stone and dust explode in slow motion, grey winter light. / Hit on impact. / VO: "They took the house." / "6 DECEMBER 1988" / RECORD

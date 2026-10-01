@@ -16,7 +16,7 @@ THE STORY (keep to these facts)
 - 1962: a county court possession order — never enforced against the house. She stayed.
 - 1965: offered a weekly tenancy at £2 — never signed, no rent paid.
 - 1969: the land was sold on to BP Pension Trust, treating her house as included.
-- 1974: another possession action — adjourned, her ownership never decided. She told the press: "I will refuse to move… my solicitors tell me I have a valid claim to it."
+- 1974: another possession action — adjourned, her ownership never decided. She did not go to the press: the family says a court clerk tipped the newspapers off and the reporters came to her. She told them: "I will refuse to move… my solicitors tell me I have a valid claim to it."
 - 31 October 1974: BP sent letters saying she "may remain" in the farmhouse "under licence". She never accepted. The family says she wrote back and that reply has never been produced.
 - 1982–83: BP registered the land, house included, while she lived in it; the family says she was not told. 14 March 1983: Mary died, 19 days after the last registration application.
 - 1987: the Court of Appeal (BP Properties Ltd v Buckler) ruled the 1974 letters made her occupation permissive "whether or not she accepted them" — so her years in the house never counted as ownership.
@@ -47,7 +47,8 @@ ACT TWO — THE AMBUSHES (each attempt, then her answer)
 14. A typed letter and pen on a table beside a cup of tea; Mary's hand pushes the pen away. / Macro, shallow focus. / VO: "Nineteen sixty-five. Two pounds a week — to rent the house she owns." / "1965" / RECORD
 15. The unsigned letter curls in a farmhouse fire. / Slow motion. / VO: "Never signed. Not a penny paid." / RECORD
 16. Fountain pens sign a thick conveyance in a smoky 1960s London office. / Top-down, slow rotate. / VO: "Nineteen sixty-nine. They sell the land on — her house included — as if it were theirs to sell." / "1969" / RECORD · CONTENTION
-17. 1970s printing press spinning out newspapers; then Mary reading the paper outside her farmhouse, crowds of visitors behind her. / Fast cuts, then push in. / VO: "Nineteen seventy-four. Another court action. She goes to the press." / Mary's line on screen: "I WILL REFUSE TO MOVE." / "1974" / RECORD
+17. A 1970s court clerk (a woman in a cardigan) speaks quietly into a rotary telephone in a dim wood-panelled courthouse corridor, glancing over her shoulder. / Slow push in. / VO: "Nineteen seventy-four. Another court action. And a court clerk tips off the press." / "1974" / FAMILY ACCOUNT
+17b. Reporters with notepads and a press photographer arrive at the farmhouse gate; Mary, in her wheelchair in the yard, answers them. Cut to the newspaper clipping. / Handheld, then push in on the print. / VO: "They come to her." / on screen: "I WILL REFUSE TO MOVE." / RECORD · NEWSPAPER
 18. A clerk ties a thick court file with red ribbon and slides it onto a high dusty shelf. / Slow motion. / VO: "The case is shelved. Her ownership — never decided." / FAMILY ACCOUNT
 
 THE GOTCHA (music drops to a ticking clock)

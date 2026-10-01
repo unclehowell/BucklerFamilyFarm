@@ -191,3 +191,16 @@ _PHOTO_LABELS = {"11_refuse1959": "RECORD · FAMILY PHOTOGRAPH", "14_offer1965":
 for _s in SHOTS:
     if _s["id"] in _PHOTO_LABELS:
         _s["label"] = _PHOTO_LABELS[_s["id"]]
+
+
+# 1974 press, corrected: Mary did NOT go to the press. A court clerk tipped the reporters off and they came to her.
+# The tip-off is the family's account, so it is labelled FAMILY ACCOUNT; the clipping itself is a record.
+if not any(_s["id"] == "17a_tipoff" for _s in SHOTS):
+    SHOTS.insert(next(i for i, _s in enumerate(SHOTS) if _s["id"] == "17_newspaper"),
+                 dict(id="17a_tipoff", secs=5.5, year="1974", label="FAMILY ACCOUNT",
+                      vo="Nineteen seventy-four. Another court action. And a court clerk tips off the press.",
+                      prompt="close-up of a woman's hand holding the receiver of a black rotary telephone to her ear against a "
+                             "wood-panelled wall, 1970s courthouse, dim light, tense, shallow depth of field"))
+for _s in SHOTS:
+    if _s["id"] == "17_newspaper":
+        _s.update(year="", vo="They come to her.", label="RECORD · NEWSPAPER", secs=6.0)

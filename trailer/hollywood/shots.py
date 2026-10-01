@@ -182,3 +182,12 @@ if not any(_s["id"] == "05b_photo" for _s in SHOTS):
 for _s in SHOTS:
     if _s["id"] == "07_hospital":
         _s["label"] = "FAMILY PHOTOGRAPH"
+
+
+# Scenes that name Mary use her real photograph (prepare_photos.py builds those stills), each framed differently.
+_PHOTO_LABELS = {"11_refuse1959": "RECORD · FAMILY PHOTOGRAPH", "14_offer1965": "RECORD · FAMILY PHOTOGRAPH",
+                 "15_unsigned": "RECORD · FAMILY PHOTOGRAPH", "17_newspaper": "RECORD · NEWSPAPER · FAMILY PHOTOGRAPH",
+                 "21_rejects": "FAMILY ACCOUNT · FAMILY PHOTOGRAPH"}
+for _s in SHOTS:
+    if _s["id"] in _PHOTO_LABELS:
+        _s["label"] = _PHOTO_LABELS[_s["id"]]

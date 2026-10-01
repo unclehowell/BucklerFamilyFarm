@@ -166,7 +166,13 @@ MOVES = {
     "02_farmhouse": (1.0, 1.3, (0.5, 0.5), (0.5, 0.46), False),
     "05_silence": (1.3, 1.0, (0.55, 0.46), (0.5, 0.48), False),
     "05b_photo": (1.0, 1.7, (0.5, 0.5), (0.47, 0.43), False),
-    "07_hospital": (1.0, 2.0, (0.5, 0.5), (0.5, 0.435), False),
+    # whole print visible at the start; the push stops while the wheelchair is still in frame
+    "07_hospital": (1.0, 1.35, (0.5, 0.5), (0.5, 0.56), False),
+    "11_refuse1959": (1.0, 1.3, (0.5, 0.5), (0.5, 0.46), False),
+    "14_offer1965": (2.4, 1.0, (0.5, 0.715), (0.5, 0.5), False),
+    "15_unsigned": (1.6, 1.25, (0.46, 0.38), (0.5, 0.5), False),
+    "17_newspaper": (1.0, 1.4, (0.5, 0.5), (0.62, 0.5), False),
+    "21_rejects": (1.05, 1.4, (0.5, 0.5), (0.45, 0.48), False),
     "08_bailiffs": (1.15, 1.3, (0.4, 0.5), (0.6, 0.5), True),
     "09_door1": (1.25, 1.1, (0.5, 0.5), (0.5, 0.46), False),
     "11_refuse1959": (1.05, 1.7, (0.55, 0.45), (0.58, 0.36), False),
@@ -268,12 +274,18 @@ def finish(arr, t, i):
     return np.clip(arr, 0, 255).astype(np.uint8)
 
 
+YEAR_LEFT = {"07_hospital", "14_offer1965", "17_newspaper"}
+
+
 def overlay(img, shot, lt, d):
     im = Image.fromarray(img).convert("RGBA")
     fade = min(ease(lt / 0.2), ease((d - lt) / 0.2))
     if shot["year"]:
         a = min(ease(lt / 0.08), ease((d - 0.4 - lt) / 0.4)) if lt < d - 0.4 else 0
-        text(im, shot["year"], H - BAR - 80, 84, BEBAS, a, (250, 240, 220), track=10, glow=12)
+        if shot["id"] in YEAR_LEFT:  # keep the year off the photograph (her lap and wheelchair)
+            text(im, shot["year"], H / 2, 84, BEBAS, a, (250, 240, 220), track=10, glow=12, x=150)
+        else:
+            text(im, shot["year"], H - BAR - 80, 84, BEBAS, a, (250, 240, 220), track=10, glow=12)
     if shot["id"] == "25_verdict":
         text(im, "“…WHETHER OR NOT SHE ACCEPTED THEM.”", BAR + 80, 44, BEBAS,
              ease((lt - 3.5) / 0.3), (255, 120, 100), track=3, glow=8)
@@ -393,7 +405,7 @@ def main():
                                        "-bufsize", "7000k", "-pix_fmt", "yuv420p", "-c:a", "aac", "-b:a", "192k",
                                        "-shortest", "-movflags", "+faststart", out], stdin=subprocess.PIPE),
             # WebM: VP9 + Opus from the same frames, so it is not a re-encode of the MP4
-            subprocess.Popen(common + ["-c:v", "libvpx-vp9", "-b:v", "0", "-crf", "31", "-row-mt", "1",
+            subprocess.Popen(common + ["-c:v", "libvpx-vp9", "-b:v", "2000k", "-maxrate", "2800k", "-row-mt", "1",
                                        "-deadline", "good", "-cpu-used", "3", "-pix_fmt", "yuv420p",
                                        "-c:a", "libopus", "-b:a", "128k", "-shortest",
                                        out.replace(".mp4", ".webm")], stdin=subprocess.PIPE)]

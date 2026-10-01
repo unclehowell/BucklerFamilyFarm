@@ -32,6 +32,8 @@ REAL = {"02_farmhouse": "cadw-1988-farmhouse.png", "26_eviction": "news-1988-pol
 # One fixed description so Mary reads as the same woman in every shot she appears in.
 MARY = ("a resolute Welsh woman in her forties, strong jaw, grey-streaked dark hair pinned back, "
         "dark wool cardigan, seated in a wooden wheelchair with a tartan blanket over her lap")
+# Stills built from the family's real photographs by prepare_photos.py; never regenerate them.
+PREPARED = {"05b_photo", "07_hospital", "11_refuse1959", "14_offer1965", "15_unsigned", "17_newspaper", "21_rejects"}
 MARY_SHOTS = {"07_hospital", "09_door1", "11_refuse1959", "10_offer1959", "14_offer1965", "15_unsigned",
               "17_newspaper", "21_rejects"}
 
@@ -71,7 +73,7 @@ def main():
         sid = shot["id"]
         name = f"{sid}.png" if not variant else f"{sid}_v{variant}.png"
         dest = os.path.join(OUT, name)
-        if (args and sid not in args) or (not args and os.path.exists(dest)):
+        if sid in PREPARED or (args and sid not in args) or (not args and os.path.exists(dest)):
             continue
         if sid in REAL:
             im = Image.open(os.path.join(ASSETS, REAL[sid])).convert("RGB")

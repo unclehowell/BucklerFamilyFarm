@@ -165,7 +165,8 @@ MOVES = {
     "01_valley": (1.0, 1.25, (0.5, 0.5), (0.5, 0.42), False),
     "02_farmhouse": (1.0, 1.3, (0.5, 0.5), (0.5, 0.46), False),
     "05_silence": (1.3, 1.0, (0.55, 0.46), (0.5, 0.48), False),
-    "07_hospital": (1.0, 1.45, (0.55, 0.42), (0.62, 0.36), False),
+    "05b_photo": (1.0, 1.7, (0.5, 0.5), (0.47, 0.43), False),
+    "07_hospital": (1.0, 2.0, (0.5, 0.5), (0.5, 0.435), False),
     "08_bailiffs": (1.15, 1.3, (0.4, 0.5), (0.6, 0.5), True),
     "09_door1": (1.25, 1.1, (0.5, 0.5), (0.5, 0.46), False),
     "11_refuse1959": (1.05, 1.7, (0.55, 0.45), (0.58, 0.36), False),
@@ -175,7 +176,7 @@ MOVES = {
 }
 DEFAULT_MOVES = [(1.0, 1.22, (0.5, 0.46), (0.5, 0.44), False), (1.18, 1.18, (0.42, 0.46), (0.58, 0.46), False),
                  (1.25, 1.0, (0.55, 0.45), (0.5, 0.46), False)]
-FADED = {"01_valley", "02_farmhouse", "03_quarry", "04_handshake", "05_silence", "06_boardroom", "13_unenforced",
+FADED = {"01_valley", "02_farmhouse", "03_quarry", "04_handshake", "05_silence", "05b_photo", "06_boardroom", "13_unenforced",
          "18_adjourned", "20_postbox", "21_rejects", "23_register", "24_candle", "28_title"}
 
 
@@ -316,8 +317,11 @@ def audio():
               for f in (55.0, 65.41, 82.41, 110.0) for dt in (0.997, 1.003))
     music += 0.045 * pad * np.clip(tt / 8, 0, 1)
     # driving pulse, faster through each act
-    acts = [(timeline[5][0], timeline[18][0], 96), (timeline[18][0], timeline[22][0], 0),
-            (timeline[22][0], TITLE_AT - 1.5, 118)]
+    def T(sid):
+        return next(st for st, d, sh in timeline if sh["id"] == sid)
+
+    acts = [(T("06_boardroom"), T("19_letter"), 96), (T("19_letter"), T("23_register"), 0),
+            (T("23_register"), TITLE_AT - 1.5, 118)]
     for a0, a1, bpm in acts:
         if not bpm:
             continue
@@ -330,7 +334,7 @@ def audio():
             add(music, b, 0.15 * np.exp(-s * 14) * (np.sign(np.sin(2 * np.pi * f * s)) * 0.4 +
                                                      np.sin(4 * np.pi * f * s) * 0.4))
     # ticking clock under the gotcha
-    for b in np.arange(timeline[18][0], timeline[22][0], 0.5):
+    for b in np.arange(T("19_letter"), T("23_register"), 0.5):
         s = np.arange(int(0.03 * SR)) / SR
         add(music, b, 0.25 * np.sin(2 * np.pi * 2400 * s) * np.exp(-s * 160))
     # hits and braams
@@ -383,11 +387,23 @@ def main():
     print(f"length {TOTAL:.1f}s")
     audio()
     out = os.path.join(HERE, "parcel-a-hollywood-trailer.mp4")
-    enc = subprocess.Popen([FFMPEG, "-loglevel", "error", "-y", "-f", "rawvideo", "-pix_fmt", "rgb24",
-                            "-s", f"{W}x{H}", "-r", str(FPS), "-i", "-", "-i", f"{TMP}/mix.wav",
-                            "-c:v", "libx264", "-preset", "slow", "-b:v", "2600k", "-maxrate", "3600k",
-                            "-bufsize", "7000k", "-pix_fmt", "yuv420p", "-c:a", "aac", "-b:a", "192k",
-                            "-shortest", "-movflags", "+faststart", out], stdin=subprocess.PIPE)
+    common = [FFMPEG, "-loglevel", "error", "-y", "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{W}x{H}",
+              "-r", str(FPS), "-i", "-", "-i", f"{TMP}/mix.wav"]
+    encs = [subprocess.Popen(common + ["-c:v", "libx264", "-preset", "slow", "-b:v", "2600k", "-maxrate", "3600k",
+                                       "-bufsize", "7000k", "-pix_fmt", "yuv420p", "-c:a", "aac", "-b:a", "192k",
+                                       "-shortest", "-movflags", "+faststart", out], stdin=subprocess.PIPE),
+            # WebM: VP9 + Opus from the same frames, so it is not a re-encode of the MP4
+            subprocess.Popen(common + ["-c:v", "libvpx-vp9", "-b:v", "0", "-crf", "31", "-row-mt", "1",
+                                       "-deadline", "good", "-cpu-used", "3", "-pix_fmt", "yuv420p",
+                                       "-c:a", "libopus", "-b:a", "128k", "-shortest",
+                                       out.replace(".mp4", ".webm")], stdin=subprocess.PIPE)]
+
+    class _Both:
+        def write(self, buf):
+            for e in encs:
+                e.stdin.write(buf)
+
+    enc = type("Enc", (), {"stdin": _Both()})()
     i = 0
     for _ in range(int(COLD * FPS)):
         enc.stdin.write(finish(np.zeros((H, W, 3), np.uint8), i / FPS, i).tobytes())
@@ -405,9 +421,11 @@ def main():
         for k in range(int(L * FPS)):
             enc.stdin.write(finish(card(k / FPS, kind), i / FPS, i).tobytes())
             i += 1
-    enc.stdin.close()
-    enc.wait()
-    print("wrote", out)
+    for e in encs:
+        e.stdin.close()
+    for e in encs:
+        e.wait()
+    print("wrote", out, "and", out.replace(".mp4", ".webm"))
 
 
 if __name__ == "__main__":

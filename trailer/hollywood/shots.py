@@ -170,3 +170,15 @@ PROMPT_OVERRIDES = {
 for _s in SHOTS:
     if _s["id"] in PROMPT_OVERRIDES:
         _s["prompt"] = PROMPT_OVERRIDES[_s["id"]]
+
+
+# The family's two real photographs (prepare_photos.py makes their stills).
+# The crowd photo follows the 1928 scene; Mary's photo replaces the generated woman in the 1955 scene.
+# Captions say FAMILY PHOTOGRAPH and carry no date of their own.
+if not any(_s["id"] == "05b_photo" for _s in SHOTS):
+    SHOTS.insert(next(i for i, _s in enumerate(SHOTS) if _s["id"] == "05_silence") + 1,
+                 dict(id="05b_photo", secs=4.6, year="", label="FAMILY PHOTOGRAPH", vo="",
+                      prompt="family photograph of a crowd at the farm"))
+for _s in SHOTS:
+    if _s["id"] == "07_hospital":
+        _s["label"] = "FAMILY PHOTOGRAPH"

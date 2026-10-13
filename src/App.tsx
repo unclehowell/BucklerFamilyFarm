@@ -86,6 +86,35 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-[#181715] flex flex-col justify-center font-sans text-[#EDEFEE] selection:bg-[#AA210F]/40 selection:text-[#EDEFEE]">
+      {/* Site header: links to the family's sister sites */}
+      <header
+        id="site-header"
+        className="w-full border-b border-[#3E3C38] bg-[#1C1B18]/90 backdrop-blur-md sticky top-0 z-40"
+      >
+        <nav
+          aria-label="Buckler family sites"
+          className="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-4"
+        >
+          <a href="/" className="text-sm sm:text-base font-black tracking-tight text-[#EDEFEE] hover:text-[#D08856] transition-colors">
+            Buckler Family Estate
+          </a>
+          <div className="flex items-center gap-2 sm:gap-3">
+            <a
+              href="https://wiki.bucklerfamily.estate"
+              className="px-3.5 py-2 text-xs sm:text-sm font-bold rounded-xl border border-[#484642] bg-[#2A2926] hover:bg-[#383734] text-[#EDEFEE] transition-colors"
+            >
+              Wiki
+            </a>
+            <a
+              href="https://bpvsbuckler.bucklerfamily.estate"
+              className="px-3.5 py-2 text-xs sm:text-sm font-bold rounded-xl border border-[#484642] bg-[#2A2926] hover:bg-[#383734] text-[#EDEFEE] transition-colors"
+            >
+              Museum
+            </a>
+          </div>
+        </nav>
+      </header>
+
       {/* Main Center Minimal Landing Page */}
       <main className="flex-1 flex flex-col justify-center max-w-6xl w-full mx-auto p-4 sm:p-6 lg:p-8 animate-in fade-in duration-200">
         <ClaimAgentSaaSPage

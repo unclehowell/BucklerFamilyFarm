@@ -123,8 +123,8 @@ export const onRequestPost: PagesFunction = async (context) => {
           serviceType: 'eligibility_check',
           claimantName: name || 'Not specified',
         },
-        success_url: `${origin}?payment_status=eligibility_success&session_id={CHECKOUT_SESSION_ID}`,
-        cancel_url: `${origin}?payment_status=cancelled`,
+        success_url: `${origin}/webapp/?payment_status=eligibility_success&session_id={CHECKOUT_SESSION_ID}`,
+        cancel_url: `${origin}/webapp/?payment_status=cancelled`,
       });
 
       return new Response(
@@ -182,8 +182,8 @@ export const onRequestPost: PagesFunction = async (context) => {
           eligibilityCode,
           claimantName: name || 'Not specified',
         },
-        success_url: `${origin}?payment_status=subscription_success&session_id={CHECKOUT_SESSION_ID}`,
-        cancel_url: `${origin}?payment_status=cancelled`,
+        success_url: `${origin}/webapp/?payment_status=subscription_success&session_id={CHECKOUT_SESSION_ID}`,
+        cancel_url: `${origin}/webapp/?payment_status=cancelled`,
       });
 
       return new Response(

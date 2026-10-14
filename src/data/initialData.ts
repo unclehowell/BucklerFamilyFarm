@@ -19,7 +19,7 @@ export const INITIAL_FOI_DATA: FOIDataset = {
         {
           date: "2026-05-18",
           type: "request",
-          from: "Sion Buckler <hywelapbuckler@gmail.com>",
+          from: "Sion Buckler <[email address withheld]>",
           to: "nmr.wales@rcahmw.gov.uk",
           summary: "EIR request for all historical survey notes, architectural drawings, and RAF 1947 aerial surveys for Great House Farm / Ty Mawr."
         },
@@ -104,7 +104,7 @@ export const INITIAL_FOI_DATA: FOIDataset = {
         {
           date: "2026-06-07",
           type: "request",
-          from: "Sion Buckler <hywelapbuckler@gmail.com>",
+          from: "Sion Buckler <[email address withheld]>",
           to: "FoiUnit@valeofglamorgan.gov.uk",
           summary: "Original EIR request re Great House Farm / Williams-Buckler family dispossession records."
         },
@@ -112,7 +112,7 @@ export const INITIAL_FOI_DATA: FOIDataset = {
           date: "2026-07-07",
           type: "response",
           from: "FOI Unit <FoiUnit@valeofglamorgan.gov.uk>",
-          to: "hywelapbuckler@gmail.com",
+          to: "[email address withheld]",
           summary: "Council response issued (content not fully extracted here)."
         },
         {

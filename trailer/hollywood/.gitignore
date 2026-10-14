@@ -1,0 +1,6 @@
+.build/
+.cache/
+# clips/ holds the AI-generated shots; only commit real generated footage
+clips/
+stills/
+__pycache__/

@@ -1,10 +1,15 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "email-archive",
+  "name": "email",
   "main": "email-archive/worker.js",
   "compatibility_date": "2026-10-17",
   "workers_dev": false,
-  "preview_urls": false,
+  "routes": [
+    {
+      "pattern": "email.bucklerfamily.estate",
+      "custom_domain": true
+    }
+  ],
   "observability": {
     "enabled": true,
     "head_sampling_rate": 1

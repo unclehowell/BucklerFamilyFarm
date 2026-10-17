@@ -1,60 +1,87 @@
-const REPO_RAW = "https://raw.githubusercontent.com/unclehowell/BucklerFamilyFarm/email-archive/email-archive/";
+const RAW_BASE = "https://raw.githubusercontent.com/unclehowell/BucklerFamilyFarm/email-archive/email-archive";
+const MANIFEST_URL = RAW_BASE + "/data/mail-index.json";
+const PAGE_URL = RAW_BASE + "/index.html?ui=thread-links-1";
+const TEXT_HOST = "wayback.datro.xyz";
+const CACHE = caches.default;
 
-const FILES = {
-  "/": { file: "index.html", type: "text/html; charset=utf-8" },
-  "/index.html": { file: "index.html", type: "text/html; charset=utf-8" },
-  "/data/threads.json": { file: "data/threads.json", type: "application/json; charset=utf-8" },
-  "/robots.txt": { file: "robots.txt", type: "text/plain; charset=utf-8" }
-};
-
-function responseHeaders(type, upstreamHeaders) {
-  const headers = new Headers(upstreamHeaders || {});
-  headers.set("content-type", type);
-  headers.set("x-content-type-options", "nosniff");
-  headers.set("referrer-policy", "strict-origin-when-cross-origin");
-  headers.set("permissions-policy", "camera=(), microphone=(), geolocation=()");
-  headers.set("content-security-policy", "default-src 'self'; connect-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; base-uri 'none'; form-action 'none'; frame-ancestors 'self' https://greathousefarmwiki.wordpress.com https://*.wordpress.com");
-  headers.set("cache-control", "public, max-age=30, s-maxage=60");
-  return headers;
+function headers(extra) {
+  const h = new Headers(extra || {});
+  h.set("X-Content-Type-Options", "nosniff");
+  h.set("Referrer-Policy", "no-referrer");
+  return h;
 }
-
-export default {
-  async fetch(request) {
-    const url = new URL(request.url);
-    if (request.method !== "GET" && request.method !== "HEAD") {
-      return new Response("Method not allowed", { status: 405, headers: { "allow": "GET, HEAD", "content-type": "text/plain; charset=utf-8" } });
-    }
-    if (url.pathname === "/healthz") {
-      return Response.json({ ok: true, service: "email-archive", source: "unclehowell/BucklerFamilyFarm@email-archive", mode: "public-read-only" }, {
-        headers: { "cache-control": "no-store", "x-content-type-options": "nosniff" }
-      });
-    }
-    let entry = FILES[url.pathname];
-    if (!entry && (url.pathname === "/about" || url.pathname.startsWith("/thread/"))) {
-      entry = FILES["/"];
-    }
-    if (!entry) {
-      return new Response("Not found", { status: 404, headers: { "content-type": "text/plain; charset=utf-8", "x-content-type-options": "nosniff" } });
-    }
-
-    try {
-      const upstream = await fetch(REPO_RAW + entry.file, {
-        headers: { "accept": entry.type.split(";")[0] + ", */*;q=0.8" },
-        cf: { cacheTtl: 30, cacheEverything: true }
-      });
-      if (!upstream.ok) {
-        return new Response("The public archive source could not be loaded. Please try again shortly.", {
-          status: 502,
-          headers: responseHeaders("text/plain; charset=utf-8")
-        });
-      }
-      const headers = responseHeaders(entry.type, upstream.headers);
-      return new Response(request.method === "HEAD" ? null : upstream.body, { status: 200, headers });
-    } catch (error) {
-      return new Response("The public archive is temporarily unavailable. Please try again shortly.", {
-        status: 503,
-        headers: responseHeaders("text/plain; charset=utf-8")
-      });
-    }
+function json(data, status) {
+  return new Response(JSON.stringify(data), {status:status || 200,headers:headers({"Content-Type":"application/json; charset=utf-8","Cache-Control":"no-store"})});
+}
+async function cachedFetch(url, ttl) {
+  const key = new Request(url, {method:"GET"});
+  const old = await CACHE.match(key);
+  if (old) return old;
+  const upstream = await fetch(url, {headers:{"Accept":"*/*","User-Agent":"GreatHouseFarmPublicArchive/1.0"}});
+  if (!upstream.ok) return upstream;
+  const hs = new Headers(upstream.headers);
+  hs.set("Cache-Control","public, max-age=" + (ttl || 300));
+  hs.set("X-Content-Type-Options","nosniff");
+  const response = new Response(upstream.body, {status:upstream.status,headers:hs});
+  await CACHE.put(key,response.clone());
+  return response;
+}
+async function loadManifest() {
+  const r = await cachedFetch(MANIFEST_URL,300);
+  if (!r.ok) throw new Error("Catalogue fetch failed: " + r.status);
+  const m = await r.json();
+  if (!m || !Array.isArray(m.records)) throw new Error("Invalid catalogue format");
+  return m;
+}
+async function loadRecordText(record) {
+  const u = new URL(record.path);
+  if (u.protocol !== "https:" || u.hostname !== TEXT_HOST || !u.pathname.startsWith("/text/")) {
+    throw new Error("Rejected source URL");
   }
+  const r = await cachedFetch(u.href,900);
+  if (!r.ok) throw new Error("Archive source returned " + r.status);
+  return await r.text();
+}
+function corsSafe(request, response) { return response; }
+export default {
+ async fetch(request, env, ctx) {
+  const url = new URL(request.url);
+  if (request.method !== "GET" && request.method !== "HEAD") return json({error:"Read-only public archive. Only GET and HEAD are supported."},405);
+  if (url.pathname === "/api/health") return json({status:"ok",service:"Great House Farm Mail Archive",worker:"email",manifestVersion:"1.0.0"});
+  if (url.pathname === "/api/records") {
+   try { const m=await loadManifest(); return json(m); }
+   catch(e) { return json({error:"Could not load the public archive index",detail:String(e)},502); }
+  }
+  if (url.pathname === "/api/message") {
+   const id=url.searchParams.get("id");
+   if (!id || id.length>80) return json({error:"A record id is required"},400);
+   try {
+    const m=await loadManifest();
+    const record=m.records.find(x=>x.id===id);
+    if(!record) return json({error:"Record not found in the public catalogue"},404);
+    const text=await loadRecordText(record);
+    return json({id:record.id,name:record.name,subject:record.subject,date:record.date,evidenceVersion:record.evidenceVersion,text:text});
+   } catch(e) { return json({error:"Could not load source text",detail:String(e)},502); }
+  }
+  if (url.pathname === "/api/search") {
+   const q=(url.searchParams.get("q")||"").trim().toLowerCase();
+   if(q.length<2) return json({threadKeys:[],matches:0,note:"Search term must contain at least two characters."});
+   if(q.length>160) return json({error:"Search term too long"},400);
+   try {
+    const m=await loadManifest();
+    const matches=new Set();
+    let cursor=0;
+    const workers=Array.from({length:6},async()=>{while(true){const i=cursor++;if(i>=m.records.length)break;const record=m.records[i];try{const body=(await loadRecordText(record)).toLowerCase();const meta=(record.subject+" "+record.name+" "+record.category).toLowerCase();if(body.includes(q)||meta.includes(q)){const key=(record.subject||record.name).toLowerCase().replace(/^(?:re\s*[:_\-]?\s*)+/i,"").replace(/\.(txt|eml|html?)$/i,"").replace(/[^a-z0-9]+/g," ").trim();matches.add(key);}}catch(e){/* Keep search moving if an archived source is unavailable. */}}});
+    await Promise.all(workers);
+    return json({threadKeys:Array.from(matches),matches:matches.size,recordsScanned:m.records.length,note:"Search covers indexed public archive records; inaccessible sources may be omitted."});
+   } catch(e) { return json({error:"Full-text search failed",detail:String(e)},502); }
+  }
+  if (url.pathname === "/" || url.pathname === "/index.html" || /^\/thread\/[a-z0-9-]+\/?$/.test(url.pathname)) {
+   const r=await cachedFetch(PAGE_URL,60);
+   if (!r.ok) return new Response("The archive interface could not be loaded from the repository branch.",{status:502,headers:headers({"Content-Type":"text/plain; charset=utf-8"})});
+   return new Response(await r.text(),{status:200,headers:headers({"Content-Type":"text/html; charset=utf-8","Cache-Control":"public, max-age=60","Content-Security-Policy":"default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; connect-src 'self'; img-src 'self' data:; base-uri 'none'; object-src 'none'; frame-ancestors 'self' https://greathousefarmwiki.wordpress.com https://*.wordpress.com; form-action 'none'"})});
+  }
+  if (url.pathname === "/robots.txt") return new Response("User-agent: *\nAllow: /\nDisallow: /api/",{headers:headers({"Content-Type":"text/plain; charset=utf-8"})});
+  return new Response("Not found",{status:404,headers:headers({"Content-Type":"text/plain; charset=utf-8"})});
+ }
 };

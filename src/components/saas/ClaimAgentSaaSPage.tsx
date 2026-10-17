@@ -110,7 +110,7 @@ export const ClaimAgentSaaSPage: React.FC<ClaimAgentSaaSPageProps> = ({
         viewParam === 'application'
       ) {
         setCurrentUser({
-          email: 'hywelapbuckler@gmail.com',
+          email: 'demo.user@example.invalid',
           name: 'Sion Buckler (Demo)',
           isDemo: true,
         });
@@ -119,7 +119,7 @@ export const ClaimAgentSaaSPage: React.FC<ClaimAgentSaaSPageProps> = ({
         setPortalViewMode('court-app');
       } else if (viewParam === 'table') {
         setCurrentUser({
-          email: 'hywelapbuckler@gmail.com',
+          email: 'demo.user@example.invalid',
           name: 'Sion Buckler (Demo)',
           isDemo: true,
         });
@@ -133,7 +133,7 @@ export const ClaimAgentSaaSPage: React.FC<ClaimAgentSaaSPageProps> = ({
         viewParam === 'rival-claims'
       ) {
         setCurrentUser({
-          email: 'hywelapbuckler@gmail.com',
+          email: 'demo.user@example.invalid',
           name: 'Sion Buckler (Demo)',
           isDemo: true,
         });
@@ -149,7 +149,7 @@ export const ClaimAgentSaaSPage: React.FC<ClaimAgentSaaSPageProps> = ({
         viewParam === 'evidence-library'
       ) {
         setCurrentUser({
-          email: 'hywelapbuckler@gmail.com',
+          email: 'demo.user@example.invalid',
           name: 'Sion Buckler (Demo)',
           isDemo: true,
         });
@@ -158,7 +158,7 @@ export const ClaimAgentSaaSPage: React.FC<ClaimAgentSaaSPageProps> = ({
         setPortalViewMode('wiki');
       } else if (viewParam === 'results') {
         setCurrentUser({
-          email: 'hywelapbuckler@gmail.com',
+          email: 'demo.user@example.invalid',
           name: 'Sion Buckler (Demo)',
           isDemo: true,
         });
@@ -176,7 +176,7 @@ export const ClaimAgentSaaSPage: React.FC<ClaimAgentSaaSPageProps> = ({
         setIsMockAuthModalOpen(true);
       } else if (viewParam === 'search') {
         setCurrentUser({
-          email: 'hywelapbuckler@gmail.com',
+          email: 'demo.user@example.invalid',
           name: 'Sion Buckler (Demo)',
           isDemo: true,
         });
@@ -504,7 +504,7 @@ export const ClaimAgentSaaSPage: React.FC<ClaimAgentSaaSPageProps> = ({
         onSuccessLogin={() => {
           setIsWebAppSubscribeModalOpen(false);
           setCurrentUser({
-            email: 'hywelapbuckler@gmail.com',
+            email: 'demo.user@example.invalid',
             name: 'Sion Buckler',
             isDemo: false,
           });

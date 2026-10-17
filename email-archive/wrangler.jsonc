@@ -10,6 +10,12 @@
       "custom_domain": true
     }
   ],
+  "r2_buckets": [
+    {
+      "binding": "CASE_ARCHIVE",
+      "bucket_name": "wayback-media"
+    }
+  ],
   "observability": {
     "enabled": true,
     "head_sampling_rate": 1

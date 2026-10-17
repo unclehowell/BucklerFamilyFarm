@@ -1,53 +1,63 @@
-# Great House Farm Public Email Archive
+# Great House Farm Public Mail Archive
 
-This directory is the source of the serverless public email archive at https://email.bucklerfamily.estate.
+This is the source for the public, read-only correspondence archive deployed at:
 
-## Components
+**https://email.bucklerfamily.estate**
 
-- index.html — dependency-free, responsive archive UI; thread list, search, filters and full-thread reader.
-- data/threads.json — the approved public correspondence dataset. It is currently empty by design.
-- schema/thread.schema.json — schema for each published email thread.
-- worker.js — Cloudflare Worker entry point. It serves the version-controlled files from this branch on the public hostname.
-- wrangler.jsonc — local deployment configuration.
+## Source and deployment
 
-The Worker is read-only. It does not connect to Gmail or any personal mailbox, does not accept email, and has no write endpoints. The published page and data are served from this repository branch. The browser supports stable thread URLs such as /thread/<thread-id> and an embed mode such as /thread/<thread-id>?embed=1 for an evidence page preview.
+- Repository: `unclehowell/BucklerFamilyFarm`
+- Branch: `email-archive`
+- Cloudflare Worker: `email`
+- Public hostname: `email.bucklerfamily.estate`
+- Web interface: `email-archive/index.html`
+- Catalogue: `email-archive/data/mail-index.json`
+- Worker: `email-archive/worker.js`
+- Wrangler configuration: `email-archive/wrangler.jsonc`
 
-## Add a reviewed thread
+The Worker serves the web interface and catalogue from this branch. When a reader opens a record, it retrieves its text from the already-public `https://wayback.datro.xyz/text/` archive. The Worker checks each requested source against the 80-record public catalogue before it will fetch it.
 
-1. Preserve original messages and attachments separately as evidence. Do not invent missing headers or body text.
-2. Review the material for personal data, third-party private information, privileged material, live security details, and attachments that are not cleared for publication. Redact only in the public derivative, document the redaction, and retain the original securely outside this public repository.
-3. Add one thread object to data/threads.json following schema/thread.schema.json. Use a stable lower-case slug for id. Keep the messages in their original chronological order.
-4. Assign each thread a semantic version:
-   - Patch (for example 1.0.1): typographical correction or non-substantive metadata fix.
-   - Minor (for example 1.1.0): one or more further messages added to the same thread without changing the established record.
-   - Major (for example 2.0.0): material restructuring, a substantive correction, or a change to what the published thread represents.
-5. Update updatedAt and append an entry to revisions whenever the thread changes. For an addition, explain which dated messages were added.
-6. Validate the JSON, commit the change to this branch, then open the stable thread URL and check the rendered message order, source links, and redactions.
+This service is not Gmail or a live mailbox. It has no mailbox sign-in, no inbox credentials, and no send/receive or write endpoint.
 
-The archive-level schemaVersion describes the data format; each thread's version describes the published evidence record. These are separate version numbers.
+## What is indexed
 
-## Thread fields
+The initial catalogue contains 80 case-related public archive records selected from the existing `unclehowell/datro@gh-pages:bpvsbuckler/text/_treeview.json` index using Great House Farm / Tŷ Mawr / Llandough / BP v Buckler and correspondence-style filename indicators. The reader groups normalized subjects into conversation-like groups. Grouping is a finding aid, not proof that each original thread is complete. The source catalogue currently lacks dates for some files; the interface shows these as undated rather than inferring dates from incomplete metadata.
 
-Required fields: id, subject, description, correspondenceWith, organisation, category, version, updatedAt, messages.
+## Reading and linking
 
-Each message should include date, fromName, to and body where those fields exist in the source. fromAddress and cc are optional. Attachments should link only to separately reviewed public files. sourceUrl should point to a stable public evidence record, not to a personal mailbox or private drive.
+- Search the catalogue by case reference, organisation, filename or message text.
+- Use the folder controls to narrow the results.
+- Open a subject to read its indexed source records in the vertically scrollable reader.
+- The description and evidence notes are below the reader in a collapsed section.
+- Use **Copy thread link** for a stable public URL: `/thread/<stable-subject-slug>`.
+- Use **Copy embed code** to produce an iframe preview link: `/thread/<stable-subject-slug>?embed=1`. This embed mode hides the folder and list panes so the selected evidence occupies the preview.
+- Each record retains its source link and an evidence version; the catalogue itself has its own manifest version.
 
-Do not paste private correspondence into a commit merely because it mentions the case. This is intended to be a public evidence archive. Publish only correspondence deliberately approved for public release.
+The Worker permits embedding on `greathousefarmwiki.wordpress.com` and WordPress subdomains. The rest of the archive remains read-only.
 
-## Local preview / deploy
+## Updating safely
 
-Use a recent Wrangler CLI from the repository root or this directory. The Worker name is email-archive and the target hostname is email.bucklerfamily.estate. This Worker uses a small, explicit allow-list of public static paths and is configured as a read-only service.
+1. Confirm the exact correspondence record is intended for public release and that the upstream text is already public.
+2. Review the complete source for personal data, third-party private material, privilege, sensitive information and attachments. Do not import a private Gmail dump or unpublished material into this public repository. Redact the public copy where appropriate and record the reason.
+3. Add or correct the corresponding entry in `data/mail-index.json`. Keep a stable `id`, exact public `path`, descriptive `subject`, `category`, and `evidenceVersion`.
+4. Increment `manifestVersion` when the catalogue changes. Increment an evidence record's `evidenceVersion` semantically when its public evidence representation changes (for example, `1.0.0` → `1.1.0` for an addition or backward-compatible correction, or `2.0.0` for a major change).
+5. For UI changes, update `index.html` and bump the `?ui=` cache-key in `worker.js` so edge caches retrieve the current UI immediately.
+6. Commit changes to this branch, then check the live domain and test both a thread link and an `?embed=1` link.
 
-For local development:
-- npm install --global wrangler
-- wrangler dev --config email-archive/wrangler.jsonc
-- wrangler deploy --config email-archive/wrangler.jsonc
+Do not alter the source text or re-label a record as a verified complete thread unless the underlying evidence supports that description.
 
-The Cloudflare domain association is managed for this deployed Worker. If deploying a new Worker version manually, keep the repository copy of worker.js in sync.
+## Local use
 
-## Related case chronology
+From the repository root, after installing a current Wrangler CLI:
 
-The current public correspondence overview is at:
+```sh
+wrangler dev --config email-archive/wrangler.jsonc
+wrangler deploy --config email-archive/wrangler.jsonc
+```
+
+The config uses the existing `email` Worker identity and custom domain. Keep it and the deployed Worker in sync.
+
+## Related chronology
+
+The wiki's narrative summary remains at:
 https://greathousefarmwiki.wordpress.com/records-access-chronology/
-
-That chronology is a narrative index, not a substitute for original message records. This archive does not mark a thread complete until its public messages and source record have been checked.

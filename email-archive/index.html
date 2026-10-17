@@ -1,274 +1,232 @@
 <!doctype html>
-<html lang="en-GB">
+<html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="robots" content="index,follow">
-<meta name="theme-color" content="#102d36">
-<title>Public Email Archive — Great House Farm</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#f6f8fc">
+<title>Great House Farm Mail Archive</title>
+<meta name="description" content="Public read-only archive of case-related email and correspondence records for Great House Farm (Tŷ Mawr), Llandough and BP v Buckler.">
 <style>
-:root{color-scheme:light;--ink:#172b32;--muted:#62727a;--line:#dbe3e5;--paper:#fff;--wash:#f3f6f6;--navy:#102d36;--teal:#146d70;--teal-pale:#e7f3f2;--gold:#b47b2c;--shadow:0 8px 28px rgba(16,45,54,.07)}
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--wash);color:var(--ink);font:15px/1.5 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}a{color:var(--teal);text-underline-offset:3px}button,input,select{font:inherit}button{cursor:pointer}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:3px solid #6db8ba;outline-offset:2px}.site-header{background:var(--navy);color:white;padding:18px clamp(18px,4vw,52px);display:flex;align-items:center;justify-content:space-between;gap:20px}.brand{display:flex;align-items:center;gap:12px;min-width:0}.brand-mark{display:grid;place-items:center;width:42px;height:42px;border:1px solid #628187;border-radius:12px;font-size:22px;flex:none}.brand-title{font-weight:750;letter-spacing:.01em}.brand-subtitle{font-size:12px;color:#c2d5d8}.header-links{display:flex;gap:18px;flex-wrap:wrap;font-size:13px}.header-links a{color:#e1eded;text-decoration:none}.header-links a:hover{text-decoration:underline}.wrap{max-width:1440px;margin:0 auto;padding:30px clamp(14px,3vw,38px) 40px}.eyebrow{text-transform:uppercase;letter-spacing:.13em;font-weight:750;font-size:11px;color:var(--teal)}h1{font-size:clamp(28px,3vw,42px);letter-spacing:-.035em;line-height:1.1;margin:8px 0 12px}.intro{max-width:900px;margin-bottom:25px}.intro p{max-width:830px;margin:0;color:#4c6169;font-size:16px}.notice{margin-top:17px;padding:12px 14px;background:#fff;border-left:3px solid var(--teal);border-radius:0 8px 8px 0;color:#52656b;font-size:13px}.notice strong{color:var(--ink)}.toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;background:white;border:1px solid var(--line);padding:13px;border-radius:13px;margin-bottom:17px;box-shadow:var(--shadow)}.search{flex:1;min-width:200px;position:relative}.search label{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--muted)}.search input{width:100%;border:1px solid #ccd7da;border-radius:8px;padding:11px 12px 11px 38px;background:#fff;color:var(--ink)}.toolbar select{border:1px solid #ccd7da;border-radius:8px;padding:11px 30px 11px 11px;background:white;color:var(--ink);max-width:225px}.button{border:1px solid #bfcfd1;background:white;color:var(--ink);padding:10px 13px;border-radius:8px;text-decoration:none;font-weight:650;font-size:13px;display:inline-flex;align-items:center;justify-content:center;gap:7px}.button.primary{background:var(--teal);border-color:var(--teal);color:white}.button:hover{filter:brightness(.97)}.workspace{display:grid;grid-template-columns:minmax(280px,370px) minmax(0,1fr);gap:17px;align-items:start}.panel{background:white;border:1px solid var(--line);border-radius:13px;box-shadow:var(--shadow);overflow:hidden;min-width:0}.panel-head{padding:16px 18px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:12px}.panel-head h2{font-size:15px;margin:0}.count{font-size:12px;color:var(--muted);white-space:nowrap}.thread-list{max-height:690px;overflow:auto}.thread-row{display:block;width:100%;text-align:left;background:white;border:0;border-bottom:1px solid #e8edef;padding:15px 16px;color:var(--ink)}.thread-row:last-child{border-bottom:0}.thread-row:hover{background:#f7fbfb}.thread-row.selected{background:var(--teal-pale);box-shadow:inset 3px 0 0 var(--teal)}.row-top{display:flex;justify-content:space-between;gap:8px;align-items:start}.row-org{font-weight:750;font-size:13px}.row-date{font-size:11px;color:var(--muted);white-space:nowrap}.row-subject{font-weight:700;margin:5px 0 4px;line-height:1.3}.row-summary{font-size:12px;color:var(--muted);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}.tag{font-size:10px;line-height:1.3;border-radius:100px;background:#edf2f3;color:#445b61;padding:4px 8px}.reader-head{padding:20px 23px 16px;border-bottom:1px solid var(--line)}.reader-kicker{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--teal);font-weight:750}.reader-subject{font-size:clamp(21px,2vw,28px);line-height:1.2;letter-spacing:-.02em;margin:7px 0 12px}.reader-meta{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}.meta-chips{display:flex;flex-wrap:wrap;gap:7px}.chip{font-size:11px;color:#4b6066;border:1px solid var(--line);background:#fbfcfc;padding:5px 8px;border-radius:6px}.reader-actions{display:flex;gap:7px;flex-wrap:wrap}.reader-messages{padding:12px 18px 18px;max-height:min(57vh,690px);overflow:auto;overscroll-behavior:contain;scrollbar-gutter:stable}.message-card{border:1px solid var(--line);border-radius:10px;margin:7px 0 12px;overflow:hidden;background:#fff}.message-meta{padding:13px 15px;background:#f8fafa;border-bottom:1px solid var(--line);display:grid;grid-template-columns:minmax(70px,auto) minmax(0,1fr);gap:4px 14px;font-size:12px}.message-meta dt{color:var(--muted)}.message-meta dd{margin:0;overflow-wrap:anywhere}.message-body{padding:17px 16px;font-size:14px;line-height:1.65;white-space:pre-wrap;overflow-wrap:anywhere}.attachments{border-top:1px solid var(--line);padding:10px 15px;display:flex;gap:7px;flex-wrap:wrap;font-size:12px}.reader-description{border-top:1px solid var(--line);padding:0 22px 18px}.reader-description details{border:1px solid var(--line);border-radius:9px;overflow:hidden}.reader-description summary{cursor:pointer;font-weight:700;font-size:13px;padding:13px 15px;background:#f8fafa}.description-content{padding:13px 15px;color:#52656b;font-size:13px}.description-content p{margin:0 0 10px}.description-content p:last-child{margin-bottom:0}.description-grid{display:grid;grid-template-columns:150px minmax(0,1fr);gap:7px 12px}.description-grid strong{color:var(--ink);font-weight:650}.empty{padding:35px 25px;text-align:left}.empty-icon{font-size:26px;margin-bottom:10px}.empty h3{margin:0 0 8px;font-size:18px}.empty p{color:var(--muted);font-size:13px;margin:0 0 12px;max-width:540px}.empty .empty-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}.side-note{padding:15px 17px;color:var(--muted);font-size:12px;line-height:1.55;border-top:1px solid var(--line);background:#fbfcfc}.side-note a{font-weight:650}.archive-footer{padding:22px 2px 0;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;color:var(--muted);font-size:12px}.archive-footer a{color:var(--teal)}.hidden{display:none!important}.embed-mode{background:white}.embed-mode .wrap{padding:0;max-width:none}.embed-mode .workspace{display:block}.embed-mode .panel{border:0;border-radius:0;box-shadow:none}.embed-mode .reader-head{padding:12px 14px}.embed-mode .reader-subject{font-size:21px}.embed-mode .reader-messages{max-height:65vh;padding:8px 12px 14px}.embed-mode .reader-description{padding:0 12px 12px}.embed-mode .message-body{font-size:14px}.embed-mode .reader-actions .button.embed-only-hide{display:none}.embed-mode #readerEmpty{padding:22px}.embed-mode .reader-kicker{font-size:10px}.embed-mode .reader-meta{align-items:flex-start}.embed-mode .site-header,.embed-mode .intro,.embed-mode .toolbar,.embed-mode #sidebar,.embed-mode .archive-footer{display:none!important}
-@media(max-width:850px){.workspace{grid-template-columns:minmax(0,1fr)}.thread-list{max-height:380px}.reader-messages{max-height:58vh}.reader-head{padding:17px}.reader-description{padding:0 17px 17px}.message-meta{grid-template-columns:62px minmax(0,1fr)}.wrap{padding-top:20px}}@media(max-width:560px){.site-header{align-items:flex-start;padding:14px}.header-links{gap:10px;font-size:12px;justify-content:flex-end}.brand-subtitle{max-width:185px}.wrap{padding:17px 10px 28px}.toolbar{padding:10px}.toolbar select{max-width:none;flex:1}.search{min-width:100%;}.reader-head{padding:15px 13px}.reader-messages{padding:8px}.reader-description{padding:0 10px 12px}.message-body{padding:13px;font-size:13px}.message-meta{padding:11px;gap:5px 10px}.reader-actions{width:100%}.reader-actions .button{flex:1}.reader-subject{font-size:22px}}
-@media print{.site-header,.intro,.toolbar,#sidebar,.reader-actions,.archive-footer,.reader-description summary{display:none!important}.wrap{padding:0}.workspace{display:block}.panel{box-shadow:none;border:0}.reader-messages{max-height:none;overflow:visible}}
+:root{color-scheme:light;--bg:#f6f8fc;--surface:#fff;--line:#dfe4ec;--text:#202124;--muted:#5f6368;--blue:#0b57d0;--soft:#e8f0fe;--navy:#174ea6}
+*{box-sizing:border-box}html,body{height:100%;margin:0}body{font:14px/1.45 Arial,Helvetica,sans-serif;color:var(--text);background:var(--bg)}
+button,input{font:inherit}button{cursor:pointer}a{color:var(--blue)}
+.topbar{height:70px;display:flex;align-items:center;gap:18px;padding:10px 22px;background:#f6f8fc;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:3}
+.brand{display:flex;align-items:center;gap:12px;min-width:245px}.brand-icon{height:40px;width:40px;border-radius:12px;background:#d3e3fd;color:#174ea6;display:grid;place-items:center;font-size:22px}.brand h1{font-size:17px;font-weight:600;margin:0}.brand p{font-size:11px;color:var(--muted);margin:2px 0 0}
+.search-wrap{display:flex;align-items:center;gap:8px;max-width:820px;flex:1}.search-wrap input{height:44px;border:1px solid transparent;border-radius:24px;background:#eaf0fb;padding:0 18px;outline:none;flex:1;min-width:80px}.search-wrap input:focus{background:#fff;border-color:#a8c7fa;box-shadow:0 1px 3px #00000012}.btn{border:1px solid var(--line);background:#fff;padding:9px 13px;border-radius:18px;color:#30343a}.btn.primary{background:var(--blue);border-color:var(--blue);color:white}.version-chip{white-space:nowrap;border:1px solid var(--line);background:#fff;border-radius:16px;padding:6px 10px;color:var(--muted);font-size:11px}
+.layout{display:grid;grid-template-columns:220px minmax(270px,360px) minmax(360px,1fr);gap:14px;height:calc(100vh - 70px);padding:14px;min-height:480px}
+.sidebar,.list-panel,.reader-panel{background:var(--surface);border:1px solid var(--line);border-radius:16px;min-height:0;overflow:hidden}
+.sidebar{padding:14px 10px;display:flex;flex-direction:column;gap:4px}.sidebar h2{font-size:11px;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);padding:14px 12px 5px;margin:0}.navbtn{border:0;background:transparent;width:100%;text-align:left;border-radius:24px;padding:10px 13px;color:#3c4043;display:flex;justify-content:space-between;gap:12px}.navbtn:hover{background:#f1f3f4}.navbtn.active{background:var(--soft);color:#174ea6;font-weight:600}.navbtn .count{font-size:11px;color:var(--muted)}.sidebar-note{margin:auto 5px 4px;padding:12px 11px;background:#f8fafd;border:1px solid var(--line);border-radius:12px;color:var(--muted);font-size:11px}
+.list-panel{display:flex;flex-direction:column}.list-heading{padding:17px 16px 12px;border-bottom:1px solid var(--line)}.list-heading h2{margin:0 0 4px;font-size:17px;font-weight:600}.list-heading p{margin:0;color:var(--muted);font-size:12px}.result-list{overflow:auto;flex:1}.result{width:100%;border:0;border-bottom:1px solid #edf0f5;background:white;display:block;text-align:left;padding:13px 15px;color:inherit}.result:hover{background:#f7f9fc}.result.active{background:#e8f0fe;border-left:3px solid var(--blue);padding-left:12px}.result-top{display:flex;justify-content:space-between;gap:8px;align-items:center}.result-subject{font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.result-date{font-size:10px;color:var(--muted);white-space:nowrap}.result-thread{font-size:12px;color:#42464b;display:flex;gap:6px;align-items:center;margin-top:5px}.category-dot{width:7px;height:7px;background:#8ab4f8;border-radius:50%;flex-shrink:0}.result-meta{font-size:11px;color:var(--muted);margin-top:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.empty-list{padding:24px 18px;color:var(--muted);line-height:1.7}
+.reader-panel{display:flex;flex-direction:column}.reader-header{padding:18px 22px 14px;border-bottom:1px solid var(--line)}.reader-title{font-size:20px;font-weight:500;line-height:1.3;margin:0 0 9px;overflow-wrap:anywhere}.reader-tags{display:flex;align-items:center;gap:7px;flex-wrap:wrap}.tag{border-radius:5px;background:#f1f3f4;color:#4d5156;padding:4px 7px;font-size:11px}.tag.blue{background:#e8f0fe;color:#174ea6}.reader-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:13px}.reader-scroll{flex:1;overflow:auto;padding:16px 22px 22px}.message-card{border:1px solid var(--line);border-radius:12px;margin-bottom:14px;overflow:hidden}.message-head{padding:12px 14px;background:#fbfcff;border-bottom:1px solid var(--line)}.message-title{font-weight:600;overflow-wrap:anywhere}.message-source{font-size:11px;color:var(--muted);margin-top:5px}.message-source a{word-break:break-all}.message-body{white-space:pre-wrap;overflow-wrap:anywhere;font:13px/1.65 ui-monospace,SFMono-Regular,Consolas,monospace;max-height:none;margin:0;padding:15px;min-height:90px;color:#202124}.message-loading{padding:30px;text-align:center;color:var(--muted)}.summary{border-top:1px solid var(--line);padding:12px 22px 18px;background:#fbfcff}.summary details{border:1px solid var(--line);border-radius:10px;background:#fff;padding:11px 13px}.summary summary{font-weight:600;cursor:pointer}.summary-content{font-size:12px;color:#3c4043;line-height:1.65;padding-top:10px}.summary-content p{margin:5px 0}.summary-content ul{padding-left:18px;margin:7px 0}.reader-empty{display:flex;flex:1;align-items:center;justify-content:center;padding:35px;text-align:center;color:var(--muted)}.reader-empty .empty-inner{max-width:380px}.reader-empty .big-icon{font-size:48px;margin-bottom:12px}.reader-empty h2{font-size:18px;color:#3c4043;margin:0 0 7px}.reader-empty p{line-height:1.7}.mobile-list-toggle{display:none}.status{font-size:11px;color:var(--muted);margin-top:8px;min-height:15px}
+@media(max-width:1050px){.layout{grid-template-columns:180px minmax(250px,320px) minmax(300px,1fr);gap:9px;padding:9px}.brand{min-width:205px}.topbar{padding:10px 13px;gap:10px}.reader-header,.reader-scroll{padding-left:16px;padding-right:16px}.summary{padding-left:16px;padding-right:16px}}
+@media(max-width:760px){.topbar{height:auto;min-height:66px;flex-wrap:wrap;gap:8px;padding:10px}.brand{min-width:0;flex:1}.brand h1{font-size:15px}.version-chip{display:none}.search-wrap{flex-basis:100%;order:2;max-width:none}.search-wrap input{height:40px}.layout{display:flex;height:auto;min-height:calc(100vh - 120px);padding:8px;flex-direction:column}.sidebar{flex-direction:row;flex-wrap:wrap;padding:7px;gap:3px}.sidebar h2,.sidebar-note{display:none}.navbtn{width:auto;border-radius:18px;padding:8px 11px;font-size:12px}.list-panel{min-height:220px;max-height:40vh}.reader-panel{min-height:58vh}.reader-title{font-size:18px}.reader-scroll{padding:12px}.summary{padding:10px 12px 14px}.result{padding:11px 13px}}
+/* Clean single-thread reader for evidence-page embeds. */
+.embed-mode .topbar,.embed-mode .sidebar,.embed-mode .list-panel{display:none!important}
+.embed-mode .layout{display:block!important;height:auto!important;min-height:0!important;padding:0!important}
+.embed-mode .reader-panel{height:100vh;min-height:0;border:0;border-radius:0;display:flex;flex-direction:column}
+.embed-mode #reader-content{min-height:0!important}
+.embed-mode .reader-header{padding:13px 15px}
+.embed-mode .reader-scroll{max-height:62vh;flex:1;overflow-y:auto;padding:12px 15px}
+.embed-mode .summary{padding:0 12px 12px}
+.embed-mode .embed-button{display:none!important}
+.embed-mode .reader-empty{min-height:100vh}
+
 </style>
 </head>
 <body>
-<header class="site-header">
-  <div class="brand"><div class="brand-mark" aria-hidden="true">✉</div><div><div class="brand-title">Great House Farm</div><div class="brand-subtitle">Public email evidence archive</div></div></div>
-  <nav class="header-links" aria-label="Main navigation"><a href="https://greathousefarmwiki.wordpress.com/">Evidence wiki</a><a href="https://greathousefarmwiki.wordpress.com/records-access-chronology/">Correspondence chronology</a><a href="https://github.com/unclehowell/BucklerFamilyFarm/tree/email-archive/email-archive">Archive source</a></nav>
+<header class="topbar">
+ <div class="brand"><div class="brand-icon" aria-hidden="true">✉</div><div><h1>Great House Farm Mail</h1><p>Public evidence archive · read-only</p></div></div>
+ <form class="search-wrap" id="search-form"><input id="search" type="search" placeholder="Search subjects, case references, authorities…" aria-label="Search the public mail archive"><button class="btn primary" type="submit">Search full text</button></form>
+ <div class="version-chip">Archive v<span id="manifest-version">1.0.0</span></div>
 </header>
-<main class="wrap">
-  <section class="intro">
-    <div class="eyebrow">Public-interest research · Great House Farm / Tŷ Mawr</div>
-    <h1>Correspondence, in context.</h1>
-    <p>A searchable archive for published email evidence about Great House Farm. Correspondence is grouped into complete threads so readers can follow the exchange, inspect dates and senders, and cite a stable URL.</p>
-    <div class="notice"><strong>Public read-only archive.</strong> This is not a live mailbox and does not connect to Gmail. Only reviewed correspondence intended for publication belongs here. Each thread carries its own semantic version so later additions are visible and auditable.</div>
-  </section>
-  <section class="toolbar" aria-label="Search and filters">
-    <div class="search"><label for="searchBox" aria-hidden="true">⌕</label><input id="searchBox" type="search" placeholder="Search subjects, organisations, message text…" autocomplete="off"></div>
-    <select id="orgFilter" aria-label="Filter by organisation"><option value="">All organisations</option></select>
-    <select id="yearFilter" aria-label="Filter by year"><option value="">All years</option></select>
-    <button class="button" id="clearFilters" type="button">Clear filters</button>
-  </section>
-  <section class="workspace" id="workspace">
-    <aside class="panel" id="sidebar" aria-label="Correspondence threads">
-      <div class="panel-head"><h2>All correspondence</h2><span class="count" id="listCount">Loading…</span></div>
-      <div class="thread-list" id="threadList" aria-live="polite"><div class="empty"><p>Loading archive index…</p></div></div>
-      <div class="side-note">Threads are published as evidence, not as a substitute for original documents. See the <a href="https://greathousefarmwiki.wordpress.com/records-access-chronology/">records-access chronology</a> for the wider sequence of requests and replies.</div>
-    </aside>
-    <article class="panel" id="reader" aria-label="Selected email thread">
-      <div id="readerEmpty" class="empty">
-        <div class="empty-icon" aria-hidden="true">✉</div>
-        <h3 id="emptyHeading">No email thread selected</h3>
-        <p id="emptyText">Choose a thread from the list to read the complete correspondence. A thread opens in a vertically scrollable reader; the description and evidence notes sit below in a collapsed section.</p>
-        <div class="empty-actions" id="emptyActions">
-          <a class="button" href="https://greathousefarmwiki.wordpress.com/records-access-chronology/">Read chronology</a>
-          <a class="button" href="https://github.com/unclehowell/BucklerFamilyFarm/tree/email-archive/email-archive/data">View archive data</a>
-        </div>
-      </div>
-      <div id="readerContent" class="hidden">
-        <div class="reader-head">
-          <div class="reader-kicker" id="readerKicker">Email evidence thread</div>
-          <h2 class="reader-subject" id="readerSubject"></h2>
-          <div class="reader-meta">
-            <div class="meta-chips" id="readerChips"></div>
-            <div class="reader-actions">
-              <button class="button" type="button" id="copyLinkButton">Copy thread link</button>
-              <button class="button embed-only-hide" type="button" id="copyEmbedButton">Copy embed code</button>
-              <a class="button" id="sourceButton" href="#" target="_blank" rel="noopener noreferrer">Evidence source ↗</a>
-            </div>
-          </div>
-        </div>
-        <div class="reader-messages" id="readerMessages" tabindex="0" aria-label="Email messages in this thread"></div>
-        <div class="reader-description"><details id="descriptionDetails"><summary id="descriptionSummary">Thread description and evidence notes</summary><div class="description-content" id="descriptionContent"></div></details></div>
-      </div>
-    </article>
-  </section>
-  <footer class="archive-footer"><span>Archive interface v0.1.0 · Data schema v1.0.0</span><span><a href="https://github.com/unclehowell/BucklerFamilyFarm/tree/email-archive/email-archive">Source in GitHub</a> · Static, serverless, read-only</span></footer>
+<main class="layout">
+ <nav class="sidebar" aria-label="Archive folders">
+   <button class="navbtn active" data-folder="all"><span>▣　All case correspondence</span><span class="count" id="count-all">—</span></button>
+   <button class="navbtn" data-folder="foi"><span>▤　FOI / EIR & requests</span><span class="count" id="count-foi">—</span></button>
+   <button class="navbtn" data-folder="legal"><span>⚖　Court & legal</span><span class="count" id="count-legal">—</span></button>
+   <button class="navbtn" data-folder="records"><span>▧　Heritage & records</span><span class="count" id="count-records">—</span></button>
+   <button class="navbtn" data-folder="land"><span>⌖　Land Registry & title</span><span class="count" id="count-land">—</span></button>
+   <h2>Archive scope</h2>
+   <div class="sidebar-note">Only published case-related records are indexed. This is not Gmail, does not connect to a private mailbox, and cannot send or receive mail. Use each source link to inspect the original archived text.</div>
+ </nav>
+ <section class="list-panel" aria-label="Message threads">
+  <div class="list-heading"><h2 id="list-title">All case correspondence</h2><p id="list-subtitle">Loading public catalogue…</p></div>
+  <div class="result-list" id="result-list"><div class="empty-list">Loading the public archive index…</div></div>
+ </section>
+ <section class="reader-panel" aria-label="Selected email thread">
+  <div class="reader-empty" id="reader-empty"><div class="empty-inner"><div class="big-icon">✉️</div><h2>Select a conversation</h2><p>Choose a subject in the centre panel to read the archived correspondence. The full message text appears in a vertically scrollable pane; the evidence summary and version record sit below it.</p></div></div>
+  <div id="reader-content" hidden style="display:flex;flex:1;min-height:0;flex-direction:column">
+   <div class="reader-header"><h2 class="reader-title" id="reader-title"></h2><div class="reader-tags" id="reader-tags"></div><div class="reader-actions" id="reader-actions"></div></div>
+   <div class="reader-scroll" id="reader-scroll"><div class="message-loading">Loading archived message text…</div></div>
+   <div class="summary"><details id="thread-details"><summary>Thread description, correspondence scope & evidence version</summary><div class="summary-content" id="thread-summary"></div></details></div>
+  </div>
+ </section>
 </main>
 <script>
 (function(){
-  'use strict';
-  var $ = function(id){ return document.getElementById(id); };
-  var archive = {threads:[], archiveVersion:'0.1.0', schemaVersion:'1.0.0'};
-  var selectedId = '';
-  var embedMode = new URLSearchParams(window.location.search).get('embed') === '1';
-  if (embedMode) document.body.classList.add('embed-mode');
-
-  function esc(value){
-    return String(value == null ? '' : value).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
-  }
-  function validWebUrl(value){
-    try { var u = new URL(value); return u.protocol === 'https:' ? u.href : ''; } catch(e) { return ''; }
-  }
-  function formatDate(value){
-    if(!value) return 'Date not recorded';
-    var d = new Date(value);
-    if (isNaN(d.getTime())) return String(value);
-    return new Intl.DateTimeFormat('en-GB',{day:'numeric',month:'short',year:'numeric'}).format(d);
-  }
-  function versionText(value){
-    return /^\d+\.\d+\.\d+$/.test(String(value || '')) ? 'v' + value : 'Version not set';
-  }
-  function latestDate(thread){
-    return thread.toDate || thread.fromDate || (thread.messages && thread.messages.length ? thread.messages[thread.messages.length-1].date : '');
-  }
-  function fullThreadUrl(thread, embed){
-    var base = window.location.origin + '/thread/' + encodeURIComponent(thread.id);
-    return base + (embed ? '?embed=1' : '');
-  }
-  function getThreadFromUrl(){
-    var params = new URLSearchParams(window.location.search);
-    var q = params.get('thread');
-    if(q) return q;
-    var match = window.location.pathname.match(/^\/thread\/([^/]+)/);
-    return match ? decodeURIComponent(match[1]) : '';
-  }
-  function setThreadInUrl(id){
-    var next = id ? fullThreadUrl({id:id}, embedMode) : window.location.origin + (embedMode ? '/?embed=1' : '/');
-    window.history.pushState({}, '', next);
-  }
-  function updateFilters(){
-    var orgs = Array.from(new Set(archive.threads.map(function(t){return t.organisation || t.correspondenceWith || 'Uncategorised';}))).sort();
-    var years = Array.from(new Set(archive.threads.map(function(t){var d=latestDate(t);return d ? String(d).slice(0,4) : '';}))).filter(Boolean).sort().reverse();
-    $('orgFilter').innerHTML = '<option value="">All organisations</option>' + orgs.map(function(v){return '<option value="' + esc(v) + '">' + esc(v) + '</option>';}).join('');
-    $('yearFilter').innerHTML = '<option value="">All years</option>' + years.map(function(v){return '<option value="' + esc(v) + '">' + esc(v) + '</option>';}).join('');
-  }
-  function matchesQuery(thread, query){
-    if(!query) return true;
-    var parts = [thread.subject,thread.organisation,thread.correspondenceWith,thread.description,thread.summary,thread.category,(thread.topics||[]).join(' ')];
-    (thread.messages||[]).forEach(function(m){parts.push(m.fromName,m.fromAddress,m.to,m.cc,m.subject,m.body);});
-    return parts.join(' ').toLowerCase().indexOf(query.toLowerCase()) !== -1;
-  }
-  function renderList(){
-    var q = $('searchBox').value.trim();
-    var org = $('orgFilter').value;
-    var year = $('yearFilter').value;
-    var filtered = archive.threads.filter(function(t){
-      var tOrg = t.organisation || t.correspondenceWith || 'Uncategorised';
-      var d = latestDate(t);
-      return matchesQuery(t,q) && (!org || tOrg === org) && (!year || String(d).slice(0,4) === year);
-    }).sort(function(a,b){return String(latestDate(b)).localeCompare(String(latestDate(a)));});
-    $('listCount').textContent = filtered.length + (filtered.length === 1 ? ' thread' : ' threads');
-    if(!filtered.length){
-      var none = archive.threads.length === 0;
-      $('threadList').innerHTML = '<div class="empty"><div class="empty-icon" aria-hidden="true">✉</div><h3>' + (none ? 'No emails published yet' : 'No matching threads') + '</h3><p>' + (none ? 'The archive is live, but its email data file is deliberately empty until original correspondence has been reviewed and approved for public release. No messages have been fabricated or imported from a private mailbox.' : 'Try another search term or clear one of the filters.') + '</p>' + (none ? '<p>Published message threads will appear here with their original dates, sender and recipient details, a scrollable full-thread reader, and a versioned description.</p>' : '') + '</div>';
-    } else {
-      $('threadList').innerHTML = filtered.map(function(t){
-        var d = latestDate(t);
-        var tags = (t.topics || []).slice(0,2).map(function(v){return '<span class="tag">' + esc(v) + '</span>';}).join('');
-        return '<button class="thread-row' + (t.id === selectedId ? ' selected' : '') + '" type="button" data-thread="' + esc(t.id) + '" aria-current="' + (t.id === selectedId ? 'true' : 'false') + '">' +
-          '<div class="row-top"><span class="row-org">' + esc(t.organisation || t.correspondenceWith || 'Uncategorised') + '</span><span class="row-date">' + esc(formatDate(d)) + '</span></div>' +
-          '<div class="row-subject">' + esc(t.subject || 'Untitled correspondence') + '</div>' +
-          '<div class="row-summary">' + esc(t.summary || t.description || 'Published correspondence thread') + '</div>' +
-          '<div class="tags"><span class="tag">' + esc(versionText(t.version)) + '</span>' + tags + '</div></button>';
-      }).join('');
-    }
-  }
-  function metaChip(label, value){
-    return value ? '<span class="chip">' + esc(label) + ': ' + esc(value) + '</span>' : '';
-  }
-  function renderMessage(message,index){
-    var from = message.fromName || message.fromAddress || 'Sender not recorded';
-    var to = message.to || '';
-    var cc = message.cc || '';
-    var content = '<section class="message-card"><dl class="message-meta">' +
-      '<dt>From</dt><dd>' + esc(from) + (message.fromAddress && message.fromName ? ' <span style="color:#62727a">(' + esc(message.fromAddress) + ')</span>' : '') + '</dd>' +
-      (to ? '<dt>To</dt><dd>' + esc(to) + '</dd>' : '') +
-      (cc ? '<dt>Cc</dt><dd>' + esc(cc) + '</dd>' : '') +
-      '<dt>Date</dt><dd>' + esc(formatDate(message.date)) + '</dd>' +
-      (message.subject ? '<dt>Subject</dt><dd>' + esc(message.subject) + '</dd>' : '') +
-      '</dl><div class="message-body">' + esc(message.body || '[Message body not supplied in this public record.]') + '</div>';
-    var attachments = Array.isArray(message.attachments) ? message.attachments : [];
-    if(attachments.length){
-      content += '<div class="attachments"><strong>Attachments:</strong>' + attachments.map(function(a){
-        var href = validWebUrl(a.url);
-        return href ? '<a href="' + esc(href) + '" target="_blank" rel="noopener noreferrer">' + esc(a.name || 'Open attachment') + ' ↗</a>' : '<span>' + esc(a.name || 'Attachment listed; no public link') + '</span>';
-      }).join('') + '</div>';
-    }
-    content += '</section>';
-    return content;
-  }
-  function renderDetail(){
-    var thread = archive.threads.find(function(t){return t.id === selectedId;});
-    $('readerEmpty').classList.toggle('hidden', !!thread);
-    $('readerContent').classList.toggle('hidden', !thread);
-    if(!thread){
-      $('readerEmpty').classList.remove('hidden');
-      if(embedMode){
-        $('emptyHeading').textContent = 'Thread not found in this archive';
-        $('emptyText').textContent = 'This link may refer to a thread that has not been published, has been withdrawn, or has changed its stable ID. Check the evidence wiki for the latest record.';
-        $('emptyActions').classList.remove('hidden');
-      } else if(archive.threads.length === 0){
-        $('emptyHeading').textContent = 'The archive is ready for reviewed evidence';
-        $('emptyText').textContent = 'No public email threads have been loaded yet. The interface and versioned thread format are in place; correspondence will appear here after it is added to the repository’s reviewed data file.';
-      } else {
-        $('emptyHeading').textContent = 'Select an email thread';
-        $('emptyText').textContent = 'Choose a thread from the list to read the complete exchange and its evidence notes.';
-      }
-      return;
-    }
-    $('readerKicker').textContent = (thread.organisation || 'Correspondence') + ' · ' + (thread.category || 'Email evidence');
-    $('readerSubject').textContent = thread.subject || 'Untitled correspondence';
-    $('readerChips').innerHTML = metaChip('Messages',String((thread.messages||[]).length)) + metaChip('Evidence version',versionText(thread.version)) + metaChip('Dates',(formatDate(thread.fromDate || (thread.messages[0]||{}).date)) + ' – ' + formatDate(thread.toDate || (thread.messages[thread.messages.length-1]||{}).date));
-    $('readerMessages').innerHTML = (thread.messages||[]).map(renderMessage).join('') || '<div class="empty"><p>No message body is attached to this thread.</p></div>';
-    $('readerMessages').scrollTop = 0;
-    $('descriptionSummary').textContent = 'Thread description and evidence notes · ' + versionText(thread.version);
-    var sourceUrl = validWebUrl(thread.sourceUrl);
-    var revisionHtml = '';
-    if(Array.isArray(thread.revisions) && thread.revisions.length){
-      revisionHtml = '<p><strong>Revision history</strong></p><ul>' + thread.revisions.map(function(r){return '<li>' + esc(versionText(r.version)) + ' — ' + esc(r.date || '') + ': ' + esc(r.summary || '') + '</li>';}).join('') + '</ul>';
-    }
-    var topics = Array.isArray(thread.topics) ? thread.topics.join(', ') : '';
-    $('descriptionContent').innerHTML =
-      '<p>' + esc(thread.description || thread.summary || 'No extended description has been supplied.') + '</p>' +
-      '<div class="description-grid">' +
-      '<strong>Correspondence with</strong><span>' + esc(thread.correspondenceWith || thread.organisation || 'Not recorded') + '</span>' +
-      '<strong>Period</strong><span>' + esc(formatDate(thread.fromDate || (thread.messages[0]||{}).date)) + ' – ' + esc(formatDate(thread.toDate || (thread.messages[thread.messages.length-1]||{}).date)) + '</span>' +
-      '<strong>Evidence version</strong><span>' + esc(versionText(thread.version)) + '</span>' +
-      '<strong>Last updated</strong><span>' + esc(formatDate(thread.updatedAt)) + '</span>' +
-      (topics ? '<strong>Topics</strong><span>' + esc(topics) + '</span>' : '') +
-      (thread.evidenceStatus ? '<strong>Publication status</strong><span>' + esc(thread.evidenceStatus) + '</span>' : '') +
-      (thread.sourceTitle ? '<strong>Source record</strong><span>' + esc(thread.sourceTitle) + '</span>' : '') +
-      (sourceUrl ? '<strong>Source link</strong><span><a href="' + esc(sourceUrl) + '" target="_blank" rel="noopener noreferrer">Open source record ↗</a></span>' : '') +
-      '</div>' + revisionHtml +
-      '<p style="margin-top:12px">This archive presents correspondence as public evidence. The source record should be checked for full context, attachments, redactions and any later correction.</p>';
-    $('sourceButton').href = sourceUrl || 'https://greathousefarmwiki.wordpress.com/records-access-chronology/';
-    $('sourceButton').classList.toggle('hidden', !sourceUrl);
-    if(!sourceUrl) $('sourceButton').removeAttribute('target');
-  }
-  function selectThread(id,updateUrl){
-    selectedId = id || '';
-    if(updateUrl) setThreadInUrl(selectedId);
-    renderList();
-    renderDetail();
-    if(!embedMode && selectedId && window.matchMedia('(max-width: 850px)').matches){
-      $('reader').scrollIntoView({behavior:'smooth',block:'start'});
-    }
-  }
-  function copyText(text){
-    if(navigator.clipboard && navigator.clipboard.writeText){
-      navigator.clipboard.writeText(text).then(function(){alert('Copied to clipboard.');}).catch(function(){window.prompt('Copy this text:',text);});
-    } else { window.prompt('Copy this text:',text); }
-  }
-  $('threadList').addEventListener('click',function(event){
-    var button = event.target.closest('[data-thread]');
-    if(button) selectThread(button.getAttribute('data-thread'),true);
-  });
-  $('searchBox').addEventListener('input',renderList);
-  $('orgFilter').addEventListener('change',renderList);
-  $('yearFilter').addEventListener('change',renderList);
-  $('clearFilters').addEventListener('click',function(){$('searchBox').value='';$('orgFilter').value='';$('yearFilter').value='';renderList();});
-  $('copyLinkButton').addEventListener('click',function(){
-    var t = archive.threads.find(function(x){return x.id === selectedId;});
-    if(t) copyText(fullThreadUrl(t,false));
-  });
-  $('copyEmbedButton').addEventListener('click',function(){
-    var t = archive.threads.find(function(x){return x.id === selectedId;});
-    if(t){
-      var src = fullThreadUrl(t,true);
-      copyText('<iframe title="Public email evidence: ' + String(t.subject || '').replace(/"/g,'&quot;') + '" src="' + src + '" width="100%" height="760" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" style="border:1px solid #dbe3e5;border-radius:10px"></iframe>');
-    }
-  });
-  window.addEventListener('popstate',function(){selectedId=getThreadFromUrl();renderList();renderDetail();});
-  fetch('/data/threads.json',{cache:'no-store'}).then(function(response){
-    if(!response.ok) throw new Error('The archive data file returned ' + response.status);
-    return response.json();
-  }).then(function(data){
-    if(!data || !Array.isArray(data.threads)) throw new Error('The archive data file has an invalid format.');
-    archive = data;
-    updateFilters();
-    selectedId = getThreadFromUrl();
-    renderList();
-    renderDetail();
-  }).catch(function(error){
-    $('listCount').textContent = 'Unavailable';
-    $('threadList').innerHTML = '<div class="empty"><h3>Archive index unavailable</h3><p>The app loaded, but could not read its public data file. Please try again shortly.</p></div>';
-    $('emptyHeading').textContent = 'Could not load email evidence';
-    $('emptyText').textContent = 'The data file could not be read. Error: ' + error.message;
-  });
+const $ = id => document.getElementById(id);
+let manifest=null, allRecords=[], threads=[], visibleThreads=[], selectedThread=null, folder='all', searchTerm='', fullTextMatches=null, messageCache=new Map();
+const categoryToFolder = c => /FOI \/ EIR/i.test(c)?'foi':/Court & legal/i.test(c)?'legal':/Heritage/i.test(c)?'records':/Land Registry/i.test(c)?'land':'all';
+const normalize = s => (s||'').toLowerCase().replace(/^(?:re\s*[:_\-]?\s*)+/i,'').replace(/\.(txt|eml|html?)$/i,'').replace(/[^a-z0-9]+/g,' ').trim();
+const esc = s => String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const fmtDate = s => { if(!s)return 'Date not stated in filename'; const d=new Date(s+'T12:00:00Z'); return isNaN(d)?s:d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric',timeZone:'UTC'}); };
+const embedMode = new URLSearchParams(window.location.search).get('embed') === '1';
+if (embedMode) document.body.classList.add('embed-mode');
+function buildThreads(records){
+ const groups=new Map();
+ records.forEach(r=>{
+  const key=normalize(r.subject||r.name);
+  if(!groups.has(key))groups.set(key,{key:key,subject:r.subject||r.name,items:[],category:r.category||'General correspondence',latestDate:''});
+  const t=groups.get(key);t.items.push(r);
+  if(r.date && (!t.latestDate||r.date>t.latestDate))t.latestDate=r.date;
+  if(categoryToFolder(r.category)!=='all')t.category=r.category;
+ });
+ return Array.from(groups.values()).map(t=>{t.items.sort((a,b)=>(a.date||'').localeCompare(b.date||'')||a.name.localeCompare(b.name));t.lastRecord=t.items[t.items.length-1];t.searchText=(t.subject+' '+t.items.map(x=>x.name+' '+x.category).join(' ')).toLowerCase();return t;}).sort((a,b)=>(b.latestDate||'').localeCompare(a.latestDate||'')||a.subject.localeCompare(b.subject));
+}
+function threadSlug(t){
+ return String(t.key || normalize(t.subject || t.name) || 'thread').trim().replace(/\s+/g,'-').slice(0,140);
+}
+function threadUrl(t, embed){
+ return window.location.origin + '/thread/' + encodeURIComponent(threadSlug(t)) + (embed ? '?embed=1' : '');
+}
+function threadFromCurrentUrl(){
+ const match = window.location.pathname.match(/^\/thread\/([^/]+)\/?$/);
+ if(!match)return null;
+ let slug=match[1];
+ try{slug=decodeURIComponent(slug);}catch(e){}
+ return threads.find(t=>threadSlug(t)===slug) || null;
+}
+function copyText(text){
+ if(navigator.clipboard && navigator.clipboard.writeText){
+  navigator.clipboard.writeText(text).then(()=>{const live=document.querySelector('.copy-status');if(live)live.textContent='Copied';}).catch(()=>window.prompt('Copy this text:',text));
+ } else { window.prompt('Copy this text:',text); }
+}
+function classifyFolder(t){return categoryToFolder(t.category);}
+function filteredThreads(){
+ return threads.filter(t=>{
+  const matchFolder=folder==='all'||classifyFolder(t)===folder;
+  const q=searchTerm.trim().toLowerCase();
+  const matchText=!q||t.searchText.includes(q)||(fullTextMatches&&fullTextMatches.has(t.key));
+  const matchFull=fullTextMatches===null||!q||fullTextMatches.has(t.key)||t.searchText.includes(q);
+  return matchFolder&&matchText&&matchFull;
+ });
+}
+function updateCounts(){
+ $('count-all').textContent=threads.length;
+ $('count-foi').textContent=threads.filter(t=>classifyFolder(t)==='foi').length;
+ $('count-legal').textContent=threads.filter(t=>classifyFolder(t)==='legal').length;
+ $('count-records').textContent=threads.filter(t=>classifyFolder(t)==='records').length;
+ $('count-land').textContent=threads.filter(t=>classifyFolder(t)==='land').length;
+}
+function renderList(){
+ visibleThreads=filteredThreads();
+ $('list-title').textContent=({all:'All case correspondence',foi:'FOI / EIR & requests',legal:'Court & legal',records:'Heritage & records',land:'Land Registry & title'})[folder]||'All case correspondence';
+ $('list-subtitle').textContent=visibleThreads.length+' conversation groups · '+allRecords.length+' indexed source records'+(fullTextMatches?' · full-text search complete':'');
+ const list=$('result-list');list.replaceChildren();
+ if(!visibleThreads.length){const d=document.createElement('div');d.className='empty-list';d.textContent='No matching conversations. Try a broader search or choose All case correspondence.';list.appendChild(d);return;}
+ visibleThreads.forEach(t=>{
+  const b=document.createElement('button');b.className='result'+(selectedThread&&selectedThread.key===t.key?' active':'');b.type='button';b.setAttribute('aria-label','Open '+t.subject);
+  const top=document.createElement('div');top.className='result-top';const title=document.createElement('div');title.className='result-subject';title.textContent=t.subject;
+  const date=document.createElement('div');date.className='result-date';date.textContent=t.latestDate?fmtDate(t.latestDate):'Undated';top.append(title,date);
+  const sub=document.createElement('div');sub.className='result-thread';const dot=document.createElement('span');dot.className='category-dot';const cat=document.createElement('span');cat.textContent=t.category;sub.append(dot,cat);
+  const meta=document.createElement('div');meta.className='result-meta';meta.textContent=t.items.length+' source record'+(t.items.length===1?'':'s')+' · '+t.items.map(x=>x.name).join(' · ');
+  b.append(top,sub,meta);b.addEventListener('click',()=>openThread(t,true));list.appendChild(b);
+ });
+}
+async function getMessage(r){
+ if(messageCache.has(r.id))return messageCache.get(r.id);
+ const promise=fetch('/api/message?id='+encodeURIComponent(r.id),{headers:{'Accept':'application/json'}}).then(async res=>{if(!res.ok)throw new Error('Archive source returned '+res.status);const data=await res.json();return data.text||'';});
+ messageCache.set(r.id,promise);
+ try{return await promise;}catch(e){messageCache.delete(r.id);throw e;}
+}
+function extractHeaders(text){
+ const lines=(text||'').split(/\r?\n/).slice(0,100), vals={from:[],to:[],date:[],subject:[]};
+ for(const line of lines){let m=line.match(/^\s*(from|to|cc|date|sent|subject)\s*:\s*(.*)$/i);if(!m)continue;const k=m[1].toLowerCase();const key=(k==='sent'?'date':k==='cc'?'to':k);if(vals[key]&&m[2]&&!vals[key].includes(m[2].trim()))vals[key].push(m[2].trim());}
+ return vals;
+}
+async function openThread(t, pushHistory){
+ if(pushHistory !== false) window.history.pushState({emailThread:t.key},'',threadUrl(t,embedMode));
+ selectedThread=t;renderList();
+ document.title = t.subject + ' — Great House Farm Mail';
+ if(window.matchMedia('(max-width:760px)').matches) $('reader-panel').scrollIntoView({behavior:'auto',block:'start'});
+ $('reader-empty').hidden=true;$('reader-content').hidden=false;$('reader-content').style.display='flex';
+ $('reader-title').textContent=t.subject;
+ $('reader-tags').replaceChildren();
+ const tag1=document.createElement('span');tag1.className='tag blue';tag1.textContent=t.items.length+' archived source record'+(t.items.length===1?'':'s');
+ const tag2=document.createElement('span');tag2.className='tag';tag2.textContent=t.category;
+ const tag3=document.createElement('span');tag3.className='tag';tag3.textContent='Evidence v'+(t.items.map(i=>i.evidenceVersion||'1.0.0').sort().slice(-1)[0]||'1.0.0');
+ $('reader-tags').append(tag1,tag2,tag3);
+ const actions=$('reader-actions');actions.replaceChildren();
+ const allWiki=document.createElement('a');allWiki.className='btn';allWiki.href='https://greathousefarmwiki.wordpress.com/?s='+encodeURIComponent(t.subject);allWiki.target='_blank';allWiki.rel='noopener noreferrer';allWiki.textContent='Find related wiki evidence';
+ const sourceBtn=document.createElement('button');sourceBtn.className='btn';sourceBtn.textContent='Open latest source ↗';sourceBtn.addEventListener('click',()=>window.open(t.lastRecord.path,'_blank','noopener'));
+ const copyBtn=document.createElement('button');copyBtn.className='btn';copyBtn.textContent='Copy thread link';copyBtn.setAttribute('aria-label','Copy permanent link to this email thread');copyBtn.addEventListener('click',()=>copyText(threadUrl(t,false)));
+ const embedBtn=document.createElement('button');embedBtn.className='btn embed-button';embedBtn.textContent='Copy embed code';embedBtn.setAttribute('aria-label','Copy iframe code for this email thread');embedBtn.addEventListener('click',()=>{
+  const safeTitle=String(t.subject||'Great House Farm email thread').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const src=threadUrl(t,true);
+  copyText('<iframe title="'+safeTitle+'" src="'+src+'" width="100%" height="760" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" style="border:1px solid #dfe4ec;border-radius:12px"></iframe>');
+ });
+ actions.append(allWiki,sourceBtn,copyBtn,embedBtn);
+ const reader=$('reader-scroll');reader.replaceChildren();const loading=document.createElement('div');loading.className='message-loading';loading.textContent='Loading '+t.items.length+' archived source record(s)…';reader.appendChild(loading);
+ $('thread-details').open=false;$('thread-summary').textContent='Building thread description from the indexed records…';
+ const results=await Promise.all(t.items.map(async r=>{try{return {record:r,text:await getMessage(r)};}catch(e){return {record:r,error:String(e)};}}));
+ const loaded=results.filter(x=>!x.error);const errors=results.filter(x=>x.error);
+ reader.replaceChildren();
+ loaded.forEach((obj,i)=>{
+  const card=document.createElement('article');card.className='message-card';
+  const head=document.createElement('div');head.className='message-head';
+  const name=document.createElement('div');name.className='message-title';name.textContent=obj.record.name;
+  const meta=document.createElement('div');meta.className='message-source';meta.textContent=(obj.record.date?fmtDate(obj.record.date)+' · ':'Date not indexed · ')+'Evidence v'+(obj.record.evidenceVersion||'1.0.0')+' · Source: ';
+  const link=document.createElement('a');link.href=obj.record.path;link.target='_blank';link.rel='noopener noreferrer';link.textContent='open original archived text';meta.appendChild(link);head.append(name,meta);
+  const body=document.createElement('pre');body.className='message-body';body.textContent=obj.text||'[The archive source returned an empty record.]';card.append(head,body);reader.appendChild(card);
+ });
+ errors.forEach(obj=>{const d=document.createElement('div');d.className='message-card';d.textContent='Could not load '+obj.record.name+': '+obj.error;reader.appendChild(d);});
+ if(!loaded.length&&!errors.length){const d=document.createElement('div');d.className='empty-list';d.textContent='No source records are attached to this conversation.';reader.appendChild(d);}
+ reader.scrollTop=0;
+ const participants=new Set(), dates=new Set(), snippets=[];
+ loaded.forEach(o=>{const h=extractHeaders(o.text);h.from.concat(h.to).forEach(x=>participants.add(x));h.date.forEach(x=>dates.add(x));const first=(o.text||'').split(/\r?\n/).map(x=>x.trim()).find(x=>x.length>30);if(first)snippets.push(first.slice(0,240));});
+ const summary=$('thread-summary');summary.replaceChildren();
+ function para(text){const p=document.createElement('p');p.textContent=text;summary.appendChild(p);}
+ para('Indexed conversation group: '+t.subject+'. This group contains '+t.items.length+' source record(s), grouped by a normalized subject from the published catalogue. Grouping is a finding aid; it is not proof that every reply in the original exchange survives.');
+ para('Evidence version: '+(t.items.map(i=>i.evidenceVersion||'1.0.0').sort().slice(-1)[0]||'1.0.0')+'. Catalogue version: '+(manifest?manifest.manifestVersion:'1.0.0')+'.');
+ if(participants.size)para('Participants/recipients stated in message headers: '+Array.from(participants).slice(0,12).join('; ')+(participants.size>12?' and others':'')+'.');
+ else para('Recipient/sender fields were not consistently available from the catalogue; consult the original message text above for any preserved headers.');
+ if(dates.size)para('Dates stated in message headers: '+Array.from(dates).slice(0,12).join('; ')+(dates.size>12?' and others':'')+'.');
+ if(snippets.length)para('Content description derived from source text: '+snippets.slice(0,3).join(' | '));
+ const ul=document.createElement('ul');t.items.forEach(r=>{const li=document.createElement('li');const a=document.createElement('a');a.href=r.path;a.target='_blank';a.rel='noopener noreferrer';a.textContent=r.name;li.appendChild(a);ul.appendChild(li);});summary.appendChild(ul);
+ if(errors.length)para('Warning: '+errors.length+' source record(s) could not be fetched from the upstream public archive during this view.');
+}
+async function doFullTextSearch(q){
+ const btn=$('search-form').querySelector('button');btn.disabled=true;btn.textContent='Searching…';$('list-subtitle').textContent='Searching the full text of case-related archive records…';
+ try{
+  const res=await fetch('/api/search?q='+encodeURIComponent(q));
+  if(!res.ok)throw new Error('Search endpoint returned '+res.status);
+  const d=await res.json();fullTextMatches=new Set(d.threadKeys||[]);
+  // Search response is keyed by grouped subject text; titles also remain searchable.
+  renderList();$('list-subtitle').textContent=visibleThreads.length+' matches across '+allRecords.length+' indexed records · full-text search complete';
+ }catch(e){$('list-subtitle').textContent='Full-text search could not complete; subject/catalogue search remains available.';}
+ finally{btn.disabled=false;btn.textContent='Search full text';}
+}
+$('search-form').addEventListener('submit',async e=>{e.preventDefault();searchTerm=$('search').value.trim();fullTextMatches=null;renderList();if(searchTerm.length>=2)await doFullTextSearch(searchTerm);});
+$('search').addEventListener('input',()=>{searchTerm=$('search').value.trim();fullTextMatches=null;renderList();});
+document.querySelectorAll('.navbtn').forEach(b=>b.addEventListener('click',()=>{folder=b.dataset.folder;document.querySelectorAll('.navbtn').forEach(x=>x.classList.toggle('active',x===b));renderList();}));
+window.addEventListener('popstate',()=>{
+ const linked=threadFromCurrentUrl();
+ if(linked){openThread(linked,false);}
+ else{
+  selectedThread=null;renderList();$('reader-content').hidden=true;$('reader-empty').hidden=false;document.title='Great House Farm Mail Archive';
+  if(embedMode){$('reader-empty').querySelector('h2').textContent='Thread link required';$('reader-empty').querySelector('p').textContent='Open a specific /thread/<id>?embed=1 URL to display an email evidence preview.';}
+ }
+});
+fetch('/api/records').then(async r=>{if(!r.ok)throw new Error('Catalogue response '+r.status);return r.json();}).then(data=>{
+ manifest=data;allRecords=data.records||[];$('manifest-version').textContent=data.manifestVersion||'1.0.0';threads=buildThreads(allRecords);updateCounts();renderList();
+ $('list-subtitle').textContent=threads.length+' conversation groups · '+allRecords.length+' public source records';
+ const linked=threadFromCurrentUrl();
+ if(linked){openThread(linked,false);}
+ else if(embedMode){
+  $('reader-empty').querySelector('h2').textContent='Thread link required';
+  $('reader-empty').querySelector('p').textContent='This preview needs a specific /thread/<id>?embed=1 URL. Reopen the thread from the archive and copy its embed code.';
+ }
+}).catch(e=>{$('list-subtitle').textContent='Could not load the public catalogue.';$('result-list').innerHTML='<div class="empty-list">The source index could not be loaded. Please retry later or inspect the repository archive index directly.</div>';});
 })();
 </script>
-</body>
-</html>
+</body></html>

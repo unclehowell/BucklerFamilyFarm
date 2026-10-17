@@ -1,63 +1,58 @@
 # Great House Farm Public Mail Archive
 
-This is the source for the public, read-only correspondence archive deployed at:
+**Live site:** https://email.bucklerfamily.estate
 
-**https://email.bucklerfamily.estate**
-
-## Source and deployment
+## Deployment source
 
 - Repository: `unclehowell/BucklerFamilyFarm`
 - Branch: `email-archive`
 - Cloudflare Worker: `email`
-- Public hostname: `email.bucklerfamily.estate`
-- Web interface: `email-archive/index.html`
-- Catalogue: `email-archive/data/mail-index.json`
-- Worker: `email-archive/worker.js`
+- Custom domain: `email.bucklerfamily.estate`
+- Interface: `email-archive/index.html`
+- Approved catalogue: `email-archive/data/mail-index.json`
+- Worker source: `email-archive/worker.js`
 - Wrangler configuration: `email-archive/wrangler.jsonc`
 
-The Worker serves the web interface and catalogue from this branch. When a reader opens a record, it retrieves its text from the already-public `https://wayback.datro.xyz/text/` archive. The Worker checks each requested source against the 80-record public catalogue before it will fetch it.
+The live Worker reads the interface and approved catalogue from this branch. It reads email text from the private Cloudflare R2 bucket `wayback-media` through the `CASE_ARCHIVE` Worker binding. It never makes the bucket public and it will return a source only when that source ID exists in the catalogue and its exact R2 key has the expected `text/` prefix.
 
-This service is not Gmail or a live mailbox. It has no mailbox sign-in, no inbox credentials, and no send/receive or write endpoint.
+This is a public, read-only evidence archive. It does not connect to Gmail or any personal mailbox, has no mailbox sign-in, and does not send or receive email.
 
-## What is indexed
+## Catalogue scope and provenance
 
-The initial catalogue contains 80 case-related public archive records selected from the existing `unclehowell/datro@gh-pages:bpvsbuckler/text/_treeview.json` index using Great House Farm / Tŷ Mawr / Llandough / BP v Buckler and correspondence-style filename indicators. The reader groups normalized subjects into conversation-like groups. Grouping is a finding aid, not proof that each original thread is complete. The source catalogue currently lacks dates for some files; the interface shows these as undated rather than inferring dates from incomplete metadata.
+The catalogue is based on the existing public case index `unclehowell/datro@gh-pages:bpvsbuckler/text/_treeview.json`, matched against the corresponding text objects stored in R2. The initial index held 80 entries; six obviously unrelated or personal-only entries have been excluded, leaving 74 case-indexed source records in the public view. This should not be read as proof that every original email thread is complete: it is an archive of indexed messages and responses that can be checked against their source files.
+
+Dates and subjects are taken from available email headers where present. If the original text does not supply a reliable date header, the interface does not invent one. Each indexed source has its own `evidenceVersion`; the catalogue has a separate semantic `manifestVersion`.
 
 ## Reading and linking
 
-- Search the catalogue by case reference, organisation, filename or message text.
-- Use the folder controls to narrow the results.
-- Open a subject to read its indexed source records in the vertically scrollable reader.
-- The description and evidence notes are below the reader in a collapsed section.
-- Use **Copy thread link** for a stable public URL: `/thread/<stable-subject-slug>`.
-- Use **Copy embed code** to produce an iframe preview link: `/thread/<stable-subject-slug>?embed=1`. This embed mode hides the folder and list panes so the selected evidence occupies the preview.
-- Each record retains its source link and an evidence version; the catalogue itself has its own manifest version.
+- Search by subject, organisation, case reference or message text.
+- Choose a correspondence group to read its archived source records in the vertically scrollable reader.
+- The thread description, dates and evidence notes are under a collapsed details section.
+- Use **Copy thread link** for a stable URL: `/thread/<stable-subject-slug>`.
+- Use **Copy embed code** to produce a preview URL: `/thread/<stable-subject-slug>?embed=1`. The embedded reader hides the folder and list panes and retains a vertical scroll.
+- Each source card links to a stable text endpoint, `/source/<record-id>`, which returns the source as plain text. HTML in an email export is never executed.
 
-The Worker permits embedding on `greathousefarmwiki.wordpress.com` and WordPress subdomains. The rest of the archive remains read-only.
+The Worker permits embedding on `greathousefarmwiki.wordpress.com` and WordPress subdomains. All request methods other than GET and HEAD are rejected; no API endpoint writes data.
 
-## Updating safely
+## Updating the archive
 
-1. Confirm the exact correspondence record is intended for public release and that the upstream text is already public.
-2. Review the complete source for personal data, third-party private material, privilege, sensitive information and attachments. Do not import a private Gmail dump or unpublished material into this public repository. Redact the public copy where appropriate and record the reason.
-3. Add or correct the corresponding entry in `data/mail-index.json`. Keep a stable `id`, exact public `path`, descriptive `subject`, `category`, and `evidenceVersion`.
-4. Increment `manifestVersion` when the catalogue changes. Increment an evidence record's `evidenceVersion` semantically when its public evidence representation changes (for example, `1.0.0` → `1.1.0` for an addition or backward-compatible correction, or `2.0.0` for a major change).
-5. For UI changes, update `index.html` and bump the `?ui=` cache-key in `worker.js` so edge caches retrieve the current UI immediately.
-6. Commit changes to this branch, then check the live domain and test both a thread link and an `?embed=1` link.
+1. Confirm the original correspondence is within the Great House Farm case and intended for public release. Remove or redact unrelated personal content, private third-party correspondence and attachments that are not cleared for publication.
+2. Add an approved record to `data/mail-index.json`, including a stable ID, actual object key under `text/`, source title, subject, category, date where established, and evidence version.
+3. Increment `manifestVersion` when the index changes. Increment an individual record's `evidenceVersion` semantically when its published evidence record changes.
+4. Keep the `RAW_BASE` in `worker.js` pointed to this branch. For interface changes, increment the `?ui=` cache key. Do not publish a public R2 domain for the entire bucket.
+5. Commit changes to this branch, then check the live site, one source endpoint, search, a stable thread URL and the wiki embed.
 
-Do not alter the source text or re-label a record as a verified complete thread unless the underlying evidence supports that description.
+## Local preview / deployment
 
-## Local use
-
-From the repository root, after installing a current Wrangler CLI:
+From the repository root, install a current Wrangler CLI and run:
 
 ```sh
 wrangler dev --config email-archive/wrangler.jsonc
 wrangler deploy --config email-archive/wrangler.jsonc
 ```
 
-The config uses the existing `email` Worker identity and custom domain. Keep it and the deployed Worker in sync.
+The config describes the existing `email` Worker and its R2 bucket binding. Keep the deployed Worker and this source file in sync.
 
-## Related chronology
+## Related case chronology
 
-The wiki's narrative summary remains at:
 https://greathousefarmwiki.wordpress.com/records-access-chronology/

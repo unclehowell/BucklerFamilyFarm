@@ -64,10 +64,10 @@ BUILDINGS = [
     ("projects", "Project Office", "PRINCE2 project management",
      "The PRINCE2 record moved from the Wiki: mandate, business case, PIDs, plans, highlight reports and control registers.",
      "https://projects.bucklerfamily.estate/", 638, 812, 130, 88, "earth", "live", ""),
-    # TODO(fb): add Farmbook once https://fb.bucklerfamily.estate/ returns 200 (site being built 19 Oct 2026):
-    # ("quarters", "Family Quarters", "Farmbook: the Williams/Buckler family wall",
-    #  "The Williams/Buckler family profile and wall: every event as a post, dated to the event.",
-    #  "https://fb.bucklerfamily.estate/", 1078, 800, 95, 95, "red", "live", ""),
+    # Farmbook went live 19 Oct 2026 (fb.bucklerfamily.estate returned 200 at 23:50 BST); added with its sign.
+    ("quarters", "Family Quarters", "Farmbook: the Williams/Buckler family wall",
+     "The Williams/Buckler family profile and wall: every event as a post, dated to the event.",
+     "https://fb.bucklerfamily.estate/", 1096, 800, 90, 95, "red", "live", ""),
 ]
 # --- Website-name signboards (Sion, 19 Oct 2026: "Put the respective website names on the buildings or next
 # to them as signs (olive green/ yellow text)"). One olive board with yellow lettering per building, linking to
@@ -123,6 +123,8 @@ SIGN_TITLE = {
                None),
     "projects": ("Great House Farm Projects — PRINCE2",
                 ["Great House Farm", "Projects — PRINCE2"]),
+    "quarters": ("Williams / Buckler family · Great House Farm (Tŷ Mawr) · farmbook",
+                ["Williams / Buckler", "family · farmbook"]),
 }
 
 # Where a building's footprint in index.html differs from BUILDINGS (hand-edited artwork), sign against this box.
@@ -220,6 +222,8 @@ def trees():
             if 194 <= x <= 406 and 806 <= y <= 906:   # clearing for The Library (15), added 19 Oct 2026
                 continue
             if 632 <= x <= 776 and 806 <= y <= 906:   # clearing for the Project Office (16), added 19 Oct 2026
+                continue
+            if 1088 <= x <= 1214 and 794 <= y <= 906:  # clearing for the Family Quarters (17), added 19 Oct 2026
                 continue
             out.append(f'<circle cx="{x:.0f}" cy="{y + 4:.0f}" r="{r:.0f}" fill="#000" opacity=".22"/>'
                        f'<circle cx="{x:.0f}" cy="{y:.0f}" r="{r:.0f}" fill="{g}"/>'

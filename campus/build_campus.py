@@ -62,6 +62,89 @@ BUILDINGS = [
     #  "The Williams/Buckler family profile and wall: every event as a post, dated to the event.",
     #  "https://fb.bucklerfamily.estate/", 1078, 800, 95, 95, "red", "live", ""),
 ]
+# --- Website-name signboards (Sion, 19 Oct 2026: "Put the respective website names on the buildings or next
+# to them as signs (olive green/ yellow text)"). One olive board with yellow lettering per building, linking to
+# its site; the full address is always in the title/aria-label, and a name too wide for its roof wraps onto two
+# lines instead of being cut.
+SIGN_FONT = 15          # map units; about 12.5 px on a 390 px-wide phone, 13.5 px on a 1440 px desktop
+SIGN_LINE = 17
+SIGN_PAD_X = 8
+SIGN_PAD_Y = 6
+# Arial/Liberation Sans Bold advance widths per 1000 em, for the characters a web address uses.
+_SIGN_W = {"a": 556, "b": 611, "c": 556, "d": 611, "e": 556, "f": 333, "g": 611, "h": 611, "i": 278, "j": 278,
+           "k": 556, "l": 278, "m": 889, "n": 611, "o": 611, "p": 611, "q": 611, "r": 389, "s": 556, "t": 333,
+           "u": 611, "v": 556, "w": 778, "x": 556, "y": 556, "z": 500, ".": 278, "-": 333, "/": 278, "\u203a": 333,
+           " ": 278}
+# Lines shown on a sign when the address alone would not say what the building is.
+SIGN_TEXT = {
+    "audit": ["greathousefarmwiki.", "wordpress.com", "\u203a council review"],
+}
+# Where a building's footprint in index.html differs from BUILDINGS (hand-edited artwork), sign against this box.
+SIGN_BOX = {"vault": (234, 614, 194, 126)}
+# Signs that sit across the front edge of the building instead of on its roof (artwork roofs).
+SIGN_FRONT = {"vault"}
+
+
+def sign_width(s, size=SIGN_FONT):
+    return sum(_SIGN_W.get(c, 556) for c in s) * size / 1000
+
+
+def sign_name(u):
+    """The website name shown on the sign: the address without scheme or trailing slash."""
+    if u.startswith("/"):
+        return "bucklerfamily.estate" + u.rstrip("/")
+    return u.split("://", 1)[-1].rstrip("/")
+
+
+def sign_lines(bid, u, w):
+    if bid in SIGN_TEXT:
+        return SIGN_TEXT[bid]
+    name = sign_name(u)
+    if sign_width(name) + 2 * SIGN_PAD_X <= w - 12:
+        return [name]
+    if "/" in name:
+        i = name.index("/")
+        return [name[:i], name[i:]]
+    i = name.index(".") + 1
+    return [name[:i], name[i:]]
+
+
+def sign(b):
+    bid, name, dept, what, url, x, y, w, h, roof, status, extra = b
+    x, y, w, h = SIGN_BOX.get(bid, (x, y, w, h))
+    lines = sign_lines(bid, url, w)
+    full = sign_name(url)
+    bw = round(max(sign_width(l) for l in lines) + 2 * SIGN_PAD_X)
+    bh = len(lines) * SIGN_LINE + 2 * SIGN_PAD_Y
+    cx = x + w / 2
+    if bid in SIGN_FRONT:
+        by = y + h - bh / 2 + 4           # straddles the front edge
+    elif extra == "mound":
+        by = y + h / 2 + 6 - bh / 2       # middle of the mound
+    else:
+        by = y + h - 8 - bh               # lower part of the roof, clear of the number plate
+    bx = cx - bw / 2
+    ext = not url.startswith("/")
+    tgt = ' target="_blank" rel="noopener"' if ext else ""
+    s = [f'<a class="sign" href="{e(url)}"{tgt} aria-label="{e(full)} (website sign for {e(name)})">'
+         f'<title>{e(url if len(url) > len(full) + 9 else full)}</title>']
+    s.append(f'<rect x="{bx + 2:.1f}" y="{by + 3:.1f}" width="{bw}" height="{bh}" rx="3" fill="#000" opacity=".35"/>')
+    s.append(f'<rect class="bd" x="{bx:.1f}" y="{by:.1f}" width="{bw}" height="{bh}" rx="3" fill="#556b2f" stroke="#2e3b17" stroke-width="2.5"/>')
+    s.append(f'<rect x="{bx + 3:.1f}" y="{by + 3:.1f}" width="{bw - 6}" height="{bh - 6}" rx="2" fill="none" stroke="#ffd700" stroke-opacity=".35" stroke-width="1"/>')
+    for i, l in enumerate(lines):
+        ty = by + SIGN_PAD_Y + SIGN_LINE * i + SIGN_FONT - 2
+        s.append(f'<text x="{cx:.1f}" y="{ty:.1f}" text-anchor="middle">{e(l)}</text>')
+    s.append("</a>")
+    return "".join(s)
+
+
+def signs():
+    return '<g class="signs">' + "".join(sign(b) for b in BUILDINGS) + "</g>"
+
+
+SIGN_CSS = (".sign{cursor:pointer}.sign text{font:700 15px Arial,\"Liberation Sans\",sans-serif;fill:#ffd700}"
+            ".sign:hover .bd,.sign:focus-visible .bd{stroke:#ffd700}.sign:focus{outline:none}")
+
 # NOTE: index.html's vault building (WAYBACK MEDIA LIBRARY artwork and wording) was hand-edited after the last
 # generation; regenerating from this file would revert it. Carry that change in here before a full regeneration.
 
@@ -181,6 +264,7 @@ a{{color:inherit}}
 .bld.sel .hit{{stroke:#f2c94c;stroke-width:5}}
 .pn{{font:800 13px Arial,sans-serif;fill:#1d2420}}
 .road-label{{font:700 13px Arial,sans-serif;fill:#d8d4c6;opacity:.55;letter-spacing:.2em}}
+{SIGN_CSS}
 .brand{{position:fixed;left:16px;top:14px;max-width:min(420px,calc(100vw - 32px));pointer-events:none;text-shadow:0 1px 6px #000a}}
 .brand h1{{margin:0;font-size:clamp(1.5rem,3.4vw,2.4rem);line-height:1;font-weight:900;letter-spacing:-.01em}}
 .brand p{{margin:6px 0 0;font-size:.92rem;color:#e6e2d4}}
@@ -254,6 +338,8 @@ a{{color:inherit}}
 <rect x="760" y="900" width="80" height="34" fill="#4a5560"/><rect x="740" y="912" width="120" height="6" fill="#c8102e"/>
 {trees()}
 {blds}
+<!-- website-name signboards (generated by campus/build_campus.py signs()) -->
+{signs()}
 </svg></div>
 
 <div class="brand">

@@ -120,7 +120,7 @@ export const CourtApplicationView: React.FC<CourtApplicationViewProps> = ({
       title: 'INTRODUCTION AND NATURE OF THE CLAIM',
       summary: 'Establishes Claimant entitlement through Mary Williams successors and identifies the central title determination question.',
       paragraphs: [
-        'The Claimants are the persons presently entitled to the proprietary interest claimed in the parcel comprising the former farmhouse, garden and curtilage at Great House Farm, Llandough ("the House Plot"), by succession from the historical owners and occupiers identified below, including Mary Williams, deceased.',
+        'The Claimants are the persons presently entitled to the proprietary interest claimed in the parcel comprising the former farmhouse, garden and curtilage at Great House Farm, Llandough ("the House Plot"), by succession from the historical owners and occupiers identified below, including Mary Doreen (Nancy) Williams, deceased.',
         'The Claimants include Sion Buckler, the son of William Buckler, who was the son of Mary Williams. The remaining persons presently entitled through Mary Williams and/or the relevant intermediate estates are to be identified and joined or represented as required by the Court.',
         'The Claimants do not contend that descent or family relationship, without more, constitutes title. Their case is that the historical instruments establish a proprietary interest in the House Plot which was separate from the agricultural interest subsequently conveyed to Western Ground Rents Ltd ("WGR") and thereafter through the BP title chain.',
         'The central question for determination is therefore: Whether the House Plot formed part of the proprietary estate conveyed to WGR and subsequently to BP Properties Ltd, or whether it remained outside that chain of title.',
@@ -234,7 +234,7 @@ export const CourtApplicationView: React.FC<CourtApplicationViewProps> = ({
       id: 'sec-J',
       letter: 'J',
       title: 'THE EVIDENCE OF MARY WILLIAMS',
-      summary: 'Testimony of Mary Williams regarding 1667 ancestry, 1877 Bute sale, 1928 quarry cessation, and continuous occupation.',
+      summary: 'Testimony of Mary (Nancy) Williams regarding 1667 ancestry, 1877 Bute sale, 1928 quarry cessation, and continuous occupation.',
       paragraphs: [
         'Mary Williams was born at Great House Farm in 1913 and stated that her family had lived and farmed there since 1667.',
         'In her evidence she stated that, prior to 1877, her grandfather held the farm as tenant of the Bute Estate.',
@@ -379,7 +379,7 @@ CHANCERY DIVISION
 <h1>PARTICULARS OF CLAIM</h1>
 
 <h2>A. INTRODUCTION AND NATURE OF THE CLAIM</h2>
-<p>The Claimants are the persons presently entitled to the proprietary interest claimed in the parcel comprising the former farmhouse, garden and curtilage at Great House Farm, Llandough ("the House Plot"), by succession from the historical owners and occupiers identified below, including Mary Williams, deceased.</p>
+<p>The Claimants are the persons presently entitled to the proprietary interest claimed in the parcel comprising the former farmhouse, garden and curtilage at Great House Farm, Llandough ("the House Plot"), by succession from the historical owners and occupiers identified below, including Mary Doreen (Nancy) Williams, deceased.</p>
 <p>The Claimants include Sion Buckler, the son of William Buckler, who was the son of Mary Williams. The remaining persons presently entitled through Mary Williams and/or the relevant intermediate estates are to be identified and joined or represented as required by the Court.</p>
 <p>The Claimants do not contend that descent or family relationship, without more, constitutes title. Their case is that the historical instruments establish a proprietary interest in the House Plot which was separate from the agricultural interest subsequently conveyed to Western Ground Rents Ltd ("WGR") and thereafter through the BP title chain.</p>
 <p>The central question for determination is therefore: Whether the House Plot formed part of the proprietary estate conveyed to WGR and subsequently to BP Properties Ltd, or whether it remained outside that chain of title.</p>

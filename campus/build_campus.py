@@ -64,8 +64,8 @@ BUILDINGS = [
 ]
 # --- Website-name signboards (Sion, 19 Oct 2026: "Put the respective website names on the buildings or next
 # to them as signs (olive green/ yellow text)"). One olive board with yellow lettering per building, linking to
-# its site; the full address is always in the title/aria-label, and a name too wide for its roof wraps onto two
-# lines instead of being cut.
+# its site. Since 19 Oct 2026 23:19 the board shows the site's title (SIGN_TITLE below); the full title and the address
+# are always in the tooltip/aria-label, and a title too wide for its roof wraps onto two lines instead of being cut.
 SIGN_FONT = 15          # map units; about 12.5 px on a 390 px-wide phone, 13.5 px on a 1440 px desktop
 SIGN_LINE = 17
 SIGN_PAD_X = 8
@@ -74,11 +74,45 @@ SIGN_PAD_Y = 6
 _SIGN_W = {"a": 556, "b": 611, "c": 556, "d": 611, "e": 556, "f": 333, "g": 611, "h": 611, "i": 278, "j": 278,
            "k": 556, "l": 278, "m": 889, "n": 611, "o": 611, "p": 611, "q": 611, "r": 389, "s": 556, "t": 333,
            "u": 611, "v": 556, "w": 778, "x": 556, "y": 556, "z": 500, ".": 278, "-": 333, "/": 278, "\u203a": 333,
-           " ": 278}
-# Lines shown on a sign when the address alone would not say what the building is.
-SIGN_TEXT = {
-    "audit": ["greathousefarmwiki.", "wordpress.com", "\u203a council review"],
+           " ": 278,
+           # capitals and punctuation used by the website titles (signs show titles since 19 Oct 2026, 23:19)
+           "&": 722, "(": 333, ")": 333, "A": 722, "B": 722, "C": 722, "D": 722, "E": 667, "F": 611, "G": 778, "H": 722, "I": 278, "L": 611, "M": 833, "O": 778, "P": 667, "Q": 778, "R": 722, "S": 667, "T": 611, "W": 944, "\u0177": 556, "\u2013": 556, "\u2014": 1000}
+# Sion, 19 Oct 2026 23:19 BST: "Sorry not urls. But website title names on buildings." Each sign shows the linked
+# site's own title (its <title>, read live 19 Oct 2026, with the " · bucklerfamily.estate" style suffix dropped).
+# bid -> (full title, lines on the board or None to wrap automatically). Lines are a faithful shortening of the
+# site's own name where the full title is too long for the roof; the full title and the address are in the
+# tooltip and the screen-reader label.
+SIGN_TITLE = {
+    "hq": ("Great House Farm Wiki – Public documentary archive of Great House Farm (Tŷ Mawr), Llandough-juxta-Penarth, South Wales: land, ownership, litigation, archaeology and family evidence.",
+          ["Great House Farm Wiki"]),
+    "museum": ("Tŷ Mawr — The Great House Farm Story",
+              None),
+    "ops": ("Disclosure Rings",
+           None),
+    "briefing": ("Tŷ Mawr at Council",
+                None),
+    "signals": ("Great House Farm — Public Authority Correspondence",
+               ["Public Authority", "Correspondence"]),
+    "records": ("Great House Farm — Primary Record Register",
+               ["Primary Record", "Register"]),
+    "review": ("Great House Farm — Independent Review Register",
+              ["Independent", "Review Register"]),
+    "inspectorate": ("Llandough Community Council — Forensic Assessment › the Clerk: documented role and casework assessment",
+                    ["Forensic Assessment", "› the Clerk"]),
+    "audit": ("Llandough Community Council — Forensic Assessment",
+             ["Forensic Assessment", "Llandough Council"]),
+    "vault": ("DATRO Wayback Archive",
+             ["DATRO Wayback", "Archive"]),
+    "bunker": ("Great House Farm Wiki – archive",
+              ["Great House Farm", "Wiki – archive"]),
+    "quartermaster": ("FOI Evidence Tree & Chronological Bible",
+                     ["FOI Evidence Tree &", "Chronological Bible"]),
+    "enquiry": ("QA Graph — FOI Questions & Answers",
+               ["QA Graph — FOI", "Questions & Answers"]),
+    "press": ("FCG Edge CMS",
+             None),
 }
+
 # Where a building's footprint in index.html differs from BUILDINGS (hand-edited artwork), sign against this box.
 SIGN_BOX = {"vault": (234, 614, 194, 126)}
 # Signs that sit across the front edge of the building instead of on its roof (artwork roofs).
@@ -97,23 +131,22 @@ def sign_name(u):
 
 
 def sign_lines(bid, u, w):
-    if bid in SIGN_TEXT:
-        return SIGN_TEXT[bid]
-    name = sign_name(u)
-    if sign_width(name) + 2 * SIGN_PAD_X <= w - 12:
-        return [name]
-    if "/" in name:
-        i = name.index("/")
-        return [name[:i], name[i:]]
-    i = name.index(".") + 1
-    return [name[:i], name[i:]]
+    title, lines = SIGN_TITLE.get(bid, (sign_name(u), None))
+    if lines:
+        return lines
+    if sign_width(title) + 2 * SIGN_PAD_X <= w - 12:
+        return [title]
+    words = title.split(" ")                       # two lines, split at the word that balances them best
+    best = min(range(1, len(words)), key=lambda k: max(sign_width(" ".join(words[:k])), sign_width(" ".join(words[k:]))))
+    return [" ".join(words[:best]), " ".join(words[best:])]
 
 
 def sign(b):
     bid, name, dept, what, url, x, y, w, h, roof, status, extra = b
     x, y, w, h = SIGN_BOX.get(bid, (x, y, w, h))
     lines = sign_lines(bid, url, w)
-    full = sign_name(url)
+    addr = sign_name(url)
+    title = SIGN_TITLE.get(bid, (addr, None))[0]
     bw = round(max(sign_width(l) for l in lines) + 2 * SIGN_PAD_X)
     bh = len(lines) * SIGN_LINE + 2 * SIGN_PAD_Y
     cx = x + w / 2
@@ -126,8 +159,9 @@ def sign(b):
     bx = cx - bw / 2
     ext = not url.startswith("/")
     tgt = ' target="_blank" rel="noopener"' if ext else ""
-    s = [f'<a class="sign" href="{e(url)}"{tgt} aria-label="{e(full)} (website sign for {e(name)})">'
-         f'<title>{e(url if len(url) > len(full) + 9 else full)}</title>']
+    where = url if len(url) > len(addr) + 9 else addr
+    s = [f'<a class="sign" href="{e(url)}"{tgt} aria-label="{e(title)} — {e(addr)} (website sign for {e(name)})">'
+         f'<title>{e(title)}\n{e(where)}</title>']
     s.append(f'<rect x="{bx + 2:.1f}" y="{by + 3:.1f}" width="{bw}" height="{bh}" rx="3" fill="#000" opacity=".35"/>')
     s.append(f'<rect class="bd" x="{bx:.1f}" y="{by:.1f}" width="{bw}" height="{bh}" rx="3" fill="#556b2f" stroke="#2e3b17" stroke-width="2.5"/>')
     s.append(f'<rect x="{bx + 3:.1f}" y="{by + 3:.1f}" width="{bw - 6}" height="{bh - 6}" rx="2" fill="none" stroke="#ffd700" stroke-opacity=".35" stroke-width="1"/>')

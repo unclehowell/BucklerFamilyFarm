@@ -110,8 +110,8 @@ SIGN_TITLE = {
               ["Great House Farm", "Wiki – archive"]),
     "quartermaster": ("FOI Evidence Tree & Chronological Bible",
                      ["FOI Evidence Tree &", "Chronological Bible"]),
-    "enquiry": ("QA Graph — FOI Questions & Answers",
-               ["QA Graph — FOI", "Questions & Answers"]),
+    "enquiry": ("Great House Farm Q&A — FOI questions and answers",
+               ["Great House", "Farm Q&A"]),
     "press": ("FCG Edge CMS",
              None),
     # Sion, 19 Oct 2026 23:24 BST: "make library bucklerfamily.estate (corresponding buildings in bucklerfamily.estate too)"

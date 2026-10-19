@@ -57,6 +57,9 @@ BUILDINGS = [
     ("press", "Print Works", "FCG Edge CMS: project mandate & GraphQL",
      "The FCG Edge CMS: the Great House Farm Evidence Recovery project mandate, with a GraphQL endpoint for agents.",
      "https://fcg.bucklerfamily.estate/", 450, 812, 170, 88, "green", "live", ""),
+    ("library", "The Library", "DATRO Library",
+     "The DATRO Library, served unchanged from the library branch of the DATRO repository.",
+     "https://library.bucklerfamily.estate/", 200, 812, 200, 88, "slate", "live", ""),
     # TODO(fb): add Farmbook once https://fb.bucklerfamily.estate/ returns 200 (site being built 19 Oct 2026):
     # ("quarters", "Family Quarters", "Farmbook: the Williams/Buckler family wall",
     #  "The Williams/Buckler family profile and wall: every event as a post, dated to the event.",
@@ -76,7 +79,7 @@ _SIGN_W = {"a": 556, "b": 611, "c": 556, "d": 611, "e": 556, "f": 333, "g": 611,
            "u": 611, "v": 556, "w": 778, "x": 556, "y": 556, "z": 500, ".": 278, "-": 333, "/": 278, "\u203a": 333,
            " ": 278,
            # capitals and punctuation used by the website titles (signs show titles since 19 Oct 2026, 23:19)
-           "&": 722, "(": 333, ")": 333, "A": 722, "B": 722, "C": 722, "D": 722, "E": 667, "F": 611, "G": 778, "H": 722, "I": 278, "L": 611, "M": 833, "O": 778, "P": 667, "Q": 778, "R": 722, "S": 667, "T": 611, "W": 944, "\u0177": 556, "\u2013": 556, "\u2014": 1000}
+           "&": 722, "(": 333, ")": 333, "A": 722, "B": 722, "C": 722, "D": 722, "E": 667, "F": 611, "G": 778, "H": 722, "I": 278, "L": 611, "M": 833, "O": 778, "P": 667, "Q": 778, "R": 722, "S": 667, "T": 611, "W": 944, "U": 722, "K": 722, "N": 722, "\u0177": 556, "\u2013": 556, "\u2014": 1000}
 # Sion, 19 Oct 2026 23:19 BST: "Sorry not urls. But website title names on buildings." Each sign shows the linked
 # site's own title (its <title>, read live 19 Oct 2026, with the " · bucklerfamily.estate" style suffix dropped).
 # bid -> (full title, lines on the board or None to wrap automatically). Lines are a faithful shortening of the
@@ -111,6 +114,9 @@ SIGN_TITLE = {
                ["QA Graph — FOI", "Questions & Answers"]),
     "press": ("FCG Edge CMS",
              None),
+    # Sion, 19 Oct 2026 23:24 BST: "make library bucklerfamily.estate (corresponding buildings in bucklerfamily.estate too)"
+    "library": ("DATRO Library - UK Finance Resources",
+               ["DATRO Library", "UK Finance Resources"]),
 }
 
 # Where a building's footprint in index.html differs from BUILDINGS (hand-edited artwork), sign against this box.
@@ -205,6 +211,8 @@ def trees():
             y = y0 + random.random() * h
             r = 9 + random.random() * 14
             g = random.choice(["#2f4a2b", "#34522f", "#3b5a34", "#2a4327"])
+            if 194 <= x <= 406 and 806 <= y <= 906:   # clearing for The Library (15), added 19 Oct 2026
+                continue
             out.append(f'<circle cx="{x:.0f}" cy="{y + 4:.0f}" r="{r:.0f}" fill="#000" opacity=".22"/>'
                        f'<circle cx="{x:.0f}" cy="{y:.0f}" r="{r:.0f}" fill="{g}"/>'
                        f'<circle cx="{x - r * .3:.0f}" cy="{y - r * .3:.0f}" r="{r * .45:.0f}" fill="#fff" opacity=".06"/>')

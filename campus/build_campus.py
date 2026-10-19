@@ -57,8 +57,8 @@ BUILDINGS = [
     ("press", "Print Works", "FCG Edge CMS: project mandate & GraphQL",
      "The FCG Edge CMS: the Great House Farm Evidence Recovery project mandate, with a GraphQL endpoint for agents.",
      "https://fcg.bucklerfamily.estate/", 450, 812, 170, 88, "green", "live", ""),
-    ("library", "The Library", "DATRO Library",
-     "The DATRO Library, served unchanged from the library branch of the DATRO repository.",
+    ("library", "The Library", "DATRO Docs Library",
+     "The DATRO document library: consortium contracts, finances, legal, operations and project papers.",
      "https://library.bucklerfamily.estate/", 200, 812, 200, 88, "slate", "live", ""),
     # TODO(fb): add Farmbook once https://fb.bucklerfamily.estate/ returns 200 (site being built 19 Oct 2026):
     # ("quarters", "Family Quarters", "Farmbook: the Williams/Buckler family wall",
@@ -115,8 +115,8 @@ SIGN_TITLE = {
     "press": ("FCG Edge CMS",
              None),
     # Sion, 19 Oct 2026 23:24 BST: "make library bucklerfamily.estate (corresponding buildings in bucklerfamily.estate too)"
-    "library": ("DATRO Library - UK Finance Resources",
-               ["DATRO Library", "UK Finance Resources"]),
+    "library": ("DATRO Docs Library",
+               None),
 }
 
 # Where a building's footprint in index.html differs from BUILDINGS (hand-edited artwork), sign against this box.

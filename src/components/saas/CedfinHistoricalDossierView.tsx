@@ -378,7 +378,7 @@ export const CedfinHistoricalDossierView: React.FC = () => {
                   <strong>(c) Vaughan–Williams Bridge:</strong> No documentary conveyance linking the Vaughan leasehold to the c. 1667 Williams family line has yet been found.
                 </div>
                 <div className="p-3 rounded-lg bg-[#191112] border border-[#522123]">
-                  <strong>(d) 1877 Daniel Thomas Sale:</strong> The 1877 sale and quarrying-cessation clause currently rest entirely on Mary Williams's sworn testimony.
+                  <strong>(d) 1877 Daniel Thomas Sale:</strong> The 1877 sale and quarrying-cessation clause currently rest entirely on Mary (Nancy) Williams's sworn testimony.
                 </div>
               </div>
             </div>

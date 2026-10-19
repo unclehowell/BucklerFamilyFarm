@@ -169,7 +169,7 @@ export const CaseStudyResultsModal: React.FC<CaseStudyResultsModalProps> = ({
                 </span>
               </div>
               <p className="text-[11px] text-[#A3A29E] font-mono hidden sm:block truncate">
-                Heirs &amp; Successors of Mary Williams • Great House Farm (Ty Mawr), Llandough • Title WA231076
+                Heirs &amp; Successors of Mary (Nancy) Williams • Great House Farm (Ty Mawr), Llandough • Title WA231076
               </p>
             </div>
           </div>
@@ -525,6 +525,9 @@ export const CaseStudyResultsModal: React.FC<CaseStudyResultsModalProps> = ({
                                     <h6 className="font-bold text-sm sm:text-base text-[#EDEFEE]">
                                       {item.title}
                                     </h6>
+                                    {item.subtitle && (
+                                      <div className="text-[10px] font-mono text-[#9BA1A6] mt-0.5">{item.subtitle}</div>
+                                    )}
                                   </div>
 
                                   <button
@@ -610,6 +613,28 @@ export const CaseStudyResultsModal: React.FC<CaseStudyResultsModalProps> = ({
                                     {item.notes && (
                                       <div className="text-[11px] text-[#EDEFEE]/80">
                                         <strong className="text-[#EDEFEE]">Notes:</strong> {item.notes}
+                                      </div>
+                                    )}
+
+                                    {item.cutsAgainst && item.cutsAgainst.length > 0 && (
+                                      <div className="p-2 rounded-lg bg-[#2A2420] border border-[#8A6D3B]/60 text-[10px] text-[#E8D9B5]">
+                                        <strong>What cuts against it:</strong>
+                                        <ul className="list-disc pl-4 mt-1 space-y-0.5">
+                                          {item.cutsAgainst.map((ca, caIdx) => (
+                                            <li key={caIdx}>{ca}</li>
+                                          ))}
+                                        </ul>
+                                      </div>
+                                    )}
+
+                                    {item.sources && item.sources.length > 0 && (
+                                      <div className="text-[10px] text-[#9BA1A6] flex flex-wrap gap-x-3 gap-y-1">
+                                        <strong className="text-[#EDEFEE]">Sources:</strong>
+                                        {item.sources.map((s, sIdx) => (
+                                          <a key={sIdx} href={s.url} target="_blank" rel="noopener noreferrer" className="text-[#5FA3A7] hover:text-white underline">
+                                            {s.label}
+                                          </a>
+                                        ))}
                                       </div>
                                     )}
 

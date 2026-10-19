@@ -159,7 +159,7 @@ export const EligibilityCheckModal: React.FC<EligibilityCheckModalProps> = ({
                     {generatedCode}
                   </div>
                   <div className="text-[10px] text-[#C8C7C4] font-mono">
-                    Heirs of Mary Williams • Great House Farm, Llandough (WA231076)
+                    Heirs of Mary (Nancy) Williams • Great House Farm, Llandough (WA231076)
                   </div>
                 </div>
               </div>

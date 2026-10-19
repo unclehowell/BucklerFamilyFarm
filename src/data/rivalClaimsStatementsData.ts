@@ -179,7 +179,7 @@ export const RIVAL_CLAIMS_STATEMENTS_DATA: RivalClaimStatement[] = [
     size: 'lg',
     dateOrEra: '1876–1928',
     parcelOrSubject: 'Quarrying royalty pact',
-    source: 'Family testimony in 1987 appeal & Thomas Limeworks ledger notes',
+    source: 'Witness testimony (per the Buckler case) in the 1987 appeal & Thomas Limeworks ledger notes',
     explanation: 'Orange (Oral agreement with documentary corroboration): Williams grandfather permitted quarrying operations in exchange for royalty credits, leading to full release upon cessation.',
   },
   {

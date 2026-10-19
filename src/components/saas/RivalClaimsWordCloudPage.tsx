@@ -356,7 +356,7 @@ export const RivalClaimsWordCloudPage: React.FC<RivalClaimsWordCloudPageProps> =
                   </span>
                 </div>
                 <p className="text-xs text-[#9BA1A6] mt-1 leading-snug">
-                  Family testimony, asserted title routes, occupation evidence and interpretations supporting a surviving proprietary interest.
+                  Named-witness testimony, asserted title routes, occupation evidence and interpretations supporting a surviving proprietary interest.
                 </p>
               </div>
 

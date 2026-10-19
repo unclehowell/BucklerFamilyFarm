@@ -121,7 +121,7 @@ export const GreatHouseFarmArchiveView: React.FC<GreatHouseFarmArchiveViewProps>
         <span>
           Complete copy of the <strong className="text-[#F2ECDD]">Great House Farm Wiki</strong>: {ARCHIVE_WIKI_PAGES.length} pages and{' '}
           {EVIDENCE_ITEMS.length} evidence files, imported {ARCHIVE_IMPORTED_AT}. Statements are labelled{' '}
-          <strong className="text-[#F2ECDD]">[Record]</strong>, <strong className="text-[#F2ECDD]">[Family account]</strong> or{' '}
+          <strong className="text-[#F2ECDD]">[Record]</strong>, <strong className="text-[#F2ECDD]">[Testimony]</strong> or{' '}
           <strong className="text-[#F2ECDD]">[Contention]</strong>.
         </span>
         <a

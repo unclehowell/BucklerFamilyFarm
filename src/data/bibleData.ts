@@ -50,7 +50,7 @@ export interface BibleSubsection {
   yearHeading: string; // Explicit year heading for every subsection (e.g. "Year: 1876", "Years: 1895–1905")
   title: string;
   dateRange: string;
-  evidenceLevel: 'ESTABLISHED ARCHAEOLOGICAL EVIDENCE' | 'ESTABLISHED DOCUMENTARY EVIDENCE' | 'ESTABLISHED FACT' | 'DOCUMENTARY EVIDENCE' | 'FAMILY TESTIMONY' | 'WORKING HYPOTHESIS' | 'FORENSIC OBSERVATION' | 'MIXED';
+  evidenceLevel: 'ESTABLISHED ARCHAEOLOGICAL EVIDENCE' | 'ESTABLISHED DOCUMENTARY EVIDENCE' | 'ESTABLISHED FACT' | 'DOCUMENTARY EVIDENCE' | 'WITNESS TESTIMONY' | 'WORKING HYPOTHESIS' | 'FORENSIC OBSERVATION' | 'MIXED';
   establishedPoints?: string[];
   documentaryPoints?: string[];
   familyTestimony?: string[];
@@ -271,7 +271,7 @@ export const PRIMARY_SOURCES: PrimarySource[] = [
   },
   {
     code: 'DXJF/64/30-31',
-    name: 'Village Layout Sketch by Mrs Nancy Buckler',
+    name: 'Village Layout Sketch by Mrs Nancy Buckler (Mary (Nancy) Williams)',
     repository: 'Glamorgan Archives, Cardiff',
     details: 'c.1950 hand-drawn sketch of the former layout and field boundaries of Llandough village.',
     category: 'Survey / Map',
@@ -820,7 +820,7 @@ export const BIBLE_PARTS: BiblePart[] = [
         yearHeading: '1895–1905',
         title: 'The Daniel Thomas Arrangement: A Family Belief in Title',
         dateRange: '1895–1905',
-        evidenceLevel: 'FAMILY TESTIMONY',
+        evidenceLevel: 'WITNESS TESTIMONY',
         eraTableId: 'part-2-post',
         familyTestimony: [
           'Between 1895 and 1905, Daniel Thomas & Son made an agreement with the Williams family whereby quarrying rights were granted in return for eventual title to the House & Garden Plot (Parcel A).',
@@ -877,7 +877,7 @@ export const BIBLE_PARTS: BiblePart[] = [
         evidenceLevel: 'ESTABLISHED DOCUMENTARY EVIDENCE',
         eraTableId: 'part-2-post',
         establishedPoints: [
-          'Frederick Buckler born 1888; later married Mary Williams, daughter of Great House Farm.',
+          'Frederick Buckler born 1888; later married Mary Doreen (Nancy) Williams, daughter of Great House Farm.',
           'Their son William ("Billy") Buckler would become the final occupier of the farm.',
           'Mary Williams retained her maiden name in daily life, causing repeated procedural confusion in later court filings.',
         ],
@@ -929,7 +929,7 @@ export const BIBLE_PARTS: BiblePart[] = [
         'Bute Estate severed 33 acres in 1876 for Llandough Limeworks (D153/4-8), operating 1876–1912.',
         'Adamsdown Square counterpart lease to John Williams, July 1877.',
         'Terminology shifted to "Great House Farm" by 1880s.',
-        'Frederick Buckler born 1888; married Mary Williams.',
+        'Frederick Buckler born 1888; married Mary (Nancy) Williams.',
         'John Williams prosecuted goose theft on 11 Nov 1891.',
         'Marconi experiments on 13 May 1897 assisted by Mr. Williams.',
       ],

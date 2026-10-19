@@ -31,6 +31,8 @@ export interface ChronologyItem {
   criticalAmbiguity?: string;
   ambiguities?: string[];
   isCriticalEvent?: boolean;
+  cutsAgainst?: string[];
+  sources?: { label: string; url: string }[];
 }
 
 export interface ChronologySection {
@@ -238,11 +240,98 @@ export const THREE_PLOT_CHRONOLOGY_SECTIONS: ChronologySection[] = [
     title: 'Industrial Pressures',
     items: [
       {
+        "id": "1855-tenancy-succession",
+        "year": "1855",
+        "title": "John Williams Succeeds His Father in the Tenancy",
+        "subtitle": "Added 19 Oct 2026 · EV-0227 · match to Great House Farm is an inference",
+        "textCitation": "\"Mr John Williams, of Llandough Farm … He succeeded his father in the tenancy of the farm in 1855 … Saturday was his 102nd rent audit.\" (Cardiff Times, 16 Jul 1904)",
+        "propertyArrangement": "Continuous Williams tenancy under the Bute estate from 1855, with a Williams father as tenant before that. The press calls the farm \"Llandough Farm\"; reading it as Great House Farm is an inference from the directories (EV-0225).",
+        "table": {
+          "farmLand": {
+            "status": "Bute tenancy (yearly, rent audit)",
+            "occupier": "John Williams (from 1855; his father before)",
+            "owner": "Marquess of Bute"
+          },
+          "houseGarden": {
+            "status": "Part of the Williams holding",
+            "occupier": "John Williams",
+            "owner": "Marquess of Bute"
+          },
+          "cottages": {
+            "status": "Unknown",
+            "occupier": "Unknown",
+            "owner": "Marquess of Bute"
+          }
+        },
+        "notes": "The 1904 article names \"Llandough Farm\"; directories of 1868–1901 put the same John Williams at \"Great House\" (EV-0225).",
+        "cutsAgainst": [
+          "The article says \"Llandough Farm\", the name of the separate Rees farm (EV-0228); the match to Great House Farm is an inference.",
+          "A 1903 report names a \"William Williams, of Llandough Farm\" (EV-0238), still unexplained."
+        ],
+        "sources": [
+          {
+            "label": "EV-0227 (wiki)",
+            "url": "https://greathousefarmwiki.wordpress.com/evidence/ev-0227-cardiff-times-1904-john-williams-tenancy-since-1855/"
+          },
+          {
+            "label": "EV-0225 (wiki)",
+            "url": "https://greathousefarmwiki.wordpress.com/evidence/ev-0225-trade-directories-1868-1901-john-williams-great-house/"
+          },
+          {
+            "label": "EV-0228 (wiki)",
+            "url": "https://greathousefarmwiki.wordpress.com/evidence/ev-0228-llandough-farm-rees-family-1841-1910/"
+          },
+          {
+            "label": "EV-0238 (wiki)",
+            "url": "https://greathousefarmwiki.wordpress.com/evidence/ev-0238-williams-of-llandough-farm-1903-1914-unexplained/"
+          }
+        ]
+      },
+      {
+        "id": "1868-1901-trade-directories",
+        "year": "1868–1901",
+        "title": "Trade Directories: \"Williams John, Great house\"",
+        "subtitle": "Added 19 Oct 2026 · EV-0225",
+        "textCitation": "Slater's 1868: \"Williams John, Great house\"; Worrall's 1875: \"Williams John, Great house\"; Slater's 1880: \"Williams John, Greathouse\"; Owen's 1887: \"Williams John, Great House farm, Llandough\"; 1891 and the 1901 Cardiff Directory the same.",
+        "propertyArrangement": "John Williams is listed at Great House in every directory from 1868 to 1901. Thomas Rees is listed beside him at the separate Llandough Farm.",
+        "table": {
+          "farmLand": {
+            "status": "Farmed by John Williams",
+            "occupier": "John Williams",
+            "owner": "Marquess of Bute"
+          },
+          "houseGarden": {
+            "status": "\"Great House\" (farmhouse)",
+            "occupier": "John Williams",
+            "owner": "Marquess of Bute"
+          },
+          "cottages": {
+            "status": "Unknown",
+            "occupier": "Unknown",
+            "owner": "Marquess of Bute"
+          }
+        },
+        "notes": "Six directories, all on the University of Leicester online collection; links on EV-0225.",
+        "cutsAgainst": [
+          "Slater's also lists a \"Great House\" at Llandough near Cowbridge, a different place (name trap, on the Kissed Frogs register)."
+        ],
+        "sources": [
+          {
+            "label": "EV-0225 (wiki)",
+            "url": "https://greathousefarmwiki.wordpress.com/evidence/ev-0225-trade-directories-1868-1901-john-williams-great-house/"
+          },
+          {
+            "label": "EV-0228 (wiki)",
+            "url": "https://greathousefarmwiki.wordpress.com/evidence/ev-0228-llandough-farm-rees-family-1841-1910/"
+          }
+        ]
+      },
+      {
         id: '1870-roman-soldier',
         year: '1870',
         title: 'Roman Soldier Discovery Under the Floor',
         textCitation:
-          '"Family testimony, repeated in contemporary press, records the discovery around 1870 of a Roman soldier under the living-room/dining-room floor of Ty Mawr while the Williams family was replacing stone flagstones with a timber floor."',
+          '"Per the Buckler case (testimony), repeated in contemporary press, records the discovery around 1870 of a Roman soldier under the living-room/dining-room floor of Ty Mawr while the Williams family was replacing stone flagstones with a timber floor."',
         propertyArrangement:
           'The discovery was made in the dining-room floor of the farmhouse. This confirms occupation of the farmhouse by the Williams family.',
         table: {
@@ -323,6 +412,87 @@ export const THREE_PLOT_CHRONOLOGY_SECTIONS: ChronologySection[] = [
         ambiguities: ['Is the John Williams of Adamsdown Square the same as Great House Farm?'],
       },
       {
+        "id": "1878-ynysawdre-excluded",
+        "year": "1878",
+        "title": "EXCLUDED — Thomas Williams / Ynysawdre Agreement (not our farm)",
+        "subtitle": "Added 19 Oct 2026 · EV-0234 · Kissed Frogs register",
+        "textCitation": "Agreement and umpire's award between Thomas Williams of Ynysawdre Farm and the Ynysawdre Coal Co., 1878.",
+        "propertyArrangement": "Not Great House Farm. Ynysawdre is near Bridgend. Listed here only so it is not mistaken for a Llandough record; it is the probable origin of a remembered \"once, in 1878\".",
+        "table": {
+          "farmLand": {
+            "status": "Not applicable (different farm)",
+            "occupier": "Not applicable",
+            "owner": "Not applicable"
+          },
+          "houseGarden": {
+            "status": "Not applicable (different farm)",
+            "occupier": "Not applicable",
+            "owner": "Not applicable"
+          },
+          "cottages": {
+            "status": "Not applicable",
+            "occupier": "Not applicable",
+            "owner": "Not applicable"
+          }
+        },
+        "notes": "Excluded: out of scope. EV-0213 is a Roath lease, not Ynysawdre.",
+        "sources": [
+          {
+            "label": "EV-0234 (wiki)",
+            "url": "https://greathousefarmwiki.wordpress.com/evidence/ev-0234-ynysawdre-coal-co-thomas-williams-agreement-award-1878/"
+          },
+          {
+            "label": "Kissed Frogs register (wiki)",
+            "url": "https://greathousefarmwiki.wordpress.com/anomalies-register/bpvsbuckler-archive-research-leads/#kissed-frogs-register"
+          }
+        ]
+      },
+      {
+        "id": "1881-census-llandough-home-farm",
+        "year": "3 Apr 1881",
+        "title": "1881 Census: \"Llandough Home Farm\"",
+        "subtitle": "Added 19 Oct 2026 · EV-0224 · TNA RG11/5288 p.2 · folio/ED SOURCE PENDING",
+        "textCitation": "Schedule 9, \"Llandough Home Farm\": John Williams, Head, 53, \"Farmer of 170[? or 120] ac. employing 1 man and 1 boy\", born Leckwith; Mary Williams, wife, 51, born Cogan; children Ellen, John and David.",
+        "propertyArrangement": "Per Sion Buckler, this is Great House Farm recorded under another name. The household is the same John Williams the directories place at \"Great House\" in 1880 and 1887 (EV-0225).",
+        "table": {
+          "farmLand": {
+            "status": "Farm of 170 or 120 acres (reading uncertain)",
+            "occupier": "John Williams",
+            "owner": "Marquess of Bute"
+          },
+          "houseGarden": {
+            "status": "\"Llandough Home Farm\" (census label)",
+            "occupier": "John Williams and family",
+            "owner": "Marquess of Bute"
+          },
+          "cottages": {
+            "status": "Unknown",
+            "occupier": "Unknown",
+            "owner": "Marquess of Bute"
+          }
+        },
+        "notes": "Photographed by Sion Buckler. The name \"Home Farm\" appears in no other source found.",
+        "cutsAgainst": [
+          "No newspaper, map or directory uses \"Home Farm\"; it looks like the enumerator's label.",
+          "If the acreage reads 170, it fits Llandough Farm (about 166 ac) better than Great House (about 120 ac).",
+          "An earlier \"Reese's Farm\" reading (EV-0223) was dictated, not read from the image."
+        ],
+        "sources": [
+          {
+            "label": "EV-0224 (wiki)",
+            "url": "https://greathousefarmwiki.wordpress.com/evidence/ev-0224-1881-census-llandough-rg11-5288/"
+          },
+          {
+            "label": "EV-0225 (wiki)",
+            "url": "https://greathousefarmwiki.wordpress.com/evidence/ev-0225-trade-directories-1868-1901-john-williams-great-house/"
+          },
+          {
+            "label": "EV-0228 (wiki)",
+            "url": "https://greathousefarmwiki.wordpress.com/evidence/ev-0228-llandough-farm-rees-family-1841-1910/"
+          }
+        ]
+      },
+      {
         id: '1891-goose-theft',
         year: '1891',
         title: 'Goose Theft Prosecution',
@@ -347,7 +517,8 @@ export const THREE_PLOT_CHRONOLOGY_SECTIONS: ChronologySection[] = [
             owner: 'Marquess of Bute',
           },
         },
-        notes: 'This independently confirms John Williams was in occupation of Great House Farm in 1891 as a substantial farmer with livestock.',
+        notes: 'This independently confirms John Williams was in occupation of Great House Farm in 1891 as a substantial farmer with livestock. Reported again in the South Wales Star, 10 Jun 1892: "the property of Mr. John Williams, Great House Farm, Llandough, on November 11, 1891" (EV-0226, added 19 Oct 2026).',
+        sources: [{ label: 'EV-0226 (wiki)', url: 'https://greathousefarmwiki.wordpress.com/evidence/ev-0226-south-wales-star-1892-john-williams-great-house-farm/' }],
       },
       {
         id: '1895-daniel-thomas',
@@ -355,7 +526,7 @@ export const THREE_PLOT_CHRONOLOGY_SECTIONS: ChronologySection[] = [
         title: 'Daniel Thomas Arrangement (Separate Plot Hypothesis)',
         isCriticalEvent: true,
         textCitation:
-          '"Family testimony records a later agreement with Daniel Thomas & Son under which quarrying rights were exchanged for eventual title; the deeds are now missing. Post-1876, the family is believed to have gained absolute title / freehold to the house and garden plot, with surrounding farmland remaining on lease. Between 1895 and 1905, family testimony states that Daniel Thomas & Son made an agreement with the Williams family whereby quarrying was allowed in return for eventual title. A tree-planting ceremony marks this transition."',
+          '"Per the Buckler case (testimony), there was a later agreement with Daniel Thomas & Son under which quarrying rights were exchanged for eventual title; the deeds are now missing. Post-1876, the family is believed to have gained absolute title / freehold to the house and garden plot, with surrounding farmland remaining on lease. Between 1895 and 1905, per the Buckler case (testimony), Daniel Thomas & Son made an agreement with the Williams family whereby quarrying was allowed in return for eventual title. A tree-planting ceremony marks this transition."',
         propertyArrangement:
           'The Williams family gained freehold/absolute title to the HOUSE AND GARDEN PLOT, while the SURROUNDING FARMLAND remained on lease. This is the origin of the "Separate Plot Hypothesis."',
         table: {
@@ -376,7 +547,7 @@ export const THREE_PLOT_CHRONOLOGY_SECTIONS: ChronologySection[] = [
           },
         },
         notes: 'This is the crucial moment for the Separate Plot Hypothesis. If true, the house and garden became separate from the farmland.',
-        criticalAmbiguity: 'The deeds are missing. This is based entirely on family testimony.',
+        criticalAmbiguity: 'The deeds are missing. This rests entirely on testimony (per the Buckler case); SOURCE PENDING.',
         ambiguities: [
           'The key deeds are missing. The arrangement cannot be proven from documentary evidence.',
           'Tree-planting ceremony marks the transition but has not been independently corroborated.',
@@ -561,6 +732,45 @@ export const THREE_PLOT_CHRONOLOGY_SECTIONS: ChronologySection[] = [
         ambiguities: ['Whether Mountjoy Ltd collected rent or managed the property directly is unknown.'],
       },
       {
+        "id": "1936-buckler-williams-wedding",
+        "year": "5 Aug 1936",
+        "title": "Wedding: Fred Buckler and Mary Doreen (Nancy) Williams",
+        "subtitle": "Added 19 Oct 2026 · EV-0230 · snippet only · SC-49",
+        "textCitation": "Western Mail, 5 Aug 1936, p.10 (snippet only): wedding of Mr. Fred Buckler of Barry and Miss Mary Doreen (Nancy) Williams of Great House Farm, Llandough.",
+        "propertyArrangement": "Mary (Nancy) Williams of Great House Farm marries Frederick Buckler; the farm stays in Williams occupation.",
+        "table": {
+          "farmLand": {
+            "status": "Williams tenancy continues",
+            "occupier": "Williams family",
+            "owner": "Marquess of Bute"
+          },
+          "houseGarden": {
+            "status": "Williams family home",
+            "occupier": "Mary (Nancy) Williams and family",
+            "owner": "Marquess of Bute (estate view)"
+          },
+          "cottages": {
+            "status": "Unknown",
+            "occupier": "Unknown",
+            "owner": "Marquess of Bute"
+          }
+        },
+        "notes": "Snippet only; the full page has not been read.",
+        "cutsAgainst": [
+          "SC-49: per Sion Buckler the marriage was in 1935; the press snippet says 1936."
+        ],
+        "sources": [
+          {
+            "label": "EV-0230 (wiki)",
+            "url": "https://greathousefarmwiki.wordpress.com/evidence/ev-0230-western-mail-1936-llandough-bride-buckler-williams/"
+          },
+          {
+            "label": "Source Conflicts Register (SC-49)",
+            "url": "https://greathousefarmwiki.wordpress.com/records-access-chronology/source-conflicts-register/"
+          }
+        ]
+      },
+      {
         id: '1938-auction-sale',
         year: '16 Nov 1938',
         title: 'Auction Sale (Western Mail Report)',
@@ -735,6 +945,50 @@ export const THREE_PLOT_CHRONOLOGY_SECTIONS: ChronologySection[] = [
         criticalAmbiguity: 'This is the moment the Separate Plot Hypothesis becomes visible in practice.',
         notes: 'The estate took the farmland but left the family in the house and garden. This strongly suggests the house and garden were treated as a separate entity, whether legally or practically.',
         ambiguities: ['Were the barns, stables, and farmyard taken with the farmland or left with the house?'],
+      },
+      {
+        "id": "1958-water-cut-off-report",
+        "year": "20 Nov 1958",
+        "title": "Press: Water Cut Off \"for nearly 10 years by order of Western Ground Rents\"",
+        "subtitle": "Added 19 Oct 2026 · EV-0037 · snippet only · SC-48",
+        "textCitation": "Western Mail, 20 Nov 1958, p.7 (snippet only): \"Mrs. Buckler claimed that the water was cut off from her house and grounds for nearly 10 years by order of Western Ground Rents\"; \"a Welsh case of Crichel Down\"; land \"farmed by her family since 1667\".",
+        "propertyArrangement": "Reported as Mrs Buckler's claim, not a finding. \"Nearly 10 years\" would put the start around 1948–49 (inferred). Per Branwen Buckler (voice testimony, relayed by Sion Buckler 19 Oct 2026): the water was cut off while it was a dairy farm, cattle drowned in the River Ely, Nancy said no bills were outstanding, and it was \"discussed in Parliament\".",
+        "table": {
+          "farmLand": {
+            "status": "Farm in Buckler occupation",
+            "occupier": "Frederick & Mary (Nancy) Buckler",
+            "owner": "Western Ground Rents Ltd"
+          },
+          "houseGarden": {
+            "status": "Water supply cut off (as claimed)",
+            "occupier": "Frederick & Mary (Nancy) Buckler",
+            "owner": "Western Ground Rents Ltd (estate view)"
+          },
+          "cottages": {
+            "status": "Unknown",
+            "occupier": "Unknown",
+            "owner": "Western Ground Rents Ltd"
+          }
+        },
+        "notes": "Snippet only. The c.1948 start date is an inference from \"nearly 10 years\".",
+        "cutsAgainst": [
+          "SC-48: a Dŵr Cymru page puts the cut-off around 1988, not 1948–58.",
+          "Branwen Buckler names \"Cardiff UDC\"; no Cardiff UDC existed (Llandough was in Penarth UDC). No Hansard record found. She lived at the farm until 1988, so the 1950s part may be second-hand."
+        ],
+        "sources": [
+          {
+            "label": "EV-0037 (wiki)",
+            "url": "https://greathousefarmwiki.wordpress.com/evidence/ev-0037-western-mail-1958-crichel-down/"
+          },
+          {
+            "label": "Branwen Buckler testimony (wiki)",
+            "url": "https://greathousefarmwiki.wordpress.com/testimony/branwen-buckler/"
+          },
+          {
+            "label": "Source Conflicts Register (SC-48)",
+            "url": "https://greathousefarmwiki.wordpress.com/records-access-chronology/source-conflicts-register/"
+          }
+        ]
       },
       {
         id: '1959-tenancy-refusal',

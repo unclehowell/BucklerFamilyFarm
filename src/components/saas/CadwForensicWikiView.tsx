@@ -644,7 +644,7 @@ export const CadwForensicWikiView: React.FC<CadwForensicWikiViewProps> = ({
                     <span>Restored House of Williams / Buckler Family Estate · August 2026 (Version 5.0.0)</span>
                   </div>
                   <div className="text-xs font-mono text-[#9BA1A6]">
-                    Contact: hywelapbuckler@gmail.com · 02031377118
+                    Contact: [redacted] · [redacted]
                   </div>
                 </div>
               </div>

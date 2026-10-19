@@ -65,7 +65,7 @@ export const NewSearchWorkflowModal: React.FC<NewSearchWorkflowModalProps> = ({
   isOpen,
   onClose,
   isDemoUser,
-  userEmail = 'hywelapbuckler@gmail.com',
+  userEmail = '[redacted]',
   userName = 'Sion Buckler',
   cachedFormData,
   onSaveCachedForm,

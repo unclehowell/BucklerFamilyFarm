@@ -60,6 +60,10 @@ BUILDINGS = [
     ("library", "The Library", "DATRO Docs Library",
      "The DATRO document library: consortium contracts, finances, legal, operations and project papers.",
      "https://library.bucklerfamily.estate/", 200, 812, 200, 88, "slate", "live", ""),
+    # Sion, 19 Oct 2026 23:24 BST: "make projects bucklerfamily.estate ... migrate all the prince 2 to projects bucklerfamily.estate"
+    ("projects", "Project Office", "PRINCE2 project management",
+     "The PRINCE2 record moved from the Wiki: mandate, business case, PIDs, plans, highlight reports and control registers.",
+     "https://projects.bucklerfamily.estate/", 638, 812, 130, 88, "earth", "live", ""),
     # TODO(fb): add Farmbook once https://fb.bucklerfamily.estate/ returns 200 (site being built 19 Oct 2026):
     # ("quarters", "Family Quarters", "Farmbook: the Williams/Buckler family wall",
     #  "The Williams/Buckler family profile and wall: every event as a post, dated to the event.",
@@ -117,6 +121,8 @@ SIGN_TITLE = {
     # Sion, 19 Oct 2026 23:24 BST: "make library bucklerfamily.estate (corresponding buildings in bucklerfamily.estate too)"
     "library": ("DATRO Docs Library",
                None),
+    "projects": ("Great House Farm Projects — PRINCE2",
+                ["Great House Farm", "Projects — PRINCE2"]),
 }
 
 # Where a building's footprint in index.html differs from BUILDINGS (hand-edited artwork), sign against this box.
@@ -212,6 +218,8 @@ def trees():
             r = 9 + random.random() * 14
             g = random.choice(["#2f4a2b", "#34522f", "#3b5a34", "#2a4327"])
             if 194 <= x <= 406 and 806 <= y <= 906:   # clearing for The Library (15), added 19 Oct 2026
+                continue
+            if 632 <= x <= 776 and 806 <= y <= 906:   # clearing for the Project Office (16), added 19 Oct 2026
                 continue
             out.append(f'<circle cx="{x:.0f}" cy="{y + 4:.0f}" r="{r:.0f}" fill="#000" opacity=".22"/>'
                        f'<circle cx="{x:.0f}" cy="{y:.0f}" r="{r:.0f}" fill="{g}"/>'

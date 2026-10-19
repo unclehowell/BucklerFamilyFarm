@@ -68,6 +68,10 @@ BUILDINGS = [
     ("quarters", "Family Quarters", "Farmbook: the Williams/Buckler family wall",
      "The Williams/Buckler family profile and wall: every event as a post, dated to the event.",
      "https://fb.bucklerfamily.estate/", 1096, 800, 90, 95, "red", "live", ""),
+    # Sion, 20 Oct 2026 00:27 BST: "ebook as a small sub building (place it in wayback)" — annex on the Archive Vault
+    ("ebook", "E-book", "The Great House Farm e-book",
+     "The whole wiki as one book: evidence, chronology and case record (v0.1), from the e-book shop.",
+     "https://bucklerfamily.estate/ebook/", 150, 650, 64, 58, "concrete", "live", "annex"),
 ]
 # --- Website-name signboards (Sion, 19 Oct 2026: "Put the respective website names on the buildings or next
 # to them as signs (olive green/ yellow text)"). One olive board with yellow lettering per building, linking to
@@ -123,6 +127,8 @@ SIGN_TITLE = {
                None),
     "projects": ("Great House Farm Projects — PRINCE2",
                 ["Great House Farm", "Projects — PRINCE2"]),
+    "ebook": ("E-book",
+              ["E-book"]),
     "quarters": ("Williams / Buckler family · Great House Farm (Tŷ Mawr) · farmbook",
                 ["Williams / Buckler", "family · farmbook"]),
 }
@@ -130,7 +136,7 @@ SIGN_TITLE = {
 # Where a building's footprint in index.html differs from BUILDINGS (hand-edited artwork), sign against this box.
 SIGN_BOX = {"vault": (234, 614, 194, 126)}
 # Signs that sit across the front edge of the building instead of on its roof (artwork roofs).
-SIGN_FRONT = {"vault"}
+SIGN_FRONT = {"vault", "ebook"}
 
 
 def sign_width(s, size=SIGN_FONT):
@@ -225,6 +231,8 @@ def trees():
                 continue
             if 1088 <= x <= 1214 and 794 <= y <= 906:  # clearing for the Family Quarters (17), added 19 Oct 2026
                 continue
+            if 140 <= x <= 234 and 640 <= y <= 716:    # clearing for the E-book annex (18), added 20 Oct 2026
+                continue
             out.append(f'<circle cx="{x:.0f}" cy="{y + 4:.0f}" r="{r:.0f}" fill="#000" opacity=".22"/>'
                        f'<circle cx="{x:.0f}" cy="{y:.0f}" r="{r:.0f}" fill="{g}"/>'
                        f'<circle cx="{x - r * .3:.0f}" cy="{y - r * .3:.0f}" r="{r * .45:.0f}" fill="#fff" opacity=".06"/>')
@@ -260,6 +268,13 @@ def building(b):
         for i in range(1, int(w // 40)):
             s.append(f'<line x1="{x + i * 40}" y1="{y + 4}" x2="{x + i * 40}" y2="{y + h - 4}" stroke="#000" stroke-opacity=".08"/>')
         s.append(f'<rect x="{x}" y="{y}" width="{w}" height="{h}" fill="none" stroke="#1d2420" stroke-opacity=".5" stroke-width="2"/>')
+    if extra == "annex":   # small sub-building joined to the Archive Vault by a covered walkway
+        s = [s[0], f'<rect x="{x + w}" y="{y + 20}" width="{234 - x - w}" height="16" fill="#d6b15f" stroke="#191716" stroke-width="2"/>'
+             f'<rect x="{x + 6}" y="{y + 8}" width="{w}" height="{h}" fill="#000" opacity=".38"/>'
+             f'<rect x="{x}" y="{y}" width="{w}" height="{h}" fill="#191716" stroke="#d6b15f" stroke-width="3"/>'
+             f'<rect x="{x}" y="{y}" width="{w}" height="10" fill="#a20f21"/>'
+             f'<path d="M{x + w - 15} {y + 28} q-6 -4 -12 0 v14 q6 -4 12 0 q6 -4 12 0 v-14 q-6 -4 -12 0z" fill="#fff4d3" stroke="#d6b15f" stroke-width="1.5"/>'
+             f'<line x1="{x + w - 15}" y1="{y + 28}" x2="{x + w - 15}" y2="{y + 42}" stroke="#d6b15f" stroke-width="1.5"/>']
     if extra == "radar":
         s.append(f'<circle cx="{x + w + 34}" cy="{y + 40}" r="28" fill="#000" opacity=".3"/>'
                  f'<circle cx="{x + w + 30}" cy="{y + 34}" r="28" fill="#e7e4da"/><circle cx="{x + w + 22}" cy="{y + 26}" r="10" fill="#fff" opacity=".6"/>')

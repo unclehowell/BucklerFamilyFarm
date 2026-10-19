@@ -21,7 +21,7 @@ export const AddBranchModal: React.FC<AddBranchModalProps> = ({
   const [outcome, setOutcome] = useState<OutcomeType>(null);
   const [outcomeNote, setOutcomeNote] = useState('');
   const [initialSummary, setInitialSummary] = useState('');
-  const [fromContact, setFromContact] = useState('Sion Buckler <hywelapbuckler@gmail.com>');
+  const [fromContact, setFromContact] = useState('Sion Buckler <[redacted]>');
   const [toContact, setToContact] = useState('');
 
   if (!isOpen) return null;

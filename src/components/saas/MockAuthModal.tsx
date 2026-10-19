@@ -28,7 +28,7 @@ export const MockAuthModal: React.FC<MockAuthModalProps> = ({
   const [activeTab, setActiveTab] = useState<'demo' | 'signin' | 'signup'>(initialMode);
 
   // Demo pre-completed state (unchangeable)
-  const demoEmail = 'hywelapbuckler@gmail.com';
+  const demoEmail = '[redacted]';
   const demoPassword = '••••••••';
   const demoName = 'Sion Buckler (Hywel ap Buckler)';
 

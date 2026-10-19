@@ -51,7 +51,19 @@ BUILDINGS = [
     ("quartermaster", "Quartermaster's Store", "The Great House WebApp",
      "Search whether your own family has land with a story like Tŷ Mawr's.",
      "/webapp/", 890, 800, 170, 100, "copper", "live", ""),
+    ("enquiry", "Enquiry Office", "QA Graph: FOI questions & answers",
+     "Every FOI and EIR question asked and the answer given, each with a stable reference, searchable as one graph.",
+     "https://qa.bucklerfamily.estate/", 840, 615, 150, 105, "slate", "live", ""),
+    ("press", "Print Works", "FCG Edge CMS: project mandate & GraphQL",
+     "The FCG Edge CMS: the Great House Farm Evidence Recovery project mandate, with a GraphQL endpoint for agents.",
+     "https://fcg.bucklerfamily.estate/", 450, 812, 170, 88, "green", "live", ""),
+    # TODO(fb): add Farmbook once https://fb.bucklerfamily.estate/ returns 200 (site being built 19 Oct 2026):
+    # ("quarters", "Family Quarters", "Farmbook: the Williams/Buckler family wall",
+    #  "The Williams/Buckler family profile and wall: every event as a post, dated to the event.",
+    #  "https://fb.bucklerfamily.estate/", 1078, 800, 95, 95, "red", "live", ""),
 ]
+# NOTE: index.html's vault building (WAYBACK MEDIA LIBRARY artwork and wording) was hand-edited after the last
+# generation; regenerating from this file would revert it. Carry that change in here before a full regeneration.
 
 ROOFS = {
     "slate": ("#4a5560", "#5a6672"),

@@ -125,8 +125,8 @@ SIGN_TITLE = {
     # Sion, 19 Oct 2026 23:24 BST: "make library bucklerfamily.estate (corresponding buildings in bucklerfamily.estate too)"
     "library": ("DATRO Docs Library",
                None),
-    "projects": ("Great House Farm Projects — PRINCE2",
-                ["Great House Farm", "Projects — PRINCE2"]),
+    "projects": ("Buckler Family Estate Projects — PRINCE2",   # site retitled 20 Oct 2026 (estate-wide)
+                ["Buckler Family Estate", "Projects — PRINCE2"]),
     "ebook": ("E-book",
               ["E-book"]),
     "quarters": ("Williams / Buckler family · Great House Farm (Tŷ Mawr) · farmbook",

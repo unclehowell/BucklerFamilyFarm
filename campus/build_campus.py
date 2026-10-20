@@ -70,7 +70,7 @@ BUILDINGS = [
      "https://fb.bucklerfamily.estate/", 1096, 800, 90, 95, "red", "live", ""),
     # Sion, 20 Oct 2026 00:27 BST: "ebook as a small sub building (place it in wayback)" — annex on the Archive Vault
     ("ebook", "E-book", "The Great House Farm e-book",
-     "The whole wiki as one book: evidence, chronology and case record (v0.1), from the e-book shop.",
+     "Evidence, history and heritage: the whole archive in one 2,064-page searchable PDF. Get the e-book (£49.99).",
      "https://bucklerfamily.estate/ebook/", 150, 650, 64, 58, "concrete", "live", "annex"),
 ]
 # --- Website-name signboards (Sion, 19 Oct 2026: "Put the respective website names on the buildings or next
@@ -337,6 +337,10 @@ a{{color:inherit}}
 .brand{{position:fixed;left:16px;top:14px;max-width:min(420px,calc(100vw - 32px));pointer-events:none;text-shadow:0 1px 6px #000a}}
 .brand h1{{margin:0;font-size:clamp(1.5rem,3.4vw,2.4rem);line-height:1;font-weight:900;letter-spacing:-.01em}}
 .brand p{{margin:6px 0 0;font-size:.92rem;color:#e6e2d4}}
+.brand .ebk{{margin:8px 0 0;pointer-events:auto}}
+.brand .ebk a{{display:inline-block;background:#f2c94c;color:#1d2420;font:800 .85rem Arial,sans-serif;padding:7px 12px;border-radius:3px;text-decoration:none;text-shadow:none;box-shadow:0 4px 14px #0007}}
+.callout .ebk2{{display:block;margin-top:10px;font:800 .9rem Arial,sans-serif;color:#7a5c00}}
+.callout .ebk2[hidden]{{display:none}}
 .tools{{position:fixed;right:16px;top:14px;display:flex;gap:8px}}
 .btn{{background:#1d2420e6;color:#f2efe6;border:1px solid #f2efe633;font:700 .85rem Arial,sans-serif;padding:9px 13px;cursor:pointer;border-radius:3px;text-decoration:none}}
 .btn:hover{{border-color:#f2c94c}}
@@ -422,6 +426,7 @@ a{{color:inherit}}
 <div class="brand">
   <h1>Tŷ Mawr Campus</h1>
   <p>Great House Farm, Llandough. Every part of the case, one building each. Select a building to see where it lives.</p>
+  <p class="ebk"><a href="/ebook/">Get the e-book (£49.99) →</a></p>
 </div>
 <div class="tools">
   <button class="btn" type="button" id="dirbtn" aria-expanded="false" aria-controls="dir">Directory</button>
@@ -436,6 +441,7 @@ a{{color:inherit}}
   <p id="co-d"></p>
   <a class="url" id="co-u" href="#"></a>
   <a class="open" id="co-o" href="#">Open</a><span class="st" id="co-s"></span>
+  <a class="ebk2" id="co-e" href="/ebook/" hidden>Get the e-book (£49.99) →</a>
 </div>
 
 <p class="hint">Not Llandough-juxta-Cowbridge, nor the Great House at Llandow or Aberthin.</p>
@@ -475,6 +481,7 @@ function select(id){{
   var ext=b.u.charAt(0)!=='/';
   [u,o].forEach(function(a){{if(ext){{a.target='_blank';a.rel='noopener';}}else{{a.removeAttribute('target');}}}});
   document.getElementById('co-s').textContent=b.s==='provisioned'?'Being set up':'';
+  document.getElementById('co-e').hidden=!({{library:1,vault:1,hq:1,museum:1,quarters:1}})[id];
   co.classList.add('on');place(cur);
   try{{history.replaceState(null,'','#'+id);}}catch(e){{}}
 }}

@@ -112,9 +112,9 @@
   brand(here);
   var next = here && here.n < TOTAL ? STOPS[here.n] : null;
   var T = {
-    en: { back: "Back to Cedwyn Estate", stop: "Stop", of: "of", next: "Next", hide: "Hide", show: "Cedwyn Estate", end: "Journey’s end" },
-    cy: { back: "Yn ôl i Ystâd Cedwyn", stop: "Arhosfan", of: "o", next: "Nesaf", hide: "Cuddio", show: "Ystâd Cedwyn", end: "Diwedd y daith" },
-    es: { back: "Volver a la Finca Cedwyn", stop: "Parada", of: "de", next: "Siguiente", hide: "Ocultar", show: "Finca Cedwyn", end: "Fin del recorrido" }
+    en: { back: "Back to Cedwyn Estate", sub: "Great House", stop: "Stop", of: "of", next: "Next", hide: "Hide", show: "Cedwyn Estate", end: "Journey’s end" },
+    cy: { back: "Yn ôl i Ystâd Cedwyn", sub: "Tŷ Mawr", stop: "Arhosfan", of: "o", next: "Nesaf", hide: "Cuddio", show: "Ystâd Cedwyn", end: "Diwedd y daith" },
+    es: { back: "Volver a la Finca Cedwyn", sub: "Great House", stop: "Parada", of: "de", next: "Siguiente", hide: "Ocultar", show: "Finca Cedwyn", end: "Fin del recorrido" }
   };
   function lang() {
     var l = (document.documentElement.getAttribute("lang") || "en").slice(0, 2).toLowerCase();
@@ -142,7 +142,7 @@
     a.appendChild(mk);
     var t = el("span", "ghf-bc-txt");
     t.appendChild(el("b", null, s.back));
-    t.appendChild(el("small", null, "Great House Farm · Tŷ Mawr"));
+    t.appendChild(el("small", null, s.sub));
     a.appendChild(t);
     nav.appendChild(a);
     if (here) {

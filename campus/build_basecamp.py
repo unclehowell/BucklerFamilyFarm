@@ -370,7 +370,8 @@ a{{color:inherit}}
 .skip{{position:absolute;left:-999px;top:8px;background:var(--gold);color:#000;padding:8px 12px;z-index:9}}.skip:focus{{left:8px}}
 header.top{{max-width:560px;margin:0 auto;padding:22px 18px 6px;position:relative}}#lang-slot{{position:absolute;top:16px;right:14px}}
 .mode{{display:inline-flex;margin:14px 0 0;border:1px solid var(--line);border-radius:999px;padding:3px;gap:2px}}.mode>*{{padding:7px 14px;border-radius:999px;font-size:13px;letter-spacing:.12em;text-transform:uppercase;text-decoration:none;color:var(--muted)}}.mode .on{{background:#fff;color:#000;font-weight:700}}.mode a:hover{{color:#fff}}
-.eyebrow .mark{{width:30px;height:30px;vertical-align:middle;margin:0 8px 0 0}}
+.top .mark{{display:block;width:72px;height:72px;margin:0 0 10px}}
+.eyebrow.sub{{margin:10px 0 0}}
 .eyebrow{{font-size:12px;letter-spacing:.32em;text-transform:uppercase;color:var(--gold);margin:0 0 8px}}
 h1{{margin:0;color:var(--ink);font-weight:300;text-transform:uppercase;letter-spacing:.06em;font-size:clamp(1.65rem,7.4vw,2.5rem);line-height:1.08}}
 h1 b{{font-weight:700;display:block}}
@@ -423,8 +424,9 @@ footer p{{margin:6px 0}}
 <a class="skip" href="#board">Skip to the map</a>
 <header class="top">
 <div id="lang-slot"></div>
-<p class="eyebrow"><img class="mark" src="/brand/cedwyn-tent-icon-128.png" width="30" height="30" alt="">Cedwyn Estate</p>
-<h1>Great House Farm <b>Tŷ Mawr</b></h1>
+<img class="mark" src="/brand/cedwyn-tent-icon-128.png" width="72" height="72" alt="">
+<h1><b>Cedwyn Estate</b></h1>
+<p class="eyebrow sub">Great House</p>
 <p class="lead">Follow the numbered stepping stones. Each building opens one part of the record. Every site has a link back here, so you can always return to Cedwyn Estate.</p>
 <p class="note">Case theories on these sites are our case, prospective. Not a finding of any court.</p>
 <div class="jump"><a class="pill solid" href="https://greathousefarmwiki.wordpress.com/">Start at stop 1 →</a><a class="pill" href="#shop">Gift shop</a><a class="pill" href="/campus/">Estate campus</a></div>
@@ -597,9 +599,9 @@ JS = r"""/*! basecamp.js — "Back to Cedwyn Estate" link for every Great House 
   brand(here);
   var next = here && here.n < TOTAL ? STOPS[here.n] : null;
   var T = {
-    en: { back: "Back to Cedwyn Estate", stop: "Stop", of: "of", next: "Next", hide: "Hide", show: "Cedwyn Estate", end: "Journey’s end" },
-    cy: { back: "Yn ôl i Ystâd Cedwyn", stop: "Arhosfan", of: "o", next: "Nesaf", hide: "Cuddio", show: "Ystâd Cedwyn", end: "Diwedd y daith" },
-    es: { back: "Volver a la Finca Cedwyn", stop: "Parada", of: "de", next: "Siguiente", hide: "Ocultar", show: "Finca Cedwyn", end: "Fin del recorrido" }
+    en: { back: "Back to Cedwyn Estate", sub: "Great House", stop: "Stop", of: "of", next: "Next", hide: "Hide", show: "Cedwyn Estate", end: "Journey’s end" },
+    cy: { back: "Yn ôl i Ystâd Cedwyn", sub: "Tŷ Mawr", stop: "Arhosfan", of: "o", next: "Nesaf", hide: "Cuddio", show: "Ystâd Cedwyn", end: "Diwedd y daith" },
+    es: { back: "Volver a la Finca Cedwyn", sub: "Great House", stop: "Parada", of: "de", next: "Siguiente", hide: "Ocultar", show: "Finca Cedwyn", end: "Fin del recorrido" }
   };
   function lang() {
     var l = (document.documentElement.getAttribute("lang") || "en").slice(0, 2).toLowerCase();
@@ -627,7 +629,7 @@ JS = r"""/*! basecamp.js — "Back to Cedwyn Estate" link for every Great House 
     a.appendChild(mk);
     var t = el("span", "ghf-bc-txt");
     t.appendChild(el("b", null, s.back));
-    t.appendChild(el("small", null, "Great House Farm · Tŷ Mawr"));
+    t.appendChild(el("small", null, s.sub));
     a.appendChild(t);
     nav.appendChild(a);
     if (here) {
@@ -717,6 +719,7 @@ est = json.load(open(os.path.join(ROOT, "public", "ghf-lang", "sites", "estate.j
 bc = {k: v for k, v in est.items() if k not in ("strings", "patterns")}; bc["site"] = "basecamp"
 bc["strings"] = {
   "Cedwyn Estate": {"cy": "Ystâd Cedwyn", "es": "Finca Cedwyn"},
+  "Great House": {"cy": "Tŷ Mawr", "es": "Great House"},
   "Gift shop": {"cy": "Siop anrhegion", "es": "Tienda de regalos"},
   "Estate campus": {"cy": "Campws yr ystad", "es": "Campus de la finca"},
   "Skip to the map": {"cy": "Neidio i’r map", "es": "Ir al mapa"},

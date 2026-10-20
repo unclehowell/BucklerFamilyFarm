@@ -10,7 +10,7 @@ const stops = JSON.parse(fs.readFileSync(root + "campus/basecamp_stops.json", "u
 const BANNED = /\b(says|claims|according to|hearsay|unverified|alleged|allegedly|family account|family's account|family testimony)\b/i;
 test("map: viewport, title, start and end", () => {
   assert.match(html, /<meta name="viewport" content="width=device-width/);
-  assert.match(html, /<title>Base camp/);
+  assert.match(html, /<title>Cedwyn Estate/);
   assert.equal(stops[0].url, "https://greathousefarmwiki.wordpress.com/");
   assert.equal(stops.at(-1).key, "shop");
   for (const s of stops) assert.ok(html.includes(`data-stop="${s.n}"`), "stop " + s.n);
@@ -32,7 +32,7 @@ test("rules: banned words, privacy, no personal name", () => {
 test("back link: script loaded by ghf-lang, guards and skips the root", () => {
   assert.match(lang, /basecamp\.js/);
   assert.match(js, /window\.GHFBasecamp/);
-  assert.match(js, /Back to base camp/);
+  assert.match(js, /Back to Cedwyn Estate/);
   assert.match(js, /path === "\/"/);
   assert.ok(fs.existsSync(root + "campus/index.html"), "campus moved, not deleted");
   assert.match(fs.readFileSync(root + "public/_redirects", "utf8"), /^\/basecamp\.js \/ghf-lang\/basecamp\.js 200$/m);

@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
-<title>Base camp 3D · Great House Farm, Tŷ Mawr</title>
-<meta name="description" content="Walk base camp in 3D: every Great House Farm site is a building on the path. Walk up to a door to open it.">
+<title>Cedwyn Estate 3D · Great House Farm, Tŷ Mawr</title>
+<meta name="description" content="Walk the Cedwyn Estate in 3D: every Great House Farm site is a building on the path. Walk up to a door to open it.">
 <meta name="theme-color" content="#000000">
 <link rel="canonical" href="https://bucklerfamily.estate/3d/">
 <style>
@@ -75,7 +75,7 @@ kbd{display:inline-block;min-width:22px;text-align:center;border:1px solid var(-
 </style>
 </head>
 <body>
-<canvas id="c" aria-label="3D base camp" role="img"></canvas>
+<canvas id="c" aria-label="3D Cedwyn Estate" role="img"></canvas>
 <div id="top">
   <a class="btn" href="/" id="to2d">← 2D map</a>
   <span class="sp"></span>
@@ -116,7 +116,7 @@ kbd{display:inline-block;min-width:22px;text-align:center;border:1px solid var(-
 
 <div class="ov" id="start">
   <div class="box">
-    <p class="eb">Base camp · game mode</p>
+    <p class="eb">Cedwyn Estate · game mode</p>
     <h1>Great House Farm <b>Tŷ Mawr</b></h1>
     <p>Walk the numbered path. Every building is one part of the record. Walk up to its door to open it.</p>
     <div class="keys desk-only"><span><kbd>↑</kbd><kbd>↓</kbd></span><span>walk forward / back</span><span><kbd>←</kbd><kbd>→</kbd></span><span>veer while walking, turn when still</span><span><kbd>Space</kbd></span><span>jump</span><span><kbd>E</kbd></span><span>go in</span></div>
@@ -125,9 +125,9 @@ kbd{display:inline-block;min-width:22px;text-align:center;border:1px solid var(-
     <p class="note">Case theories on these sites are our case, prospective. Not a finding of any court.</p>
   </div>
 </div>
-<div class="ov" id="rotate"><div class="box"><div class="phone" aria-hidden="true"></div><h1>Tip your phone <b>sideways</b></h1><p>Base camp 3D plays in landscape, with the controls under your thumbs.</p><div class="row"><button class="btn" id="anyway">Play upright anyway</button><a class="btn" href="/">2D map</a></div></div></div>
-<div class="ov" id="err"><div class="box"><h1>3D isn't available <b>here</b></h1><p>This browser can't draw the 3D camp. The 2D map has every stop.</p><div class="row"><a class="btn solid" href="/">Open the 2D map</a></div></div></div>
-<noscript><div class="ov"><div class="box"><h1>Base camp</h1><p>The 3D camp needs JavaScript. <a href="/">Open the 2D map</a>.</p></div></div></noscript>
+<div class="ov" id="rotate"><div class="box"><div class="phone" aria-hidden="true"></div><h1>Tip your phone <b>sideways</b></h1><p>Cedwyn Estate 3D plays in landscape, with the controls under your thumbs.</p><div class="row"><button class="btn" id="anyway">Play upright anyway</button><a class="btn" href="/">2D map</a></div></div></div>
+<div class="ov" id="err"><div class="box"><h1>3D isn't available <b>here</b></h1><p>This browser can't draw the 3D estate. The 2D map has every stop.</p><div class="row"><a class="btn solid" href="/">Open the 2D map</a></div></div></div>
+<noscript><div class="ov"><div class="box"><h1>Cedwyn Estate</h1><p>The 3D estate needs JavaScript. <a href="/">Open the 2D map</a>.</p></div></div></noscript>
 
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js"}}</script>
 <script type="module">
@@ -221,8 +221,11 @@ function label(num, title, tag, red, C) {
 function textSign(text, color) {
   const c = document.createElement("canvas"); c.width = 512; c.height = 96; const x = c.getContext("2d");
   x.fillStyle = "#120707"; x.fillRect(0, 0, 512, 96); x.strokeStyle = color; x.lineWidth = 6; x.strokeRect(4, 4, 504, 88);
-  x.fillStyle = color; x.font = "700 50px Barlow, Arial"; x.textAlign = "center"; x.textBaseline = "middle";
-  x.fillText(text.toUpperCase().split("").join(String.fromCharCode(8202)), 256, 52);
+  x.fillStyle = color; x.textAlign = "center"; x.textBaseline = "middle";
+  const t = text.toUpperCase().split("").join(String.fromCharCode(8202));
+  let fs = 50; x.font = "700 " + fs + "px Barlow, Arial";
+  while (fs > 28 && x.measureText(t).width > 470) { fs -= 2; x.font = "700 " + fs + "px Barlow, Arial"; }
+  x.fillText(t, 256, 52);
   const tex = new THREE.CanvasTexture(c); tex.colorSpace = THREE.SRGBColorSpace;
   return new THREE.Mesh(new THREE.PlaneGeometry(4.8, 0.9), new THREE.MeshBasicMaterial({map: tex}));
 }
@@ -323,7 +326,7 @@ STOPS.forEach(building);
 { const a = new THREE.Group(); const st = curvePts[0];
   for (const x of [-2.4, 2.4]) { const p = withEdges(new THREE.Mesh(new THREE.BoxGeometry(0.4, 4, 0.4), M.body2)); p.position.set(x, 2, 0); a.add(p); }
   const top = withEdges(new THREE.Mesh(new THREE.BoxGeometry(5.6, 0.5, 0.5), M.body2)); top.position.y = 4.1; a.add(top);
-  const s = textSign("Base camp", "#f2c94c"); s.position.set(0, 4.95, 0); a.add(s);
+  const s = textSign("Cedwyn Estate", "#f2c94c"); s.position.set(0, 4.95, 0); a.add(s);
   a.position.set(st.x, 0, st.z - 2); scene.add(a); }
 
 // ---------- rifle (only drawn inside the enemy camp) ----------

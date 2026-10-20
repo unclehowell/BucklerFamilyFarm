@@ -1,4 +1,4 @@
-/*! basecamp.js — "Back to base camp" link for every Great House Farm (Tŷ Mawr) site, plus a
+/*! basecamp.js — "Back to Cedwyn Estate" link for every Great House Farm (Tŷ Mawr) site, plus a
  * "stop N, next stop" hint along the numbered path on bucklerfamily.estate. Dependency-free.
  * Loaded automatically by ghf-lang.js (same folder); can also be tagged directly:
  *   <script src="https://bucklerfamily.estate/basecamp.js" defer></script>
@@ -112,9 +112,9 @@
   brand(here);
   var next = here && here.n < TOTAL ? STOPS[here.n] : null;
   var T = {
-    en: { back: "Back to base camp", stop: "Stop", of: "of", next: "Next", hide: "Hide", show: "Base camp", end: "Journey’s end" },
-    cy: { back: "Yn ôl i’r gwersyll", stop: "Arhosfan", of: "o", next: "Nesaf", hide: "Cuddio", show: "Gwersyll", end: "Diwedd y daith" },
-    es: { back: "Volver al campamento base", stop: "Parada", of: "de", next: "Siguiente", hide: "Ocultar", show: "Campamento", end: "Fin del recorrido" }
+    en: { back: "Back to Cedwyn Estate", stop: "Stop", of: "of", next: "Next", hide: "Hide", show: "Cedwyn Estate", end: "Journey’s end" },
+    cy: { back: "Yn ôl i Ystâd Cedwyn", stop: "Arhosfan", of: "o", next: "Nesaf", hide: "Cuddio", show: "Ystâd Cedwyn", end: "Diwedd y daith" },
+    es: { back: "Volver a la Finca Cedwyn", stop: "Parada", of: "de", next: "Siguiente", hide: "Ocultar", show: "Finca Cedwyn", end: "Fin del recorrido" }
   };
   function lang() {
     var l = (document.documentElement.getAttribute("lang") || "en").slice(0, 2).toLowerCase();
@@ -172,7 +172,7 @@
       "@media print{.ghf-bc{display:none!important}}";
     (document.head || document.documentElement).appendChild(css);
     nav = el("nav", "ghf-bc");
-    nav.setAttribute("aria-label", "Base camp");
+    nav.setAttribute("aria-label", "Cedwyn Estate");
     nav.setAttribute("data-no-translate", "");
     nav.setAttribute("translate", "no");
     document.body.appendChild(nav);

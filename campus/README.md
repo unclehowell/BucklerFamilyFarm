@@ -1,4 +1,6 @@
-# bucklerfamily.estate — base camp map and campus map
+# bucklerfamily.estate — Cedwyn Estate (base camp) map and campus map
+
+**Public name (Sion, 17:38 BST 20 Oct 2026): the base camp is called "Cedwyn Estate"** (Welsh "Ystâd Cedwyn", Spanish "Finca Cedwyn"); the URL stays bucklerfamily.estate. File and variable names (basecamp.js, basecamp_stops.json, build_basecamp.py) are unchanged. Visible strings: `base.name` in basecamp_stops.json, the page head/hero in build_basecamp.py, the `T` table (back-link labels EN/CY/ES) in the generated basecamp.js, and the 3D page `public/3d/index.html`.
 
 **Since 20 Oct 2026 the root of bucklerfamily.estate is the BASE CAMP map** (a numbered, game-board path from the
 Legal Wiki to the gift shop). The original campus map moved, unchanged, to `/campus/` (`campus/index.html`).

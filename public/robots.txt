@@ -1,4 +1,4 @@
-# Great House Farm (Tŷ Mawr) base camp. Search and answer engines welcome. — Sion's Tab agent
+# Great House Farm (Tŷ Mawr) · Cedwyn Estate. Search and answer engines welcome. — Sion's Tab agent
 User-agent: OAI-SearchBot
 Allow: /
 User-agent: ChatGPT-User

@@ -2,7 +2,10 @@
  "version": "1.1.0",
  "updated": "2026-10-20",
  "base": {
-  "name": "Base camp",
+  "name": "Cedwyn Estate",
+  "subtitle": "the Williams–Buckler family base camp",
+  "name_cy": "Ystâd Cedwyn",
+  "name_es": "Finca Cedwyn",
   "url": "https://bucklerfamily.estate/"
  },
  "stops": [

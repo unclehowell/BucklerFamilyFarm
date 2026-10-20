@@ -243,7 +243,7 @@ def host_of(u):
 
 svg = []
 svg.append(f'<svg id="board" viewBox="0 0 {W} {H}" role="img" aria-labelledby="bt bd" xmlns="http://www.w3.org/2000/svg">')
-svg.append('<title id="bt">Base camp map: a numbered path of 19 buildings</title>')
+svg.append('<title id="bt">Cedwyn Estate map: a numbered path of 19 buildings</title>')
 svg.append('<desc id="bd">Start at the Legal Wiki and follow the stepping stones through each part of the Great House Farm record, ending at the gift shop and marketplace.</desc>')
 svg.append('<defs><pattern id="grid" width="26" height="26" patternUnits="userSpaceOnUse"><path d="M26 0H0V26" fill="none" stroke="#fff" stroke-opacity=".045" stroke-width="1"/></pattern>'
            '<radialGradient id="glow" cx="50%" cy="0%" r="70%"><stop offset="0" stop-color="#f2c94c" stop-opacity=".10"/><stop offset="1" stop-color="#f2c94c" stop-opacity="0"/></radialGradient></defs>')
@@ -260,7 +260,7 @@ svg.append(f'<path d="{d}" fill="none" stroke="#fff" stroke-opacity=".08" stroke
 svg.append(f'<path d="{d}" fill="none" stroke="#e8e2cc" stroke-opacity=".55" stroke-width="9" stroke-dasharray="1 15" stroke-linecap="round"/>')
 svg.append(f'<path class="trail" d="{d}" fill="none" stroke="#f2c94c" stroke-width="2" stroke-dasharray="6 10" stroke-linecap="round"/>')
 # base camp
-svg.append('<g class="camp">' + tent(W/2, 92) + f'<text x="{W/2}" y="146" text-anchor="middle" class="here">YOU ARE HERE · BASE CAMP</text></g>')
+svg.append('<g class="camp">' + tent(W/2, 92) + f'<text x="{W/2}" y="146" text-anchor="middle" class="here">YOU ARE HERE · CEDWYN ESTATE</text></g>')
 for r in rows:
     s = r["s"]; sx, sy = stone_xy(r)
     a_lbl = f'Stop {s["n"]}: {s["title"]}. {s["caption"]}'
@@ -309,9 +309,11 @@ PAGE = f"""<!doctype html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Base camp · Great House Farm (Tŷ Mawr) · bucklerfamily.estate</title>
-<meta name="description" content="Base camp for Great House Farm / Tŷ Mawr, Llandough. Follow the numbered path from the Legal Wiki through every part of the record to the gift shop and marketplace.">
-<meta property="og:title" content="Base camp · Great House Farm (Tŷ Mawr)">
+<title>Cedwyn Estate · Great House Farm (Tŷ Mawr) · bucklerfamily.estate</title>
+<meta name="description" content="Cedwyn Estate — the Williams–Buckler family base camp, for Great House Farm / Tŷ Mawr, Llandough. Follow the numbered path from the Legal Wiki through every part of the record to the gift shop and marketplace.">
+<meta property="og:title" content="Cedwyn Estate · Great House Farm (Tŷ Mawr)">
+<meta property="og:site_name" content="Cedwyn Estate">
+<meta name="twitter:title" content="Cedwyn Estate · Great House Farm (Tŷ Mawr)">
 <meta property="og:description" content="Follow the path: the Legal Wiki, the story, the chessboard, the records, the archives and the gift shop.">
 <meta property="og:url" content="https://bucklerfamily.estate/">
 <meta name="theme-color" content="#000000">
@@ -388,9 +390,9 @@ footer p{{margin:6px 0}}
 <a class="skip" href="#board">Skip to the map</a>
 <header class="top">
 <div id="lang-slot"></div>
-<p class="eyebrow">Base camp</p>
+<p class="eyebrow">Cedwyn Estate</p>
 <h1>Great House Farm <b>Tŷ Mawr</b></h1>
-<p class="lead">Follow the numbered stepping stones. Each building opens one part of the record. Every site has a link back here, so you can always return to base camp.</p>
+<p class="lead">Follow the numbered stepping stones. Each building opens one part of the record. Every site has a link back here, so you can always return to Cedwyn Estate.</p>
 <p class="note">Case theories on these sites are our case, prospective. Not a finding of any court.</p>
 <div class="jump"><a class="pill solid" href="https://greathousefarmwiki.wordpress.com/">Start at stop 1 →</a><a class="pill" href="#shop">Gift shop</a><a class="pill" href="/campus/">Estate campus</a></div>
 <div class="mode" role="group" aria-label="Choose a view"><span class="on" aria-current="page">2D map</span><a href="/3d/">3D walk · game mode</a></div>
@@ -448,7 +450,7 @@ TWEAKS = {
   "research.bucklerfamily.estate": {"forceHeader": True},
   "wayback.bucklerfamily.estate": {"css": "body{background-color:__P__!important}"},
 }
-JS = r"""/*! basecamp.js — "Back to base camp" link for every Great House Farm (Tŷ Mawr) site, plus a
+JS = r"""/*! basecamp.js — "Back to Cedwyn Estate" link for every Great House Farm (Tŷ Mawr) site, plus a
  * "stop N, next stop" hint along the numbered path on bucklerfamily.estate. Dependency-free.
  * Loaded automatically by ghf-lang.js (same folder); can also be tagged directly:
  *   <script src="https://bucklerfamily.estate/basecamp.js" defer></script>
@@ -562,9 +564,9 @@ JS = r"""/*! basecamp.js — "Back to base camp" link for every Great House Farm
   brand(here);
   var next = here && here.n < TOTAL ? STOPS[here.n] : null;
   var T = {
-    en: { back: "Back to base camp", stop: "Stop", of: "of", next: "Next", hide: "Hide", show: "Base camp", end: "Journey’s end" },
-    cy: { back: "Yn ôl i’r gwersyll", stop: "Arhosfan", of: "o", next: "Nesaf", hide: "Cuddio", show: "Gwersyll", end: "Diwedd y daith" },
-    es: { back: "Volver al campamento base", stop: "Parada", of: "de", next: "Siguiente", hide: "Ocultar", show: "Campamento", end: "Fin del recorrido" }
+    en: { back: "Back to Cedwyn Estate", stop: "Stop", of: "of", next: "Next", hide: "Hide", show: "Cedwyn Estate", end: "Journey’s end" },
+    cy: { back: "Yn ôl i Ystâd Cedwyn", stop: "Arhosfan", of: "o", next: "Nesaf", hide: "Cuddio", show: "Ystâd Cedwyn", end: "Diwedd y daith" },
+    es: { back: "Volver a la Finca Cedwyn", stop: "Parada", of: "de", next: "Siguiente", hide: "Ocultar", show: "Finca Cedwyn", end: "Fin del recorrido" }
   };
   function lang() {
     var l = (document.documentElement.getAttribute("lang") || "en").slice(0, 2).toLowerCase();
@@ -622,7 +624,7 @@ JS = r"""/*! basecamp.js — "Back to base camp" link for every Great House Farm
       "@media print{.ghf-bc{display:none!important}}";
     (document.head || document.documentElement).appendChild(css);
     nav = el("nav", "ghf-bc");
-    nav.setAttribute("aria-label", "Base camp");
+    nav.setAttribute("aria-label", "Cedwyn Estate");
     nav.setAttribute("data-no-translate", "");
     nav.setAttribute("translate", "no");
     document.body.appendChild(nav);
@@ -665,7 +667,7 @@ open(os.path.join(ROOT, "public", "ghf-lang", "basecamp.js"), "w", encoding="utf
 est = json.load(open(os.path.join(ROOT, "public", "ghf-lang", "sites", "estate.json"), encoding="utf-8"))
 bc = {k: v for k, v in est.items() if k not in ("strings", "patterns")}; bc["site"] = "basecamp"
 bc["strings"] = {
-  "Base camp": {"cy": "Gwersyll", "es": "Campamento base"},
+  "Cedwyn Estate": {"cy": "Ystâd Cedwyn", "es": "Finca Cedwyn"},
   "Gift shop": {"cy": "Siop anrhegion", "es": "Tienda de regalos"},
   "Estate campus": {"cy": "Campws yr ystad", "es": "Campus de la finca"},
   "Skip to the map": {"cy": "Neidio i’r map", "es": "Ir al mapa"},
@@ -675,7 +677,7 @@ bc["strings"] = {
   "Merch, opening soon": {"cy": "Nwyddau, yn agor cyn bo hir", "es": "Artículos, muy pronto"}
 }
 bc["patterns"] = []; bc["mount"] = "#lang-slot"; bc["mountMode"] = "append"; bc.pop("fixedBelow", None); bc.pop("fixed", None); bc.pop("inlineStyle", None)
-bc["note"] = est.get("note", "") + " Base camp map page: a few header strings, mounted in the header (generated by campus/build_basecamp.py)."
+bc["note"] = est.get("note", "") + " Cedwyn Estate (base camp) map page: a few header strings, mounted in the header (generated by campus/build_basecamp.py)."
 json.dump(bc, open(os.path.join(ROOT, "public", "ghf-lang", "sites", "basecamp.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 json.dump(D, open(os.path.join(ROOT, "public", "basecamp.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 print("index.html", len(PAGE), "bytes; board height", int(H), "; basecamp.js", len(JS), "bytes")

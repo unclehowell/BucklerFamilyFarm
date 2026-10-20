@@ -1,0 +1,474 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<title>Base camp 3D · Great House Farm, Tŷ Mawr</title>
+<meta name="description" content="Walk base camp in 3D: every Great House Farm site is a building on the path. Walk up to a door to open it.">
+<meta name="theme-color" content="#000000">
+<link rel="canonical" href="https://bucklerfamily.estate/3d/">
+<style>
+@font-face{font-family:"Barlow";font-weight:400;font-display:swap;src:url(/fonts/barlow-latin-400-normal.woff2) format("woff2")}
+@font-face{font-family:"Barlow";font-weight:700;font-display:swap;src:url(/fonts/barlow-latin-700-normal.woff2) format("woff2")}
+:root{--gold:#f2c94c;--line:rgba(255,255,255,.18);--font:"Barlow","Helvetica Neue",Arial,system-ui,sans-serif}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:#000;color:#fff;font-family:var(--font);overflow:hidden;overscroll-behavior:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;touch-action:none}
+canvas#c{position:fixed;inset:0;width:100vw;height:100vh;display:block}
+a{color:inherit}
+.btn{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:rgba(0,0,0,.55);color:#fff;border-radius:999px;padding:8px 14px;font:700 12px/1 var(--font);letter-spacing:.14em;text-transform:uppercase;text-decoration:none;cursor:pointer;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.btn.solid{background:#fff;color:#000;border-color:#fff}
+.btn.gold{background:var(--gold);color:#000;border-color:var(--gold)}
+#top{position:fixed;top:max(10px,env(safe-area-inset-top));left:max(10px,env(safe-area-inset-left));right:max(10px,env(safe-area-inset-right));display:flex;gap:8px;align-items:center;z-index:5;pointer-events:none}
+#top>*{pointer-events:auto}
+#top .sp{flex:1}
+#next{position:fixed;top:max(54px,calc(env(safe-area-inset-top) + 44px));left:50%;transform:translateX(-50%);z-index:4;display:flex;align-items:center;gap:8px;font:700 12px/1.2 var(--font);letter-spacing:.12em;text-transform:uppercase;background:rgba(0,0,0,.5);border:1px solid var(--line);border-radius:999px;padding:6px 12px 6px 8px;white-space:nowrap;max-width:80vw;overflow:hidden;text-overflow:ellipsis;pointer-events:none}
+#arrow{width:22px;height:22px;flex:none;transition:transform .08s linear}
+#card{position:fixed;left:50%;bottom:max(18px,env(safe-area-inset-bottom));transform:translate(-50%,140%);transition:transform .25s ease;z-index:6;width:min(420px,58vw);background:rgba(8,8,8,.92);border:1px solid var(--line);border-radius:16px;padding:14px 16px 16px}
+#card.on{transform:translate(-50%,0)}
+#card .k{font:700 11px/1 var(--font);letter-spacing:.24em;text-transform:uppercase;color:var(--gold)}
+#card b{display:block;font-size:20px;letter-spacing:.04em;text-transform:uppercase;margin:6px 0 4px}
+#card p{margin:0 0 12px;color:#d4d4d4;font-size:14px;line-height:1.4}
+#card .row{display:flex;gap:8px;align-items:center}
+#card small{color:#a3a3a3;font-size:12px}
+#help{position:fixed;right:max(10px,env(safe-area-inset-right));top:max(54px,calc(env(safe-area-inset-top) + 44px));z-index:6;width:300px;max-width:80vw;background:rgba(8,8,8,.94);border:1px solid var(--line);border-radius:14px;padding:12px 14px;font-size:14px;line-height:1.45;display:none}
+#help.on{display:block}
+#help h2{margin:0 0 8px;font-size:13px;letter-spacing:.24em;text-transform:uppercase;color:var(--gold)}
+#help table{border-collapse:collapse;width:100%}#help td{padding:3px 0;vertical-align:top}#help td:first-child{white-space:nowrap;padding-right:10px}
+kbd{display:inline-block;min-width:22px;text-align:center;border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:1px 5px;font:700 12px/1.4 var(--font);background:#111}
+#cross{position:fixed;left:50%;top:50%;width:18px;height:18px;margin:-9px 0 0 -9px;z-index:3;display:none;pointer-events:none}
+#cross.on{display:block}
+#camp{position:fixed;left:50%;top:max(92px,calc(env(safe-area-inset-top) + 82px));transform:translateX(-50%);z-index:4;font:700 11px/1 var(--font);letter-spacing:.3em;text-transform:uppercase;color:#ff6b6b;display:none;pointer-events:none}
+#camp.on{display:block}
+/* touch controls */
+#pad{position:fixed;inset:0;z-index:2;display:none}
+.touch #pad{display:block}
+#stick{position:fixed;left:max(22px,env(safe-area-inset-left));bottom:max(22px,env(safe-area-inset-bottom));width:132px;height:132px;border-radius:50%;border:2px solid rgba(255,255,255,.28);background:rgba(255,255,255,.06);z-index:3;display:none}
+#knob{position:absolute;left:50%;top:50%;width:56px;height:56px;margin:-28px 0 0 -28px;border-radius:50%;background:rgba(255,255,255,.85);box-shadow:0 0 0 6px rgba(255,255,255,.12)}
+#jump{position:fixed;right:max(26px,env(safe-area-inset-right));bottom:max(30px,env(safe-area-inset-bottom));width:84px;height:84px;border-radius:50%;border:2px solid rgba(255,255,255,.35);background:rgba(242,201,76,.2);color:#fff;font:700 13px/1 var(--font);letter-spacing:.14em;text-transform:uppercase;z-index:3;display:none}
+#use{position:fixed;right:max(124px,calc(env(safe-area-inset-right) + 112px));bottom:max(44px,calc(env(safe-area-inset-bottom) + 14px));width:64px;height:64px;border-radius:50%;border:2px solid var(--gold);background:rgba(0,0,0,.5);color:var(--gold);font:700 12px/1 var(--font);letter-spacing:.1em;text-transform:uppercase;z-index:3;display:none}
+.touch #stick,.touch #jump{display:block}
+.touch.near #use{display:block}
+.touch #card{bottom:auto;top:max(92px,calc(env(safe-area-inset-top) + 84px));transform:translate(-50%,-260%)}
+.touch #card.on{transform:translate(-50%,0)}
+/* tablets: controls higher and larger, easier for two hands holding the sides */
+.tablet #stick{width:170px;height:170px;bottom:max(90px,env(safe-area-inset-bottom));left:max(40px,env(safe-area-inset-left))}
+.tablet #knob{width:70px;height:70px;margin:-35px 0 0 -35px}
+.tablet #jump{width:100px;height:100px;bottom:max(100px,env(safe-area-inset-bottom));right:max(44px,env(safe-area-inset-right))}
+.tablet #use{bottom:max(230px,env(safe-area-inset-bottom));right:max(60px,env(safe-area-inset-right))}
+/* overlays */
+.ov{position:fixed;inset:0;z-index:20;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.86);padding:24px;text-align:center}
+.ov .box{max-width:460px}
+.ov h1{margin:0 0 6px;font-weight:300;font-size:clamp(24px,5vw,34px);letter-spacing:.08em;text-transform:uppercase}.ov h1 b{font-weight:700}
+.ov .eb{font:700 12px/1 var(--font);letter-spacing:.32em;text-transform:uppercase;color:var(--gold);margin:0 0 10px}
+.ov p{color:#d4d4d4;font-size:15px;line-height:1.5;margin:8px 0}
+.ov .note{color:#a3a3a3;font-size:12px}
+.ov .row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:16px}
+#rotate{display:none}
+#rotate .phone{width:46px;height:78px;border:3px solid #fff;border-radius:10px;margin:0 auto 16px;animation:tip 2.2s ease-in-out infinite}
+@keyframes tip{0%,20%{transform:rotate(0)}50%,80%{transform:rotate(-90deg)}100%{transform:rotate(0)}}
+@media (orientation:portrait){.touch.playing:not(.portrait-ok) #rotate{display:flex}}
+#start .keys{display:inline-grid;grid-template-columns:auto auto;gap:4px 12px;text-align:left;font-size:14px;margin:10px auto 0;color:#d4d4d4}
+.desk-only{display:none}.desk .desk-only{display:revert}.touch .touch-only{display:revert}.touch-only{display:none}
+#err{display:none}
+.touch #start .keys{display:none}
+@media (max-height:500px){.ov{padding:12px 20px;align-items:flex-start;overflow:auto}.ov .box{margin:auto}.ov h1{font-size:24px}.ov p{font-size:14px;margin:5px 0}.ov .row{margin-top:10px}.ov .eb{margin-bottom:6px}#rotate .phone{width:34px;height:58px;margin-bottom:10px}}
+</style>
+</head>
+<body>
+<canvas id="c" aria-label="3D base camp" role="img"></canvas>
+<div id="top">
+  <a class="btn" href="/" id="to2d">← 2D map</a>
+  <span class="sp"></span>
+  <button class="btn" id="helpBtn" aria-expanded="false" aria-controls="help">? Controls</button>
+</div>
+<div id="next" aria-live="polite"><svg id="arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 L20 20 L12 15 L4 20 Z" fill="#f2c94c"/></svg><span id="nextT">Next: stop 1</span></div>
+<div id="camp">Enemy camp</div>
+<svg id="cross" viewBox="0 0 18 18" aria-hidden="true"><path d="M9 1v5M9 12v5M1 9h5M12 9h5" stroke="#fff" stroke-width="1.6"/></svg>
+<div id="card" role="dialog" aria-live="polite" aria-label="Building">
+  <span class="k" id="cardK">Stop 1</span><b id="cardT">The Legal Wiki</b><p id="cardP"></p>
+  <div class="row"><a class="btn gold" id="cardA" href="#">Go in →</a><small class="desk-only">or press <kbd>E</kbd> / <kbd>Enter</kbd></small></div>
+</div>
+<div id="help" role="region" aria-label="Controls">
+  <h2>Controls</h2>
+  <table class="desk-only">
+    <tr><td><kbd>↑</kbd> <kbd>W</kbd></td><td>Walk forward</td></tr>
+    <tr><td><kbd>↓</kbd> <kbd>S</kbd></td><td>Walk backward</td></tr>
+    <tr><td><kbd>←</kbd> <kbd>→</kbd> <kbd>A</kbd> <kbd>D</kbd></td><td>While walking: veer and turn that way. Standing still: turn on the spot.</td></tr>
+    <tr><td><kbd>Q</kbd> <kbd>E</kbd>…</td><td><kbd>Q</kbd> / <kbd>Z</kbd> step sideways left, <kbd>C</kbd> step sideways right</td></tr>
+    <tr><td><kbd>Space</kbd></td><td>Jump</td></tr>
+    <tr><td><kbd>Shift</kbd></td><td>Run</td></tr>
+    <tr><td><kbd>E</kbd> <kbd>Enter</kbd></td><td>Go into the building in front of you</td></tr>
+    <tr><td>Mouse drag</td><td>Look around</td></tr>
+    <tr><td><kbd>H</kbd> <kbd>?</kbd></td><td>Show or hide this panel</td></tr>
+  </table>
+  <table class="touch-only">
+    <tr><td>Left stick</td><td>Push up to walk. Push left or right while walking to veer and turn; on its own it turns you on the spot.</td></tr>
+    <tr><td>Drag right side</td><td>Look around</td></tr>
+    <tr><td>Jump</td><td>Jump</td></tr>
+    <tr><td>Go in</td><td>Appears at a door: opens that building</td></tr>
+  </table>
+  <p style="margin:10px 0 0;color:#a3a3a3;font-size:12px">Follow the stepping stones and the gold arrow. Walk up to a door to see what is inside.</p>
+</div>
+<div id="pad" aria-hidden="true"></div>
+<div id="stick" aria-hidden="true"><div id="knob"></div></div>
+<button id="use" aria-label="Go into this building">Go in</button>
+<button id="jump" aria-label="Jump">Jump</button>
+
+<div class="ov" id="start">
+  <div class="box">
+    <p class="eb">Base camp · game mode</p>
+    <h1>Great House Farm <b>Tŷ Mawr</b></h1>
+    <p>Walk the numbered path. Every building is one part of the record. Walk up to its door to open it.</p>
+    <div class="keys desk-only"><span><kbd>↑</kbd><kbd>↓</kbd></span><span>walk forward / back</span><span><kbd>←</kbd><kbd>→</kbd></span><span>veer while walking, turn when still</span><span><kbd>Space</kbd></span><span>jump</span><span><kbd>E</kbd></span><span>go in</span></div>
+    <p class="touch-only">Tip your phone sideways. Left thumb walks, right thumb looks and jumps.</p>
+    <div class="row"><button class="btn solid" id="go">Start walking</button><a class="btn" href="/">Back to the 2D map</a></div>
+    <p class="note">Case theories on these sites are our case, prospective. Not a finding of any court.</p>
+  </div>
+</div>
+<div class="ov" id="rotate"><div class="box"><div class="phone" aria-hidden="true"></div><h1>Tip your phone <b>sideways</b></h1><p>Base camp 3D plays in landscape, with the controls under your thumbs.</p><div class="row"><button class="btn" id="anyway">Play upright anyway</button><a class="btn" href="/">2D map</a></div></div></div>
+<div class="ov" id="err"><div class="box"><h1>3D isn't available <b>here</b></h1><p>This browser can't draw the 3D camp. The 2D map has every stop.</p><div class="row"><a class="btn solid" href="/">Open the 2D map</a></div></div></div>
+<noscript><div class="ov"><div class="box"><h1>Base camp</h1><p>The 3D camp needs JavaScript. <a href="/">Open the 2D map</a>.</p></div></div></noscript>
+
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js"}}</script>
+<script type="module">
+import * as THREE from "three";
+const $ = (id) => document.getElementById(id);
+const docEl = document.documentElement;
+const coarse = matchMedia("(pointer:coarse)").matches || ("ontouchstart" in window && navigator.maxTouchPoints > 0);
+const tablet = coarse && Math.min(screen.width, screen.height) >= 700;
+docEl.classList.add(coarse ? "touch" : "desk");
+if (tablet) docEl.classList.add("tablet");
+
+// ---------- data ----------
+let STOPS = [];
+try { const r = await fetch("/basecamp.json", {cache: "no-cache"}); STOPS = (await r.json()).stops; }
+catch (e) { STOPS = [{n:1,key:"wiki",title:"The Legal Wiki",tag:"START HERE",caption:"Every record, page by page.",url:"https://greathousefarmwiki.wordpress.com/",icon:"library"}]; }
+const ENEMY = new Set(["authorities"]);   // the fenced enemy camp: the public-authorities side
+
+// ---------- renderer ----------
+const canvas = $("c");
+let renderer;
+try { renderer = new THREE.WebGLRenderer({canvas, antialias: !coarse, powerPreference: "high-performance"}); }
+catch (e) { $("err").style.display = "flex"; $("start").style.display = "none"; throw e; }
+renderer.setPixelRatio(Math.min(devicePixelRatio || 1, coarse ? 1.25 : 1.5));
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x020306);
+scene.fog = new THREE.Fog(0x020306, 28, 95);
+const camera = new THREE.PerspectiveCamera(70, 1, 0.05, 220);
+scene.add(camera);
+scene.add(new THREE.HemisphereLight(0xbfd4ff, 0x0b0b0b, 0.9));
+const sun = new THREE.DirectionalLight(0xffffff, 0.9); sun.position.set(30, 60, 20); scene.add(sun);
+
+// stars
+{ const n = 900, p = new Float32Array(n * 3);
+  for (let i = 0; i < n; i++) { const t = Math.random() * Math.PI * 2, u = Math.random() * 0.9 + 0.08, r = 180;
+    p[i*3] = r * Math.cos(t) * Math.sqrt(1-u*u); p[i*3+1] = r * u; p[i*3+2] = r * Math.sin(t) * Math.sqrt(1-u*u); }
+  const g = new THREE.BufferGeometry(); g.setAttribute("position", new THREE.BufferAttribute(p, 3));
+  const s = new THREE.Points(g, new THREE.PointsMaterial({color: 0xffffff, size: 0.7, sizeAttenuation: false, fog: false}));
+  s.name = "stars"; scene.add(s); }
+
+// ---------- materials ----------
+const M = {
+  ground: new THREE.MeshLambertMaterial({color: 0x0b0d0c}),
+  body: new THREE.MeshLambertMaterial({color: 0x17191c}),
+  body2: new THREE.MeshLambertMaterial({color: 0x202326}),
+  roof: new THREE.MeshLambertMaterial({color: 0x2a2d31}),
+  door: new THREE.MeshBasicMaterial({color: 0x050505}),
+  doorGlow: new THREE.MeshBasicMaterial({color: 0xf2c94c}),
+  stone: new THREE.MeshLambertMaterial({color: 0x4a4d52}),
+  gold: new THREE.MeshLambertMaterial({color: 0xf2c94c, emissive: 0x3a2c05}),
+  white: new THREE.MeshLambertMaterial({color: 0xe8e8e8}),
+  pond: new THREE.MeshLambertMaterial({color: 0x0f3b2a, emissive: 0x03140d}),
+  frog: new THREE.MeshLambertMaterial({color: 0x3f9b5f}),
+  fence: new THREE.MeshLambertMaterial({color: 0x6b2b2b}),
+  tank: new THREE.MeshLambertMaterial({color: 0x3a3d40}),
+  gun: new THREE.MeshLambertMaterial({color: 0x6a7078, emissive: 0x15171a}),
+  gunDark: new THREE.MeshLambertMaterial({color: 0x34383d, emissive: 0x0b0c0d}),
+  edge: new THREE.LineBasicMaterial({color: 0xffffff, transparent: true, opacity: 0.55}),
+  edgeRed: new THREE.LineBasicMaterial({color: 0xff6b6b, transparent: true, opacity: 0.7}),
+};
+function withEdges(mesh, mat = M.edge) { mesh.add(new THREE.LineSegments(new THREE.EdgesGeometry(mesh.geometry, 20), mat)); return mesh; }
+
+// ground + faint grid
+const ground = new THREE.Mesh(new THREE.PlaneGeometry(400, 400), M.ground);
+ground.rotation.x = -Math.PI / 2; scene.add(ground);
+const grid = new THREE.GridHelper(400, 100, 0x1b1f22, 0x14171a); grid.position.y = 0.01; scene.add(grid);
+
+// ---------- labels ----------
+await Promise.race([document.fonts.load("700 40px Barlow"), new Promise(r => setTimeout(r, 1500))]).catch(() => {});
+function label(num, title, tag, red) {
+  const c = document.createElement("canvas"); c.width = 512; c.height = 176;
+  const x = c.getContext("2d");
+  x.fillStyle = "rgba(0,0,0,.78)"; x.strokeStyle = red ? "#ff6b6b" : "rgba(255,255,255,.5)"; x.lineWidth = 4;
+  const r = 26; x.beginPath(); x.roundRect ? x.roundRect(6, 6, 500, 164, r) : x.rect(6, 6, 500, 164); x.fill(); x.stroke();
+  x.fillStyle = "#f2c94c"; x.beginPath(); x.arc(84, 88, 52, 0, Math.PI * 2); x.fill();
+  x.fillStyle = "#000"; x.font = "700 56px Barlow, Arial"; x.textAlign = "center"; x.textBaseline = "middle"; x.fillText(String(num), 84, 92);
+  x.textAlign = "left"; x.fillStyle = red ? "#ff6b6b" : "#f2c94c"; x.font = "700 22px Barlow, Arial";
+  x.fillText((tag || "").toUpperCase().split("").join(String.fromCharCode(8202)), 156, 52);
+  x.fillStyle = "#fff"; let fs = 40; x.font = `700 ${fs}px Barlow, Arial`;
+  const t = title.replace(/^The /, "").toUpperCase();
+  const words = t.split(" "), lines = [""]; for (const w of words) { const L = lines[lines.length-1]; if (x.measureText(L + " " + w).width > 330 && L) lines.push(w); else lines[lines.length-1] = (L ? L + " " : "") + w; }
+  if (lines.length > 2) { fs = 30; x.font = `700 ${fs}px Barlow, Arial`; }
+  lines.slice(0, 3).forEach((L, i) => x.fillText(L, 156, 96 + i * (fs + 4) - (lines.length > 1 ? fs/2 : 0)));
+  const tex = new THREE.CanvasTexture(c); tex.colorSpace = THREE.SRGBColorSpace; tex.anisotropy = 2;
+  const s = new THREE.Sprite(new THREE.SpriteMaterial({map: tex, depthWrite: false, fog: false}));
+  s.scale.set(5.2, 1.79, 1); return s;
+}
+function textSign(text, color) {
+  const c = document.createElement("canvas"); c.width = 512; c.height = 96; const x = c.getContext("2d");
+  x.fillStyle = "#120707"; x.fillRect(0, 0, 512, 96); x.strokeStyle = color; x.lineWidth = 6; x.strokeRect(4, 4, 504, 88);
+  x.fillStyle = color; x.font = "700 50px Barlow, Arial"; x.textAlign = "center"; x.textBaseline = "middle";
+  x.fillText(text.toUpperCase().split("").join(String.fromCharCode(8202)), 256, 52);
+  const tex = new THREE.CanvasTexture(c); tex.colorSpace = THREE.SRGBColorSpace;
+  return new THREE.Mesh(new THREE.PlaneGeometry(4.8, 0.9), new THREE.MeshBasicMaterial({map: tex}));
+}
+
+// ---------- layout: a winding path, buildings beside it ----------
+const COLS = 4, DX = 19, DZ = 23;
+const N = STOPS.length;
+const P = STOPS.map((s, i) => { const r = Math.floor(i / COLS), c = i % COLS, cc = r % 2 ? COLS - 1 - c : c;
+  return new THREE.Vector3((cc - (COLS - 1) / 2) * DX, 0, -r * DZ); });
+const curvePts = [P[0].clone().add(new THREE.Vector3(0, 0, 14)), ...P];
+const curve = new THREE.CatmullRomCurve3(curvePts, false, "centripetal");
+const colliders = [];   // {x,z,r} circles
+const doors = [];       // per stop
+const campBox = {on: false, minX: 0, maxX: 0, minZ: 0, maxZ: 0};
+
+// stepping stones along the path
+{ const L = curve.getLength(), step = 1.55, n = Math.floor(L / step);
+  const g = new THREE.CylinderGeometry(0.55, 0.62, 0.12, 7);
+  const inst = new THREE.InstancedMesh(g, M.stone, n); const m = new THREE.Matrix4(), q = new THREE.Quaternion(), sc = new THREE.Vector3(1,1,1);
+  for (let i = 0; i < n; i++) { const p = curve.getPointAt(i / n); const off = (i % 2 ? 0.35 : -0.35);
+    const t = curve.getTangentAt(i / n); const side = new THREE.Vector3(-t.z, 0, t.x).multiplyScalar(off);
+    q.setFromAxisAngle(new THREE.Vector3(0, 1, 0), i * 1.7);
+    m.compose(new THREE.Vector3(p.x + side.x, 0.06, p.z + side.z), q, sc); inst.setMatrixAt(i, m); }
+  scene.add(inst); }
+
+const ROOFS = { library: "portico", court: "portico", book: "gable", chess: "flat", search: "dome", office: "flat",
+  cabinet: "gable", film: "flat", camera: "flat", tower: "tower", post: "gable", target: "dome", qa: "dome", shop: "awning", frog: "pond" };
+function building(s, i) {
+  const enemy = ENEMY.has(s.key);
+  const p = P[i];
+  // which side of the path: away from the next row, alternate otherwise
+  const prev = P[Math.max(0, i - 1)], next = P[Math.min(N - 1, i + 1)];
+  const t = new THREE.Vector3().subVectors(next, prev); if (t.lengthSq() < 1e-6) t.set(1, 0, 0); t.normalize();
+  let side = new THREE.Vector3(-t.z, 0, t.x); if (i % 2 === 0) side.negate();
+  const dist = enemy ? 15 : 7.2;
+  const pos = p.clone().addScaledVector(side, dist);
+  const g = new THREE.Group(); g.position.copy(pos);
+  g.rotation.y = Math.atan2(-side.x, -side.z);  // door (local +z) faces the path
+  const kind = ROOFS[s.icon] || ["gable", "flat", "dome", "tower"][i % 4];
+  const W = kind === "tower" ? 3.6 : 5.6, D = 4.6, H = kind === "tower" ? 7.5 : 3.4;
+  const bodyMat = i % 2 ? M.body : M.body2;
+  const body = withEdges(new THREE.Mesh(new THREE.BoxGeometry(W, H, D), bodyMat), enemy ? M.edgeRed : M.edge); body.position.y = H / 2; g.add(body);
+  if (kind === "gable" || kind === "pond") { const r = withEdges(new THREE.Mesh(new THREE.CylinderGeometry(0.01, W * 0.62, 2.2, 4, 1), M.roof)); r.rotation.y = Math.PI / 4; r.scale.set(1, 1, D / W); r.position.y = H + 1.1; g.add(r); }
+  if (kind === "dome") { const r = withEdges(new THREE.Mesh(new THREE.SphereGeometry(2.3, 10, 6, 0, Math.PI * 2, 0, Math.PI / 2), M.roof)); r.position.y = H; g.add(r); }
+  if (kind === "flat") { const r = withEdges(new THREE.Mesh(new THREE.BoxGeometry(W + 0.6, 0.35, D + 0.6), M.roof)); r.position.y = H + 0.17; g.add(r); }
+  if (kind === "tower") { const r = withEdges(new THREE.Mesh(new THREE.ConeGeometry(2.7, 2.6, 4), M.roof)); r.rotation.y = Math.PI / 4; r.position.y = H + 1.3; g.add(r); }
+  if (kind === "portico") { const r = withEdges(new THREE.Mesh(new THREE.CylinderGeometry(0.01, W * 0.68, 1.6, 3, 1), M.roof)); r.rotation.z = Math.PI / 2; r.rotation.y = Math.PI / 2; r.scale.set(1, 1, 1); r.position.set(0, H + 0.55, 0.4);
+    const roofSlab = withEdges(new THREE.Mesh(new THREE.BoxGeometry(W + 0.8, 0.3, D + 1.8), M.roof)); roofSlab.position.set(0, H + 0.15, 0.6); g.add(roofSlab);
+    for (let k = 0; k < 4; k++) { const c = withEdges(new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.22, H, 8), M.white)); c.position.set(-W / 2 + 0.5 + k * (W - 1) / 3, H / 2, D / 2 + 1.2); g.add(c); } }
+  if (kind === "awning") { for (let k = 0; k < 6; k++) { const a = new THREE.Mesh(new THREE.BoxGeometry(W / 6, 0.12, 1.6), k % 2 ? M.white : M.gold); a.position.set(-W / 2 + W / 12 + k * W / 6, H - 0.4, D / 2 + 0.7); a.rotation.x = 0.35; g.add(a); } }
+  if (kind === "pond") { const pond = new THREE.Mesh(new THREE.CircleGeometry(2.4, 14), M.pond); pond.rotation.x = -Math.PI / 2; pond.position.set(W / 2 + 2.2, 0.03, 1.6); g.add(pond);
+    const frog = new THREE.Group(); const fb = new THREE.Mesh(new THREE.SphereGeometry(0.45, 8, 6), M.frog); fb.scale.set(1, 0.7, 1.1); frog.add(fb);
+    for (const e of [-0.2, 0.2]) { const eye = new THREE.Mesh(new THREE.SphereGeometry(0.14, 6, 5), M.frog); eye.position.set(e, 0.3, 0.25); frog.add(eye); }
+    const pad = new THREE.Mesh(new THREE.CircleGeometry(0.8, 10), new THREE.MeshLambertMaterial({color: 0x1f5c3a})); pad.rotation.x = -Math.PI / 2; pad.position.y = -0.3; frog.add(pad);
+    frog.position.set(W / 2 + 2.2, 0.36, 1.6); frog.rotation.y = -0.6; g.add(frog); g.userData.frog = frog; }
+  // door + gold lintel
+  const door = new THREE.Mesh(new THREE.PlaneGeometry(1.5, 2.3), M.door); door.position.set(0, 1.15, D / 2 + 0.01); g.add(door);
+  const lintel = new THREE.Mesh(new THREE.BoxGeometry(1.9, 0.14, 0.14), M.gold); lintel.position.set(0, 2.38, D / 2 + 0.05); g.add(lintel);
+  // number disc on the path
+  const disc = new THREE.Mesh(new THREE.CylinderGeometry(0.9, 0.9, 0.1, 18), M.gold); disc.position.set(p.x, 0.08, p.z); scene.add(disc);
+  // label above the roof
+  const lab = label(s.n, s.title, s.tag, enemy); lab.position.set(0, H + 3.1, 0); g.add(lab);
+  scene.add(g);
+  const doorWorld = new THREE.Vector3(0, 0, D / 2 + 1.4).applyAxisAngle(new THREE.Vector3(0, 1, 0), g.rotation.y).add(pos);
+  doors.push({stop: s, pos: doorWorld, group: g, enemy});
+  colliders.push({x: pos.x, z: pos.z, r: Math.max(W, D) * 0.62});
+  if (enemy) enemyCamp(pos, g.rotation.y, side);
+}
+function enemyCamp(center, rotY, side) {
+  const half = 9, gate = 3.2, postG = new THREE.BoxGeometry(0.22, 2.2, 0.22), railG = new THREE.BoxGeometry(1, 0.12, 0.12);
+  const grp = new THREE.Group(); grp.position.copy(center); grp.rotation.y = rotY; scene.add(grp);
+  const pts = []; // fence perimeter in local coords, gate gap on +z (path side)
+  const edges = [[[-half, half], [-gate, half]], [[gate, half], [half, half]], [[half, half], [half, -half]], [[half, -half], [-half, -half]], [[-half, -half], [-half, half]]];
+  for (const [[ax, az], [bx, bz]] of edges) {
+    const len = Math.hypot(bx - ax, bz - az), n = Math.max(1, Math.round(len / 2));
+    for (let k = 0; k <= n; k++) { const x = ax + (bx - ax) * k / n, z = az + (bz - az) * k / n; const post = new THREE.Mesh(postG, M.fence); post.position.set(x, 1.1, z); grp.add(post);
+      const wp = new THREE.Vector3(x, 0, z).applyAxisAngle(new THREE.Vector3(0, 1, 0), rotY).add(center); colliders.push({x: wp.x, z: wp.z, r: 0.75}); }
+    for (const y of [0.7, 1.5, 2.05]) { const rail = new THREE.Mesh(railG, M.fence); rail.scale.x = len; rail.position.set((ax + bx) / 2, y, (az + bz) / 2); rail.rotation.y = -Math.atan2(bz - az, bx - ax); grp.add(rail); }
+  }
+  for (const gx of [-gate, gate]) { const tall = new THREE.Mesh(new THREE.BoxGeometry(0.35, 3.6, 0.35), M.fence); tall.position.set(gx, 1.8, half); grp.add(tall); }
+  const sign = textSign("Enemy camp", "#ff6b6b"); sign.position.set(0, 3.3, half + 0.03); grp.add(sign);
+  const signIn = textSign("Enemy camp", "#ff6b6b"); signIn.position.set(0, 3.3, half - 0.03); signIn.rotation.y = Math.PI; grp.add(signIn);
+  // storage tanks (scenery only)
+  for (const [tx, tz] of [[-5.5, -5], [-5.5, -1.2], [5.6, -5.2]]) { const tk = withEdges(new THREE.Mesh(new THREE.CylinderGeometry(1.5, 1.5, 2.8, 12), M.tank), M.edgeRed); tk.position.set(tx, 1.4, tz); grp.add(tk);
+    const wp = new THREE.Vector3(tx, 0, tz).applyAxisAngle(new THREE.Vector3(0, 1, 0), rotY).add(center); colliders.push({x: wp.x, z: wp.z, r: 1.8}); }
+  // floodlight poles
+  for (const [lx, lz] of [[-half + 0.6, half - 0.6], [half - 0.6, -half + 0.6]]) { const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.08, 5, 6), M.gunDark); pole.position.set(lx, 2.5, lz); grp.add(pole);
+    const lamp = new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.3, 0.4), new THREE.MeshBasicMaterial({color: 0xffe2a8})); lamp.position.set(lx, 5, lz); grp.add(lamp); }
+  // bounds for "inside the camp" (in world space, via an inverse transform test)
+  campBox.on = true; campBox.center = center.clone(); campBox.rot = rotY; campBox.half = half;
+}
+STOPS.forEach(building);
+
+// start arch
+{ const a = new THREE.Group(); const st = curvePts[0];
+  for (const x of [-2.4, 2.4]) { const p = withEdges(new THREE.Mesh(new THREE.BoxGeometry(0.4, 4, 0.4), M.body2)); p.position.set(x, 2, 0); a.add(p); }
+  const top = withEdges(new THREE.Mesh(new THREE.BoxGeometry(5.6, 0.5, 0.5), M.body2)); top.position.y = 4.1; a.add(top);
+  const s = textSign("Base camp", "#f2c94c"); s.position.set(0, 4.95, 0); a.add(s);
+  a.position.set(st.x, 0, st.z - 2); scene.add(a); }
+
+// ---------- rifle (only drawn inside the enemy camp) ----------
+const rifle = new THREE.Group();
+{ const box = (w, h, d, m, x, y, z) => { const b = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), m); b.position.set(x, y, z); rifle.add(b); return b; };
+  box(0.07, 0.09, 0.42, M.gun, 0, 0, 0);              // receiver
+  box(0.06, 0.12, 0.22, M.gunDark, 0, -0.03, 0.3);     // stock
+  box(0.04, 0.14, 0.06, M.gunDark, 0, -0.1, -0.02);    // magazine
+  box(0.035, 0.09, 0.05, M.gunDark, 0, -0.08, 0.12);   // grip
+  const brl = new THREE.Mesh(new THREE.CylinderGeometry(0.014, 0.014, 0.42, 8), M.gunDark); brl.rotation.x = Math.PI / 2; brl.position.set(0, 0.015, -0.4); rifle.add(brl);
+  const scope = new THREE.Mesh(new THREE.CylinderGeometry(0.022, 0.022, 0.18, 10), M.gunDark); scope.rotation.x = Math.PI / 2; scope.position.set(0, 0.075, -0.02); rifle.add(scope);
+  box(0.06, 0.05, 0.3, M.gun, 0, 0.0, -0.3);           // handguard
+  rifle.traverse(o => { if (o.material) { o.material = o.material.clone(); o.material.fog = false; o.renderOrder = 10; o.material.depthTest = false; } });
+}
+const RIFLE_DOWN = new THREE.Vector3(0.24, -0.62, -0.5), RIFLE_AIM = new THREE.Vector3(0.16, -0.15, -0.4);
+rifle.position.copy(RIFLE_DOWN); rifle.visible = false; camera.add(rifle);
+
+// ---------- player ----------
+const EYE = 1.62, start = curvePts[0];
+const player = {pos: new THREE.Vector3(start.x, 0, start.z + 3), vy: 0, yaw: 0, pitch: -0.05, onGround: true};
+{ const d = new THREE.Vector3().subVectors(P[0], player.pos); player.yaw = Math.atan2(-d.x, -d.z); }
+const saved = (() => { try { return JSON.parse(sessionStorage.getItem("ghf3d.pos") || "null"); } catch (e) { return null; } })();
+if (saved && isFinite(saved.x)) { player.pos.set(saved.x, 0, saved.z); player.yaw = saved.yaw || 0; }
+const visited = new Set((() => { try { return JSON.parse(localStorage.getItem("ghf3d.visited") || "[]"); } catch (e) { return []; } })());
+
+// ---------- input ----------
+const keys = new Set();
+const KEYMAP = {ArrowUp: "f", KeyW: "f", ArrowDown: "b", KeyS: "b", ArrowLeft: "l", KeyA: "l", ArrowRight: "r", KeyD: "r", KeyQ: "sl", KeyZ: "sl", KeyC: "sr", ShiftLeft: "run", ShiftRight: "run"};
+let playing = false;
+addEventListener("keydown", (e) => {
+  if (!playing) { if (e.code === "Enter" || e.code === "Space") { begin(); e.preventDefault(); } return; }
+  if (e.code === "Space") { jump(); e.preventDefault(); return; }
+  if (e.code === "KeyE" || e.code === "Enter") { enter(); e.preventDefault(); return; }
+  if (e.code === "KeyH" || e.key === "?") { toggleHelp(); return; }
+  const k = KEYMAP[e.code]; if (k) { keys.add(k); if (e.code.startsWith("Arrow")) e.preventDefault(); }
+});
+addEventListener("keyup", (e) => { const k = KEYMAP[e.code]; if (k) keys.delete(k); });
+addEventListener("blur", () => keys.clear());
+// mouse look (drag)
+let drag = null;
+canvas.addEventListener("pointerdown", (e) => { if (e.pointerType === "mouse") { drag = {x: e.clientX, y: e.clientY}; canvas.setPointerCapture(e.pointerId); } });
+canvas.addEventListener("pointermove", (e) => { if (drag && e.pointerType === "mouse") { look(e.clientX - drag.x, e.clientY - drag.y, 0.0042); drag.x = e.clientX; drag.y = e.clientY; } });
+canvas.addEventListener("pointerup", () => { drag = null; });
+function look(dx, dy, k) { player.yaw -= dx * k; player.pitch = Math.max(-1.2, Math.min(1.1, player.pitch - dy * k)); }
+// touch: joystick on the left, look on the right
+const stick = {id: null, cx: 0, cy: 0, x: 0, y: 0}, lookT = {id: null, x: 0, y: 0};
+const pad = $("pad"), stickEl = $("stick"), knob = $("knob");
+function stickCenter() { const r = stickEl.getBoundingClientRect(); return {x: r.left + r.width / 2, y: r.top + r.height / 2, R: r.width / 2}; }
+function onTouchStart(e) {
+  for (const t of e.changedTouches) {
+    const c = stickCenter();
+    if (stick.id === null && (Math.hypot(t.clientX - c.x, t.clientY - c.y) < c.R * 1.6 || t.clientX < innerWidth * 0.33)) { stick.id = t.identifier; moveStick(t); }
+    else if (lookT.id === null) { lookT.id = t.identifier; lookT.x = t.clientX; lookT.y = t.clientY; }
+  }
+  e.preventDefault();
+}
+function moveStick(t) { const c = stickCenter(); let dx = t.clientX - c.x, dy = t.clientY - c.y; const d = Math.hypot(dx, dy), m = c.R * 0.8;
+  if (d > m) { dx *= m / d; dy *= m / d; } stick.x = dx / m; stick.y = -dy / m; knob.style.transform = `translate(${dx}px,${dy}px)`; }
+function onTouchMove(e) { for (const t of e.changedTouches) { if (t.identifier === stick.id) moveStick(t);
+    else if (t.identifier === lookT.id) { look(t.clientX - lookT.x, t.clientY - lookT.y, 0.0065); lookT.x = t.clientX; lookT.y = t.clientY; } } e.preventDefault(); }
+function onTouchEnd(e) { for (const t of e.changedTouches) { if (t.identifier === stick.id) { stick.id = null; stick.x = stick.y = 0; knob.style.transform = ""; } if (t.identifier === lookT.id) lookT.id = null; } }
+for (const el of [pad, stickEl]) { el.addEventListener("touchstart", onTouchStart, {passive: false}); el.addEventListener("touchmove", onTouchMove, {passive: false}); el.addEventListener("touchend", onTouchEnd); el.addEventListener("touchcancel", onTouchEnd); }
+$("jump").addEventListener("touchstart", (e) => { jump(); e.preventDefault(); }, {passive: false});
+$("jump").addEventListener("click", jump);
+$("use").addEventListener("click", enter);
+
+function jump() { if (player.onGround) { player.vy = 5.2; player.onGround = false; } }
+function toggleHelp(force) { const h = $("help"); const on = force ?? !h.classList.contains("on"); h.classList.toggle("on", on); $("helpBtn").setAttribute("aria-expanded", on); }
+$("helpBtn").addEventListener("click", () => toggleHelp());
+function begin() { playing = true; docEl.classList.add("playing"); $("start").style.display = "none";
+  if (coarse && screen.orientation && screen.orientation.lock) { (docEl.requestFullscreen ? docEl.requestFullscreen().catch(() => {}) : Promise.resolve()).then(() => screen.orientation.lock("landscape").catch(() => {})); }
+  if (!coarse && !sessionStorage.getItem("ghf3d.help")) { toggleHelp(true); sessionStorage.setItem("ghf3d.help", "1"); setTimeout(() => toggleHelp(false), 9000); } }
+$("go").addEventListener("click", begin);
+$("anyway").addEventListener("click", () => docEl.classList.add("portrait-ok"));
+if (new URLSearchParams(location.search).has("play")) begin();
+
+// ---------- doors ----------
+let near = null;
+function enter() { if (near) { visited.add(near.stop.n); saveVisited(); location.href = near.stop.url; } }
+function saveVisited() { try { localStorage.setItem("ghf3d.visited", JSON.stringify([...visited])); } catch (e) {} }
+function showCard(d) {
+  const card = $("card");
+  if (d === near) return; near = d; docEl.classList.toggle("near", !!d);
+  if (!d) { card.classList.remove("on"); return; }
+  $("cardK").textContent = `Stop ${d.stop.n} of ${N}` + (d.stop.tag ? ` · ${d.stop.tag}` : "");
+  $("cardT").textContent = d.stop.title; $("cardP").textContent = d.stop.caption || "";
+  const a = $("cardA"); a.href = d.stop.url; a.onclick = () => { visited.add(d.stop.n); saveVisited(); };
+  card.classList.add("on");
+  if (!visited.has(d.stop.n)) { visited.add(d.stop.n); saveVisited(); }
+}
+
+// ---------- loop ----------
+const clock = new THREE.Clock(); const tmp = new THREE.Vector3();
+let rifleAmt = 0, bob = 0, lastSave = 0;
+function inCamp(p) { if (!campBox.on) return false; const v = new THREE.Vector3().subVectors(p, campBox.center).applyAxisAngle(new THREE.Vector3(0, 1, 0), -campBox.rot);
+  return Math.abs(v.x) < campBox.half + 0.3 && Math.abs(v.z) < campBox.half + 0.3; }
+function frame() {
+  const dt = Math.min(0.05, clock.getDelta());
+  if (playing) {
+    let fwd = (keys.has("f") ? 1 : 0) - (keys.has("b") ? 1 : 0), turn = (keys.has("r") ? 1 : 0) - (keys.has("l") ? 1 : 0);
+    let strafe = (keys.has("sr") ? 1 : 0) - (keys.has("sl") ? 1 : 0);
+    if (stick.id !== null) { fwd = Math.abs(stick.y) > 0.12 ? stick.y : 0; turn = Math.abs(stick.x) > 0.12 ? stick.x : 0; }
+    const run = keys.has("run") || (stick.id !== null && Math.hypot(stick.x, stick.y) > 0.95);
+    const speed = run ? 7.2 : 4.2;
+    const moving = Math.abs(fwd) > 0.1;
+    if (moving) {
+      // walking: the body turns into the new direction while it veers, like a person changing course
+      player.yaw -= turn * 1.7 * dt;
+      const veer = -turn * 0.38 * Math.sign(fwd);
+      const dir = player.yaw + veer;
+      player.pos.x += (-Math.sin(dir) * fwd) * speed * dt; player.pos.z += (-Math.cos(dir) * fwd) * speed * dt;
+    } else if (turn) {
+      player.yaw -= turn * 2.3 * dt;   // standing still: turn on the spot (left = anticlockwise)
+    }
+    if (strafe) { player.pos.x += Math.cos(player.yaw) * strafe * 3.2 * dt; player.pos.z += -Math.sin(player.yaw) * strafe * 3.2 * dt; }
+    // gravity + jump
+    player.vy -= 13 * dt; tmp.y = 0; let y = (player.y || 0) + player.vy * dt;
+    if (y <= 0) { y = 0; player.vy = 0; player.onGround = true; } player.y = y;
+    // collisions
+    for (const c of colliders) { const dx = player.pos.x - c.x, dz = player.pos.z - c.z, d = Math.hypot(dx, dz), r = c.r + 0.35;
+      if (d < r && d > 1e-4) { player.pos.x = c.x + dx / d * r; player.pos.z = c.z + dz / d * r; } }
+    player.pos.x = Math.max(-60, Math.min(60, player.pos.x)); player.pos.z = Math.max(P[N - 1].z - 30, Math.min(30, player.pos.z));
+    bob += (moving ? speed : 0) * dt * 1.8;
+    // nearest door
+    let best = null, bd = 3.4; for (const d of doors) { const dd = Math.hypot(d.pos.x - player.pos.x, d.pos.z - player.pos.z); if (dd < bd) { bd = dd; best = d; } }
+    showCard(best);
+    // enemy camp: rifle drawn and pointed; elsewhere, empty hands
+    const camp = inCamp(player.pos);
+    rifleAmt += ((camp ? 1 : 0) - rifleAmt) * Math.min(1, dt * 5);
+    rifle.visible = rifleAmt > 0.02; rifle.position.lerpVectors(RIFLE_DOWN, RIFLE_AIM, rifleAmt);
+    rifle.position.y += Math.sin(bob * 2) * 0.006 * rifleAmt; rifle.rotation.set(0.25 * (1 - rifleAmt), 0.05, 0);
+    $("cross").classList.toggle("on", camp); $("camp").classList.toggle("on", camp);
+    // next-stop arrow
+    let target = STOPS.find(s => !visited.has(s.n)) || STOPS[N - 1];
+    const d = doors.find(x => x.stop.n === target.n);
+    if (d) { const ang = Math.atan2(-(d.pos.x - player.pos.x), -(d.pos.z - player.pos.z)) - player.yaw; $("arrow").style.transform = `rotate(${-ang}rad)`;
+      $("nextT").textContent = (visited.size >= N ? "All stops visited · " : "Next: ") + `${target.n} · ${target.title.replace(/^The /, "")}`; }
+    const now = performance.now(); if (now - lastSave > 1500) { lastSave = now; try { sessionStorage.setItem("ghf3d.pos", JSON.stringify({x: player.pos.x, z: player.pos.z, yaw: player.yaw})); } catch (e) {} }
+  } else {
+    player.yaw += dt * 0.06;  // slow idle pan behind the start screen
+  }
+  for (const d of doors) if (d.group.userData.frog) d.group.userData.frog.position.y = 0.36 + Math.max(0, Math.sin(clock.elapsedTime * 2.2)) * 0.25;
+  camera.position.set(player.pos.x, EYE + (player.y || 0) + Math.sin(bob * 2) * 0.035, player.pos.z);
+  camera.rotation.set(player.pitch, player.yaw, 0, "YXZ");
+  renderer.render(scene, camera);
+  if (!document.hidden) requestAnimationFrame(frame);
+}
+function resize() { const w = innerWidth, h = innerHeight; renderer.setSize(w, h, false); camera.aspect = w / h; camera.fov = w < h ? 80 : 70; camera.updateProjectionMatrix(); }
+addEventListener("resize", resize); resize();
+document.addEventListener("visibilitychange", () => { if (!document.hidden) { clock.getDelta(); requestAnimationFrame(frame); } });
+requestAnimationFrame(frame);
+window.GHF3D = {player, STOPS, doors, begin, campBox, rifle, camera, setPos(x, z, yaw) { player.pos.set(x, 0, z); if (yaw !== undefined) player.yaw = yaw; }};
+</script>
+</body>
+</html>

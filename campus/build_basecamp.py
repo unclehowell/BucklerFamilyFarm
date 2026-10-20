@@ -60,6 +60,14 @@ def icon(kind, cx, cy, big=False):
         g.append(f'<path d="M{cx-22} {cy-8} q11 -6 22 0 q11 -6 22 0 v26 q-11 -6 -22 0 q-11 -6 -22 0 Z" fill="#141414" {ST}/>')
         g.append(f'<path d="M{cx} {cy-8} v26" {ST}/>')
         g.append(f'<path d="M{cx-17} {cy-1} h12 M{cx-17} {cy+5} h12 M{cx+5} {cy-1} h12 M{cx+5} {cy+5} h12" stroke="#f2c94c" stroke-width="1.2"/>')
+    elif kind == "frog":    # pond hut with a frog on a lily pad: leads checked and set aside
+        g.append(roof_house(cx, cy, 58, 34, 18))
+        g.append(f'<ellipse cx="{cx}" cy="{cy+30}" rx="40" ry="7" fill="#0b2a1a" {ST}/>')
+        g.append(f'<ellipse cx="{cx+18}" cy="{cy+29}" rx="11" ry="3.5" fill="#1f5c3a"/>')
+        g.append(f'<ellipse cx="{cx}" cy="{cy+6}" rx="14" ry="10" fill="#2f7d4f" {ST}/>')
+        g.append(f'<circle cx="{cx-7}" cy="{cy-4}" r="4.5" fill="#2f7d4f" {ST}/><circle cx="{cx+7}" cy="{cy-4}" r="4.5" fill="#2f7d4f" {ST}/>')
+        g.append(f'<circle cx="{cx-7}" cy="{cy-4}" r="1.6" fill="#0d0d0d"/><circle cx="{cx+7}" cy="{cy-4}" r="1.6" fill="#0d0d0d"/>')
+        g.append(f'<path d="M{cx-6} {cy+8} q6 4 12 0" stroke="#f2c94c" stroke-width="1.4" fill="none"/>')
     elif kind == "chess":
         g.append(f'<path d="M{cx-44} {cy+34} L{cx-30} {cy-14} H{cx+30} L{cx+44} {cy+34} Z" fill="#0d0d0d" {ST}/>')
         s = 8
@@ -306,6 +314,7 @@ a{{color:inherit}}
 :focus-visible{{outline:3px solid var(--gold);outline-offset:3px}}
 .skip{{position:absolute;left:-999px;top:8px;background:var(--gold);color:#000;padding:8px 12px;z-index:9}}.skip:focus{{left:8px}}
 header.top{{max-width:560px;margin:0 auto;padding:22px 18px 6px;position:relative}}#lang-slot{{position:absolute;top:16px;right:14px}}
+.mode{{display:inline-flex;margin:14px 0 0;border:1px solid var(--line);border-radius:999px;padding:3px;gap:2px}}.mode>*{{padding:7px 14px;border-radius:999px;font-size:13px;letter-spacing:.12em;text-transform:uppercase;text-decoration:none;color:var(--muted)}}.mode .on{{background:#fff;color:#000;font-weight:700}}.mode a:hover{{color:#fff}}
 .eyebrow{{font-size:12px;letter-spacing:.32em;text-transform:uppercase;color:var(--gold);margin:0 0 8px}}
 h1{{margin:0;color:var(--ink);font-weight:300;text-transform:uppercase;letter-spacing:.06em;font-size:clamp(1.65rem,7.4vw,2.5rem);line-height:1.08}}
 h1 b{{font-weight:700;display:block}}
@@ -362,6 +371,7 @@ footer p{{margin:6px 0}}
 <p class="lead">Follow the numbered stepping stones. Each building opens one part of the record. Every site has a link back here, so you can always return to base camp.</p>
 <p class="note">Case theories on these sites are our case, prospective. Not a finding of any court.</p>
 <div class="jump"><a class="pill solid" href="https://greathousefarmwiki.wordpress.com/">Start at stop 1 →</a><a class="pill" href="#shop">Gift shop</a><a class="pill" href="/campus/">Estate campus</a></div>
+<div class="mode" role="group" aria-label="Choose a view"><span class="on" aria-current="page">2D map</span><a href="/3d/">3D walk · game mode</a></div>
 </header>
 <main id="map">
 {SVG}
@@ -407,7 +417,7 @@ JS = r"""/*! basecamp.js — "Back to base camp" link for every Great House Farm
   window.GHFBasecamp = { version: "__VER__", stops: STOPS };
   var host = location.hostname.replace(/^www\./, ""), path = location.pathname || "/";
   var apex = host === "bucklerfamily.estate" || /(^|\.)bucklerfamilyfarm\.pages\.dev$/.test(host);
-  if (apex && (path === "/" || path === "/index.html")) return; // this IS base camp
+  if (apex && (path === "/" || path === "/index.html" || /^\/3d(\/|$)/.test(path))) return; // this IS base camp (2D or 3D)
   var here = null, i, j;
   for (i = 0; i < STOPS.length && !here; i++) {
     for (j = 0; j < STOPS[i].h.length; j++) if (STOPS[i].h[j] === host) { here = STOPS[i]; break; }

@@ -20,3 +20,14 @@ The root of bucklerfamily.estate is a map of the Tŷ Mawr case: each building is
 - `npm run build` (Vite) builds both pages: `dist/index.html` (campus) and `dist/webapp/index.html` (WebApp).
 - `/api/*` Cloudflare Pages functions are unchanged. Stripe returns to `/webapp/`; any payment return that lands
   on the root is forwarded there.
+
+
+## 3D walk (game mode) — /3d/
+
+`public/3d/index.html` is a static first-person walk of the same stops (it reads `/basecamp.json`; three.js 0.160 from the jsDelivr CDN; no build step). The 2D map stays the default; its header has a "2D map | 3D walk" switch.
+
+- Desktop: arrow keys or WASD; left/right veer and turn while walking and turn on the spot when standing; Space jumps; Shift runs; E or Enter goes in; H shows the key panel; mouse drag looks.
+- Phones: a "tip your phone sideways" screen in portrait; in landscape a left thumb-stick (walk/turn), right-side drag to look, Jump, and a "Go in" button at doors. Tablets get larger, higher controls.
+- The fenced "Enemy camp" holds the Public Authorities building (`ENEMY` set in the page). Only inside it is a rifle drawn and raised; nothing to shoot, no people.
+- Walking up to a door shows its card and link; visited stops are remembered on the device and a gold arrow points at the next one.
+- basecamp.js hides itself on /3d/ as well as on the root.

@@ -56,7 +56,20 @@
    "icon": "court"
   },
   {
-   "n": 5,
+   "key": "csscpsg",
+   "title": "The Grammar House (CSSCPSGP)",
+   "tag": "STRUCTURE",
+   "caption": "Five key documents read sentence by sentence, with a scoring model and its limits. Our case, prospective. Not a finding of any court.",
+   "url": "https://csscpsg.bucklerfamily.estate/",
+   "hosts": [
+    "csscpsg.bucklerfamily.estate",
+    "csscpsgp.bucklerfamily.estate"
+   ],
+   "icon": "book",
+   "n": 5
+  },
+  {
+   "n": 6,
    "key": "records",
    "title": "Primary Records",
    "tag": "REGISTER",
@@ -68,7 +81,7 @@
    "icon": "cabinet"
   },
   {
-   "n": 6,
+   "n": 7,
    "key": "wayback",
    "title": "The Wayback Vault",
    "tag": "ARCHIVE",
@@ -80,7 +93,7 @@
    "icon": "vault"
   },
   {
-   "n": 7,
+   "n": 8,
    "key": "email",
    "title": "The Post Office",
    "tag": "CORRESPONDENCE",
@@ -92,7 +105,7 @@
    "icon": "post"
   },
   {
-   "n": 8,
+   "n": 9,
    "key": "authorities",
    "title": "Public Authorities",
    "tag": "WHO WAS ASKED",
@@ -104,7 +117,7 @@
    "icon": "columns"
   },
   {
-   "n": 9,
+   "n": 10,
    "key": "dartboard",
    "title": "The Disclosure Dartboard",
    "tag": "DISCLOSURE",
@@ -116,7 +129,7 @@
    "icon": "target"
   },
   {
-   "n": 10,
+   "n": 11,
    "key": "qa",
    "title": "The Q&A Hall",
    "tag": "FOI",
@@ -128,7 +141,7 @@
    "icon": "hall"
   },
   {
-   "n": 11,
+   "n": 12,
    "key": "clerk",
    "title": "The Council House",
    "tag": "LOCAL COUNCIL",
@@ -140,7 +153,7 @@
    "icon": "council"
   },
   {
-   "n": 12,
+   "n": 13,
    "key": "chamber",
    "title": "The Council Chamber",
    "tag": "22 OCT 2026",
@@ -152,7 +165,7 @@
    "icon": "chamber"
   },
   {
-   "n": 13,
+   "n": 14,
    "key": "review",
    "title": "Independent Review",
    "tag": "CHECKS",
@@ -164,7 +177,7 @@
    "icon": "magnifier"
   },
   {
-   "n": 14,
+   "n": 15,
    "key": "research",
    "title": "The Research Library",
    "tag": "SEARCH",
@@ -176,7 +189,18 @@
    "icon": "search"
   },
   {
-   "n": 15,
+   "key": "kissed-frogs",
+   "title": "Kissed Frogs",
+   "tag": "LEADS SET ASIDE",
+   "caption": "Leads we checked that turned out not to be ours, and why.",
+   "url": "https://greathousefarmwiki.wordpress.com/anomalies-register/bpvsbuckler-archive-research-leads/#kissed-frogs-register",
+   "hosts": [],
+   "paths": [],
+   "icon": "frog",
+   "n": 16
+  },
+  {
+   "n": 17,
    "key": "projects",
    "title": "The Project Office",
    "tag": "PRINCE2",
@@ -188,7 +212,7 @@
    "icon": "office"
   },
   {
-   "n": 16,
+   "n": 18,
    "key": "film",
    "title": "The Film House",
    "tag": "FILMS & REELS",
@@ -198,7 +222,7 @@
    "icon": "film"
   },
   {
-   "n": 17,
+   "n": 19,
    "key": "album",
    "title": "The Farm Album",
    "tag": "PHOTOGRAPHS",
@@ -210,7 +234,7 @@
    "icon": "album"
   },
   {
-   "n": 18,
+   "n": 20,
    "key": "campus",
    "title": "The Estate Campus",
    "tag": "THE FIRST MAP",
@@ -225,7 +249,7 @@
    "icon": "campus"
   },
   {
-   "n": 19,
+   "n": 21,
    "key": "shop",
    "title": "Gift Shop & Marketplace",
    "tag": "JOURNEY'S END",

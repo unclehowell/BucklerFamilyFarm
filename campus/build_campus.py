@@ -72,6 +72,11 @@ BUILDINGS = [
     ("ebook", "E-book", "The Great House Farm e-book",
      "Evidence, history and heritage: the whole archive in one 2,064-page searchable PDF. Get the e-book (£49.99).",
      "https://bucklerfamily.estate/ebook/", 150, 650, 64, 58, "concrete", "live", "annex"),
+    # Added 20 Oct 2026 by the chess-board worker: the whole record as one zoomable chessboard, on open ground
+    # south of the parade square (no existing building, road or tree moved).
+    ("chess", "The Chessboard", "The whole record on one board",
+     "Every record of the case as one zoomable chessboard: black squares for the actions against Williams/Buckler ownership, white squares for the evidence, heritage and lineage.",
+     "https://chess.bucklerfamily.estate/", 662, 604, 104, 78, "slate", "live", "chess"),
 ]
 # --- Website-name signboards (Sion, 19 Oct 2026: "Put the respective website names on the buildings or next
 # to them as signs (olive green/ yellow text)"). One olive board with yellow lettering per building, linking to
@@ -94,6 +99,7 @@ _SIGN_W = {"a": 556, "b": 611, "c": 556, "d": 611, "e": 556, "f": 333, "g": 611,
 # site's own name where the full title is too long for the roof; the full title and the address are in the
 # tooltip and the screen-reader label.
 SIGN_TITLE = {
+    "chess": ("Tŷ Mawr Chessboard", ["Chessboard"]),
     "hq": ("Legal Wiki – Public documentary archive of Great House Farm (Tŷ Mawr), Llandough-juxta-Penarth, South Wales: land, ownership, litigation, archaeology and family evidence.",
           ["Legal Wiki"]),
     "museum": ("Tŷ Mawr — The Great House Farm Story",
@@ -285,6 +291,13 @@ def building(b):
     if extra == "flag":
         s.append(f'<line x1="{x + w / 2}" y1="{y + h + 70}" x2="{x + w / 2}" y2="{y + h + 22}" stroke="#ddd" stroke-width="3"/>'
                  f'<path d="M{x + w / 2} {y + h + 22} l34 8 l-34 8z" fill="#c8102e"/>')
+    if extra == "chess":   # roof painted as a chessboard (added 20 Oct 2026 for chess.bucklerfamily.estate)
+        cw, chh = (w - 16) / 8, (h - 16) / 6
+        s.append(f'<rect x="{x + 6}" y="{y + 6}" width="{w - 12}" height="{h - 12}" fill="#d6b15f"/>')
+        for ry in range(6):
+            for cx_ in range(8):
+                fillc = "#f2efe6" if (ry + cx_) % 2 == 0 else "#1d2420"
+                s.append(f'<rect x="{x + 8 + cx_ * cw:.1f}" y="{y + 8 + ry * chh:.1f}" width="{cw:.1f}" height="{chh:.1f}" fill="{fillc}"/>')
     # number plate
     s.append(f'<rect class="plate" x="{x + 8}" y="{y + 8}" width="34" height="20" rx="3" fill="#f2efe6"/>'
              f'<text x="{x + 25}" y="{y + 22}" text-anchor="middle" class="pn">{BUILDINGS.index(b) + 1}</text>')

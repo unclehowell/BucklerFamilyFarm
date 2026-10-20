@@ -267,35 +267,195 @@ def page_patagonia(cfg):
 """
     return head("Great House Farm II · Puerto Madryn, Patagonia · Cedwyn Estate", "Cedwyn Estate, Patagonia: a planned replica of Tŷ Mawr in Puerto Madryn, Chubut, with a wax museum, weddings, stables and a luxury B&B. Coming soon. Register interest.", "https://bucklerfamily.estate/patagonia/", "/locations-img/madryn-sunrise.webp") + body
 
+ARCADE_CSS = """
+@font-face{font-family:"Press Start 2P";font-weight:400;font-display:swap;src:url(/fonts/press-start-2p-latin-400-normal.woff2) format("woff2")}
+html body.arcade{--px:"Press Start 2P",ui-monospace,Menlo,Consolas,monospace;--mg:#ff3ddb;--cy:#00f0ff;--yl:#ffe94a;--bg:#07060f;--ink:#f4f1ff;--dim:#c9c4e6;
+ background:var(--bg);color:var(--ink);font:400 16px/1.6 Barlow,"Helvetica Neue",Arial,system-ui,sans-serif}
+html:has(body.arcade){background:#07060f!important}
+html body.arcade :is(.stage,.segs,.bar,.drawer,.foot) :is(h1,h2,h3,.px,summary,button,.btn,.tag,.chg,.start,.logo,.play,.coin,.kick,.seg-link){font-family:var(--px)!important;font-weight:400!important;text-transform:uppercase;letter-spacing:.04em}
+body.arcade a{color:var(--cy)}
+body.arcade :focus-visible{outline:3px solid var(--yl);outline-offset:3px}
+.skip{position:absolute;left:-9999px;top:0}.skip:focus{left:8px;top:8px;z-index:20;background:var(--yl);color:#000;padding:8px 10px}
+/* CRT: scanlines + soft vignette, a very slight flicker (off with reduced motion or the FX switch) */
+body.arcade:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:2147483640;background:repeating-linear-gradient(180deg,rgba(0,0,0,0) 0,rgba(0,0,0,0) 2px,rgba(0,0,0,.28) 3px,rgba(0,0,0,0) 4px)}
+body.arcade:after{content:"";position:fixed;inset:0;pointer-events:none;z-index:2147483641;background:radial-gradient(ellipse at center,rgba(0,0,0,0) 60%,rgba(0,0,0,.45) 100%);animation:flick 4s steps(2) infinite}
+@keyframes flick{0%,96%,100%{opacity:1}97%{opacity:.82}98%{opacity:.95}}
+@keyframes blink{0%,49%{opacity:1}50%,100%{opacity:.15}}
+.glow-c{color:var(--cy);text-shadow:0 0 6px rgba(0,240,255,.7),0 0 18px rgba(0,240,255,.35)}
+.glow-m{color:var(--mg);text-shadow:0 0 6px rgba(255,61,219,.75),0 0 18px rgba(255,61,219,.35)}
+.glow-y{color:var(--yl);text-shadow:0 0 6px rgba(255,233,74,.7)}
+/* top bar */
+.bar{position:sticky;top:0;z-index:12;display:flex;align-items:center;gap:10px;padding:10px 14px;background:rgba(7,6,15,.94);border-bottom:2px solid var(--mg);box-shadow:0 2px 14px rgba(255,61,219,.35)}
+.bar .logo{font-size:11px;color:var(--yl);text-decoration:none;margin-right:auto}
+.bar button{background:none;border:2px solid var(--cy);color:var(--cy);font-size:11px;padding:9px 10px;cursor:pointer;min-height:40px}
+.bar button[aria-pressed=false]{border-color:#6d6890;color:#a39fc2}
+#lang-slot{position:static}
+/* landing */
+.stage{max-width:620px;margin:0 auto;padding:26px 18px 10px;text-align:center}
+.stage .kick{font-family:var(--px)!important;font-size:10px;letter-spacing:.12em;color:var(--mg);margin:0 0 14px}
+.stage h1{font-size:clamp(24px,8vw,44px);line-height:1.25;margin:0 0 10px}
+.stage .lede{font-size:17px;color:var(--dim);margin:0 auto 18px;max-width:30em}
+.screen{margin:0 auto 10px;max-width:420px;border:3px solid var(--cy);padding:6px;background:#000;box-shadow:0 0 0 3px var(--bg),0 0 0 6px var(--mg),0 0 26px rgba(0,240,255,.4)}
+.screen img{width:100%;height:auto;display:block;image-rendering:auto}
+.cap{font-size:13px;color:#b9b4da;margin:8px auto 22px;max-width:420px}.cap a{color:var(--yl)}
+.coin{font-family:var(--px)!important;font-size:12px;color:var(--yl);margin:0 0 12px;animation:blink 1.2s steps(1) infinite}
+.start{display:inline-block;background:var(--mg);color:#07060f!important;border:0;font-size:15px!important;padding:16px 22px;cursor:pointer;text-decoration:none;box-shadow:0 0 0 3px #07060f,0 0 0 5px var(--yl),0 0 22px rgba(255,61,219,.6)}
+.start:hover,.start:focus-visible{background:var(--yl)}
+/* top-level segments: every option visible, each opens in place */
+.segs{max-width:620px;margin:26px auto 0;padding:0 18px 20px;display:grid;gap:12px}
+details.seg{border:2px solid var(--cy);background:#0c0a1d;scroll-margin-top:120px}
+details.seg[open]{border-color:var(--yl);box-shadow:0 0 18px rgba(255,233,74,.25)}
+details.seg>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:12px;padding:18px 16px;font-size:13px;line-height:1.5;color:var(--cy)}
+details.seg>summary::-webkit-details-marker{display:none}
+details.seg>summary .n{color:var(--mg);flex:0 0 auto}
+details.seg>summary:after{content:"\\25B6";margin-left:auto;color:var(--yl);font-size:11px}
+details.seg[open]>summary:after{content:"\\25BC"}
+details.seg[open]>summary{color:var(--yl)}
+.seg .in{padding:2px 14px 16px}
+.seg .hint{font-size:14px;color:var(--dim);margin:0 0 12px}
+a.seg-link{display:flex;align-items:center;gap:12px;padding:18px 16px;border:2px solid var(--cy);background:#0c0a1d;color:var(--cy);text-decoration:none;font-family:var(--px)!important;font-size:13px;text-transform:uppercase}
+a.seg-link .n{color:var(--mg)}a.seg-link:after{content:"\\21A9";margin-left:auto;color:var(--yl)}
+.back{display:block;width:100%;margin:14px 0 0;background:none;border:2px dashed #6d6890;color:#d7d3f2;font-size:10px;padding:12px;cursor:pointer}
+.back:hover,.back:focus-visible{border-color:var(--yl);color:var(--yl)}
+/* level 2: featured games */
+.games{display:grid;gap:10px}
+.games details{border:2px solid #3a3466}.games details[open]{border-color:var(--mg)}
+.games summary{list-style:none;cursor:pointer;padding:14px 12px;font-size:11px;line-height:1.5;color:var(--ink);display:flex;gap:10px}
+.games summary::-webkit-details-marker{display:none}.games summary:after{content:"+";margin-left:auto;color:var(--yl)}.games details[open] summary:after{content:"\\2013"}
+.games .d{padding:0 12px 14px;color:var(--dim);font-size:15px}
+.play{display:inline-block;margin-top:8px;font-family:var(--px)!important;font-size:11px;color:#07060f!important;background:var(--cy);padding:10px 12px;text-decoration:none}
+.play:hover,.play:focus-visible{background:var(--yl)}
+.views{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.views .btn{display:flex;align-items:center;justify-content:center;min-height:52px;border:2px solid var(--cy);color:var(--cy);text-decoration:none;font-size:10px;text-align:center;padding:4px;background:none}
+.views .btn:hover,.views .btn:focus-visible{background:var(--cy);color:#07060f}
+/* level 2: high-score table of every site */
+.hs-head{display:flex;gap:10px;font-family:var(--px)!important;font-size:9px;color:var(--mg);padding:0 10px 8px;border-bottom:2px solid var(--mg)}
+.hs-head span:last-child{margin-left:auto}
+ol.hs{list-style:none;margin:0;padding:0}
+ol.hs>li{border-bottom:1px dashed #3a3466}
+ol.hs details>summary{list-style:none;cursor:pointer;display:flex;gap:10px;align-items:baseline;padding:13px 10px;font-size:10.5px;line-height:1.6;color:var(--ink)}
+ol.hs details>summary::-webkit-details-marker{display:none}
+ol.hs .rk{color:var(--yl);flex:0 0 auto;min-width:2.6em}
+ol.hs .dot{width:9px;height:9px;flex:0 0 auto;align-self:center}
+ol.hs .nm{flex:1 1 auto}
+ol.hs summary:after{content:"+";color:var(--cy);flex:0 0 auto}ol.hs details[open]>summary:after{content:"\\2013"}
+ol.hs details[open]>summary{color:var(--cy)}
+ol.hs li:nth-child(1) .rk{color:var(--yl)}ol.hs li:nth-child(2) .rk{color:var(--cy)}ol.hs li:nth-child(3) .rk{color:var(--mg)}
+ol.hs .d{padding:0 10px 14px 50px;color:var(--dim);font-size:15px}
+/* side menu */
+.drawer{position:fixed;inset:0;z-index:2147483600;display:none}
+.drawer.on{display:block}
+.drawer .shade{position:absolute;inset:0;background:rgba(0,0,0,.6)}
+.drawer nav{position:absolute;top:0;left:0;bottom:0;width:min(86vw,330px);background:#0c0a1d;border-right:3px solid var(--mg);padding:16px;overflow:auto;box-shadow:0 0 30px rgba(255,61,219,.4)}
+.drawer h2{font-size:12px!important;line-height:1.5!important;color:var(--yl);margin:10px 60px 16px 0!important}
+.drawer ol{list-style:none;margin:0;padding:0}
+.drawer li a,.drawer li button{display:block;width:100%;text-align:left;font-family:var(--px)!important;font-size:11px;text-transform:uppercase;color:var(--cy);background:none;border:0;border-bottom:1px dashed #3a3466;padding:16px 4px;text-decoration:none;cursor:pointer}
+.drawer li a:hover,.drawer li button:hover{color:var(--yl)}
+.drawer .x{position:absolute;top:10px;right:10px;background:none;border:2px solid var(--mg);color:var(--mg);font-family:var(--px)!important;font-size:11px;padding:8px 10px;cursor:pointer}
+/* footer */
+.foot{max-width:620px;margin:10px auto 0;padding:22px 18px 40px;border-top:2px solid var(--mg);text-align:center;color:#b9b4da;font-size:14px}
+.foot .px{font-size:9px;color:var(--mg);margin:0 0 10px}
+.foot p{margin:0 0 8px}
+/* reduced motion: no flicker, no blink (system setting or the FX switch) */
+@media (prefers-reduced-motion:reduce){body.arcade:after,.coin{animation:none!important}html{scroll-behavior:auto}}
+body.arcade.calm:after,body.arcade.calm .coin{animation:none!important}
+body.arcade.calm:before{opacity:.5}
+@media (min-width:760px){.stage{padding-top:40px}.segs{gap:14px}}
+"""
+
+ARCADE_JS = r"""<script>
+(function(){
+  var segs=[].slice.call(document.querySelectorAll("details.seg"));
+  function only(d){segs.forEach(function(s){if(s!==d)s.open=false;});}
+  segs.forEach(function(d){d.addEventListener("toggle",function(){if(d.open)only(d);});});
+  function openSeg(id){var d=document.getElementById(id);if(!d)return;d.open=true;only(d);d.scrollIntoView({block:"start",behavior:mq()?"auto":"smooth"});var s=d.querySelector("summary");if(s)s.focus({preventScroll:true});}
+  function mq(){return document.body.classList.contains("calm")||(window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches);}
+  function closeAll(){segs.forEach(function(s){s.open=false;[].forEach.call(s.querySelectorAll("details[open]"),function(x){x.open=false;});});var t=document.getElementById("top-level");if(t)t.scrollIntoView({block:"start",behavior:mq()?"auto":"smooth"});}
+  [].forEach.call(document.querySelectorAll("[data-open]"),function(b){b.addEventListener("click",function(e){e.preventDefault();hideMenu();openSeg(b.getAttribute("data-open"));});});
+  [].forEach.call(document.querySelectorAll("[data-back]"),function(b){b.addEventListener("click",function(){var d=b.closest("details.seg");if(d){d.open=false;var s=d.querySelector("summary");if(s){s.scrollIntoView({block:"center",behavior:mq()?"auto":"smooth"});s.focus({preventScroll:true});}}});});
+  [].forEach.call(document.querySelectorAll("[data-collapse]"),function(b){b.addEventListener("click",function(){hideMenu();closeAll();});});
+  var dr=document.getElementById("menu"),mb=document.getElementById("menu-btn");
+  function showMenu(){dr.classList.add("on");mb.setAttribute("aria-expanded","true");var f=dr.querySelector("nav a,nav button");if(f)f.focus();}
+  function hideMenu(){if(!dr.classList.contains("on"))return;dr.classList.remove("on");mb.setAttribute("aria-expanded","false");mb.focus({preventScroll:true});}
+  mb.addEventListener("click",function(){dr.classList.contains("on")?hideMenu():showMenu();});
+  [].forEach.call(dr.querySelectorAll("[data-close]"),function(b){b.addEventListener("click",hideMenu);});
+  document.addEventListener("keydown",function(e){if(e.key==="Escape")hideMenu();});
+  var fx=document.getElementById("fx-btn");
+  function setFx(on){document.body.classList.toggle("calm",!on);fx.setAttribute("aria-pressed",on?"true":"false");fx.textContent=on?"FX ON":"FX OFF";}
+  var saved=null;try{saved=localStorage.getItem("arcade_fx");}catch(e){}
+  setFx(saved?saved==="on":!(window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches));
+  fx.addEventListener("click",function(){var on=fx.getAttribute("aria-pressed")!=="true";setFx(on);try{localStorage.setItem("arcade_fx",on?"on":"off");}catch(e){}});
+  if(location.hash){var h=location.hash.slice(1);if(document.getElementById(h)&&/^seg-/.test(h))openSeg(h);}
+})();
+</script>"""
+
 def page_cyber(cfg, D):
+    """Cyberspace in a retro cyberpunk arcade theme (Sion, 00:26 BST 21 Oct 2026), built on the progressive-disclosure
+    design rule for every site: a minimal landing view; detail only by opening the side menu or a segment; each tap
+    reveals the next level; every top-level option stays visible; a collapse control at every level.
+    The hero is a wireframe rendering (Canny edge trace) of family album photo no. 098; the original file is kept."""
     L = cfg["links"]
     cards = [("Online library", "Every record, page by page: the Legal Wiki.", L["library"]), ("E-book shop", "The case books and archive editions, from £0.00.", L["ebooks"]),
              ("Merch shop", "T-shirts, mugs and prints from the farm album.", L["shop"]), ("The app", "Request the records and organise the evidence.", L["app"]),
              ("Chess and puzzles", "The case as a chessboard.", L["chess"]), ("Farm album", "Photos and posts from the farm.", L["album"])]
-    cs = "".join(f'<a class="card" href="{u}"><h3>{E(t)}</h3><p>{E(d)}</p><span class="go">Open</span></a>' for t, d, u in cards)
-    sites = "".join(f"""<details class="site"><summary><span class="dot" style="background:{(s.get('colors') or ['#000','#f2c94c'])[1]}"></span><span>{E(s['title'])}</span></summary><div class="d"><p>{E(s.get('desc') or s.get('caption') or '')}</p><a href="{s['url']}" rel="noopener">🌐 Visit ↗</a></div></details>""" for s in D["stops"])
-    body = f"""<body>
+    games = "".join(f'<details><summary><span class="glow-m">P{i}</span><span>{E(t)}</span></summary><div class="d"><p>{E(d)}</p><a class="play" href="{u}">Open ▶</a></div></details>' for i, (t, d, u) in enumerate(cards, 1))
+    rows = "".join(f"""<li><details><summary><span class="rk">{i:02d}</span><span class="dot" style="background:{(s.get('colors') or ['#000','#f2c94c'])[1]}" aria-hidden="true"></span><span class="nm">{E(s['title'])}</span></summary><div class="d"><p>{E(s.get('desc') or s.get('caption') or '')}</p><a class="play" href="{s['url']}" rel="noopener">Visit ↗</a></div></details></li>""" for i, s in enumerate(D["stops"], 1))
+    n_sites = len(D["stops"])
+    body = f"""<body class="arcade">
+<a class="skip" href="#top-level">Skip to the menu</a>
+<div class="bar"><button id="menu-btn" type="button" aria-controls="menu" aria-expanded="false" aria-label="Open the menu">☰</button><a class="logo" href="/cyberspace/">Cedwyn·Net</a><span id="lang-slot"></span><button id="fx-btn" type="button" aria-pressed="true" title="Screen flicker and blinking on or off">FX ON</button></div>
+<div class="drawer" id="menu" role="dialog" aria-modal="true" aria-label="Menu"><div class="shade" data-close></div><nav>
+<button class="x" type="button" data-close aria-label="Close the menu">✕</button>
+<h2>Select stage</h2>
+<ol>
+<li><a href="#seg-start" data-open="seg-start">1P · Start here</a></li>
+<li><a href="#seg-maps" data-open="seg-maps">2P · Maps of the estate</a></li>
+<li><a href="#seg-sites" data-open="seg-sites">Hi-score · Every site</a></li>
+<li><a href="/choose/">Change location ↩</a></li>
+<li><button type="button" data-collapse>▲ Collapse all</button></li>
+</ol></nav></div>
 <main>
-<header class="hero" style="min-height:52vh;background-image:url(/locations-img/album-098.webp)"><span id="lang-slot"></span><div class="wrap">
+<header class="stage">
 <p class="kick">Cyberspace · The digital estate</p>
-<h1>The digital estate</h1>
+<h1 class="glow-c">The digital estate</h1>
 <p class="lede">Everything Cedwyn Estate publishes online: the record, the library, the shops and the maps.</p>
-</div></header>
-<section class="s"><div class="wrap"><div class="cards">{cs}</div></div></section>
-<section class="s"><div class="wrap">
-<h2>Maps of the estate</h2>
+<figure class="screen" style="margin-bottom:0"><img src="/locations-img/album-098-wireframe.webp" width="840" height="887" alt="Neon wireframe line drawing of the farmhouse, traced from a family album photograph"></figure>
+<p class="cap">Wireframe rendering: edges traced by computer from family album photo no. 098 (Great House Farm Part 1, Wayback Vault). <a href="/locations-img/album-098.webp">Original photograph</a></p>
+<p class="coin" aria-hidden="true">Insert coin</p>
+<a class="start" href="#seg-start" data-open="seg-start">Press start ▶</a>
+</header>
+<section class="segs" id="top-level" aria-label="Menu">
+<details class="seg" id="seg-start"><summary><span class="n">1P</span><span>Start here</span></summary><div class="in">
+<p class="hint">Six places to begin. Tap one for more.</p>
+<div class="games">{games}</div>
+<button class="back" type="button" data-back>▲ Back to all options</button>
+</div></details>
+<details class="seg" id="seg-maps"><summary><span class="n">2P</span><span>Maps of the estate</span></summary><div class="in">
+<p class="hint">Walk the estate in one, two or three dimensions.</p>
 <div class="views"><a class="btn" href="/?map">2D map</a><a class="btn" href="/3d/">3D walk</a><a class="btn" href="/1d/">1D list</a></div>
-</div></section>
-<section class="s"><div class="wrap">
-<h2>Every site</h2>
-{sites}
-<a class="chg" href="/choose/">Change location</a>
-</div></section>
+<button class="back" type="button" data-back>▲ Back to all options</button>
+</div></details>
+<details class="seg" id="seg-sites"><summary><span class="n">HI</span><span>Every site ({n_sites})</span></summary><div class="in">
+<p class="hint">The whole estate as a high-score table. Tap a row for what it holds.</p>
+<div class="hs-head" aria-hidden="true"><span>Rank</span><span>Site</span><span>Info</span></div>
+<ol class="hs">{rows}</ol>
+<button class="back" type="button" data-back>▲ Back to all options</button>
+</div></details>
+<a class="seg-link" href="/choose/"><span class="n">↩</span><span>Change location</span></a>
+</section>
 </main>
+<footer class="foot">
+<p class="px">Thanks for playing</p>
+<p>Our case, prospective. Not a finding of any court.</p>
+<p>— Sion's Tab agent</p>
+<p style="font-size:12px">Pixel font: Press Start 2P (SIL Open Font License 1.1, <a href="/fonts/OFL-press-start-2p.txt">licence</a>).</p>
+</footer>
+{ARCADE_JS}
 </body>
 </html>
 """
-    return head("Cyberspace · The digital estate · Cedwyn Estate", "Cedwyn Estate online: the Legal Wiki library, e-book shop, merch shop, the app, chess and the 1D, 2D and 3D maps of every site.", "https://bucklerfamily.estate/cyberspace/", "/locations-img/album-098.webp") + body
+    return head("Cyberspace · The digital estate · Cedwyn Estate", "Cedwyn Estate online: the Legal Wiki library, e-book shop, merch shop, the app, chess and the 1D, 2D and 3D maps of every site.", "https://bucklerfamily.estate/cyberspace/", "/locations-img/album-098-wireframe.webp",
+                extra='<link rel="preload" href="/fonts/press-start-2p-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>\n<meta name="color-scheme" content="dark">\n<style>' + ARCADE_CSS + '</style>') + body
 
 def page_choose(cfg):
     return head("Choose your destination · Cedwyn Estate", "Cedwyn Estate: Great House Farm, Llandough, Wales; Great House Farm II, Puerto Madryn, Patagonia; or Cyberspace.", "https://bucklerfamily.estate/choose/", "/locations-img/album-098.webp", extra='<script src="/ghf-lang/locations.js"></script>') + """<body>

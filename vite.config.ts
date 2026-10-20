@@ -10,6 +10,7 @@ export default defineConfig(() => {
       rollupOptions: {
         input: {
           campus: path.resolve(__dirname, 'index.html'),
+          campusmap: path.resolve(__dirname, 'campus/index.html'),
           webapp: path.resolve(__dirname, 'webapp/index.html'),
         },
       },

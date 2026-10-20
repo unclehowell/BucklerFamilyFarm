@@ -8,7 +8,7 @@ import html, os, random
 
 e = html.escape
 HERE = os.path.dirname(os.path.abspath(__file__))
-OUT = os.path.join(HERE, "..", "index.html")
+OUT = os.path.join(HERE, "index.html")  # moved 20 Oct 2026: the root is now the base camp map (build_basecamp.py)
 
 WIKI = "https://greathousefarmwiki.wordpress.com"
 

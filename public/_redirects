@@ -1,3 +1,5 @@
+# Base camp back-link script (Sion's Tab agent, 20 Oct 2026): canonical file is /ghf-lang/basecamp.js
+/basecamp.js /ghf-lang/basecamp.js 200
 # Tracked links for promo A/B tests (Sion's Tab agent, 20 Oct 2026). Each path is counted in Cloudflare analytics.
 # Test ab1 (Facebook GHF II, 20 Oct 2026): a = Legal Wiki book single, b = all four books bundle
 /go/ab1-a /ebook/?utm_source=facebook&utm_medium=post&utm_campaign=ab1&utm_content=a 302

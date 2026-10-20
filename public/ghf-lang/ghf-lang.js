@@ -333,7 +333,15 @@
   }
   window.GHFLang = {
     set: function (l) { set(l); }, get: function () { return cur; },
-    open: function () { open(false); }, close: close, site: SITE, version: "1.0.1"
+    open: function () { open(false); }, close: close, site: SITE, version: "1.0.2"
   };
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", load); else load();
+  // Base camp: every GHF site gets a "Back to base camp" link (basecamp.js, same folder; 20 Oct 2026, Sion's Tab agent).
+  try {
+    if (!window.GHFBasecamp && !document.querySelector('script[src*="basecamp.js"]')) {
+      var bc = document.createElement("script");
+      bc.src = base + "basecamp.js"; bc.async = true;
+      (document.head || document.documentElement).appendChild(bc);
+    }
+  } catch (e) {}
 })();

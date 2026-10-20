@@ -1,0 +1,21 @@
+{
+ "live_search": {
+  "product": "prod_VTfmkfZcgaOvMD",
+  "price": "price_1USiR9JRNz20guqBKtKUzABi",
+  "pence": 1999,
+  "plink": "plink_1USiRDJRNz20guqBxOcdkuvX",
+  "url": "https://buy.stripe.com/8x2bJ22pB0DRdKI5gr6Zy0h"
+ },
+ "case_agent_monthly": {
+  "product": "prod_VTfmqzR4hlV4ty",
+  "price": "price_1USiRQJRNz20guqBdiwm08Um",
+  "pence": 4999,
+  "interval": "month",
+  "plink": "plink_1USiRUJRNz20guqB7Wt9kQ4j",
+  "url": "https://buy.stripe.com/cNi6oIfcncmzfSQ4cn6Zy0i"
+ },
+ "portal": {
+  "config": "bpc_1USiUYJRNz20guqBYGx7Zq4K",
+  "login_url": "https://billing.stripe.com/p/login/4gMbJ25BN5YbeOM24f6Zy00"
+ }
+}

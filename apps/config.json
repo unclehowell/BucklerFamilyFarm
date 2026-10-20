@@ -1,0 +1,67 @@
+{
+ "search_price_pence": 1999,
+ "search_price_label": "£19.99",
+ "sub_price_pence": 4999,
+ "sub_price_label": "£49.99 a month",
+ "search_link": "https://buy.stripe.com/8x2bJ22pB0DRdKI5gr6Zy0h",
+ "search_plink": "plink_1USiRDJRNz20guqBxOcdkuvX",
+ "sub_link": "https://buy.stripe.com/cNi6oIfcncmzfSQ4cn6Zy0i",
+ "sub_plink": "plink_1USiRUJRNz20guqB7Wt9kQ4j",
+ "portal_url": "https://billing.stripe.com/p/login/4gMbJ25BN5YbeOM24f6Zy00",
+ "colors": [
+  "#3E2C23",
+  "#7FDBFF"
+ ],
+ "mail_from": "sales@bucklerfamily.estate",
+ "stages": [
+  {
+   "key": "records",
+   "title": "Records requests",
+   "caption": "FOI, EIR and subject access requests, drafted and tracked.",
+   "icon": "post"
+  },
+  {
+   "key": "title",
+   "title": "Title trail",
+   "caption": "Registers, plans and deeds, linked parent to child.",
+   "icon": "cabinet"
+  },
+  {
+   "key": "evidence",
+   "title": "Evidence log",
+   "caption": "Every document, dated, sourced and filed.",
+   "icon": "vault"
+  },
+  {
+   "key": "timeline",
+   "title": "Timeline",
+   "caption": "One chronology of what happened, and when.",
+   "icon": "book"
+  },
+  {
+   "key": "authorities",
+   "title": "Authorities list",
+   "caption": "The public bodies that hold records about your land.",
+   "icon": "columns"
+  },
+  {
+   "key": "costs",
+   "title": "Costs ledger",
+   "caption": "What each record and request has cost you.",
+   "icon": "counting"
+  }
+ ],
+ "hubspot": {
+  "pipeline": "4244015340",
+  "stages": {
+   "paid": "6265191651",
+   "qualified": "6265191652",
+   "replied": "6265191653",
+   "sub_onboarding": "6265191654",
+   "sub_active": "6265191655",
+   "lost": "6265191656"
+  }
+ },
+ "d1": "6fb11d8e-5d14-41a4-a7a0-ebf3d3de410a",
+ "worker": "cedwyn-apps"
+}

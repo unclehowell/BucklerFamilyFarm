@@ -368,11 +368,12 @@
     {
       "n": 23,
       "key": "apps",
-      "title": "The Case Office (Apps)",
+      "title": "The Case Office",
       "tag": "YOUR OWN CASE",
       "caption": "Register, start a live records search, or get your own virtual base camp for your land.",
-      "url": "https://apps.bucklerfamily.estate/",
+      "url": "https://app.bucklerfamily.estate/",
       "hosts": [
+        "app.bucklerfamily.estate",
         "apps.bucklerfamily.estate"
       ],
       "paths": [],

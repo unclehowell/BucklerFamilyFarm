@@ -1,0 +1,530 @@
+#!/usr/bin/env python3
+"""Cedwyn Estate locations, part of campus/build_basecamp.py (imported and run by it; can also run on its own).
+
+Sion, 21:43 BST 20 Oct 2026: on first visit bucklerfamily.estate asks where to go: Great House Farm, Llandough, Wales
+(a guided virtual-reality tour) / Great House Farm II, Cedwyn Estate, Puerto Madryn, Patagonia (a planned replica with a
+wax museum, weddings, stables and a B&B) / Cyberspace (all the digital sites). A WALES / PATAGONIA / CYBERSPACE toggle
+sits at the top of every page.
+
+Source of truth: campus/locations.json (strings EN + CY/ES, prices, Stripe links, hues, credits) and
+campus/basecamp_stops.json (the site list for Cyberspace). Writes:
+  public/ghf-lang/locations.js            chooser overlay + location strip (loaded by basecamp.js on every site, and by
+                                          the root and /1d/ pages, which carry their own header)
+  public/ghf-lang/sites/locations.json    EN/CY/ES strings for ghf-lang.js (data-site="locations")
+  public/choose/ public/wales/ public/wales/vouchers/terms/ public/wales/vouchers/thank-you/
+  public/patagonia/ public/cyberspace/    the pages
+and adds one <script> tag to the generated root index.html and public/1d/index.html (idempotent).
+Forms post to /visit/api/* (Worker cedwyn-visit, KV storage; source in Tab's work/visit/worker).   — Sion's Tab agent
+"""
+import json, os, html, re
+HERE = os.path.dirname(os.path.abspath(__file__))
+E = html.escape
+MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+MKEYS = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"]
+
+CSS = """
+*{box-sizing:border-box}html,body{margin:0;background:#000;color:#fff}
+body{font:300 17px/1.6 Barlow,"Helvetica Neue",Arial,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#fff}img{max-width:100%;height:auto;display:block}
+.wrap{max-width:780px;margin:0 auto;padding:0 20px}
+.hero{position:relative;min-height:78vh;display:flex;align-items:flex-end;padding:90px 0 44px;background:#000 center/cover no-repeat;overflow:hidden}
+.hero:before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.35) 0,rgba(0,0,0,.55) 45%,#000 100%)}
+.hero .wrap{position:relative;width:100%}
+.kick{font-size:11.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--ghf-s,#f2c94c);margin:0 0 14px;font-weight:500}
+h1{font-weight:300;font-size:clamp(34px,9vw,64px);letter-spacing:.08em;text-transform:uppercase;line-height:1.05;margin:0 0 14px}
+h2{font-weight:300;font-size:clamp(22px,5.6vw,32px);letter-spacing:.08em;text-transform:uppercase;line-height:1.2;margin:0 0 18px}
+h3{font-weight:500;font-size:15px;letter-spacing:.16em;text-transform:uppercase;margin:0 0 8px}
+.lede{font-size:19px;max-width:560px;margin:0 0 20px;color:#e6e6e6}
+.soon{display:inline-block;border:1px solid var(--ghf-s,#f2c94c);color:var(--ghf-s,#f2c94c);padding:5px 12px;font-size:11.5px;letter-spacing:.24em;text-transform:uppercase;margin:0 0 22px}
+.btns{display:flex;flex-wrap:wrap;gap:10px}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:46px;padding:0 22px;border:1px solid #fff;color:#fff;background:transparent;text-decoration:none;font:500 12.5px/1 Barlow,Arial,sans-serif;letter-spacing:.2em;text-transform:uppercase;cursor:pointer;border-radius:0}
+.btn:hover,.btn:focus-visible{background:#fff;color:#000}
+.btn.solid{background:#fff;color:#000}.btn.solid:hover{background:var(--ghf-s,#f2c94c);border-color:var(--ghf-s,#f2c94c)}
+section.s{padding:56px 0;border-top:1px solid rgba(255,255,255,.12)}
+p{margin:0 0 16px}.muted{color:#a9a9a9;font-size:14.5px}
+ul.ticks{list-style:none;padding:0;margin:0 0 18px}ul.ticks li{padding:9px 0;border-bottom:1px solid rgba(255,255,255,.1);letter-spacing:.06em}
+ul.ticks li:before{content:"";display:inline-block;width:7px;height:7px;background:var(--ghf-s,#f2c94c);margin:0 12px 2px 0}
+.gal{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:8px 0 6px}.gal img{width:100%;height:auto;aspect-ratio:1/1;object-fit:cover}
+.gal figure,.fig{margin:0}.fig img{width:100%;height:auto}figcaption{font-size:12.5px;color:#9a9a9a;margin:6px 0 0;letter-spacing:.02em}
+.cards{display:grid;grid-template-columns:1fr;gap:12px}@media(min-width:620px){.cards{grid-template-columns:1fr 1fr}}
+.card{border:1px solid rgba(255,255,255,.22);padding:22px 20px;display:flex;flex-direction:column;gap:8px;text-decoration:none;color:#fff}
+a.card:hover,a.card:focus-visible{border-color:var(--ghf-s,#f2c94c)}
+.card .price{font-size:30px;font-weight:300;letter-spacing:.04em}.card p{margin:0;color:#cfcfcf;font-size:15.5px}
+.card .go{margin-top:auto;padding-top:10px;font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--ghf-s,#f2c94c)}
+form.enq{display:grid;gap:14px;max-width:560px}
+form.enq label{display:grid;gap:6px;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:#cfcfcf}
+form.enq input,form.enq select,form.enq textarea{font:400 16px/1.4 Barlow,Arial,sans-serif;color:#fff;background:#0b0b0b;border:1px solid rgba(255,255,255,.35);border-radius:0;padding:12px;width:100%}
+form.enq select option{color:#000}
+form.enq input:focus,form.enq select:focus,form.enq textarea:focus{outline:none;border-color:var(--ghf-s,#f2c94c)}
+form.enq .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+form.enq .tick{display:flex;gap:10px;align-items:flex-start;text-transform:none;letter-spacing:0;font-size:14.5px;color:#d8d8d8}
+form.enq .tick input{width:20px;height:20px;margin:2px 0 0;flex:0 0 auto;accent-color:var(--ghf-s,#f2c94c)}
+.hp{position:absolute!important;left:-5000px!important;width:1px;height:1px;overflow:hidden}
+.note{padding:14px 16px;border:1px solid var(--ghf-s,#f2c94c);display:none}.note.on{display:block}.note.bad{border-color:#ff6b6b}
+.src{font-size:13.5px;color:#a9a9a9}.src a{color:#cfcfcf}.src li{margin:0 0 6px}
+.chg{display:inline-block;margin:26px 0 0;font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:#bdbdbd}
+#lang-slot{position:absolute;top:14px;right:14px;z-index:3}
+details.site{border-bottom:1px solid rgba(255,255,255,.14)}details.site summary{list-style:none;cursor:pointer;padding:14px 0;display:flex;gap:12px;align-items:center;letter-spacing:.08em;text-transform:uppercase;font-size:14px}
+details.site summary::-webkit-details-marker{display:none}details.site summary .dot{width:10px;height:10px;border-radius:50%;flex:0 0 auto}
+details.site summary:after{content:"+";margin-left:auto;font-size:20px;color:#9a9a9a}details.site[open] summary:after{content:"–"}
+details.site .d{padding:0 0 16px 22px;color:#cfcfcf;font-size:15.5px}details.site .d a{color:var(--ghf-s,#f2c94c);letter-spacing:.14em;text-transform:uppercase;font-size:12px;text-decoration:none}
+.views{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.views .btn{padding:0 8px}
+.terms h2{margin-top:30px}.terms li{margin:0 0 10px}
+"""
+
+def head(title, desc, canon, img, site="locations", extra=""):
+    return f"""<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>{E(title)}</title>
+<meta name="description" content="{E(desc)}">
+<link rel="canonical" href="{canon}">
+<meta property="og:site_name" content="Cedwyn Estate">
+<meta property="og:title" content="{E(title)}">
+<meta property="og:description" content="{E(desc)}">
+<meta property="og:type" content="website">
+<meta property="og:url" content="{canon}">
+<meta property="og:image" content="https://bucklerfamily.estate{img}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#000000">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="preload" href="/fonts/barlow-latin-300-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/ghf-lang/ghf-theme.css" data-ghf-theme>
+<style>
+@font-face{{font-family:"Barlow";font-weight:300;font-display:swap;src:url(/fonts/barlow-latin-300-normal.woff2) format("woff2")}}
+@font-face{{font-family:"Barlow";font-weight:400;font-display:swap;src:url(/fonts/barlow-latin-400-normal.woff2) format("woff2")}}
+@font-face{{font-family:"Barlow";font-weight:500 700;font-display:swap;src:url(/fonts/barlow-latin-700-normal.woff2) format("woff2")}}
+{CSS}
+</style>
+{extra}
+<script src="https://bucklerfamily.estate/ghf-lang/ghf-lang.js" data-site="{site}" defer></script>
+</head>
+"""
+
+FORM_JS = r"""<script>
+(function(){
+  var f=document.querySelectorAll("form.enq");
+  for(var i=0;i<f.length;i++)(function(form){
+    var ts=form.querySelector("[name=ts]"); if(ts) ts.value=String(Date.now());
+    form.addEventListener("submit",function(ev){
+      ev.preventDefault();
+      var ok=form.querySelector(".note.ok"),bad=form.querySelector(".note.bad"),btn=form.querySelector("button[type=submit]");
+      ok.classList.remove("on");bad.classList.remove("on");
+      if(!form.checkValidity()){form.reportValidity();return;}
+      var d={};new FormData(form).forEach(function(v,k){d[k]=v;});
+      d.lang=(document.documentElement.getAttribute("lang")||"en").slice(0,2);
+      var label=btn.textContent;btn.disabled=true;btn.textContent=btn.getAttribute("data-busy")||"…";
+      fetch(form.action,{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json"},body:JSON.stringify(d)})
+        .then(function(r){return r.json().catch(function(){return {ok:false};});})
+        .then(function(j){
+          btn.disabled=false;btn.textContent=label;
+          if(j&&j.ok){form.reset();if(ts)ts.value=String(Date.now());ok.classList.add("on");var rf=ok.querySelector(".ref");if(rf)rf.textContent=j.ref||"";ok.scrollIntoView({block:"center",behavior:"smooth"});}
+          else{bad.classList.add("on");var m=bad.querySelector(".msg");if(m&&j&&j.error)m.textContent=j.error;}
+        })
+        .catch(function(){btn.disabled=false;btn.textContent=label;bad.classList.add("on");});
+    });
+  })(f[i]);
+  // a plain (no-script) post comes back with ?sent=1 or 0
+  var m=/[?&]sent=([01])/.exec(location.search);
+  if(m){var n=document.querySelector(m[1]==="1"?".note.ok":".note.bad");if(n)n.classList.add("on");}
+  // offer buttons pre-select the form's interest
+  var ob=document.querySelectorAll("[data-offer]");
+  for(var k=0;k<ob.length;k++)ob[k].addEventListener("click",function(){var s=document.querySelector("form.enq select[name=offer]");if(s)s.value=this.getAttribute("data-offer");});
+})();
+</script>"""
+
+def form(cfg, loc, offers, month_label):
+    opts = "".join(f'<option value="{k}">{E(v)}</option>' for k, v in offers)
+    months = '<option value="any">Any month</option>' + "".join(f'<option value="{k}">{m}</option>' for k, m in zip(MKEYS, MONTHS))
+    sel = f'<label>What are you interested in?<select name="offer">{opts}</select></label>' if len(offers) > 1 else f'<input type="hidden" name="offer" value="{offers[0][0]}">'
+    return f"""<form class="enq" method="post" action="{cfg['endpoint']}enquiry" novalidate>
+<input type="hidden" name="loc" value="{loc}"><input type="hidden" name="ts" value="">
+{sel}
+<label>Your name<input name="name" autocomplete="name" required maxlength="120"></label>
+<label>Email<input name="email" type="email" autocomplete="email" required maxlength="160"></label>
+<div class="row"><label>Group size<input name="group" type="number" min="1" max="500" value="2" inputmode="numeric"></label>
+<label>{month_label}<select name="month">{months}</select></label></div>
+<label>Message (optional)<textarea name="message" rows="4" maxlength="2000"></textarea></label>
+<div class="hp" aria-hidden="true"><label>Website<input name="website" tabindex="-1" autocomplete="off"></label></div>
+<label class="tick"><input type="checkbox" name="consent" value="1" required><span>I agree that Cedwyn Estate may store this enquiry and email me about it.</span></label>
+<p class="muted"><a href="/privacy/#visits">Privacy notice</a></p>
+<div><button class="btn solid" type="submit" data-busy="Sending…">Send</button></div>
+<div class="note ok" role="status"><span>Thank you. Your interest is registered. We will email you when there is news.</span> <span class="muted">Reference</span> <b class="ref"></b></div>
+<div class="note bad" role="alert"><span class="msg">That did not send. Please check the form and try again, or email sales@bucklerfamily.estate.</span></div>
+</form>"""
+
+def credit(c):
+    return f'<a href="{c["url"]}" rel="noopener">{E(c["title"])}</a>, {E(c["author"])}, {E(c["licence"])}'
+
+def sources(lst):
+    return "<ul class=\"src\">" + "".join(f'<li><a href="{s["url"]}" rel="noopener">{E(s["text"])}</a></li>' for s in lst) + "</ul>"
+
+def page_wales(cfg):
+    C = cfg["credits"]
+    vc = "".join(f"""<div class="card"><h3>{E(v['label'])}</h3><div class="price">£{v['pence']/100:.2f}</div>
+<a class="btn solid" href="{v['url']}" rel="noopener">Buy voucher</a></div>""" for v in cfg["vouchers"])
+    body = f"""<body>
+<main>
+<header class="hero" style="background-image:url(/locations-img/album-098.webp)"><span id="lang-slot"></span><div class="wrap">
+<p class="kick">Wales · Llandough, Vale of Glamorgan</p>
+<h1>Great House Farm</h1>
+<p class="lede">Cedwyn Estate · Tŷ Mawr. A guided tour in virtual reality.</p>
+<span class="soon">Coming soon</span>
+<div class="btns"><a class="btn solid" href="#enquire">Register interest</a><a class="btn" href="#vouchers">Gift vouchers</a></div>
+</div></header>
+<section class="s"><div class="wrap">
+<h2>The tour</h2>
+<p>Great House Farm (Tŷ Mawr) stood in Llandough, near Penarth. The farmhouse and its yard are being rebuilt in virtual reality from the family album, survey plans and archive records.</p>
+<p>Guests will wear a VR headset and walk the house and yard with a guide who tells its story.</p>
+<ul class="ticks"><li>Guided small groups</li><li>VR headsets provided</li><li>Dates, times and prices to be announced</li></ul>
+<p>Tickets are not on sale yet. Register your interest and you will hear first when booking opens.</p>
+<div class="gal"><figure><img src="/locations-img/album-101.webp" alt="Great House Farm farmhouse, side and porch" loading="lazy" width="660" height="660"></figure>
+<figure><img src="/locations-img/album-128.webp" alt="The stable range at Great House Farm" loading="lazy" width="640" height="660"></figure></div>
+<p class="muted">The farmhouse, from the family album</p>
+</div></section>
+<section class="s"><div class="wrap">
+<h2>Next door to history: Marconi, May 1897</h2>
+<p>In May 1897 Guglielmo Marconi and William Preece, engineer-in-chief of the Post Office, tested wireless telegraphy across the Bristol Channel at Lavernock Point, about 5 km south of Llandough.</p>
+<p>Signals crossed open sea from Flat Holm island to Lavernock, and on 18 May from Lavernock to Brean Down in Somerset. A plaque at St Lawrence’s church, Lavernock, marks the trials.</p>
+<p>The tour will tell this story beside the farm’s own.</p>
+<figure class="fig"><img src="/locations-img/marconi-1897.webp" alt="Post Office engineers with wireless equipment on Flat Holm, May 1897" loading="lazy" width="1400" height="966"><figcaption><span>Post Office engineers at the wireless trials, Flat Holm, May 1897</span> · {credit(C['marconi-1897'])}</figcaption></figure>
+<figure class="fig" style="margin-top:14px"><img src="/locations-img/flat-holm.webp" alt="Flat Holm island seen from the beach at Lavernock" loading="lazy" width="1400" height="934"><figcaption><span>Flat Holm from Lavernock</span> · {credit(C['flat-holm'])}</figcaption></figure>
+<h3 style="margin-top:22px">Sources</h3>{sources(cfg['sources']['marconi'])}
+</div></section>
+<section class="s" id="vouchers"><div class="wrap">
+<h2>Gift vouchers</h2>
+<p>Give a place on the tour. Each voucher can be exchanged for tour tickets when tours open.</p>
+<div class="cards">{vc}</div>
+<p class="muted" style="margin-top:16px">Valid 24 months. Full refund on request if tours have not opened within 12 months. 14-day right to cancel.</p>
+<p class="muted">Stripe emails your receipt at once. Your voucher code follows by email within 2 working days.</p>
+<p><a href="/wales/vouchers/terms/">Voucher terms</a></p>
+</div></section>
+<section class="s" id="enquire"><div class="wrap">
+<h2>Register interest in the tour</h2>
+{form(cfg, "wales", [("tour", "Wales: guided virtual tour (Llandough)")], "Preferred month")}
+<a class="chg" href="/choose/">Change location</a>
+<p class="src" style="margin-top:22px"><span>Photo credits</span>: {credit(C['album'])}.</p>
+</div></section>
+</main>
+{FORM_JS}
+</body>
+</html>
+"""
+    return head("Great House Farm, Llandough · Virtual tour · Cedwyn Estate", "Cedwyn Estate, Wales: a guided virtual-reality tour of Great House Farm (Tŷ Mawr), Llandough. Coming soon. Register interest or buy a gift voucher.", "https://bucklerfamily.estate/wales/", "/locations-img/album-098.webp") + body
+
+def page_patagonia(cfg):
+    C = cfg["credits"]
+    offers = [("museum", "Museum visit", "Wax museum", "The story of Tŷ Mawr and its people in wax figures, with a guide figure of Guglielmo Marconi, whose 1897 wireless trials took place a few kilometres from the original farm."),
+              ("weddings", "Weddings", "Weddings", "A Welsh farmhouse wedding at the edge of Patagonia: house, yard and gardens."),
+              ("stables", "Stables and livery", "Stables and livery", "High-end stables and livery for horses, with rides on the Atlantic coast."),
+              ("bnb", "B&B stays", "Luxury B&B", "Rooms in the reconstructed farmhouse, with Welsh tea and a Patagonian breakfast.")]
+    cards = "".join(f"""<a class="card" href="#enquire" data-offer="{k}"><h3>{E(t)}</h3><p>{E(d)}</p><span class="go">Register interest</span></a>""" for k, _, t, d in offers)
+    body = f"""<body>
+<main>
+<header class="hero" style="background-image:url(/locations-img/madryn-sunrise.webp)"><span id="lang-slot"></span><div class="wrap">
+<p class="kick">Patagonia · Puerto Madryn, Chubut, Argentina</p>
+<h1>Great House Farm II</h1>
+<p class="lede">Cedwyn Estate. A planned replica of Tŷ Mawr.</p>
+<span class="soon">Coming soon</span>
+<div class="btns"><a class="btn solid" href="#enquire">Register interest</a></div>
+</div></header>
+<section class="s"><div class="wrap">
+<p>A reconstruction of Great House Farm, the Tŷ Mawr farmhouse of Llandough, is planned for Puerto Madryn, the town where Welsh settlers landed in 1865.</p>
+<p>The plans: a museum of wax figures, a wedding venue, high-end stables and a luxury bed and breakfast.</p>
+<p class="muted">Plans only. Site, designs and dates are not fixed yet.</p>
+<div class="cards" style="margin-top:20px">{cards}</div>
+<p class="muted" style="margin-top:14px">Enquiries only. No prices yet.</p>
+</div></section>
+<section class="s"><div class="wrap">
+<figure class="fig"><img src="/locations-img/album-096.webp" alt="Entrance gate and farmhouse of Great House Farm, Llandough" loading="lazy" width="680" height="668"><figcaption>The original: Great House Farm, Llandough (family album)</figcaption></figure>
+</div></section>
+<section class="s"><div class="wrap">
+<h2>The Welsh in Patagonia</h2>
+<p>On 28 July 1865 the ship Mimosa landed about 150 Welsh settlers at Puerto Madryn (Porth Madryn). They founded Y Wladfa, the Welsh settlement of the Chubut valley, and Welsh is still spoken there today.</p>
+<p>A Welsh farmhouse rebuilt in Puerto Madryn would bring Tŷ Mawr to the town where that story began.</p>
+<figure class="fig"><img src="/locations-img/punta-cuevas.webp" alt="Punta Cuevas headland, Puerto Madryn" loading="lazy" width="1400" height="1050"><figcaption><span>Punta Cuevas, Puerto Madryn, the shore where the 1865 settlers first sheltered</span> · {credit(C['punta-cuevas'])}</figcaption></figure>
+<h3 style="margin-top:22px">Sources</h3>{sources(cfg['sources']['patagonia'])}
+</div></section>
+<section class="s" id="enquire"><div class="wrap">
+<h2>Register interest in Patagonia</h2>
+{form(cfg, "patagonia", [(k, l) for k, l, _, _ in offers] + [("general", "General interest")], "Preferred month or date")}
+<a class="chg" href="/choose/">Change location</a>
+<p class="src" style="margin-top:22px"><span>Photo credits</span>: {credit(C['madryn-sunrise'])}; {credit(C['punta-cuevas'])}; {credit(C['album'])}.</p>
+</div></section>
+</main>
+<script>
+// Spanish first on the Patagonia page for Spanish-speaking browsers, unless a language was already chosen
+(function(){{try{{if(!localStorage.getItem("ghf_lang")&&!/(^|; )ghf_lang=/.test(document.cookie)&&/^es/i.test(navigator.language||"")){{var t=setInterval(function(){{if(window.GHFLang){{clearInterval(t);window.GHFLang.set("es");}}}},150);setTimeout(function(){{clearInterval(t);}},6000);}}}}catch(e){{}}}})();
+</script>
+{FORM_JS}
+</body>
+</html>
+"""
+    return head("Great House Farm II · Puerto Madryn, Patagonia · Cedwyn Estate", "Cedwyn Estate, Patagonia: a planned replica of Tŷ Mawr in Puerto Madryn, Chubut, with a wax museum, weddings, stables and a luxury B&B. Coming soon. Register interest.", "https://bucklerfamily.estate/patagonia/", "/locations-img/madryn-sunrise.webp") + body
+
+def page_cyber(cfg, D):
+    L = cfg["links"]
+    cards = [("Online library", "Every record, page by page: the Legal Wiki.", L["library"]), ("E-book shop", "The case books and archive editions, from £0.00.", L["ebooks"]),
+             ("Merch shop", "T-shirts, mugs and prints from the farm album.", L["shop"]), ("The app", "Request the records and organise the evidence.", L["app"]),
+             ("Chess and puzzles", "The case as a chessboard.", L["chess"]), ("Farm album", "Photos and posts from the farm.", L["album"])]
+    cs = "".join(f'<a class="card" href="{u}"><h3>{E(t)}</h3><p>{E(d)}</p><span class="go">Open</span></a>' for t, d, u in cards)
+    sites = "".join(f"""<details class="site"><summary><span class="dot" style="background:{(s.get('colors') or ['#000','#f2c94c'])[1]}"></span><span>{E(s['title'])}</span></summary><div class="d"><p>{E(s.get('desc') or s.get('caption') or '')}</p><a href="{s['url']}" rel="noopener">🌐 Visit ↗</a></div></details>""" for s in D["stops"])
+    body = f"""<body>
+<main>
+<header class="hero" style="min-height:52vh;background-image:url(/locations-img/album-098.webp)"><span id="lang-slot"></span><div class="wrap">
+<p class="kick">Cyberspace · The digital estate</p>
+<h1>The digital estate</h1>
+<p class="lede">Everything Cedwyn Estate publishes online: the record, the library, the shops and the maps.</p>
+</div></header>
+<section class="s"><div class="wrap"><div class="cards">{cs}</div></div></section>
+<section class="s"><div class="wrap">
+<h2>Maps of the estate</h2>
+<div class="views"><a class="btn" href="/?map">2D map</a><a class="btn" href="/3d/">3D walk</a><a class="btn" href="/1d/">1D list</a></div>
+</div></section>
+<section class="s"><div class="wrap">
+<h2>Every site</h2>
+{sites}
+<a class="chg" href="/choose/">Change location</a>
+</div></section>
+</main>
+</body>
+</html>
+"""
+    return head("Cyberspace · The digital estate · Cedwyn Estate", "Cedwyn Estate online: the Legal Wiki library, e-book shop, merch shop, the app, chess and the 1D, 2D and 3D maps of every site.", "https://bucklerfamily.estate/cyberspace/", "/locations-img/album-098.webp") + body
+
+def page_choose(cfg):
+    return head("Choose your destination · Cedwyn Estate", "Cedwyn Estate: Great House Farm, Llandough, Wales; Great House Farm II, Puerto Madryn, Patagonia; or Cyberspace.", "https://bucklerfamily.estate/choose/", "/locations-img/album-098.webp", extra='<script src="/ghf-lang/locations.js"></script>') + """<body>
+<main class="wrap" style="padding:60px 20px">
+<noscript><h1>Choose your destination</h1><p><a class="btn" href="/wales/">Wales</a> <a class="btn" href="/patagonia/">Patagonia</a> <a class="btn" href="/cyberspace/">Cyberspace</a></p></noscript>
+</main>
+<script>window.GHFLoc&&window.GHFLoc.choose(true);</script>
+</body>
+</html>
+"""
+
+def page_terms(cfg):
+    t = cfg["voucher_terms"]
+    rows = "".join(f"<li><b>{E(v['label'])}</b>: £{v['pence']/100:.2f}</li>" for v in cfg["vouchers"])
+    return head("Gift voucher terms · Cedwyn Estate", "Terms for Cedwyn Estate guided virtual tour gift vouchers.", "https://bucklerfamily.estate/wales/vouchers/terms/", "/locations-img/album-098.webp") + f"""<body>
+<main class="wrap terms" style="padding:70px 20px 40px"><span id="lang-slot"></span>
+<p class="kick">Wales · Llandough</p>
+<h1 style="font-size:clamp(28px,7vw,44px)">Gift voucher terms</h1>
+<p class="muted">Version 1.0, 20 October 2026. Plain English; your statutory rights are not affected.</p>
+<h2>What the voucher is for</h2>
+<p>A Cedwyn Estate gift voucher can be exchanged for tickets for the guided virtual-reality tour of Great House Farm (Tŷ Mawr), Llandough, Wales, for the number of guests shown on it:</p>
+<ul>{rows}</ul>
+<h2>Tours are not open yet</h2>
+<p>The tour is in preparation. No date is fixed. You are buying a voucher to use once booking opens; we will email voucher holders when it does.</p>
+<h2>How long it lasts</h2>
+<p>The voucher is valid for {t['valid_months']} months from the date of purchase. If tours have not opened, or no date you can attend is offered, before it expires, you can have a full refund.</p>
+<h2>Refund if tours do not open</h2>
+<p>If tours have not opened within {t['refund_if_not_open_months']} months of your purchase, you can ask for a full refund at any time after that, until the voucher expires.</p>
+<h2>Your 14-day right to cancel</h2>
+<p>You can cancel within {t['cooling_off_days']} days of purchase for any reason and get a full refund (Consumer Contracts (Information, Cancellation and Additional Charges) Regulations 2013).</p>
+<h2>How to ask for a refund</h2>
+<p>Email <a href="mailto:{t['contact']}">{t['contact']}</a> with your name, the email you paid with and your voucher code or Stripe receipt number. Refunds go back to the card you paid with, normally within 14 days of your request.</p>
+<h2>Delivery</h2>
+<p>Stripe emails your receipt at once. Your voucher code is emailed to the address you paid with within {t['code_delivery_working_days']} working days. If it has not arrived, check spam, then email {t['contact']}.</p>
+<h2>Using the voucher</h2>
+<ul><li>One code per voucher. It can be given to anyone; the person who books uses it.</li><li>It cannot be exchanged for cash, except for the refunds above.</li><li>Lost codes can be reissued: email {t['contact']} with your receipt.</li></ul>
+<h2>Who sells it</h2>
+<p>Vouchers are sold for Cedwyn Estate by DATRO Consortium Ltd, which takes card payments through Stripe. Questions: <a href="mailto:{t['contact']}">{t['contact']}</a>.</p>
+<p><a class="btn" href="/wales/#vouchers">Back to vouchers</a></p>
+<p class="muted" style="margin-top:20px">Template prepared by Sion's Tab agent; not legal advice.</p>
+</main>
+</body>
+</html>
+"""
+
+def page_thanks(cfg):
+    return head("Thank you · Gift voucher · Cedwyn Estate", "Thank you for buying a Cedwyn Estate gift voucher.", "https://bucklerfamily.estate/wales/vouchers/thank-you/", "/locations-img/album-098.webp", extra='<meta name="robots" content="noindex">') + f"""<body>
+<main class="wrap" style="padding:80px 20px 40px"><span id="lang-slot"></span>
+<p class="kick">Wales · Llandough</p>
+<h1 style="font-size:clamp(28px,7vw,44px)">Thank you for your order</h1>
+<p>Stripe emails your receipt at once. Your voucher code follows by email within 2 working days.</p>
+<div class="note on" id="vc" style="display:none"><span class="muted">Your voucher code</span><div style="font-size:26px;letter-spacing:.12em;margin-top:6px" id="code"></div></div>
+<p class="muted" id="ref"></p>
+<p><a href="/wales/vouchers/terms/">Voucher terms</a></p>
+<p><a class="btn" href="/wales/">Back to the tour</a></p>
+</main>
+<script>
+(function(){{
+  var q=new URLSearchParams(location.search),sid=q.get("session_id"),v=q.get("v");
+  if(!sid||!/^cs_/.test(sid))return;
+  var k="cev_"+sid.slice(-16);try{{if(sessionStorage.getItem(k))return;sessionStorage.setItem(k,"1");}}catch(e){{}}
+  fetch("{cfg['endpoint']}voucher-claim",{{method:"POST",headers:{{"Content-Type":"application/json","Accept":"application/json"}},body:JSON.stringify({{session_id:sid,v:v}})}})
+   .then(function(r){{return r.json();}}).then(function(j){{
+     if(j&&j.ref)document.getElementById("ref").textContent="Ref. "+j.ref;
+     if(j&&j.code){{document.getElementById("code").textContent=j.code;document.getElementById("vc").style.display="block";}}
+   }}).catch(function(){{}});
+}})();
+</script>
+</body>
+</html>
+"""
+
+LOC_JS = r"""/*! locations.js — Cedwyn Estate: where would you like to go? (generated by campus/build_locations.py · v__VER__ · Sion's Tab agent)
+ * 1. A WALES / PATAGONIA / CYBERSPACE strip under the shared header bar on every site (basecamp.js calls GHFLoc.strip).
+ * 2. On bucklerfamily.estate/ : the full-screen chooser on a first visit; afterwards a visitor arriving from outside goes
+ *    to the location they chose. ?map shows the 2D map, ?choose shows the chooser. Choice kept in localStorage + a
+ *    .bucklerfamily.estate cookie (ghf_loc).
+ */
+(function () {
+  if (window.GHFLoc) return;
+  var T = __T__;
+  var LOCS = [["wales", "/wales/"], ["patagonia", "/patagonia/"], ["cyberspace", "/cyberspace/"]];
+  var BASE = "https://bucklerfamily.estate", host = location.hostname.replace(/^www\./, ""), path = location.pathname || "/";
+  var apex = host === "bucklerfamily.estate" || /(^|\.)bucklerfamilyfarm\.pages\.dev$/.test(host);
+  var href = function (p) { return apex ? p : BASE + p; };
+  function lang() { var l = (document.documentElement.getAttribute("lang") || "en").slice(0, 2).toLowerCase(); return T[l] ? l : "en"; }
+  function get() { var v = null; try { v = localStorage.getItem("ghf_loc"); } catch (e) {} if (!v) { var m = /(?:^|; )ghf_loc=([a-z]+)/.exec(document.cookie); v = m && m[1]; } return /^(wales|patagonia|cyberspace)$/.test(v || "") ? v : null; }
+  function set(v) { try { localStorage.setItem("ghf_loc", v); } catch (e) {} try { document.cookie = "ghf_loc=" + v + "; path=/; max-age=31536000; SameSite=Lax; Secure" + (/(^|\.)bucklerfamily\.estate$/.test(location.hostname) ? "; domain=.bucklerfamily.estate" : ""); } catch (e) {} }
+  function here() { if (apex && /^\/wales(\/|$)/.test(path)) return "wales"; if (apex && /^\/patagonia(\/|$)/.test(path)) return "patagonia"; if (apex && /^\/choose(\/|$)/.test(path)) return ""; return "cyberspace"; }
+  function el(t, c, x) { var e = document.createElement(t); if (c) e.className = c; if (x != null) e.textContent = x; return e; }
+  var CSS = ".ghf-loc{display:flex!important;align-items:stretch;justify-content:center;gap:0;width:100%;box-sizing:border-box;margin:0!important;padding:0 6px!important;background:#000!important;border-bottom:1px solid rgba(255,255,255,.18)!important;position:relative;z-index:2147481989;font:500 11px/1 Barlow,'Helvetica Neue',Arial,sans-serif!important;-webkit-font-smoothing:antialiased}" +
+    ".ghf-loc a{flex:1 1 0;display:flex!important;align-items:center;justify-content:center;min-height:38px;padding:0 4px!important;color:#cfcfcf!important;text-decoration:none!important;letter-spacing:.2em;text-transform:uppercase;border-bottom:2px solid transparent;white-space:nowrap;font:inherit!important}" +
+    ".ghf-loc a:hover,.ghf-loc a:focus-visible{color:#fff!important}.ghf-loc a[aria-current=page]{color:#fff!important;border-bottom-color:var(--ghf-s,#f2c94c)}" +
+    ".ghf-loc a.ghf-loc-ch{flex:0 0 40px;font-size:15px!important;letter-spacing:0}" +
+    "html[data-ghf-mode=day] .ghf-loc{background:#fff!important;border-bottom-color:#ddd!important}html[data-ghf-mode=day] .ghf-loc a{color:#555!important}html[data-ghf-mode=day] .ghf-loc a[aria-current=page]{color:#000!important;border-bottom-color:var(--ghf-p,#0a0a0a)}" +
+    "@media (max-width:380px){.ghf-loc a{letter-spacing:.12em;font-size:10px!important}}@media print{.ghf-loc{display:none!important}}" +
+    ".ghf-cho{position:fixed;inset:0;z-index:2147483000;background:#000;color:#fff;overflow:auto;-webkit-overflow-scrolling:touch;font:300 16px/1.5 Barlow,'Helvetica Neue',Arial,sans-serif;-webkit-font-smoothing:antialiased}" +
+    ".ghf-cho-bg{position:fixed;inset:0;background:#000 url(" + BASE + "/locations-img/album-098.webp) center/cover;opacity:.22;filter:grayscale(1)}" +
+    ".ghf-cho-in{position:relative;max-width:560px;margin:0 auto;padding:28px 20px 40px;min-height:100%;display:flex;flex-direction:column;justify-content:center;box-sizing:border-box}" +
+    ".ghf-cho-top{display:flex;align-items:center;justify-content:space-between;margin:0 0 30px}.ghf-cho-brand{display:flex;align-items:center;gap:10px;letter-spacing:.24em;text-transform:uppercase;font-size:12px;font-weight:500}" +
+    ".ghf-cho-brand img{width:30px;height:30px}.ghf-cho-lang{display:flex;gap:4px}.ghf-cho-lang button{font:500 11px/1 Barlow,Arial,sans-serif;letter-spacing:.14em;color:#bbb;background:none;border:1px solid transparent;padding:7px 8px;cursor:pointer}" +
+    ".ghf-cho-lang button[aria-pressed=true]{color:#fff;border-color:#fff}" +
+    ".ghf-cho h1{font-weight:300;font-size:clamp(26px,7.4vw,40px);letter-spacing:.1em;text-transform:uppercase;line-height:1.1;margin:0 0 22px}" +
+    ".ghf-cho-opt{display:block;text-decoration:none;color:#fff!important;border:1px solid rgba(255,255,255,.55);padding:18px 18px 16px;margin:0 0 12px;background:rgba(0,0,0,.55);transition:background .15s,border-color .15s}" +
+    ".ghf-cho-opt:hover,.ghf-cho-opt:focus-visible{background:#fff;color:#000!important;border-color:#fff}.ghf-cho-opt:hover small,.ghf-cho-opt:focus-visible small{color:#333}" +
+    ".ghf-cho-opt b{display:block;font-weight:400;font-size:19px;letter-spacing:.14em;text-transform:uppercase;margin:4px 0 4px}" +
+    ".ghf-cho-opt span{display:block;font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:#f2c94c}.ghf-cho-opt:hover span{color:#000}" +
+    ".ghf-cho-opt small{display:block;font-size:14px;color:#c8c8c8;letter-spacing:.02em}.ghf-cho-opt i{font-style:normal;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;border:1px solid currentColor;padding:2px 6px;margin-left:6px;vertical-align:2px}" +
+    ".ghf-cho-note{font-size:12.5px;color:#9a9a9a;margin:10px 0 0;letter-spacing:.04em}";
+  function css() { if (document.querySelector("style[data-ghf-loc]")) return; var s = el("style"); s.setAttribute("data-ghf-loc", ""); s.textContent = CSS; (document.head || document.documentElement).appendChild(s); }
+  var strips = [];
+  function fill(nav) {
+    var s = T[lang()], cur = here(); nav.textContent = "";
+    nav.setAttribute("aria-label", s.loc);
+    LOCS.forEach(function (x) { var a = el("a", null, s[x[0]]); a.href = href(x[1]); if (x[0] === cur) a.setAttribute("aria-current", "page"); a.addEventListener("click", function () { set(x[0]); }); nav.appendChild(a); });
+    var c = el("a", "ghf-loc-ch", "◎"); c.href = href("/choose/"); c.title = s.choose; c.setAttribute("aria-label", s.choose); nav.appendChild(c);
+  }
+  function strip(after) {
+    if (!document.body) return;
+    if (document.querySelector(".ghf-loc")) return;
+    css();
+    var nav = el("nav", "ghf-loc ghf-ui"); nav.setAttribute("data-no-translate", ""); nav.setAttribute("translate", "no");
+    fill(nav); strips.push(nav);
+    if (after && after.parentNode) after.parentNode.insertBefore(nav, after.nextSibling); else document.body.insertBefore(nav, document.body.firstChild);
+  }
+  var box = null;
+  function render() {
+    if (!box) return;
+    var s = T[lang()], l = lang(); box.querySelector(".ghf-cho-in").innerHTML = "";
+    var inn = box.querySelector(".ghf-cho-in");
+    var top = el("div", "ghf-cho-top"), br = el("div", "ghf-cho-brand"); var im = document.createElement("img"); im.src = BASE + "/brand/cedwyn-tent-icon-64.png"; im.alt = ""; br.appendChild(im); br.appendChild(el("span", null, s.estate)); top.appendChild(br);
+    var lg = el("div", "ghf-cho-lang"); ["en", "cy", "es"].forEach(function (k) { var b = el("button", null, k.toUpperCase()); b.type = "button"; b.setAttribute("aria-pressed", k === l ? "true" : "false"); b.onclick = function () { if (window.GHFLang) window.GHFLang.set(k); else { document.documentElement.setAttribute("lang", k); } setTimeout(render, 60); }; lg.appendChild(b); }); top.appendChild(lg);
+    inn.appendChild(top);
+    inn.appendChild(el("h1", null, s.title));
+    [["wales", "/wales/", s.w_kick, s.w_name, s.w_line], ["patagonia", "/patagonia/", s.p_kick, s.p_name, s.p_line], ["cyberspace", "/cyberspace/", s.c_kick, s.c_name, s.c_line]].forEach(function (o) {
+      var a = el("a", "ghf-cho-opt"); a.href = href(o[1]);
+      a.appendChild(el("span", null, o[2] + (o[0] !== "cyberspace" ? " · " + s.soon : ""))); a.appendChild(el("b", null, o[3])); a.appendChild(el("small", null, o[4]));
+      a.addEventListener("click", function () { set(o[0]); });
+      inn.appendChild(a);
+    });
+    inn.appendChild(el("p", "ghf-cho-note", s.note));
+  }
+  function choose(fixed) {
+    if (!document.body) { document.addEventListener("DOMContentLoaded", function () { choose(fixed); }); return; }
+    if (box) return;
+    css();
+    box = el("div", "ghf-cho ghf-ui"); box.setAttribute("role", "dialog"); box.setAttribute("aria-modal", "true"); box.setAttribute("aria-label", T[lang()].title);
+    box.setAttribute("data-no-translate", ""); box.setAttribute("translate", "no");
+    box.appendChild(el("div", "ghf-cho-bg")); box.appendChild(el("div", "ghf-cho-in"));
+    document.body.appendChild(box); document.documentElement.style.overflow = "hidden";
+    render();
+      }
+  document.addEventListener("ghf-lang-change", function () { strips.forEach(fill); render(); });
+  window.GHFLoc = { strip: strip, choose: choose, get: get, set: set, version: "__VER__" };
+  // pages that carry their own header (the base camp map and the 1D list) get the strip at the top here;
+  // every other page gets it from basecamp.js, under the shared header bar
+  var own = apex && (path === "/" || path === "/index.html" || /^\/1d(\/|$)/.test(path));
+  if (own) { if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", function () { strip(null); }); else strip(null); }
+  if (apex && (path === "/" || path === "/index.html")) {
+    var q = location.search || "";
+    if (/[?&]choose\b/.test(q)) choose(false);
+    else if (!/[?&]map\b/.test(q)) {
+      var c = get(), ref = document.referrer || "";
+      var inside = /^https:\/\/([a-z0-9-]+\.)*bucklerfamily\.estate\//.test(ref) || /\.pages\.dev\//.test(ref);
+      if (!c) choose(false);
+      else if (!inside) location.replace("/" + c + "/");
+    }
+  }
+})();
+"""
+
+T_JS = {
+ "en": {"loc": "Location", "wales": "Wales", "patagonia": "Patagonia", "cyberspace": "Cyberspace", "choose": "Choose a location", "estate": "Cedwyn Estate",
+        "title": "Choose your destination", "soon": "Coming soon",
+        "w_kick": "Llandough, Wales", "w_name": "Great House Farm", "w_line": "Virtual-reality guided tour",
+        "p_kick": "Puerto Madryn, Patagonia, Argentina", "p_name": "Great House Farm II", "p_line": "Cedwyn Estate: replica farmhouse, wax museum, weddings, stables, B&B",
+        "c_kick": "Online", "c_name": "Cyberspace", "c_line": "The digital estate: maps, library, shops, app",
+        "note": "Your choice is remembered on this device. Change it any time with the bar at the top."},
+ "cy": {"loc": "Lleoliad", "wales": "Cymru", "patagonia": "Patagonia", "cyberspace": "Seiberofod", "choose": "Dewiswch leoliad", "estate": "Ystâd Cedwyn",
+        "title": "Dewiswch eich cyrchfan", "soon": "Yn dod cyn hir",
+        "w_kick": "Llandochau, Cymru", "w_name": "Tŷ Mawr", "w_line": "Taith dywys rhith-wirionedd",
+        "p_kick": "Porth Madryn, Patagonia, yr Ariannin", "p_name": "Tŷ Mawr II", "p_line": "Ystâd Cedwyn: ffermdy replica, amgueddfa gwyr, priodasau, stablau, gwely a brecwast",
+        "c_kick": "Ar-lein", "c_name": "Seiberofod", "c_line": "Yr ystâd ddigidol: mapiau, llyfrgell, siopau, ap",
+        "note": "Cofir eich dewis ar y ddyfais hon. Newidiwch ef unrhyw bryd gyda’r bar ar y brig."},
+ "es": {"loc": "Lugar", "wales": "Gales", "patagonia": "Patagonia", "cyberspace": "Ciberespacio", "choose": "Elija un lugar", "estate": "Finca Cedwyn",
+        "title": "Elija su destino", "soon": "Próximamente",
+        "w_kick": "Llandough, Gales", "w_name": "Great House Farm", "w_line": "Visita guiada en realidad virtual",
+        "p_kick": "Puerto Madryn, Patagonia, Argentina", "p_name": "Great House Farm II", "p_line": "Finca Cedwyn: réplica de la casa, museo de cera, bodas, caballerizas, B&B",
+        "c_kick": "En línea", "c_name": "Ciberespacio", "c_line": "La finca digital: mapas, biblioteca, tiendas, app",
+        "note": "Su elección se recuerda en este dispositivo. Cámbiela cuando quiera con la barra superior."}
+}
+
+def inject(fn, tag, marker):
+    if not os.path.exists(fn): return False
+    s = open(fn, encoding="utf-8").read()
+    if marker in s: return False
+    s = s.replace("</head>", tag + "\n</head>", 1)
+    open(fn, "w", encoding="utf-8").write(s); return True
+
+def build(D=None, ROOT=None):
+    ROOT = ROOT or os.path.dirname(HERE)
+    D = D or json.load(open(os.path.join(HERE, "basecamp_stops.json"), encoding="utf-8"))
+    cfg = json.load(open(os.path.join(HERE, "locations.json"), encoding="utf-8"))
+    pub = os.path.join(ROOT, "public")
+    pages = {"wales": page_wales(cfg), "patagonia": page_patagonia(cfg), "cyberspace": page_cyber(cfg, D), "choose": page_choose(cfg),
+             "wales/vouchers/terms": page_terms(cfg), "wales/vouchers/thank-you": page_thanks(cfg)}
+    for p, h in pages.items():
+        d = os.path.join(pub, p); os.makedirs(d, exist_ok=True)
+        open(os.path.join(d, "index.html"), "w", encoding="utf-8").write(h)
+    open(os.path.join(pub, "ghf-lang", "locations.js"), "w", encoding="utf-8").write(LOC_JS.replace("__T__", json.dumps(T_JS, ensure_ascii=False)).replace("__VER__", cfg["version"]))
+    # ghf-lang dictionary: every visible English string on the location pages
+    strings = dict(cfg["strings"])
+    for v in cfg["vouchers"]: strings.setdefault(v["label"], strings.get(v["label"], {}))
+    dic = {"site": "locations", "version": cfg["version"], "updated": cfg["updated"],
+           "note": "Cedwyn Estate locations (/wales/, /patagonia/, /cyberspace/, voucher pages): interface strings. Generated by campus/build_locations.py from campus/locations.json.",
+           "mount": "#lang-slot", "mountMode": "append", "patterns": [], "strings": {k: v for k, v in strings.items() if v}}
+    json.dump(dic, open(os.path.join(pub, "ghf-lang", "sites", "locations.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+    tag = '<script src="/ghf-lang/locations.js?v=' + cfg["version"] + '" data-ghf-locations></script>'
+    a = inject(os.path.join(ROOT, "index.html"), tag, "data-ghf-locations")
+    b = inject(os.path.join(pub, "1d", "index.html"), tag, "data-ghf-locations")
+    # sitemap
+    sm = os.path.join(pub, "sitemap.xml")
+    if os.path.exists(sm):
+        s = open(sm, encoding="utf-8").read(); add = ""
+        for p in ["wales/", "patagonia/", "cyberspace/", "wales/vouchers/terms/"]:
+            u = "https://bucklerfamily.estate/" + p
+            if "<loc>" + u + "</loc>" not in s: add += f"  <url><loc>{u}</loc><lastmod>{cfg['updated']}</lastmod></url>\n"
+        if add: open(sm, "w", encoding="utf-8").write(s.replace("</urlset>", add + "</urlset>"))
+    return {"pages": list(pages), "root_tag": a, "1d_tag": b}
+
+if __name__ == "__main__":
+    print(build())

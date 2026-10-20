@@ -688,6 +688,7 @@ def build(D=None, ROOT=None):
     open(os.path.join(pub, "ghf-lang", "locations.js"), "w", encoding="utf-8").write(LOC_JS.replace("__T__", json.dumps(T_JS, ensure_ascii=False)).replace("__ICO__", json.dumps(ICONS, ensure_ascii=False)).replace("__LICO__", json.dumps(LOC_ICONS)).replace("__VER__", cfg["version"]))
     fd = os.path.join(pub, "brand", "flags"); os.makedirs(fd, exist_ok=True)
     for k, v in ICONS.items(): open(os.path.join(fd, k + ".svg"), "w", encoding="utf-8").write(v + "\n")
+    open(os.path.join(fd, "robot-light.svg"), "w", encoding="utf-8").write(ICONS["robot"].replace("currentColor", "#ffffff") + "\n")  # for <img> on dark bars (WordPress wiki)
     # ghf-lang dictionary: every visible English string on the location pages
     strings = dict(cfg["strings"])
     for v in cfg["vouchers"]: strings.setdefault(v["label"], strings.get(v["label"], {}))

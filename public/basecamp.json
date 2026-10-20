@@ -333,6 +333,23 @@
   },
   {
    "n": 21,
+   "key": "treasury",
+   "title": "The Treasury",
+   "tag": "CEDWYN ESTATE COINS",
+   "caption": "Coins: store credit for e-books, from 100 coins for £9.99. No cash value.",
+   "url": "https://bucklerfamily.estate/coins/",
+   "hosts": [],
+   "paths": [
+    "/coins/"
+   ],
+   "icon": "treasury",
+   "colors": [
+    "#12355B",
+    "#D9E2EC"
+   ]
+  },
+  {
+   "n": 22,
    "key": "shop",
    "title": "Gift Shop & Marketplace",
    "tag": "JOURNEY'S END",

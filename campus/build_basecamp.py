@@ -179,6 +179,15 @@ def _icon(kind, cx, cy, big=False):
         g.append(f'<path d="M{cx-28} {cy-14} L{cx-20} {cy+30} M{cx+12} {cy-16} L{cx+4} {cy+30}" stroke="#fff" stroke-width=".8" opacity=".6"/>')
         g.append(f'<path d="M{cx+20} {cy-6} c0 -12 18 -12 18 0 c0 8 -9 16 -9 20 c0 -4 -9 -12 -9 -20 Z" fill="#f2c94c"/>')
         g.append(f'<circle cx="{cx+29}" cy="{cy-6}" r="3" fill="#0d0d0d"/>')
+    elif kind == "treasury":   # domed treasury with a coin: Cedwyn Estate coins (store credit), /coins/
+        g.append(f'<rect x="{cx-40}" y="{cy+28}" width="80" height="6" fill="#0d0d0d" {ST}/>')
+        g.append(f'<rect x="{cx-36}" y="{cy-4}" width="72" height="32" fill="#141414" {ST}/>')
+        for i in range(4):
+            g.append(f'<rect x="{cx-30+i*18}" y="{cy-2}" width="6" height="30" fill="#0d0d0d" {ST}/>')
+        g.append(f'<rect x="{cx-40}" y="{cy-10}" width="80" height="6" fill="#0d0d0d" {ST}/>')
+        g.append(f'<path d="M{cx-30} {cy-10} A30 24 0 0 1 {cx+30} {cy-10} Z" fill="__ROOF__" {ST}/>')
+        g.append(f'<circle cx="{cx}" cy="{cy-40}" r="7" fill="#f2c94c" {ST}/>')
+        g.append(f'<text x="{cx}" y="{cy-36.5}" text-anchor="middle" style="font:700 9px Barlow,Arial,sans-serif" fill="#0d0d0d">C</text>')
     elif kind == "shop":
         w = 120
         g.append(f'<rect x="{cx-w/2}" y="{cy-22}" width="{w}" height="56" fill="#0d0d0d" {ST}/>')

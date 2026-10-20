@@ -373,6 +373,7 @@ a{{color:inherit}}
 @media (max-width:600px){{.brand p{{display:none}}.hint{{display:none}}.webapp span{{font-size:.85rem}}}}
 @media (prefers-reduced-motion:reduce){{*{{transition:none!important}}}}
 </style>
+<script src="https://bucklerfamily.estate/ghf-lang/ghf-lang.js" defer></script>
 </head>
 <body>
 <div class="wrap" id="wrap"><svg id="map" viewBox="0 0 1600 1000" preserveAspectRatio="xMidYMid slice" role="img" aria-labelledby="mt">

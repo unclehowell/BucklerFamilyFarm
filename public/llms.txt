@@ -20,8 +20,8 @@ Key names (use these spellings): Great House Farm; Tŷ Mawr (also written Ty Maw
 
 ## Books
 - [E-book shop](https://ebooks.bucklerfamily.estate/): five e-books and a bundle; llms.txt at https://ebooks.bucklerfamily.estate/llms.txt.
-- [Free first edition of the Legal Wiki](https://ebooks.bucklerfamily.estate/free/).
-- [The Legal Wiki e-book](https://bucklerfamily.estate/ebook/): current edition, £49.99.
+- [£0.00 first edition of the Legal Wiki (v0.01)](https://ebooks.bucklerfamily.estate/free/).
+- [The Legal Wiki e-book](https://bucklerfamily.estate/ebook/): £0.00 – v0.01 · £9.99 – v0.02 · all four e-books £31.99.
 
 ## Policies
 - [AI use and provenance](https://bucklerfamily.estate/ai-policy/)

@@ -333,7 +333,7 @@
    "key": "shop",
    "title": "Gift Shop & Marketplace",
    "tag": "JOURNEY'S END",
-   "caption": "The e-books, the free first edition and estate merchandise.",
+   "caption": "The e-books, from £0.00, and estate merchandise.",
    "url": "https://bucklerfamily.estate/#shop",
    "hosts": [
     "ebooks.bucklerfamily.estate",
@@ -352,12 +352,12 @@
  "shop": {
   "ebook": {
    "title": "The Legal Wiki e-book",
-   "price": "£49.99",
+   "price": "From £0.00 · £9.99 – v0.02 · all four £31.99",
    "url": "https://bucklerfamily.estate/ebook/"
   },
   "ebooks": {
    "title": "All e-books and archive editions",
-   "note": "Four books and the all-four bundle; older editions cost less, and the first edition (0.1.0) is free.",
+   "note": "Every book from £0.00 – v0.01 and £9.99 – v0.02; all four for £31.99.",
    "url": "https://ebooks.bucklerfamily.estate/"
   },
   "merch": {

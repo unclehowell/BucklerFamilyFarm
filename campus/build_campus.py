@@ -70,7 +70,7 @@ BUILDINGS = [
      "https://fb.bucklerfamily.estate/", 1096, 800, 90, 95, "red", "live", ""),
     # Sion, 20 Oct 2026 00:27 BST: "ebook as a small sub building (place it in wayback)" — annex on the Archive Vault
     ("ebook", "E-book", "The Great House Farm e-book",
-     "Evidence, history and heritage: the whole archive in one 2,064-page searchable PDF. Get the e-book (£49.99).",
+     "Evidence, history and heritage: the whole archive in one 2,064-page searchable PDF. Get the e-book (from £0.00 · £9.99 – v0.02 · all four £31.99).",
      "https://bucklerfamily.estate/ebook/", 150, 650, 64, 58, "concrete", "live", "annex"),
     # Added 20 Oct 2026 by the chess-board worker: the whole record as one zoomable chessboard, on open ground
     # south of the parade square (no existing building, road or tree moved).
@@ -440,7 +440,7 @@ a{{color:inherit}}
 <div class="brand">
   <h1>Tŷ Mawr Campus</h1>
   <p>Great House Farm, Llandough. Every part of the case, one building each. Select a building to see where it lives.</p>
-  <p class="ebk"><a href="/ebook/">Get the e-book (£49.99) →</a></p>
+  <p class="ebk"><a href="/ebook/">Get the e-book (from £0.00 · £9.99 – v0.02 · all four £31.99) →</a></p>
 </div>
 <div class="tools">
   <button class="btn" type="button" id="dirbtn" aria-expanded="false" aria-controls="dir">Directory</button>
@@ -455,7 +455,7 @@ a{{color:inherit}}
   <p id="co-d"></p>
   <a class="url" id="co-u" href="#"></a>
   <a class="open" id="co-o" href="#">Open</a><span class="st" id="co-s"></span>
-  <a class="ebk2" id="co-e" href="/ebook/" hidden>Get the e-book (£49.99) →</a>
+  <a class="ebk2" id="co-e" href="/ebook/" hidden>Get the e-book (from £0.00 · £9.99 – v0.02 · all four £31.99) →</a>
 </div>
 
 <p class="hint">Not Llandough-juxta-Cowbridge, nor the Great House at Llandow or Aberthin.</p>

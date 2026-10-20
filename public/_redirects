@@ -10,3 +10,13 @@
 /go /ebook/ 302
 # Free-book funnel (worker ff7c2ab1, 20 Oct 2026): short link to the lead-magnet landing page
 /free https://ebooks.bucklerfamily.estate/free/?utm_source=basecamp&utm_medium=shortlink&utm_campaign=free-wiki 302
+
+# Rights, licence and UK compliance pages (Sion's Tab agent, 20 Oct 2026)
+/rights /licence/ 301
+/rights/ /licence/ 301
+/license /licence/ 301
+/license/ /licence/ 301
+/privacy-policy /privacy/ 301
+/cookie-policy /cookies/ 301
+/enquiry /enquire/ 301
+/enquiries /enquire/ 301

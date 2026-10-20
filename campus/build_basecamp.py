@@ -638,6 +638,24 @@ JS = r"""/*! basecamp.js — "Back to base camp" link for every Great House Farm
     window.addEventListener("resize", place);
     document.addEventListener("ghf-lang-change", function () { render(); });
   }
+  // Shared legal footer on every Great House Farm site: licence, privacy, cookies, terms, disclaimer (Sion's Tab agent, 20 Oct 2026).
+  // Skipped where the page already carries it (data-ghf-legal-foot) and on the full-screen 3D walk.
+  function legalFoot() {
+    if (!document.body || document.querySelector("[data-ghf-legal-foot]") || /^\/3d(\/|$)/.test(path)) return;
+    var B = "https://bucklerfamily.estate", L = [["Licence", "/licence/"], ["Privacy", "/privacy/"], ["Cookies", "/cookies/"], ["Terms", "/terms/"], ["Disclaimer", "/disclaimer/"], ["Accessibility", "/accessibility/"], ["Enquire", "/enquire/"]];
+    var st = el("style"); st.setAttribute("data-ghf-lf", "");
+    st.textContent = ".ghf-lf{display:block!important;clear:both;position:relative;z-index:2;box-sizing:border-box;width:100%;flex:0 0 auto;margin:32px 0 0!important;padding:16px 16px 76px!important;background:#0a0a0a!important;border-top:1px solid #333!important;color:#b8b8b8!important;font:400 12.5px/1.6 Barlow,'Helvetica Neue',Arial,system-ui,sans-serif!important;text-align:center!important;letter-spacing:0!important;text-transform:none!important}" +
+      ".ghf-lf p{margin:3px auto!important;max-width:760px;color:#b8b8b8!important;font:inherit!important}.ghf-lf b{color:#eaeaea!important;font-weight:700}" +
+      ".ghf-lf a{color:#eaeaea!important;text-decoration:underline!important;margin:0 6px;display:inline-block;padding:3px 0;font:inherit!important}.ghf-lf a:focus-visible{outline:2px solid #f2c94c;outline-offset:2px}@media print{.ghf-lf{padding-bottom:16px!important}}";
+    (document.head || document.documentElement).appendChild(st);
+    var f = el("footer", "ghf-lf"); f.setAttribute("data-ghf-legal-foot", "1");
+    var p1 = el("p"); p1.appendChild(el("b", null, "\u00a9 Williams\u2013Buckler family. All rights reserved. Licence terms apply.")); f.appendChild(p1);
+    var nv = el("p"); nv.setAttribute("role", "navigation"); nv.setAttribute("aria-label", "Legal");
+    L.forEach(function (x) { var a = el("a", null, x[0]); a.href = B + x[1]; nv.appendChild(a); }); f.appendChild(nv);
+    f.appendChild(el("p", null, "Our case, prospective. Not a finding of any court. Not legal advice. \u2014 Sion's Tab agent"));
+    document.body.appendChild(f);
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", legalFoot); else legalFoot();
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start); else start();
 })();
 """

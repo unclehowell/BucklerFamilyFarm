@@ -20,5 +20,7 @@ Allow: /
 Disallow: /api/
 Disallow: /ebook/api/
 Disallow: /ebook/thank-you/
+Disallow: /enquire/api/
 Sitemap: https://bucklerfamily.estate/sitemap.xml
+# Licence terms (text and data mining reserved for commercial AI training, Art 4(3) Directive (EU) 2019/790): https://bucklerfamily.estate/licence/
 # Plain-text guide for language models: https://bucklerfamily.estate/llms.txt

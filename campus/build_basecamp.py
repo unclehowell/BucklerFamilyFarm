@@ -669,6 +669,19 @@ JS = r"""/*! basecamp.js — "Back to Cedwyn Estate" link for every Great House 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", legalFoot); else legalFoot();
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start); else start();
 })();
+/* "Ask the archive" AI chat widget loader (Sion's Tab agent, 20 Oct 2026): AI answers from our published pages, with
+ * source links; may be wrong. Served by chat.bucklerfamily.estate. Opt out per site or page with <html data-ghf-chat="off">
+ * or <meta name="ghf-chat" content="off">. Never loaded on clerk., chess. or email. */
+(function () {
+  try {
+    var h = location.hostname, d = document.documentElement;
+    if (window.GHFChat || /^(clerk|chess|email)\./.test(h) || !/(^|\.)bucklerfamily\.estate$/.test(h)) return;
+    if (d.getAttribute("data-ghf-chat") === "off") return;
+    var m = document.querySelector('meta[name="ghf-chat"]'); if (m && /off/i.test(m.getAttribute("content") || "")) return;
+    var s = document.createElement("script"); s.src = "https://chat.bucklerfamily.estate/widget.js"; s.async = true;
+    (document.head || d).appendChild(s);
+  } catch (e) {}
+})();
 """
 JS = JS.replace("__BRANDPATHS__", json.dumps(BRAND_PATHS)).replace("__TWEAKS__", json.dumps(TWEAKS, ensure_ascii=False))
 JS = JS.replace("__STOPS__", json.dumps(js_stops, ensure_ascii=False)).replace("__VER__", D["version"]).replace("__DATE__", D["updated"])

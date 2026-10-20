@@ -1,5 +1,5 @@
 {
- "version": "1.1.0",
+ "version": "1.2.0",
  "updated": "2026-10-20",
  "base": {
   "name": "Cedwyn Estate",
@@ -22,9 +22,11 @@
    ],
    "icon": "library",
    "colors": [
-    "#2C3E50",
-    "#9FD4DF"
-   ]
+    "#1B4D6A",
+    "#0F9DF0"
+   ],
+   "hue": "Sky",
+   "desc": "The main record of Great House Farm (Tŷ Mawr), Llandough: hundreds of pages of documents, dates and sources, each page with its own change log. Start here if you are new."
   },
   {
    "n": 2,
@@ -38,9 +40,11 @@
    ],
    "icon": "book",
    "colors": [
-    "#1F3A68",
-    "#FF9F43"
-   ]
+    "#6A3A1B",
+    "#F1721E"
+   ],
+   "hue": "Orange",
+   "desc": "The history told in order, from the Williams family line through the farm's later years to the 1988 demolition, one slide at a time."
   },
   {
    "n": 3,
@@ -54,9 +58,11 @@
    ],
    "icon": "chess",
    "colors": [
-    "#4A2C17",
-    "#F3EBD3"
-   ]
+    "#3D2614",
+    "#D9AE7E"
+   ],
+   "hue": "Brown",
+   "desc": "Two records set side by side on a zoomable board: what was done and written on one side, the documented family facts on the other."
   },
   {
    "n": 4,
@@ -70,9 +76,11 @@
    ],
    "icon": "court",
    "colors": [
-    "#4B1E5A",
-    "#C9A0FF"
-   ]
+    "#4A1B6A",
+    "#C274F6"
+   ],
+   "hue": "Purple",
+   "desc": "Our case on fraud, concealment and government involvement, set out topic by topic with the sources for each point. Our case, prospective. Not a finding of any court."
   },
   {
    "key": "csscpsg",
@@ -87,9 +95,11 @@
    "icon": "book",
    "n": 5,
    "colors": [
-    "#2E2A6B",
-    "#C6E55A"
-   ]
+    "#364E13",
+    "#92DB24"
+   ],
+   "hue": "Lime",
+   "desc": "Five key documents read closely, sentence by sentence, with a score for how each sentence holds up against the record."
   },
   {
    "n": 6,
@@ -103,9 +113,11 @@
    ],
    "icon": "cabinet",
    "colors": [
-    "#4A5320",
-    "#E8D5A3"
-   ]
+    "#215214",
+    "#48DB24"
+   ],
+   "hue": "Green",
+   "desc": "The original documents in one list: deeds, letters, maps and registers, each dated and linked to where it is held."
   },
   {
    "n": 7,
@@ -119,9 +131,11 @@
    ],
    "icon": "vault",
    "colors": [
-    "#0B4F6C",
-    "#F4D58D"
-   ]
+    "#144E52",
+    "#0FE1F0"
+   ],
+   "hue": "Cyan",
+   "desc": "Web pages, images and transcripts saved exactly as they were found, so the record does not change if a page is taken down."
   },
   {
    "n": 8,
@@ -135,9 +149,11 @@
    ],
    "icon": "post",
    "colors": [
-    "#0F5132",
-    "#FFB627"
-   ]
+    "#145227",
+    "#24DB5B"
+   ],
+   "hue": "Emerald",
+   "desc": "A public archive of the letters and emails exchanged with public bodies, in date order."
   },
   {
    "n": 9,
@@ -151,9 +167,11 @@
    ],
    "icon": "columns",
    "colors": [
-    "#2B2B2B",
-    "#FF5A5F"
-   ]
+    "#263238",
+    "#B0BEC5"
+   ],
+   "hue": "Steel grey",
+   "desc": "Every public body that has been written to: what was asked, when, and what came back."
   },
   {
    "n": 10,
@@ -167,9 +185,11 @@
    ],
    "icon": "target",
    "colors": [
-    "#3A1F3D",
-    "#FF8FB1"
-   ]
+    "#671B6A",
+    "#EE4EF4"
+   ],
+   "hue": "Magenta",
+   "desc": "Each records request shown on a dartboard, scored by how close the answer came to what was asked for."
   },
   {
    "n": 11,
@@ -183,9 +203,11 @@
    ],
    "icon": "hall",
    "colors": [
-    "#145A5A",
-    "#7EE2B8"
-   ]
+    "#14523F",
+    "#24DBA4"
+   ],
+   "hue": "Teal",
+   "desc": "Freedom of information questions and the answers that came back, grouped by topic."
   },
   {
    "n": 12,
@@ -199,9 +221,11 @@
    ],
    "icon": "council",
    "colors": [
-    "#6B3E26",
-    "#FFC48C"
-   ]
+    "#1B4D6A",
+    "#0F9DF0"
+   ],
+   "hue": "Sky",
+   "desc": "A page on the Legal Wiki looking at Llandough Community Council's handling of the matter, step by step."
   },
   {
    "n": 13,
@@ -215,9 +239,11 @@
    ],
    "icon": "chamber",
    "colors": [
-    "#4B3B47",
-    "#B5E48C"
-   ]
+    "#484912",
+    "#D5DB24"
+   ],
+   "hue": "Yellow",
+   "desc": "The briefing prepared for Llandough Community Council's meeting of 22 October 2026."
   },
   {
    "n": 14,
@@ -231,9 +257,11 @@
    ],
    "icon": "magnifier",
    "colors": [
-    "#2D4739",
-    "#F7D6E0"
-   ]
+    "#1B1D6A",
+    "#878BF7"
+   ],
+   "hue": "Indigo",
+   "desc": "An independent pass over the evidence, entry by entry, showing what holds and what still needs a source."
   },
   {
    "n": 15,
@@ -247,9 +275,11 @@
    ],
    "icon": "search",
    "colors": [
-    "#102A43",
-    "#D3B8FF"
-   ]
+    "#301B6A",
+    "#A182F7"
+   ],
+   "hue": "Violet",
+   "desc": "A searchable copy of the whole Legal Wiki, for finding a name, date or place quickly."
   },
   {
    "key": "kissed-frogs",
@@ -262,9 +292,11 @@
    "icon": "frog",
    "n": 16,
    "colors": [
-    "#2C3E50",
-    "#9FD4DF"
-   ]
+    "#1B4D6A",
+    "#0F9DF0"
+   ],
+   "hue": "Sky",
+   "desc": "Leads that were followed up and turned out not to be connected to this case, with the reason each was ruled out."
   },
   {
    "n": 17,
@@ -278,9 +310,11 @@
    ],
    "icon": "office",
    "colors": [
-    "#1D4E89",
-    "#FFE066"
-   ]
+    "#1B356A",
+    "#6695F5"
+   ],
+   "hue": "Blue",
+   "desc": "The project office: the plan, the logs, the lessons and the benchmarks behind all of this work."
   },
   {
    "n": 18,
@@ -292,9 +326,11 @@
    "hosts": [],
    "icon": "film",
    "colors": [
-    "#263238",
-    "#FFAB91"
-   ]
+    "#6A1B50",
+    "#F55CC2"
+   ],
+   "hue": "Pink",
+   "desc": "Short films on each chapter of the story, posted on the Great House Farm II Facebook page."
   },
   {
    "n": 19,
@@ -308,9 +344,11 @@
    ],
    "icon": "album",
    "colors": [
-    "#263238",
-    "#FFAB91"
-   ]
+    "#6A1B50",
+    "#F55CC2"
+   ],
+   "hue": "Pink",
+   "desc": "Photographs of the farm and family through the years, shown as a dated timeline, each post sourced to the wiki."
   },
   {
    "n": 20,
@@ -327,9 +365,11 @@
    ],
    "icon": "campus",
    "colors": [
-    "#2E5E3A",
-    "#A8E06C"
-   ]
+    "#0A0A0A",
+    "#F2C94C"
+   ],
+   "hue": "Gold",
+   "desc": "The original estate campus map, with the museum, the vault, the library and the enemy camp."
   },
   {
    "n": 21,
@@ -344,9 +384,11 @@
    ],
    "icon": "treasury",
    "colors": [
-    "#12355B",
-    "#D9E2EC"
-   ]
+    "#0A0A0A",
+    "#F2C94C"
+   ],
+   "hue": "Gold",
+   "desc": "Cedwyn Estate coins: prepaid store credit for e-books and goods. No cash value."
   },
   {
    "n": 22,
@@ -361,9 +403,11 @@
    "paths": [],
    "icon": "counting",
    "colors": [
-    "#1C2541",
-    "#5BC0BE"
-   ]
+    "#6A1B38",
+    "#F56197"
+   ],
+   "hue": "Rose",
+   "desc": "Open accounts for the project: money in and out, AI and records costs, kept as a public ledger."
   },
   {
    "n": 23,
@@ -379,9 +423,11 @@
    "paths": [],
    "icon": "search",
    "colors": [
-    "#3E2C23",
-    "#7FDBFF"
-   ]
+    "#6A1B1B",
+    "#FF5252"
+   ],
+   "hue": "Red",
+   "desc": "The Case Office web app: register, start a paid live records search, or set up your own virtual base camp for your land."
   },
   {
    "n": 24,
@@ -399,9 +445,11 @@
    ],
    "icon": "shop",
    "colors": [
-    "#4A1942",
+    "#0A0A0A",
     "#F2C94C"
-   ]
+   ],
+   "hue": "Gold",
+   "desc": "The e-books, from £0.00, and estate merchandise."
   }
  ],
  "shop": {
@@ -426,6 +474,8 @@
    "#0A0A0A",
    "#F2C94C"
   ],
-  "note": "Two-colour identity per department: colors = [primary, secondary]. Primary is deep (white text passes WCAG AA on it); secondary is bright (black text passes AA on it, and it passes AA as text on black). Stops pointing at the same site share a pair. Red is reserved for the Public Authorities (enemy camp). Table: work/brand/palette.md. — Sion's Tab agent"
- }
+  "note": "Two-colour identity per department: colors = [primary, secondary]. Primary is deep (white text passes WCAG AA on it); secondary is bright (black text passes AA on it, and it passes AA as text on black). Stops pointing at the same site share a pair. Red is reserved for the Public Authorities (enemy camp). Table: work/brand/palette.md. — Sion's Tab agent",
+  "hue": "Gold"
+ },
+ "note_hues": "One signature hue family per site (20 Oct 2026: red is the app, purple is fcg). colors = [primary (deep, white text passes AA), secondary (bright, passes AA as text on black)], both from the same hue family. Stops on the same site share it (clerk and kissed frogs are Legal Wiki pages; the film and the album are the Facebook family; campus, treasury and gift shop are base camp pages, gold). Table: work/brand/palette.md. — Sion's Tab agent"
 }

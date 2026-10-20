@@ -5,7 +5,7 @@
   "links": [
    {
     "site": "bpvsbuckler",
-    "label": "The story: Cadw slides only",
+    "label": "The story: Cadw slides only (9)",
     "url": "https://bpvsbuckler.bucklerfamily.estate/?institution=cadw"
    },
    {
@@ -37,7 +37,7 @@
   "links": [
    {
     "site": "bpvsbuckler",
-    "label": "The story: Welsh Government slides only",
+    "label": "The story: Welsh Government slides only (1)",
     "url": "https://bpvsbuckler.bucklerfamily.estate/?institution=welsh-government"
    },
    {
@@ -64,7 +64,7 @@
   "links": [
    {
     "site": "bpvsbuckler",
-    "label": "The story: HM Land Registry slides only",
+    "label": "The story: HM Land Registry slides only (13)",
     "url": "https://bpvsbuckler.bucklerfamily.estate/?institution=hmlr"
    },
    {
@@ -96,7 +96,7 @@
   "links": [
    {
     "site": "bpvsbuckler",
-    "label": "The story: Vale of Glamorgan Council slides only",
+    "label": "The story: Vale of Glamorgan Council slides only (8)",
     "url": "https://bpvsbuckler.bucklerfamily.estate/?institution=vale-council"
    },
    {
@@ -128,7 +128,7 @@
   "links": [
    {
     "site": "bpvsbuckler",
-    "label": "The story: Cardiff Council slides only",
+    "label": "The story: Cardiff Council (no scene names it yet; plays the full story)",
     "url": "https://bpvsbuckler.bucklerfamily.estate/?institution=cardiff-council"
    },
    {
@@ -149,7 +149,7 @@
   "links": [
    {
     "site": "bpvsbuckler",
-    "label": "The story: South Glamorgan County Council slides only",
+    "label": "The story: South Glamorgan County Council (no scene names it yet; plays the full story)",
     "url": "https://bpvsbuckler.bucklerfamily.estate/?institution=south-glamorgan"
    },
    {
@@ -170,7 +170,7 @@
   "links": [
    {
     "site": "bpvsbuckler",
-    "label": "The story: BP / Western Ground Rents slides only",
+    "label": "The story: BP / Western Ground Rents slides only (39)",
     "url": "https://bpvsbuckler.bucklerfamily.estate/?institution=bp"
    },
    {
@@ -197,7 +197,7 @@
   "links": [
    {
     "site": "bpvsbuckler",
-    "label": "The story: The Courts slides only",
+    "label": "The story: The Courts slides only (17)",
     "url": "https://bpvsbuckler.bucklerfamily.estate/?institution=courts"
    },
    {
@@ -229,7 +229,7 @@
   "links": [
    {
     "site": "bpvsbuckler",
-    "label": "The story: South Wales Police slides only",
+    "label": "The story: South Wales Police slides only (1)",
     "url": "https://bpvsbuckler.bucklerfamily.estate/?institution=south-wales-police"
    },
    {
@@ -261,7 +261,7 @@
   "links": [
    {
     "site": "bpvsbuckler",
-    "label": "The story: Ministry of Defence slides only",
+    "label": "The story: Ministry of Defence (no scene names it yet; plays the full story)",
     "url": "https://bpvsbuckler.bucklerfamily.estate/?institution=mod"
    },
    {
@@ -288,7 +288,7 @@
   "links": [
    {
     "site": "bpvsbuckler",
-    "label": "The story: Information Commissioner slides only",
+    "label": "The story: Information Commissioner (no scene names it yet; plays the full story)",
     "url": "https://bpvsbuckler.bucklerfamily.estate/?institution=ico"
    },
    {
@@ -309,7 +309,7 @@
   "links": [
    {
     "site": "bpvsbuckler",
-    "label": "The story: The National Archives slides only",
+    "label": "The story: The National Archives slides only (2)",
     "url": "https://bpvsbuckler.bucklerfamily.estate/?institution=national-archives"
    },
    {
@@ -341,7 +341,7 @@
   "links": [
    {
     "site": "bpvsbuckler",
-    "label": "The story: Natural Resources Wales slides only",
+    "label": "The story: Natural Resources Wales (no scene names it yet; plays the full story)",
     "url": "https://bpvsbuckler.bucklerfamily.estate/?institution=nrw"
    },
    {
@@ -357,7 +357,7 @@
   "links": [
    {
     "site": "bpvsbuckler",
-    "label": "The story: Forest of Cardiff slides only",
+    "label": "The story: Forest of Cardiff slides only (4)",
     "url": "https://bpvsbuckler.bucklerfamily.estate/?institution=forest-of-cardiff"
    },
    {
@@ -378,7 +378,7 @@
   "links": [
    {
     "site": "bpvsbuckler",
-    "label": "The story: Land Authority for Wales slides only",
+    "label": "The story: Land Authority for Wales slides only (1)",
     "url": "https://bpvsbuckler.bucklerfamily.estate/?institution=land-authority-wales"
    },
    {
@@ -399,7 +399,7 @@
   "links": [
    {
     "site": "bpvsbuckler",
-    "label": "The story: Glamorgan Archives slides only",
+    "label": "The story: Glamorgan Archives slides only (1)",
     "url": "https://bpvsbuckler.bucklerfamily.estate/?institution=glamorgan-archives"
    },
    {
@@ -431,7 +431,7 @@
   "links": [
    {
     "site": "bpvsbuckler",
-    "label": "The story: Llandough Community Council slides only",
+    "label": "The story: Llandough Community Council slides only (1)",
     "url": "https://bpvsbuckler.bucklerfamily.estate/?institution=llandough-community-council"
    },
    {
@@ -459,6 +459,124 @@
     "site": "2026-10-22",
     "label": "Council briefing, 22 October 2026",
     "url": "https://2026-10-22.bucklerfamily.estate/"
+   }
+  ]
+ },
+ "heneb": {
+  "name": "Heneb (formerly the Glamorgan-Gwent Archaeological Trust)",
+  "sign": "Heneb (formerly GGAT)",
+  "links": [
+   {
+    "site": "bpvsbuckler",
+    "label": "The story: Heneb (formerly GGAT) slides only (12)",
+    "url": "https://bpvsbuckler.bucklerfamily.estate/?institution=heneb"
+   },
+   {
+    "site": "dartboard",
+    "label": "Dartboard (Disclosure Rings)",
+    "url": "https://dartboard.bucklerfamily.estate/",
+    "note": "opens the board; that site has no per-institution address yet"
+   },
+   {
+    "site": "legal-wiki",
+    "label": "Legal Wiki: forensic assessment",
+    "url": "https://greathousefarmwiki.wordpress.com/scrutiny-and-accountability/government-public-authority-involvement/heneb-forensic-institutional-review/"
+   },
+   {
+    "site": "qa",
+    "label": "Q&A: questions to Heneb (formerly GGAT)",
+    "url": "https://qa.bucklerfamily.estate/?institution=heneb"
+   }
+  ]
+ },
+ "rcahmw": {
+  "name": "RCAHMW (Royal Commission on the Ancient and Historical Monuments of Wales)",
+  "sign": "RCAHMW",
+  "links": [
+   {
+    "site": "bpvsbuckler",
+    "label": "The story: RCAHMW slides only (9)",
+    "url": "https://bpvsbuckler.bucklerfamily.estate/?institution=rcahmw"
+   },
+   {
+    "site": "dartboard",
+    "label": "Dartboard (Disclosure Rings)",
+    "url": "https://dartboard.bucklerfamily.estate/",
+    "note": "opens the board; that site has no per-institution address yet"
+   },
+   {
+    "site": "legal-wiki",
+    "label": "Legal Wiki: forensic assessment",
+    "url": "https://greathousefarmwiki.wordpress.com/scrutiny-and-accountability/government-public-authority-involvement/rcahmw-forensic-institutional-review/"
+   },
+   {
+    "site": "qa",
+    "label": "Q&A: questions to RCAHMW",
+    "url": "https://qa.bucklerfamily.estate/?institution=rcahmw"
+   }
+  ]
+ },
+ "museum-wales": {
+  "name": "Amgueddfa Cymru – Museum Wales",
+  "sign": "Museum Wales",
+  "links": [
+   {
+    "site": "bpvsbuckler",
+    "label": "The story: Museum Wales slides only (4)",
+    "url": "https://bpvsbuckler.bucklerfamily.estate/?institution=museum-wales"
+   },
+   {
+    "site": "dartboard",
+    "label": "Dartboard (Disclosure Rings)",
+    "url": "https://dartboard.bucklerfamily.estate/",
+    "note": "opens the board; that site has no per-institution address yet"
+   },
+   {
+    "site": "legal-wiki",
+    "label": "Legal Wiki: forensic assessment",
+    "url": "https://greathousefarmwiki.wordpress.com/scrutiny-and-accountability/government-public-authority-involvement/amgueddfa-cymru-museum-wales-forensic-institutional-review/"
+   },
+   {
+    "site": "qa",
+    "label": "Q&A: questions to Museum Wales",
+    "url": "https://qa.bucklerfamily.estate/?institution=museum-wales"
+   }
+  ]
+ },
+ "glamorgan-county-council": {
+  "name": "Glamorgan County Council",
+  "sign": "Glamorgan County Council",
+  "links": [
+   {
+    "site": "bpvsbuckler",
+    "label": "The story: Glamorgan County Council slides only (1)",
+    "url": "https://bpvsbuckler.bucklerfamily.estate/?institution=glamorgan-county-council"
+   },
+   {
+    "site": "legal-wiki",
+    "label": "Legal Wiki: forensic assessment",
+    "url": "https://greathousefarmwiki.wordpress.com/scrutiny-and-accountability/government-public-authority-involvement/glamorgan-county-council-forensic-institutional-review/"
+   },
+   {
+    "site": "qa",
+    "label": "Q&A: questions mentioning “Glamorgan County Council”",
+    "url": "https://qa.bucklerfamily.estate/?institution=glamorgan-county-council"
+   }
+  ]
+ },
+ "echr": {
+  "name": "European Court / Commission of Human Rights",
+  "sign": "European Court of Human Rights",
+  "links": [
+   {
+    "site": "bpvsbuckler",
+    "label": "The story: European Court of Human Rights slides only (8)",
+    "url": "https://bpvsbuckler.bucklerfamily.estate/?institution=echr"
+   },
+   {
+    "site": "legal-wiki",
+    "label": "Legal Wiki: forensic assessment",
+    "url": "https://greathousefarmwiki.wordpress.com/scrutiny-and-accountability/government-public-authority-involvement/european-court-human-rights-echr-archives-forensic-review/"
    }
   ]
  }

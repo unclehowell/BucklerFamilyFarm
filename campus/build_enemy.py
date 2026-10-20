@@ -29,7 +29,7 @@ ROOFS = {
 ROOF_CYCLE = ["slate", "concrete", "red", "copper", "slate", "green", "concrete", "earth", "red"]
 
 # Three rows of buildings between the roads (map units, viewBox 1600 x 1000).
-ROWS = [(150, 135, 6), (402, 135, 5), (622, 125, 6)]
+ROWS = [(150, 135, 8), (402, 135, 7), (622, 125, 7)]
 X0, X1 = 170, 1430
 
 _W = {c: 556 for c in "abcdeghknopqsuvxyzABCDEFGHKNOPRSUVXYZ0123456789"}
@@ -59,7 +59,7 @@ def layout():
     slugs = list(DATA)
     out, k = [], 0
     for y, h, n in ROWS:
-        gap = 34
+        gap = 22
         w = (X1 - X0 - gap * (n - 1)) / n
         for i in range(n):
             if k >= len(slugs):

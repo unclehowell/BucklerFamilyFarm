@@ -501,6 +501,9 @@ JS = r"""/*! basecamp.js — "Back to Cedwyn Estate" link for every Great House 
   if (window.GHFBasecamp) return;
   var STOPS = __STOPS__;
   var TOTAL = STOPS.length, HOME = "https://bucklerfamily.estate/";
+  // assets come from the apex, or same-origin where a site serves /ghf-lang/ itself (a strict CSP, e.g. the mail archive)
+  var SRC = (document.currentScript && document.currentScript.src) || "", ASSET = "https://bucklerfamily.estate";
+  try { var su = new URL(SRC); if (su.origin !== ASSET && /^\/ghf-lang\//.test(su.pathname)) ASSET = su.origin; } catch (e) {}
   window.GHFBasecamp = { version: "__VER__", stops: STOPS };
   var host = location.hostname.replace(/^www\./, ""), path = location.pathname || "/";
   var apex = host === "bucklerfamily.estate" || /(^|\.)bucklerfamilyfarm\.pages\.dev$/.test(host);
@@ -551,7 +554,7 @@ JS = r"""/*! basecamp.js — "Back to Cedwyn Estate" link for every Great House 
           "html[data-ghf-native=dark]:not(.ghf-inv),html[data-ghf-native=dark]:not(.ghf-inv) body{background-color:#000!important}";
         (document.head || de).appendChild(crit);
         if (!document.querySelector("link[data-ghf-theme]")) {
-          var l = document.createElement("link"); l.rel = "stylesheet"; l.href = "https://bucklerfamily.estate/ghf-lang/ghf-theme.css?v=__VER__"; l.setAttribute("data-ghf-theme", "");
+          var l = document.createElement("link"); l.rel = "stylesheet"; l.href = ASSET + "/ghf-lang/ghf-theme.css?v=__VER__"; l.setAttribute("data-ghf-theme", "");
           (document.head || de).appendChild(l);
         }
       }
@@ -701,7 +704,7 @@ JS = r"""/*! basecamp.js — "Back to Cedwyn Estate" link for every Great House 
   function mini() { try { return sessionStorage.getItem(KEY) === "1"; } catch (e) { return false; } }
   function setMini(v) { try { sessionStorage.setItem(KEY, v ? "1" : "0"); } catch (e) {} render(); }
   function el(tag, cls, txt) { var e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; }
-  var ICON = "https://bucklerfamily.estate/brand/cedwyn-tent-icon-64.png";
+  var ICON = ASSET + "/brand/cedwyn-tent-icon-64.png";
   // floating pill (shown once the header has scrolled away): home + "stop N, next stop"
   function render() {
     var s = T[lang()];

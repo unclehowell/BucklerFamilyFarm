@@ -130,16 +130,19 @@
     nav.className = "ghf-bc" + (mini() ? " ghf-bc-min" : "");
     if (mini()) {
       var b = el("button", "ghf-bc-open", "⟵ " + s.show);
-      b.type = "button"; b.setAttribute("aria-label", s.back + " (bucklerfamily.estate)");
+      b.type = "button"; b.setAttribute("aria-label", s.back);
       b.onclick = function () { setMini(false); };
       nav.appendChild(b); return;
     }
     var a = el("a", "ghf-bc-home");
     a.href = HOME;
     a.appendChild(el("span", "ghf-bc-arrow", "⟵"));
+    var mk = document.createElement("img"); mk.src = "https://bucklerfamily.estate/brand/cedwyn-tent-icon-64.png"; mk.alt = ""; mk.width = 22; mk.height = 22;
+    mk.style.cssText = "width:22px!important;height:22px!important;margin:0 6px 0 0!important;vertical-align:middle!important;border:0!important;display:inline-block!important";
+    a.appendChild(mk);
     var t = el("span", "ghf-bc-txt");
     t.appendChild(el("b", null, s.back));
-    t.appendChild(el("small", null, "bucklerfamily.estate"));
+    t.appendChild(el("small", null, "Great House Farm · Tŷ Mawr"));
     a.appendChild(t);
     nav.appendChild(a);
     if (here) {

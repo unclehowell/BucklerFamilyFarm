@@ -219,12 +219,11 @@ def _icon(kind, cx, cy, big=False):
     return "".join(g)
 
 def tent(cx, cy):
-    return (f'<ellipse cx="{cx}" cy="{cy+30}" rx="70" ry="10" fill="#fff" opacity=".07"/>'
-            f'<path d="M{cx-46} {cy+30} L{cx} {cy-26} L{cx+46} {cy+30} Z" fill="#0d0d0d" {ST}/>'
-            f'<path d="M{cx} {cy-26} L{cx-12} {cy+30} M{cx} {cy-26} L{cx+12} {cy+30}" stroke="#fff" stroke-width="1"/>'
-            f'<path d="M{cx-12} {cy+30} L{cx} {cy+2} L{cx+12} {cy+30} Z" fill="#f2c94c"/>'
-            f'<path d="M{cx} {cy-26} v-16" {ST}/><path d="M{cx} {cy-42} l16 5 l-16 5 Z" fill="#f2c94c"/>'
-            f'<path d="M{cx+60} {cy+26} l6 -10 l6 10 Z M{cx+63} {cy+20} h6" stroke="#f2c94c" stroke-width="1.4" fill="none"/>')
+    # Cedwyn Estate mark: a cartoon adapted from People's Collection Wales item 871431 (chapel Sale of Work at
+    # Great House Farm: the chute slide and the refreshment tent). Creative Archive Licence; credit on /licence/.
+    return (f'<ellipse cx="{cx}" cy="{cy+32}" rx="62" ry="9" fill="#fff" opacity=".07"/>'
+            f'<image href="/brand/cedwyn-tent-icon-256.webp" x="{cx-50}" y="{cy-62}" width="100" height="100">'
+            '<title>Cedwyn Estate: the tent and the slide at Great House Farm</title></image>')
 
 # ---------- layout ----------
 rows = []
@@ -254,6 +253,14 @@ def path_d():
         d += f" C{x0:.1f} {y0 + k:.1f} {x1:.1f} {y1 - k:.1f} {x1:.1f} {y1:.1f}"
     return d
 
+GO_SHORT = {"fcg": "the FCG department", "csscpsg": "the Grammar House", "kissed-frogs": "Kissed Frogs", "apps": "the Case Office"}
+def go_label(s):
+    """Readable link label for a map stop (the visible words; the href keeps the real URL)."""
+    if s.get("go"): return s["go"]
+    name = GO_SHORT.get(s["key"]) or re.sub(r"\s*\(.*?\)", "", s["title"]).strip()
+    if name.startswith("The "): name = "the " + name[4:]
+    return "Open " + name
+
 def host_of(u):
     m = re.match(r"https?://([^/]+)(/[^#?]*)?", u)
     h = m.group(1).replace("www.", "")
@@ -262,7 +269,7 @@ def host_of(u):
 
 svg = []
 svg.append(f'<svg id="board" viewBox="0 0 {W} {H}" role="img" aria-labelledby="bt bd" xmlns="http://www.w3.org/2000/svg">')
-svg.append('<title id="bt">Cedwyn Estate map: a numbered path of 19 buildings</title>')
+svg.append(f'<title id="bt">Cedwyn Estate map: a numbered path of {len(STOPS)} buildings</title>')
 svg.append('<desc id="bd">Start at the Legal Wiki and follow the stepping stones through each part of the Great House Farm record, ending at the gift shop and marketplace.</desc>')
 svg.append('<defs><pattern id="grid" width="26" height="26" patternUnits="userSpaceOnUse"><path d="M26 0H0V26" fill="none" stroke="#fff" stroke-opacity=".045" stroke-width="1"/></pattern>'
            '<radialGradient id="glow" cx="50%" cy="0%" r="70%"><stop offset="0" stop-color="#f2c94c" stop-opacity=".10"/><stop offset="1" stop-color="#f2c94c" stop-opacity="0"/></radialGradient></defs>')
@@ -306,7 +313,7 @@ for r in rows:
     yy += 4
     for ln in r["cap"]:
         t.append(f'<text x="{tx}" y="{yy}" text-anchor="{anchor}" class="cap">{esc(ln)}</text>'); yy += 17
-    lbl = ("Enter the shop" if r["big"] else host_of(s["url"])) + " →"
+    lbl = ("Enter the shop" if r["big"] else go_label(s)) + " →"
     if s["key"] == "film": lbl = "Watch on Facebook →"
     t.append(f'<text x="{tx}" y="{yy+6}" text-anchor="{anchor}" class="go" style="fill:{cS}">{esc(lbl)}</text>')
     svg.append("".join(t))
@@ -328,7 +335,7 @@ PAGE = f"""<!doctype html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Cedwyn Estate · Great House Farm (Tŷ Mawr) · bucklerfamily.estate</title>
+<title>Cedwyn Estate · Great House Farm (Tŷ Mawr)</title>
 <meta name="description" content="Cedwyn Estate — the Williams–Buckler family base camp, for Great House Farm / Tŷ Mawr, Llandough. Follow the numbered path from the Legal Wiki through every part of the record to the gift shop and marketplace.">
 <meta property="og:title" content="Cedwyn Estate · Great House Farm (Tŷ Mawr)">
 <meta property="og:site_name" content="Cedwyn Estate">
@@ -337,6 +344,12 @@ PAGE = f"""<!doctype html>
 <meta property="og:url" content="https://bucklerfamily.estate/">
 <meta name="theme-color" content="#000000">
 <link rel="canonical" href="https://bucklerfamily.estate/">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="application-name" content="Cedwyn Estate">
+<meta name="apple-mobile-web-app-title" content="Cedwyn Estate">
 <link rel="preload" href="/fonts/barlow-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/fonts/barlow-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
 <script>
@@ -357,6 +370,7 @@ a{{color:inherit}}
 .skip{{position:absolute;left:-999px;top:8px;background:var(--gold);color:#000;padding:8px 12px;z-index:9}}.skip:focus{{left:8px}}
 header.top{{max-width:560px;margin:0 auto;padding:22px 18px 6px;position:relative}}#lang-slot{{position:absolute;top:16px;right:14px}}
 .mode{{display:inline-flex;margin:14px 0 0;border:1px solid var(--line);border-radius:999px;padding:3px;gap:2px}}.mode>*{{padding:7px 14px;border-radius:999px;font-size:13px;letter-spacing:.12em;text-transform:uppercase;text-decoration:none;color:var(--muted)}}.mode .on{{background:#fff;color:#000;font-weight:700}}.mode a:hover{{color:#fff}}
+.eyebrow .mark{{width:30px;height:30px;vertical-align:middle;margin:0 8px 0 0}}
 .eyebrow{{font-size:12px;letter-spacing:.32em;text-transform:uppercase;color:var(--gold);margin:0 0 8px}}
 h1{{margin:0;color:var(--ink);font-weight:300;text-transform:uppercase;letter-spacing:.06em;font-size:clamp(1.65rem,7.4vw,2.5rem);line-height:1.08}}
 h1 b{{font-weight:700;display:block}}
@@ -409,7 +423,7 @@ footer p{{margin:6px 0}}
 <a class="skip" href="#board">Skip to the map</a>
 <header class="top">
 <div id="lang-slot"></div>
-<p class="eyebrow">Cedwyn Estate</p>
+<p class="eyebrow"><img class="mark" src="/brand/cedwyn-tent-icon-128.png" width="30" height="30" alt="">Cedwyn Estate</p>
 <h1>Great House Farm <b>Tŷ Mawr</b></h1>
 <p class="lead">Follow the numbered stepping stones. Each building opens one part of the record. Every site has a link back here, so you can always return to Cedwyn Estate.</p>
 <p class="note">Case theories on these sites are our case, prospective. Not a finding of any court.</p>
@@ -601,16 +615,19 @@ JS = r"""/*! basecamp.js — "Back to Cedwyn Estate" link for every Great House 
     nav.className = "ghf-bc" + (mini() ? " ghf-bc-min" : "");
     if (mini()) {
       var b = el("button", "ghf-bc-open", "⟵ " + s.show);
-      b.type = "button"; b.setAttribute("aria-label", s.back + " (bucklerfamily.estate)");
+      b.type = "button"; b.setAttribute("aria-label", s.back);
       b.onclick = function () { setMini(false); };
       nav.appendChild(b); return;
     }
     var a = el("a", "ghf-bc-home");
     a.href = HOME;
     a.appendChild(el("span", "ghf-bc-arrow", "⟵"));
+    var mk = document.createElement("img"); mk.src = "https://bucklerfamily.estate/brand/cedwyn-tent-icon-64.png"; mk.alt = ""; mk.width = 22; mk.height = 22;
+    mk.style.cssText = "width:22px!important;height:22px!important;margin:0 6px 0 0!important;vertical-align:middle!important;border:0!important;display:inline-block!important";
+    a.appendChild(mk);
     var t = el("span", "ghf-bc-txt");
     t.appendChild(el("b", null, s.back));
-    t.appendChild(el("small", null, "bucklerfamily.estate"));
+    t.appendChild(el("small", null, "Great House Farm · Tŷ Mawr"));
     a.appendChild(t);
     nav.appendChild(a);
     if (here) {

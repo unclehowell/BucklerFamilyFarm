@@ -1,0 +1,29 @@
+{
+ "name": "Cedwyn Estate",
+ "short_name": "Cedwyn Estate",
+ "description": "Cedwyn Estate: the Williams–Buckler family base camp for Great House Farm (Tŷ Mawr), Llandough.",
+ "start_url": "/",
+ "scope": "/",
+ "display": "standalone",
+ "background_color": "#0a0a0a",
+ "theme_color": "#000000",
+ "icons": [
+  {
+   "src": "/brand/cedwyn-tent-icon-256.png",
+   "sizes": "256x256",
+   "type": "image/png",
+   "purpose": "any"
+  },
+  {
+   "src": "/brand/cedwyn-tent-icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "any"
+  },
+  {
+   "src": "/apple-touch-icon.png",
+   "sizes": "180x180",
+   "type": "image/png"
+  }
+ ]
+}

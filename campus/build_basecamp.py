@@ -296,8 +296,8 @@ for r in rows:
     svg.append(f'<rect class="hit" x="6" y="{r["cy"]-58 - (60 if r["big"] else 0)}" width="{W-12}" height="{r["h"]-8}" rx="10"/>')
     svg.append(icon(s["icon"], r["bx"], r["cy"] - (12 if not r["big"] else 0), r["big"], s.get("colors")))
     # stepping stone with number
-    svg.append(f'<circle cx="{sx}" cy="{sy}" r="16" fill="{"#f2c94c" if s["n"] in (1, 19) else "#000"}" stroke="#f2c94c" stroke-width="2"/>')
-    svg.append(f'<text x="{sx}" y="{sy+5.5}" text-anchor="middle" class="num{" dark" if s["n"] in (1, 19) else ""}">{s["n"]}</text>')
+    svg.append(f'<circle cx="{sx}" cy="{sy}" r="16" fill="{"#f2c94c" if s["n"] in (1, STOPS[-1]["n"]) else "#000"}" stroke="#f2c94c" stroke-width="2"/>')
+    svg.append(f'<text x="{sx}" y="{sy+5.5}" text-anchor="middle" class="num{" dark" if s["n"] in (1, STOPS[-1]["n"]) else ""}">{s["n"]}</text>')
     # text block
     if r["big"]:
         tx, anchor = W/2, "middle"; ty = r["cy"] + 64
@@ -482,6 +482,7 @@ TWEAKS = {
   "csscpsg.bucklerfamily.estate": {"vars": {"--gold": "S"}},
   "csscpsgp.bucklerfamily.estate": {"vars": {"--gold": "S"}},
   "chess.bucklerfamily.estate": {"buttons": False, "keep": "#board"},
+  "maps.bucklerfamily.estate": {"buttons": False, "header": False, "links": False, "keep": "#map", "native": "dark"},
   "qa.bucklerfamily.estate": {"vars": {"--navy": "P", "--blue": "P"}},
   "fb.bucklerfamily.estate": {"vars": {"--blue": "P"}},
   "2026-10-22.bucklerfamily.estate": {"vars": {"--slate": "P", "--moss": "P"}},

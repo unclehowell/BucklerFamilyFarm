@@ -367,6 +367,23 @@
   },
   {
    "n": 23,
+   "key": "apps",
+   "title": "The Case Office (Apps)",
+   "tag": "YOUR OWN CASE",
+   "caption": "Register, start a live records search, or get your own virtual base camp for your land.",
+   "url": "https://apps.bucklerfamily.estate/",
+   "hosts": [
+    "apps.bucklerfamily.estate"
+   ],
+   "paths": [],
+   "icon": "search",
+   "colors": [
+    "#3E2C23",
+    "#7FDBFF"
+   ]
+  },
+  {
+   "n": 24,
    "key": "shop",
    "title": "Gift Shop & Marketplace",
    "tag": "JOURNEY'S END",

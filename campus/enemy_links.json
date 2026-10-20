@@ -1,0 +1,465 @@
+{
+ "cadw": {
+  "name": "Cadw",
+  "sign": "Cadw",
+  "links": [
+   {
+    "site": "bpvsbuckler",
+    "label": "The story: Cadw slides only",
+    "url": "https://bpvsbuckler.bucklerfamily.estate/?institution=cadw"
+   },
+   {
+    "site": "dartboard",
+    "label": "Dartboard (Disclosure Rings)",
+    "url": "https://dartboard.bucklerfamily.estate/",
+    "note": "opens the board; that site has no per-institution address yet"
+   },
+   {
+    "site": "legal-wiki",
+    "label": "Legal Wiki: forensic assessment",
+    "url": "https://greathousefarmwiki.wordpress.com/scrutiny-and-accountability/government-public-authority-involvement/cadw-forensic-critique-v8-0-0/"
+   },
+   {
+    "site": "qa",
+    "label": "Q&A: questions to Cadw",
+    "url": "https://qa.bucklerfamily.estate/?institution=cadw"
+   },
+   {
+    "site": "authorities",
+    "label": "Authority correspondence register: Cadw entry",
+    "url": "https://authorities.bucklerfamily.estate/#:~:text=Cadw"
+   }
+  ]
+ },
+ "welsh-government": {
+  "name": "Welsh Government (incl. the Welsh Office)",
+  "sign": "Welsh Government",
+  "links": [
+   {
+    "site": "bpvsbuckler",
+    "label": "The story: Welsh Government slides only",
+    "url": "https://bpvsbuckler.bucklerfamily.estate/?institution=welsh-government"
+   },
+   {
+    "site": "dartboard",
+    "label": "Dartboard (Disclosure Rings)",
+    "url": "https://dartboard.bucklerfamily.estate/",
+    "note": "opens the board; that site has no per-institution address yet"
+   },
+   {
+    "site": "legal-wiki",
+    "label": "Legal Wiki: forensic assessment",
+    "url": "https://greathousefarmwiki.wordpress.com/scrutiny-and-accountability/government-public-authority-involvement/welsh-government-forensic-institutional-review/"
+   },
+   {
+    "site": "qa",
+    "label": "Q&A: questions to Welsh Government",
+    "url": "https://qa.bucklerfamily.estate/?institution=welsh-government"
+   }
+  ]
+ },
+ "hmlr": {
+  "name": "HM Land Registry",
+  "sign": "HM Land Registry",
+  "links": [
+   {
+    "site": "bpvsbuckler",
+    "label": "The story: HM Land Registry slides only",
+    "url": "https://bpvsbuckler.bucklerfamily.estate/?institution=hmlr"
+   },
+   {
+    "site": "dartboard",
+    "label": "Dartboard (Disclosure Rings)",
+    "url": "https://dartboard.bucklerfamily.estate/",
+    "note": "opens the board; that site has no per-institution address yet"
+   },
+   {
+    "site": "legal-wiki",
+    "label": "Legal Wiki: forensic assessment",
+    "url": "https://greathousefarmwiki.wordpress.com/scrutiny-and-accountability/government-public-authority-involvement/hm-land-registry-administrative-decisions/"
+   },
+   {
+    "site": "qa",
+    "label": "Q&A: questions to HM Land Registry",
+    "url": "https://qa.bucklerfamily.estate/?institution=hmlr"
+   },
+   {
+    "site": "authorities",
+    "label": "Authority correspondence register: HM Land Registry entry",
+    "url": "https://authorities.bucklerfamily.estate/#:~:text=HM%20Land%20Registry"
+   }
+  ]
+ },
+ "vale-council": {
+  "name": "Vale of Glamorgan Council",
+  "sign": "Vale of Glamorgan Council",
+  "links": [
+   {
+    "site": "bpvsbuckler",
+    "label": "The story: Vale of Glamorgan Council slides only",
+    "url": "https://bpvsbuckler.bucklerfamily.estate/?institution=vale-council"
+   },
+   {
+    "site": "dartboard",
+    "label": "Dartboard (Disclosure Rings)",
+    "url": "https://dartboard.bucklerfamily.estate/",
+    "note": "opens the board; that site has no per-institution address yet"
+   },
+   {
+    "site": "legal-wiki",
+    "label": "Legal Wiki: forensic assessment",
+    "url": "https://greathousefarmwiki.wordpress.com/scrutiny-and-accountability/government-public-authority-involvement/vale-of-glamorgan-council-forensic-institutional-review/"
+   },
+   {
+    "site": "qa",
+    "label": "Q&A: questions to Vale of Glamorgan Council",
+    "url": "https://qa.bucklerfamily.estate/?institution=vale-council"
+   },
+   {
+    "site": "authorities",
+    "label": "Authority correspondence register: Vale of Glamorgan Council entry",
+    "url": "https://authorities.bucklerfamily.estate/#:~:text=Vale%20of%20Glamorgan%20Council"
+   }
+  ]
+ },
+ "cardiff-council": {
+  "name": "Cardiff Council (Cardiff City Council)",
+  "sign": "Cardiff Council",
+  "links": [
+   {
+    "site": "bpvsbuckler",
+    "label": "The story: Cardiff Council slides only",
+    "url": "https://bpvsbuckler.bucklerfamily.estate/?institution=cardiff-council"
+   },
+   {
+    "site": "legal-wiki",
+    "label": "Legal Wiki: forensic assessment",
+    "url": "https://greathousefarmwiki.wordpress.com/scrutiny-and-accountability/government-public-authority-involvement/cardiff-city-council-forensic-institutional-review/"
+   },
+   {
+    "site": "qa",
+    "label": "Q&A: questions mentioning “Cardiff Council”",
+    "url": "https://qa.bucklerfamily.estate/?institution=cardiff-council"
+   }
+  ]
+ },
+ "south-glamorgan": {
+  "name": "South Glamorgan County Council",
+  "sign": "South Glamorgan County Council",
+  "links": [
+   {
+    "site": "bpvsbuckler",
+    "label": "The story: South Glamorgan County Council slides only",
+    "url": "https://bpvsbuckler.bucklerfamily.estate/?institution=south-glamorgan"
+   },
+   {
+    "site": "legal-wiki",
+    "label": "Legal Wiki: search for “South Glamorgan County Council”",
+    "url": "https://greathousefarmwiki.wordpress.com/?s=%22South+Glamorgan+County+Council%22"
+   },
+   {
+    "site": "qa",
+    "label": "Q&A: questions mentioning “South Glamorgan”",
+    "url": "https://qa.bucklerfamily.estate/?institution=south-glamorgan"
+   }
+  ]
+ },
+ "bp": {
+  "name": "BP Properties Ltd / BP / Western Ground Rents Ltd",
+  "sign": "BP / Western Ground Rents",
+  "links": [
+   {
+    "site": "bpvsbuckler",
+    "label": "The story: BP / Western Ground Rents slides only",
+    "url": "https://bpvsbuckler.bucklerfamily.estate/?institution=bp"
+   },
+   {
+    "site": "dartboard",
+    "label": "Dartboard (Disclosure Rings)",
+    "url": "https://dartboard.bucklerfamily.estate/",
+    "note": "opens the board; that site has no per-institution address yet"
+   },
+   {
+    "site": "legal-wiki",
+    "label": "Legal Wiki: forensic assessment",
+    "url": "https://greathousefarmwiki.wordpress.com/scrutiny-and-accountability/government-public-authority-involvement/bp-properties-bp-pension-trust-forensic-institutional-review/"
+   },
+   {
+    "site": "qa",
+    "label": "Q&A: questions mentioning “BP Properties”",
+    "url": "https://qa.bucklerfamily.estate/?institution=bp"
+   }
+  ]
+ },
+ "courts": {
+  "name": "The courts (Court of Appeal, High Court, HMCTS)",
+  "sign": "The Courts",
+  "links": [
+   {
+    "site": "bpvsbuckler",
+    "label": "The story: The Courts slides only",
+    "url": "https://bpvsbuckler.bucklerfamily.estate/?institution=courts"
+   },
+   {
+    "site": "dartboard",
+    "label": "Dartboard (Disclosure Rings)",
+    "url": "https://dartboard.bucklerfamily.estate/",
+    "note": "opens the board; that site has no per-institution address yet"
+   },
+   {
+    "site": "legal-wiki",
+    "label": "Legal Wiki: forensic assessment",
+    "url": "https://greathousefarmwiki.wordpress.com/scrutiny-and-accountability/government-public-authority-involvement/court-of-appeal-forensic-institutional-review/"
+   },
+   {
+    "site": "qa",
+    "label": "Q&A: questions to The Courts",
+    "url": "https://qa.bucklerfamily.estate/?institution=courts"
+   },
+   {
+    "site": "authorities",
+    "label": "Authority correspondence register: The Courts entry",
+    "url": "https://authorities.bucklerfamily.estate/#:~:text=Ministry%20of%20Justice"
+   }
+  ]
+ },
+ "south-wales-police": {
+  "name": "South Wales Police",
+  "sign": "South Wales Police",
+  "links": [
+   {
+    "site": "bpvsbuckler",
+    "label": "The story: South Wales Police slides only",
+    "url": "https://bpvsbuckler.bucklerfamily.estate/?institution=south-wales-police"
+   },
+   {
+    "site": "dartboard",
+    "label": "Dartboard (Disclosure Rings)",
+    "url": "https://dartboard.bucklerfamily.estate/",
+    "note": "opens the board; that site has no per-institution address yet"
+   },
+   {
+    "site": "legal-wiki",
+    "label": "Legal Wiki: forensic assessment",
+    "url": "https://greathousefarmwiki.wordpress.com/scrutiny-and-accountability/government-public-authority-involvement/south-wales-police-forensic-institutional-review/"
+   },
+   {
+    "site": "qa",
+    "label": "Q&A: questions to South Wales Police",
+    "url": "https://qa.bucklerfamily.estate/?institution=south-wales-police"
+   },
+   {
+    "site": "authorities",
+    "label": "Authority correspondence register: South Wales Police entry",
+    "url": "https://authorities.bucklerfamily.estate/#:~:text=South%20Wales%20Police"
+   }
+  ]
+ },
+ "mod": {
+  "name": "Ministry of Defence",
+  "sign": "Ministry of Defence",
+  "links": [
+   {
+    "site": "bpvsbuckler",
+    "label": "The story: Ministry of Defence slides only",
+    "url": "https://bpvsbuckler.bucklerfamily.estate/?institution=mod"
+   },
+   {
+    "site": "dartboard",
+    "label": "Dartboard (Disclosure Rings)",
+    "url": "https://dartboard.bucklerfamily.estate/",
+    "note": "opens the board; that site has no per-institution address yet"
+   },
+   {
+    "site": "legal-wiki",
+    "label": "Legal Wiki: forensic assessment",
+    "url": "https://greathousefarmwiki.wordpress.com/scrutiny-and-accountability/government-public-authority-involvement/ministry-of-defence-forensic-institutional-review/"
+   },
+   {
+    "site": "qa",
+    "label": "Q&A: questions to Ministry of Defence",
+    "url": "https://qa.bucklerfamily.estate/?institution=mod"
+   }
+  ]
+ },
+ "ico": {
+  "name": "Information Commissioner's Office",
+  "sign": "Information Commissioner",
+  "links": [
+   {
+    "site": "bpvsbuckler",
+    "label": "The story: Information Commissioner slides only",
+    "url": "https://bpvsbuckler.bucklerfamily.estate/?institution=ico"
+   },
+   {
+    "site": "legal-wiki",
+    "label": "Legal Wiki: forensic assessment",
+    "url": "https://greathousefarmwiki.wordpress.com/scrutiny-and-accountability/government-public-authority-involvement/ico-forensic-institutional-review/"
+   },
+   {
+    "site": "qa",
+    "label": "Q&A: questions to Information Commissioner",
+    "url": "https://qa.bucklerfamily.estate/?institution=ico"
+   }
+  ]
+ },
+ "national-archives": {
+  "name": "The National Archives",
+  "sign": "The National Archives",
+  "links": [
+   {
+    "site": "bpvsbuckler",
+    "label": "The story: The National Archives slides only",
+    "url": "https://bpvsbuckler.bucklerfamily.estate/?institution=national-archives"
+   },
+   {
+    "site": "dartboard",
+    "label": "Dartboard (Disclosure Rings)",
+    "url": "https://dartboard.bucklerfamily.estate/",
+    "note": "opens the board; that site has no per-institution address yet"
+   },
+   {
+    "site": "legal-wiki",
+    "label": "Legal Wiki: forensic assessment",
+    "url": "https://greathousefarmwiki.wordpress.com/scrutiny-and-accountability/government-public-authority-involvement/national-archives-forensic-institutional-review/"
+   },
+   {
+    "site": "qa",
+    "label": "Q&A: questions to The National Archives",
+    "url": "https://qa.bucklerfamily.estate/?institution=national-archives"
+   },
+   {
+    "site": "authorities",
+    "label": "Authority correspondence register: The National Archives entry",
+    "url": "https://authorities.bucklerfamily.estate/#:~:text=The%20National%20Archives"
+   }
+  ]
+ },
+ "nrw": {
+  "name": "Natural Resources Wales / Forestry",
+  "sign": "Natural Resources Wales",
+  "links": [
+   {
+    "site": "bpvsbuckler",
+    "label": "The story: Natural Resources Wales slides only",
+    "url": "https://bpvsbuckler.bucklerfamily.estate/?institution=nrw"
+   },
+   {
+    "site": "legal-wiki",
+    "label": "Legal Wiki: search for “Natural Resources Wales”",
+    "url": "https://greathousefarmwiki.wordpress.com/?s=%22Natural+Resources+Wales%22"
+   }
+  ]
+ },
+ "forest-of-cardiff": {
+  "name": "Forest of Cardiff",
+  "sign": "Forest of Cardiff",
+  "links": [
+   {
+    "site": "bpvsbuckler",
+    "label": "The story: Forest of Cardiff slides only",
+    "url": "https://bpvsbuckler.bucklerfamily.estate/?institution=forest-of-cardiff"
+   },
+   {
+    "site": "legal-wiki",
+    "label": "Legal Wiki: forensic assessment",
+    "url": "https://greathousefarmwiki.wordpress.com/scrutiny-and-accountability/government-public-authority-involvement/forest-of-cardiff-forensic-institutional-review/"
+   },
+   {
+    "site": "qa",
+    "label": "Q&A: questions mentioning “Forest of Cardiff”",
+    "url": "https://qa.bucklerfamily.estate/?institution=forest-of-cardiff"
+   }
+  ]
+ },
+ "land-authority-wales": {
+  "name": "Land Authority for Wales",
+  "sign": "Land Authority for Wales",
+  "links": [
+   {
+    "site": "bpvsbuckler",
+    "label": "The story: Land Authority for Wales slides only",
+    "url": "https://bpvsbuckler.bucklerfamily.estate/?institution=land-authority-wales"
+   },
+   {
+    "site": "legal-wiki",
+    "label": "Legal Wiki: search for “Land Authority for Wales”",
+    "url": "https://greathousefarmwiki.wordpress.com/?s=%22Land+Authority+for+Wales%22"
+   },
+   {
+    "site": "qa",
+    "label": "Q&A: questions mentioning “Land Authority”",
+    "url": "https://qa.bucklerfamily.estate/?institution=land-authority-wales"
+   }
+  ]
+ },
+ "glamorgan-archives": {
+  "name": "Glamorgan Archives",
+  "sign": "Glamorgan Archives",
+  "links": [
+   {
+    "site": "bpvsbuckler",
+    "label": "The story: Glamorgan Archives slides only",
+    "url": "https://bpvsbuckler.bucklerfamily.estate/?institution=glamorgan-archives"
+   },
+   {
+    "site": "dartboard",
+    "label": "Dartboard (Disclosure Rings)",
+    "url": "https://dartboard.bucklerfamily.estate/",
+    "note": "opens the board; that site has no per-institution address yet"
+   },
+   {
+    "site": "legal-wiki",
+    "label": "Legal Wiki: forensic assessment",
+    "url": "https://greathousefarmwiki.wordpress.com/scrutiny-and-accountability/government-public-authority-involvement/glamorgan-archives-forensic-institutional-review/"
+   },
+   {
+    "site": "qa",
+    "label": "Q&A: questions to Glamorgan Archives",
+    "url": "https://qa.bucklerfamily.estate/?institution=glamorgan-archives"
+   },
+   {
+    "site": "authorities",
+    "label": "Authority correspondence register: Glamorgan Archives entry",
+    "url": "https://authorities.bucklerfamily.estate/#:~:text=Glamorgan%20Archives"
+   }
+  ]
+ },
+ "llandough-community-council": {
+  "name": "Llandough Community Council",
+  "sign": "Llandough Community Council",
+  "links": [
+   {
+    "site": "bpvsbuckler",
+    "label": "The story: Llandough Community Council slides only",
+    "url": "https://bpvsbuckler.bucklerfamily.estate/?institution=llandough-community-council"
+   },
+   {
+    "site": "dartboard",
+    "label": "Dartboard (Disclosure Rings)",
+    "url": "https://dartboard.bucklerfamily.estate/",
+    "note": "opens the board; that site has no per-institution address yet"
+   },
+   {
+    "site": "legal-wiki",
+    "label": "Legal Wiki: forensic assessment",
+    "url": "https://greathousefarmwiki.wordpress.com/scrutiny-and-accountability/government-public-authority-involvement/llandough-community-council-forensic-institutional-review/"
+   },
+   {
+    "site": "qa",
+    "label": "Q&A: questions to Llandough Community Council",
+    "url": "https://qa.bucklerfamily.estate/?institution=llandough-community-council"
+   },
+   {
+    "site": "authorities",
+    "label": "Authority correspondence register: Llandough Community Council entry",
+    "url": "https://authorities.bucklerfamily.estate/#:~:text=Llandough%20Community%20Council"
+   },
+   {
+    "site": "2026-10-22",
+    "label": "Council briefing, 22 October 2026",
+    "url": "https://2026-10-22.bucklerfamily.estate/"
+   }
+  ]
+ }
+}

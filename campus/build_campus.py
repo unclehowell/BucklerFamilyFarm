@@ -15,7 +15,7 @@ WIKI = "https://greathousefarmwiki.wordpress.com"
 # id, name, department, what it holds, url, x, y, w, h, roof, status, extra
 BUILDINGS = [
     ("hq", "Headquarters", "Knowledge base and PRINCE2 planning",
-     "The Great House Farm Wiki: evidence library, registers, chronology, project plans and highlight reports.",
+     "The Legal Wiki: evidence library, registers, chronology, project plans and highlight reports.",
      WIKI + "/", 620, 150, 340, 150, "slate", "live", "flag"),
     ("museum", "The Museum", "Exhibition",
      "The whole story as an interactive timeline, from the Iron Age to the records requests of 2026.",
@@ -39,14 +39,14 @@ BUILDINGS = [
      "How the Llandough Community Council Clerk's information replies compare with other bodies.",
      "https://clerk.bucklerfamily.estate/", 1230, 600, 170, 110, "concrete", "live", ""),
     ("audit", "Audit Office", "Llandough Community Council review",
-     "The Wiki's forensic institutional review of the Council, its Clerk and councillors.",
+     "The Legal Wiki's forensic institutional review of the Council, its Clerk and councillors.",
      WIKI + "/scrutiny-and-accountability/government-public-authority-involvement/llandough-community-council-forensic-institutional-review/",
      1010, 620, 160, 100, "slate", "live", ""),
     ("vault", "Archive Vault", "The wayback archive",
      "Copies of every page, letter and image kept outside the live sites.",
      "https://wayback.bucklerfamily.estate/", 250, 620, 170, 110, "concrete", "live", ""),
-    ("bunker", "Reserve Bunker", "Wiki mirror",
-     "A mirror of the Wiki, rebuilt from the archive, in case the live Wiki is unavailable.",
+    ("bunker", "Reserve Bunker", "Legal Wiki mirror",
+     "A mirror of the Legal Wiki, rebuilt from the archive, in case the live Legal Wiki is unavailable.",
      "https://wiki.bucklerfamily.estate/", 500, 690, 150, 90, "earth", "live", "mound"),
     ("quartermaster", "Quartermaster's Store", "The Great House WebApp",
      "Search whether your own family has land with a story like Tŷ Mawr's.",
@@ -62,7 +62,7 @@ BUILDINGS = [
      "https://library.bucklerfamily.estate/", 200, 812, 200, 88, "slate", "live", ""),
     # Sion, 19 Oct 2026 23:24 BST: "make projects bucklerfamily.estate ... migrate all the prince 2 to projects bucklerfamily.estate"
     ("projects", "Project Office", "PRINCE2 project management",
-     "The PRINCE2 record moved from the Wiki: mandate, business case, PIDs, plans, highlight reports and control registers.",
+     "The PRINCE2 record moved from the Legal Wiki: mandate, business case, PIDs, plans, highlight reports and control registers.",
      "https://projects.bucklerfamily.estate/", 638, 812, 130, 88, "earth", "live", ""),
     # Farmbook went live 19 Oct 2026 (fb.bucklerfamily.estate returned 200 at 23:50 BST); added with its sign.
     ("quarters", "Family Quarters", "Farmbook: the Williams/Buckler family wall",
@@ -94,8 +94,8 @@ _SIGN_W = {"a": 556, "b": 611, "c": 556, "d": 611, "e": 556, "f": 333, "g": 611,
 # site's own name where the full title is too long for the roof; the full title and the address are in the
 # tooltip and the screen-reader label.
 SIGN_TITLE = {
-    "hq": ("Great House Farm Wiki – Public documentary archive of Great House Farm (Tŷ Mawr), Llandough-juxta-Penarth, South Wales: land, ownership, litigation, archaeology and family evidence.",
-          ["Great House Farm Wiki"]),
+    "hq": ("Legal Wiki – Public documentary archive of Great House Farm (Tŷ Mawr), Llandough-juxta-Penarth, South Wales: land, ownership, litigation, archaeology and family evidence.",
+          ["Legal Wiki"]),
     "museum": ("Tŷ Mawr — The Great House Farm Story",
               None),
     "ops": ("Disclosure Rings",
@@ -310,9 +310,9 @@ def page():
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Tŷ Mawr Campus · bucklerfamily.estate</title>
-<meta name="description" content="Great House Farm / Tŷ Mawr, Llandough: every part of the case in one place. The museum, the evidence quest, the council briefing, the records and the Wiki.">
+<meta name="description" content="Great House Farm / Tŷ Mawr, Llandough: every part of the case in one place. The museum, the evidence quest, the council briefing, the records and the Legal Wiki.">
 <meta property="og:title" content="Tŷ Mawr Campus">
-<meta property="og:description" content="Great House Farm / Tŷ Mawr, Llandough: the museum, the evidence quest, the council briefing, the records and the Wiki.">
+<meta property="og:description" content="Great House Farm / Tŷ Mawr, Llandough: the museum, the evidence quest, the council briefing, the records and the Legal Wiki.">
 <meta name="theme-color" content="#2b3a26">
 <script>
 (function(){{var q=location.search;if(/payment_status=/.test(q)){{location.replace('/webapp/'+q+location.hash);}}}})();
@@ -362,7 +362,14 @@ a{{color:inherit}}
 .webapp span{{display:flex;flex-direction:column;line-height:1.1;font-size:.95rem}}
 .webapp small{{font-weight:600;font-size:.78rem;color:#5b6670}}
 .webapp:hover{{outline:3px solid #f2c94c}}
-.hint{{position:fixed;left:16px;bottom:16px;font-size:.82rem;color:#e6e2d4;text-shadow:0 1px 4px #000;max-width:calc(100vw - 260px)}}
+.hint{{position:fixed;left:16px;bottom:16px;font-size:.82rem;color:#e6e2d4;text-shadow:0 1px 4px #000;max-width:calc(50vw - 200px)}}
+/* Allied / enemy camp toggle (Sion, 20 Oct 2026 00:55 BST) */
+.camps{{position:fixed;z-index:7;left:50%;bottom:18px;transform:translateX(-50%);display:flex;gap:2px;background:#1d2420f2;border:1px solid #f2efe655;border-radius:40px;padding:4px;box-shadow:0 8px 24px #0009}}
+.camps a{{padding:9px 15px;border-radius:40px;text-decoration:none;font:800 .9rem Arial,sans-serif;white-space:nowrap;color:#f2efe6}}
+.camps a:hover{{outline:2px solid #ffd700}}
+.camps a[aria-current]{{background:#ffd700;color:#1d2420}}
+.camps small{{font-weight:600;font-size:.78em}}
+@media (max-width:600px){{.camps{{left:12px;right:12px;top:58px;bottom:auto;transform:none}}.camps a{{flex:1;text-align:center;font-size:.84rem;padding:8px 4px}}.dir{{top:106px!important}}}}
 @media (max-width:600px){{.brand p{{display:none}}.hint{{display:none}}.webapp span{{font-size:.85rem}}}}
 @media (prefers-reduced-motion:reduce){{*{{transition:none!important}}}}
 </style>
@@ -418,6 +425,7 @@ a{{color:inherit}}
 <div class="tools">
   <button class="btn" type="button" id="dirbtn" aria-expanded="false" aria-controls="dir">Directory</button>
 </div>
+<nav class="camps" aria-label="Choose camp"><a href="/" aria-current="page">Tŷ Mawr camp <small>(allied)</small></a><a href="/enemy/">Enemy camp</a></nav>
 <nav class="dir" id="dir" aria-label="Directory of buildings"><ul>{directory}</ul></nav>
 
 <div class="callout" id="co" role="dialog" aria-live="polite" aria-labelledby="co-h">
@@ -445,7 +453,7 @@ wrap.addEventListener('scroll',function(){{if(cur)place(cur);}});
 var B=[{data}];
 var by={{}};B.forEach(function(b){{by[b.id]=b;}});
 var co=document.getElementById('co'),cur=null;
-function label(u){{if(u.charAt(0)==='/')return 'bucklerfamily.estate'+u.replace(/\\/$/,'');var t=u.replace('https://','').replace(/\\/$/,'');if(t.length<=46)return t;var parts=t.split('/');var last=parts[parts.length-1].replace(/-/g,' ');return parts[0]+' › '+last.charAt(0).toUpperCase()+last.slice(1);}}
+function label(u){{if(u.indexOf('greathousefarmwiki.wordpress.com')>-1){{var p=u.split('wordpress.com')[1].replace(/\\/$/,'').split('/').pop().replace(/-/g,' ');return 'Legal Wiki'+(p?' › '+p.charAt(0).toUpperCase()+p.slice(1):'');}}if(u.charAt(0)==='/')return 'bucklerfamily.estate'+u.replace(/\\/$/,'');var t=u.replace('https://','').replace(/\\/$/,'');if(t.length<=46)return t;var parts=t.split('/');var last=parts[parts.length-1].replace(/-/g,' ');return parts[0]+' › '+last.charAt(0).toUpperCase()+last.slice(1);}}
 function place(g){{
   var r=g.getBoundingClientRect(),w=co.offsetWidth,h=co.offsetHeight,vw=innerWidth,vh=innerHeight;
   var x=r.left+r.width/2-w/2,y=r.top-h-12;

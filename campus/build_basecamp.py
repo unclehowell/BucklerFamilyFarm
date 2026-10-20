@@ -188,6 +188,16 @@ def _icon(kind, cx, cy, big=False):
         g.append(f'<path d="M{cx-30} {cy-10} A30 24 0 0 1 {cx+30} {cy-10} Z" fill="__ROOF__" {ST}/>')
         g.append(f'<circle cx="{cx}" cy="{cy-40}" r="7" fill="#f2c94c" {ST}/>')
         g.append(f'<text x="{cx}" y="{cy-36.5}" text-anchor="middle" style="font:700 9px Barlow,Arial,sans-serif" fill="#0d0d0d">C</text>')
+    elif kind == "counting":   # Georgian counting house with a pound-sign plaque and an open ledger: public accounts, accounts.bucklerfamily.estate
+        g.append(f'<rect x="{cx-42}" y="{cy+28}" width="84" height="6" fill="#0d0d0d" {ST}/>')
+        g.append(f'<rect x="{cx-38}" y="{cy-8}" width="76" height="36" fill="#141414" {ST}/>')
+        g.append(f'<path d="M{cx-44} {cy-8} H{cx+44} L{cx} {cy-32} Z" fill="__ROOF__" {ST}/>')
+        g.append(f'<circle cx="{cx}" cy="{cy-17}" r="6.5" fill="#0d0d0d" {ST}/>')
+        g.append(f'<text x="{cx}" y="{cy-13.5}" text-anchor="middle" style="font:700 9px Barlow,Arial,sans-serif" fill="#f2c94c">£</text>')
+        g.append(win(cx-31, cy-1, 10, 12)); g.append(win(cx+21, cy-1, 10, 12))
+        g.append(f'<path d="M{cx-17} {cy+2} h14 v12 h-14 Z M{cx+3} {cy+2} h14 v12 h-14 Z" fill="#f2c94c" stroke="#fff" stroke-width=".8"/>')
+        g.append(f'<path d="M{cx-14} {cy+6} h8 M{cx-14} {cy+9} h8 M{cx+6} {cy+6} h8 M{cx+6} {cy+9} h8" stroke="#0d0d0d" stroke-width=".9"/>')
+        g.append(door(cx, cy, 12, 14))
     elif kind == "shop":
         w = 120
         g.append(f'<rect x="{cx-w/2}" y="{cy-22}" width="{w}" height="56" fill="#0d0d0d" {ST}/>')

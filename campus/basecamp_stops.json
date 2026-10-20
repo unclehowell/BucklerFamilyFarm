@@ -1,5 +1,5 @@
 {
- "version": "1.0.0",
+ "version": "1.1.0",
  "updated": "2026-10-20",
  "base": {
   "name": "Base camp",
@@ -17,7 +17,11 @@
     "greathousefarmwiki.wordpress.com",
     "wiki.bucklerfamily.estate"
    ],
-   "icon": "library"
+   "icon": "library",
+   "colors": [
+    "#2C3E50",
+    "#9FD4DF"
+   ]
   },
   {
    "n": 2,
@@ -29,7 +33,11 @@
    "hosts": [
     "bpvsbuckler.bucklerfamily.estate"
    ],
-   "icon": "book"
+   "icon": "book",
+   "colors": [
+    "#1F3A68",
+    "#FF9F43"
+   ]
   },
   {
    "n": 3,
@@ -41,7 +49,11 @@
    "hosts": [
     "chess.bucklerfamily.estate"
    ],
-   "icon": "chess"
+   "icon": "chess",
+   "colors": [
+    "#4A2C17",
+    "#F3EBD3"
+   ]
   },
   {
    "n": 4,
@@ -53,7 +65,11 @@
    "hosts": [
     "fcg.bucklerfamily.estate"
    ],
-   "icon": "court"
+   "icon": "court",
+   "colors": [
+    "#4B1E5A",
+    "#C9A0FF"
+   ]
   },
   {
    "key": "csscpsg",
@@ -66,7 +82,11 @@
     "csscpsgp.bucklerfamily.estate"
    ],
    "icon": "book",
-   "n": 5
+   "n": 5,
+   "colors": [
+    "#2E2A6B",
+    "#C6E55A"
+   ]
   },
   {
    "n": 6,
@@ -78,7 +98,11 @@
    "hosts": [
     "records.bucklerfamily.estate"
    ],
-   "icon": "cabinet"
+   "icon": "cabinet",
+   "colors": [
+    "#4A5320",
+    "#E8D5A3"
+   ]
   },
   {
    "n": 7,
@@ -90,7 +114,11 @@
    "hosts": [
     "wayback.bucklerfamily.estate"
    ],
-   "icon": "vault"
+   "icon": "vault",
+   "colors": [
+    "#0B4F6C",
+    "#F4D58D"
+   ]
   },
   {
    "n": 8,
@@ -102,7 +130,11 @@
    "hosts": [
     "email.bucklerfamily.estate"
    ],
-   "icon": "post"
+   "icon": "post",
+   "colors": [
+    "#0F5132",
+    "#FFB627"
+   ]
   },
   {
    "n": 9,
@@ -114,7 +146,11 @@
    "hosts": [
     "authorities.bucklerfamily.estate"
    ],
-   "icon": "columns"
+   "icon": "columns",
+   "colors": [
+    "#2B2B2B",
+    "#FF5A5F"
+   ]
   },
   {
    "n": 10,
@@ -126,7 +162,11 @@
    "hosts": [
     "dartboard.bucklerfamily.estate"
    ],
-   "icon": "target"
+   "icon": "target",
+   "colors": [
+    "#3A1F3D",
+    "#FF8FB1"
+   ]
   },
   {
    "n": 11,
@@ -138,7 +178,11 @@
    "hosts": [
     "qa.bucklerfamily.estate"
    ],
-   "icon": "hall"
+   "icon": "hall",
+   "colors": [
+    "#145A5A",
+    "#7EE2B8"
+   ]
   },
   {
    "n": 12,
@@ -150,7 +194,11 @@
    "hosts": [
     "clerk.bucklerfamily.estate"
    ],
-   "icon": "council"
+   "icon": "council",
+   "colors": [
+    "#6B3E26",
+    "#FFC48C"
+   ]
   },
   {
    "n": 13,
@@ -162,7 +210,11 @@
    "hosts": [
     "2026-10-22.bucklerfamily.estate"
    ],
-   "icon": "chamber"
+   "icon": "chamber",
+   "colors": [
+    "#4B3B47",
+    "#B5E48C"
+   ]
   },
   {
    "n": 14,
@@ -174,7 +226,11 @@
    "hosts": [
     "review.bucklerfamily.estate"
    ],
-   "icon": "magnifier"
+   "icon": "magnifier",
+   "colors": [
+    "#2D4739",
+    "#F7D6E0"
+   ]
   },
   {
    "n": 15,
@@ -186,7 +242,11 @@
    "hosts": [
     "research.bucklerfamily.estate"
    ],
-   "icon": "search"
+   "icon": "search",
+   "colors": [
+    "#102A43",
+    "#D3B8FF"
+   ]
   },
   {
    "key": "kissed-frogs",
@@ -197,7 +257,11 @@
    "hosts": [],
    "paths": [],
    "icon": "frog",
-   "n": 16
+   "n": 16,
+   "colors": [
+    "#2C3E50",
+    "#9FD4DF"
+   ]
   },
   {
    "n": 17,
@@ -209,7 +273,11 @@
    "hosts": [
     "projects.bucklerfamily.estate"
    ],
-   "icon": "office"
+   "icon": "office",
+   "colors": [
+    "#1D4E89",
+    "#FFE066"
+   ]
   },
   {
    "n": 18,
@@ -219,7 +287,11 @@
    "caption": "Short films on each chapter, on the Great House Farm II page.",
    "url": "https://www.facebook.com/901925066346636",
    "hosts": [],
-   "icon": "film"
+   "icon": "film",
+   "colors": [
+    "#263238",
+    "#FFAB91"
+   ]
   },
   {
    "n": 19,
@@ -231,7 +303,11 @@
    "hosts": [
     "fb.bucklerfamily.estate"
    ],
-   "icon": "album"
+   "icon": "album",
+   "colors": [
+    "#263238",
+    "#FFAB91"
+   ]
   },
   {
    "n": 20,
@@ -246,7 +322,11 @@
     "/enemy/",
     "/webapp/"
    ],
-   "icon": "campus"
+   "icon": "campus",
+   "colors": [
+    "#2E5E3A",
+    "#A8E06C"
+   ]
   },
   {
    "n": 21,
@@ -262,7 +342,11 @@
    "paths": [
     "/ebook/"
    ],
-   "icon": "shop"
+   "icon": "shop",
+   "colors": [
+    "#4A1942",
+    "#F2C94C"
+   ]
   }
  ],
  "shop": {
@@ -281,5 +365,12 @@
    "url": null,
    "status": "opening soon"
   }
+ },
+ "brand": {
+  "base": [
+   "#0A0A0A",
+   "#F2C94C"
+  ],
+  "note": "Two-colour identity per department: colors = [primary, secondary]. Primary is deep (white text passes WCAG AA on it); secondary is bright (black text passes AA on it, and it passes AA as text on black). Stops pointing at the same site share a pair. Red is reserved for the Public Authorities (enemy camp). Table: work/brand/palette.md. — Sion's Tab agent"
  }
 }

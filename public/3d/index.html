@@ -187,6 +187,9 @@ const M = {
   edge: new THREE.LineBasicMaterial({color: 0xffffff, transparent: true, opacity: 0.55}),
   edgeRed: new THREE.LineBasicMaterial({color: 0xff6b6b, transparent: true, opacity: 0.7}),
 };
+const MC = {};
+function lam(hex, glow) { const k = hex + (glow ? "g" : ""); return MC[k] || (MC[k] = new THREE.MeshLambertMaterial({color: new THREE.Color(hex), emissive: new THREE.Color(hex).multiplyScalar(glow ? 0.18 : 0.45)})); }
+function basic(hex) { const k = "b" + hex; return MC[k] || (MC[k] = new THREE.MeshBasicMaterial({color: new THREE.Color(hex)})); }
 function withEdges(mesh, mat = M.edge) { mesh.add(new THREE.LineSegments(new THREE.EdgesGeometry(mesh.geometry, 20), mat)); return mesh; }
 
 // ground + faint grid
@@ -196,14 +199,15 @@ const grid = new THREE.GridHelper(400, 100, 0x1b1f22, 0x14171a); grid.position.y
 
 // ---------- labels ----------
 await Promise.race([document.fonts.load("700 40px Barlow"), new Promise(r => setTimeout(r, 1500))]).catch(() => {});
-function label(num, title, tag, red) {
+function label(num, title, tag, red, C) {
   const c = document.createElement("canvas"); c.width = 512; c.height = 176;
   const x = c.getContext("2d");
   x.fillStyle = "rgba(0,0,0,.78)"; x.strokeStyle = red ? "#ff6b6b" : "rgba(255,255,255,.5)"; x.lineWidth = 4;
   const r = 26; x.beginPath(); x.roundRect ? x.roundRect(6, 6, 500, 164, r) : x.rect(6, 6, 500, 164); x.fill(); x.stroke();
-  x.fillStyle = "#f2c94c"; x.beginPath(); x.arc(84, 88, 52, 0, Math.PI * 2); x.fill();
+  x.fillStyle = C ? C[1] : "#f2c94c"; x.beginPath(); x.arc(84, 88, 52, 0, Math.PI * 2); x.fill();
+  if (C) { x.fillStyle = C[0]; x.fillRect(156, 155, 120, 7); x.fillStyle = C[1]; x.fillRect(276, 155, 70, 7); }
   x.fillStyle = "#000"; x.font = "700 56px Barlow, Arial"; x.textAlign = "center"; x.textBaseline = "middle"; x.fillText(String(num), 84, 92);
-  x.textAlign = "left"; x.fillStyle = red ? "#ff6b6b" : "#f2c94c"; x.font = "700 22px Barlow, Arial";
+  x.textAlign = "left"; x.fillStyle = C ? C[1] : (red ? "#ff6b6b" : "#f2c94c"); x.font = "700 22px Barlow, Arial";
   x.fillText((tag || "").toUpperCase().split("").join(String.fromCharCode(8202)), 156, 52);
   x.fillStyle = "#fff"; let fs = 40; x.font = `700 ${fs}px Barlow, Arial`;
   const t = title.replace(/^The /, "").toUpperCase();
@@ -259,28 +263,31 @@ function building(s, i) {
   g.rotation.y = Math.atan2(-side.x, -side.z);  // door (local +z) faces the path
   const kind = ROOFS[s.icon] || ["gable", "flat", "dome", "tower"][i % 4];
   const W = kind === "tower" ? 3.6 : 5.6, D = 4.6, H = kind === "tower" ? 7.5 : 3.4;
-  const bodyMat = i % 2 ? M.body : M.body2;
+  // two-colour identity (basecamp.json "colors"): walls = primary, roof / trim / door = secondary
+  const C = Array.isArray(s.colors) && s.colors.length === 2 ? s.colors : null;
+  const bodyMat = C ? lam(C[0]) : (i % 2 ? M.body : M.body2);
+  const roofMat = C ? lam(C[1]) : M.roof, trimMat = C ? lam(C[1], true) : M.gold, doorMat = C ? basic(C[1]) : M.door;
   const body = withEdges(new THREE.Mesh(new THREE.BoxGeometry(W, H, D), bodyMat), enemy ? M.edgeRed : M.edge); body.position.y = H / 2; g.add(body);
-  if (kind === "gable" || kind === "pond") { const r = withEdges(new THREE.Mesh(new THREE.CylinderGeometry(0.01, W * 0.62, 2.2, 4, 1), M.roof)); r.rotation.y = Math.PI / 4; r.scale.set(1, 1, D / W); r.position.y = H + 1.1; g.add(r); }
-  if (kind === "dome") { const r = withEdges(new THREE.Mesh(new THREE.SphereGeometry(2.3, 10, 6, 0, Math.PI * 2, 0, Math.PI / 2), M.roof)); r.position.y = H; g.add(r); }
-  if (kind === "flat") { const r = withEdges(new THREE.Mesh(new THREE.BoxGeometry(W + 0.6, 0.35, D + 0.6), M.roof)); r.position.y = H + 0.17; g.add(r); }
-  if (kind === "tower") { const r = withEdges(new THREE.Mesh(new THREE.ConeGeometry(2.7, 2.6, 4), M.roof)); r.rotation.y = Math.PI / 4; r.position.y = H + 1.3; g.add(r); }
-  if (kind === "portico") { const r = withEdges(new THREE.Mesh(new THREE.CylinderGeometry(0.01, W * 0.68, 1.6, 3, 1), M.roof)); r.rotation.z = Math.PI / 2; r.rotation.y = Math.PI / 2; r.scale.set(1, 1, 1); r.position.set(0, H + 0.55, 0.4);
-    const roofSlab = withEdges(new THREE.Mesh(new THREE.BoxGeometry(W + 0.8, 0.3, D + 1.8), M.roof)); roofSlab.position.set(0, H + 0.15, 0.6); g.add(roofSlab);
+  if (kind === "gable" || kind === "pond") { const r = withEdges(new THREE.Mesh(new THREE.CylinderGeometry(0.01, W * 0.62, 2.2, 4, 1), roofMat)); r.rotation.y = Math.PI / 4; r.scale.set(1, 1, D / W); r.position.y = H + 1.1; g.add(r); }
+  if (kind === "dome") { const r = withEdges(new THREE.Mesh(new THREE.SphereGeometry(2.3, 10, 6, 0, Math.PI * 2, 0, Math.PI / 2), roofMat)); r.position.y = H; g.add(r); }
+  if (kind === "flat") { const r = withEdges(new THREE.Mesh(new THREE.BoxGeometry(W + 0.6, 0.35, D + 0.6), roofMat)); r.position.y = H + 0.17; g.add(r); }
+  if (kind === "tower") { const r = withEdges(new THREE.Mesh(new THREE.ConeGeometry(2.7, 2.6, 4), roofMat)); r.rotation.y = Math.PI / 4; r.position.y = H + 1.3; g.add(r); }
+  if (kind === "portico") { const r = withEdges(new THREE.Mesh(new THREE.CylinderGeometry(0.01, W * 0.68, 1.6, 3, 1), roofMat)); r.rotation.z = Math.PI / 2; r.rotation.y = Math.PI / 2; r.scale.set(1, 1, 1); r.position.set(0, H + 0.55, 0.4);
+    const roofSlab = withEdges(new THREE.Mesh(new THREE.BoxGeometry(W + 0.8, 0.3, D + 1.8), roofMat)); roofSlab.position.set(0, H + 0.15, 0.6); g.add(roofSlab);
     for (let k = 0; k < 4; k++) { const c = withEdges(new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.22, H, 8), M.white)); c.position.set(-W / 2 + 0.5 + k * (W - 1) / 3, H / 2, D / 2 + 1.2); g.add(c); } }
-  if (kind === "awning") { for (let k = 0; k < 6; k++) { const a = new THREE.Mesh(new THREE.BoxGeometry(W / 6, 0.12, 1.6), k % 2 ? M.white : M.gold); a.position.set(-W / 2 + W / 12 + k * W / 6, H - 0.4, D / 2 + 0.7); a.rotation.x = 0.35; g.add(a); } }
+  if (kind === "awning") { for (let k = 0; k < 6; k++) { const a = new THREE.Mesh(new THREE.BoxGeometry(W / 6, 0.12, 1.6), k % 2 ? M.white : trimMat); a.position.set(-W / 2 + W / 12 + k * W / 6, H - 0.4, D / 2 + 0.7); a.rotation.x = 0.35; g.add(a); } }
   if (kind === "pond") { const pond = new THREE.Mesh(new THREE.CircleGeometry(2.4, 14), M.pond); pond.rotation.x = -Math.PI / 2; pond.position.set(W / 2 + 2.2, 0.03, 1.6); g.add(pond);
     const frog = new THREE.Group(); const fb = new THREE.Mesh(new THREE.SphereGeometry(0.45, 8, 6), M.frog); fb.scale.set(1, 0.7, 1.1); frog.add(fb);
     for (const e of [-0.2, 0.2]) { const eye = new THREE.Mesh(new THREE.SphereGeometry(0.14, 6, 5), M.frog); eye.position.set(e, 0.3, 0.25); frog.add(eye); }
     const pad = new THREE.Mesh(new THREE.CircleGeometry(0.8, 10), new THREE.MeshLambertMaterial({color: 0x1f5c3a})); pad.rotation.x = -Math.PI / 2; pad.position.y = -0.3; frog.add(pad);
     frog.position.set(W / 2 + 2.2, 0.36, 1.6); frog.rotation.y = -0.6; g.add(frog); g.userData.frog = frog; }
   // door + gold lintel
-  const door = new THREE.Mesh(new THREE.PlaneGeometry(1.5, 2.3), M.door); door.position.set(0, 1.15, D / 2 + 0.01); g.add(door);
-  const lintel = new THREE.Mesh(new THREE.BoxGeometry(1.9, 0.14, 0.14), M.gold); lintel.position.set(0, 2.38, D / 2 + 0.05); g.add(lintel);
+  const door = new THREE.Mesh(new THREE.PlaneGeometry(1.5, 2.3), doorMat); door.position.set(0, 1.15, D / 2 + 0.01); g.add(door);
+  const lintel = new THREE.Mesh(new THREE.BoxGeometry(1.9, 0.14, 0.14), trimMat); lintel.position.set(0, 2.38, D / 2 + 0.05); g.add(lintel);
   // number disc on the path
   const disc = new THREE.Mesh(new THREE.CylinderGeometry(0.9, 0.9, 0.1, 18), M.gold); disc.position.set(p.x, 0.08, p.z); scene.add(disc);
   // label above the roof
-  const lab = label(s.n, s.title, s.tag, enemy); lab.position.set(0, H + 3.1, 0); g.add(lab);
+  const lab = label(s.n, s.title, s.tag, enemy, C); lab.position.set(0, H + 3.1, 0); g.add(lab);
   scene.add(g);
   const doorWorld = new THREE.Vector3(0, 0, D / 2 + 1.4).applyAxisAngle(new THREE.Vector3(0, 1, 0), g.rotation.y).add(pos);
   doors.push({stop: s, pos: doorWorld, group: g, enemy});
@@ -404,6 +411,9 @@ function showCard(d) {
   $("cardK").textContent = `Stop ${d.stop.n} of ${N}` + (d.stop.tag ? ` · ${d.stop.tag}` : "");
   $("cardT").textContent = d.stop.title; $("cardP").textContent = d.stop.caption || "";
   const a = $("cardA"); a.href = d.stop.url; a.onclick = () => { visited.add(d.stop.n); saveVisited(); };
+  const C = Array.isArray(d.stop.colors) && d.stop.colors.length === 2 ? d.stop.colors : null;   // the building's two colours
+  card.style.borderColor = C ? C[1] : ""; card.style.boxShadow = C ? `inset 0 6px 0 ${C[0]}` : "";
+  $("cardK").style.color = C ? C[1] : ""; a.style.background = C ? C[1] : ""; a.style.color = C ? "#000" : ""; a.style.borderColor = C ? C[1] : "";
   card.classList.add("on");
   if (!visited.has(d.stop.n)) { visited.add(d.stop.n); saveVisited(); }
 }

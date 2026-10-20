@@ -4,7 +4,8 @@
 Source of truth: campus/basecamp_stops.json (the numbered path).
 Writes:
   index.html                      the base camp map (root of bucklerfamily.estate; Vite input "campus")
-  public/ghf-lang/basecamp.js     "Back to base camp" link + "stop N, next" hint, loaded by ghf-lang.js on every GHF site
+  public/ghf-lang/basecamp.js     "Back to base camp" link + "stop N, next" hint + each site's two-colour identity
+                                  (band, header, buttons, links), loaded by ghf-lang.js on every GHF site
   public/basecamp.json            the path as JSON, for any site that wants it
 The original campus map now lives at campus/index.html (/campus/), built by campus/build_campus.py.
 Run: python3 campus/build_basecamp.py      — Sion's Tab agent, 20 Oct 2026
@@ -39,17 +40,32 @@ def ground(cx, cy, w=58):
     return f'<ellipse cx="{cx}" cy="{cy+36}" rx="{w}" ry="9" fill="#ffffff" opacity=".07"/>'
 def roof_house(cx, cy, w=70, h=40, roof=24, fill="#0d0d0d"):
     x0, x1, yb, yt = cx - w/2, cx + w/2, cy + 34, cy + 34 - h
-    return (f'<path d="M{x0} {yb} V{yt} L{cx} {yt-roof} L{x1} {yt} V{yb} Z" fill="{fill}" {ST}/>')
+    return (f'<path d="M{x0} {yb} V{yt} H{x1} V{yb} Z" fill="{fill}" {ST}/>'
+            f'<path d="M{x0-3} {yt} L{cx} {yt-roof} L{x1+3} {yt} Z" fill="__ROOF__" {ST}/>')
 def door(cx, cy, w=12, h=18):
     return f'<rect x="{cx-w/2}" y="{cy+34-h}" width="{w}" height="{h}" rx="1.5" fill="#f2c94c" opacity=".9"/>'
 def win(x, y, w=9, h=9, lit=True):
     return f'<rect x="{x}" y="{y}" width="{w}" height="{h}" fill="{"#f2c94c" if lit else "#262626"}" opacity="{".85" if lit else "1"}" stroke="#fff" stroke-width=".8"/>'
 
-def icon(kind, cx, cy, big=False):
+def _shade(hx, f):
+    """Darken a #rrggbb colour by factor f (0..1 keeps that share of each channel)."""
+    hx = hx.lstrip("#"); return "#" + "".join(f"{int(int(hx[i:i+2], 16) * f):02x}" for i in (0, 2, 4))
+
+def paint(svg_str, colors):
+    """Two-colour identity (campus/basecamp_stops.json "colors"): walls = primary, roof/trim/door = secondary."""
+    if not colors: return svg_str.replace("__ROOF__", "#0d0d0d")
+    p, s = colors
+    return (svg_str.replace("#0d0d0d", p).replace("#141414", _shade(p, .62))
+                   .replace("#f2c94c", s).replace("__ROOF__", s))
+
+def icon(kind, cx, cy, big=False, colors=None):
+    return paint(_icon(kind, cx, cy, big), colors)
+
+def _icon(kind, cx, cy, big=False):
     g = [ground(cx, cy, 64 if big else 56)]
     if kind == "library":   # classical library, columns
         g.append(f'<path d="M{cx-48} {cy+34} H{cx+48} V{cy+28} H{cx-48} Z" fill="#0d0d0d" {ST}/>')
-        g.append(f'<path d="M{cx-44} {cy-6} H{cx+44} L{cx} {cy-30} Z" fill="#0d0d0d" {ST}/>')
+        g.append(f'<path d="M{cx-44} {cy-6} H{cx+44} L{cx} {cy-30} Z" fill="__ROOF__" {ST}/>')
         g.append(f'<rect x="{cx-44}" y="{cy-6}" width="88" height="6" fill="#0d0d0d" {ST}/>')
         for i in range(5):
             x = cx - 36 + i*18
@@ -81,7 +97,7 @@ def icon(kind, cx, cy, big=False):
         g.append(f'<path d="M{cx+18} {cy-14} v-10 h-4 v-4 h12 v4 h-4 v10" fill="#0d0d0d" {ST}/>')
     elif kind == "court":
         g.append(f'<path d="M{cx-50} {cy+34} H{cx+50} V{cy+28} H{cx-50} Z" fill="#0d0d0d" {ST}/>')
-        g.append(f'<path d="M{cx-46} {cy-8} H{cx+46} L{cx} {cy-34} Z" fill="#0d0d0d" {ST}/>')
+        g.append(f'<path d="M{cx-46} {cy-8} H{cx+46} L{cx} {cy-34} Z" fill="__ROOF__" {ST}/>')
         for i in range(4):
             x = cx - 33 + i*22
             g.append(f'<rect x="{x-4}" y="{cy-8}" width="8" height="36" fill="#141414" {ST}/>')
@@ -95,6 +111,7 @@ def icon(kind, cx, cy, big=False):
             g.append(f'<rect x="{cx-5}" y="{y+4}" width="10" height="3" fill="#f2c94c"/>')
     elif kind == "vault":
         g.append(f'<rect x="{cx-38}" y="{cy-16}" width="76" height="50" rx="4" fill="#0d0d0d" {ST}/>')
+        g.append(f'<rect x="{cx-42}" y="{cy-22}" width="84" height="7" rx="2" fill="__ROOF__" {ST}/>')
         g.append(f'<circle cx="{cx}" cy="{cy+8}" r="17" fill="#141414" {ST}/>')
         g.append(f'<circle cx="{cx}" cy="{cy+8}" r="5" fill="#f2c94c"/>')
         for a in range(0, 360, 60):
@@ -107,7 +124,7 @@ def icon(kind, cx, cy, big=False):
         g.append(f'<path d="M{cx-20} {cy-4} L{cx} {cy+10} L{cx+20} {cy-4}" fill="none" stroke="#f2c94c" stroke-width="1.6"/>')
     elif kind == "columns":
         g.append(f'<path d="M{cx-44} {cy+34} H{cx+44} V{cy+29} H{cx-44} Z" fill="#0d0d0d" {ST}/>')
-        g.append(f'<path d="M{cx-40} {cy-10} H{cx+40} L{cx} {cy-28} Z" fill="#0d0d0d" {ST}/>')
+        g.append(f'<path d="M{cx-40} {cy-10} H{cx+40} L{cx} {cy-28} Z" fill="__ROOF__" {ST}/>')
         for i in range(3):
             x = cx - 26 + i*26
             g.append(f'<rect x="{x-5}" y="{cy-10}" width="10" height="39" fill="#141414" {ST}/>')
@@ -137,18 +154,19 @@ def icon(kind, cx, cy, big=False):
         g.append(f'<path d="M{cx+5} {cy+14} l9 9" stroke="#f2c94c" stroke-width="3" stroke-linecap="round"/>')
     elif kind == "search":
         g.append(f'<path d="M{cx-40} {cy+34} V{cy-10} H{cx+40} V{cy+34} Z" fill="#0d0d0d" {ST}/>')
-        g.append(f'<path d="M{cx-40} {cy-10} L{cx} {cy-30} L{cx+40} {cy-10}" fill="#0d0d0d" {ST}/>')
+        g.append(f'<path d="M{cx-40} {cy-10} L{cx} {cy-30} L{cx+40} {cy-10} Z" fill="__ROOF__" {ST}/>')
         for i in range(6):
             g.append(f'<rect x="{cx-30+i*10}" y="{cy}" width="6" height="22" fill="{"#f2c94c" if i in (1,4) else "#2a2a2a"}" stroke="#fff" stroke-width=".7"/>')
     elif kind == "office":
         g.append(f'<rect x="{cx-26}" y="{cy-30}" width="52" height="64" fill="#0d0d0d" {ST}/>')
+        g.append(f'<rect x="{cx-30}" y="{cy-36}" width="60" height="6" fill="__ROOF__" {ST}/>')
         for r in range(4):
             for c in range(3):
                 g.append(win(cx-19+c*14, cy-24+r*13, 8, 8, (r+c) % 3 != 0))
     elif kind == "film":
         g.append(roof_house(cx, cy, 72, 38, 14))
         g.append(f'<rect x="{cx-22}" y="{cy-2}" width="44" height="24" fill="#141414" {ST}/>')
-        g.append(f'<path d="M{cx-22} {cy-2} l6 -10 h44 l-6 10" fill="#0d0d0d" {ST}/>')
+        g.append(f'<path d="M{cx-22} {cy-2} l6 -10 h44 l-6 10" fill="__ROOF__" {ST}/>')
         g.append(f'<path d="M{cx-12} {cy-12} l-5 10 M{cx} {cy-12} l-5 10 M{cx+12} {cy-12} l-5 10" stroke="#f2c94c" stroke-width="2"/>')
         g.append(f'<path d="M{cx-5} {cy+4} v12 l11 -6 Z" fill="#f2c94c"/>')
     elif kind == "album":
@@ -164,7 +182,7 @@ def icon(kind, cx, cy, big=False):
     elif kind == "shop":
         w = 120
         g.append(f'<rect x="{cx-w/2}" y="{cy-22}" width="{w}" height="56" fill="#0d0d0d" {ST}/>')
-        g.append(f'<path d="M{cx-w/2-6} {cy-22} H{cx+w/2+6} L{cx+w/2} {cy-40} H{cx-w/2} Z" fill="#0d0d0d" {ST}/>')
+        g.append(f'<path d="M{cx-w/2-6} {cy-22} H{cx+w/2+6} L{cx+w/2} {cy-40} H{cx-w/2} Z" fill="__ROOF__" {ST}/>')
         n = 8
         for i in range(n):
             x = cx - w/2 - 6 + i*(w+12)/n
@@ -250,7 +268,7 @@ for r in rows:
     href = s["url"]
     svg.append(f'<a class="stop" href="{esc(href)}" aria-label="{esc(a_lbl)}" data-stop="{s["n"]}">')
     svg.append(f'<rect class="hit" x="6" y="{r["cy"]-58 - (60 if r["big"] else 0)}" width="{W-12}" height="{r["h"]-8}" rx="10"/>')
-    svg.append(icon(s["icon"], r["bx"], r["cy"] - (12 if not r["big"] else 0), r["big"]))
+    svg.append(icon(s["icon"], r["bx"], r["cy"] - (12 if not r["big"] else 0), r["big"], s.get("colors")))
     # stepping stone with number
     svg.append(f'<circle cx="{sx}" cy="{sy}" r="16" fill="{"#f2c94c" if s["n"] in (1, 19) else "#000"}" stroke="#f2c94c" stroke-width="2"/>')
     svg.append(f'<text x="{sx}" y="{sy+5.5}" text-anchor="middle" class="num{" dark" if s["n"] in (1, 19) else ""}">{s["n"]}</text>')
@@ -259,7 +277,10 @@ for r in rows:
         tx, anchor = W/2, "middle"; ty = r["cy"] + 64
     else:
         tx, anchor = (168, "start") if r["left"] else (16, "start"); ty = r["cy"] - 40
-    t = [f'<text x="{tx}" y="{ty}" text-anchor="{anchor}" class="tag">{esc(s["tag"])}</text>']
+    cP, cS = s.get("colors") or ("#f2c94c", "#f2c94c")
+    bx0 = tx - 20 if anchor == "middle" else tx
+    t = [f'<rect x="{bx0}" y="{ty-18}" width="24" height="4" rx="1" fill="{cP}" stroke="#fff" stroke-opacity=".35" stroke-width=".6"/><rect x="{bx0+24}" y="{ty-18}" width="16" height="4" rx="1" fill="{cS}"/>',
+         f'<text x="{tx}" y="{ty}" text-anchor="{anchor}" class="tag" style="fill:{cS}">{esc(s["tag"])}</text>']
     yy = ty + 20
     for ln in r["title"]:
         t.append(f'<text x="{tx}" y="{yy}" text-anchor="{anchor}" class="ttl">{esc(ln)}</text>'); yy += 19
@@ -268,14 +289,14 @@ for r in rows:
         t.append(f'<text x="{tx}" y="{yy}" text-anchor="{anchor}" class="cap">{esc(ln)}</text>'); yy += 17
     lbl = ("Enter the shop" if r["big"] else host_of(s["url"])) + " →"
     if s["key"] == "film": lbl = "Watch on Facebook →"
-    t.append(f'<text x="{tx}" y="{yy+6}" text-anchor="{anchor}" class="go">{esc(lbl)}</text>')
+    t.append(f'<text x="{tx}" y="{yy+6}" text-anchor="{anchor}" class="go" style="fill:{cS}">{esc(lbl)}</text>')
     svg.append("".join(t))
     svg.append('</a>')
 svg.append('</svg>')
 SVG = "\n".join(svg)
 
 route_li = "\n".join(
-    f'<li><a href="{esc(s["url"])}"><b>{s["n"]}. {esc(s["title"])}</b> — {esc(s["caption"])}</a></li>' for s in STOPS)
+    f'<li><a href="{esc(s["url"])}"><i class="sw" aria-hidden="true" style="--p:{(s.get("colors") or ["#f2c94c"]*2)[0]};--s:{(s.get("colors") or ["#f2c94c"]*2)[1]}"></i><b>{s["n"]}. {esc(s["title"])}</b> — {esc(s["caption"])}</a></li>' for s in STOPS)
 
 merch = SHOP["merch"]
 if merch.get("url"):
@@ -357,6 +378,7 @@ ol.route{{margin:8px 0 0;padding-left:0;list-style:none}}
 ol.route li{{margin:0 0 8px;font-size:.92rem}}
 ol.route a{{text-decoration:none;color:var(--body)}}ol.route a:hover b{{color:var(--gold)}}
 ol.route b{{color:var(--ink)}}
+.sw{{display:inline-block;width:26px;height:10px;margin:0 8px 0 0;border-radius:2px;vertical-align:middle;background:linear-gradient(90deg,var(--p) 0 60%,var(--s) 60% 100%);box-shadow:0 0 0 1px rgba(255,255,255,.25)}}
 footer{{max-width:560px;margin:0 auto;padding:18px 18px 40px;font-size:.82rem;color:var(--muted);border-top:1px solid var(--line)}}
 footer a{{color:var(--ink)}}
 footer p{{margin:6px 0}}
@@ -402,7 +424,30 @@ footer p{{margin:6px 0}}
 open(os.path.join(ROOT, "index.html"), "w", encoding="utf-8").write(PAGE)
 
 # ---------- basecamp.js ----------
-js_stops = [{"n": s["n"], "t": s["title"], "u": s["url"], "h": s.get("hosts", []), "p": s.get("paths", [])} for s in STOPS]
+js_stops = [{"n": s["n"], "t": s["title"], "u": s["url"], "h": s.get("hosts", []), "p": s.get("paths", []), "c": s.get("colors")} for s in STOPS]
+# Two-colour identity: per-site tweaks for the brand layer in basecamp.js ("P"/"S" = that site's primary/secondary).
+# vars: the site's own CSS custom properties re-pointed at its pair; header/buttons/links: false = leave alone,
+# or a CSS selector to use instead of the generic one. Pages under BRAND_PATHS on the apex take that stop's pair.
+_by_key = {s["key"]: s for s in STOPS}
+BRAND_PATHS = {"/enemy/": _by_key["authorities"]["colors"]}
+TWEAKS = {
+  "fcg.bucklerfamily.estate": {"vars": {"--accent": "S"}},
+  "projects.bucklerfamily.estate": {"vars": {"--accent": "S"}},
+  "ebooks.bucklerfamily.estate": {"vars": {"--accent": "S"}},
+  "shop.bucklerfamily.estate": {"vars": {"--accent": "S"}},
+  "csscpsg.bucklerfamily.estate": {"vars": {"--gold": "S"}},
+  "csscpsgp.bucklerfamily.estate": {"vars": {"--gold": "S"}},
+  "chess.bucklerfamily.estate": {"buttons": False},
+  "qa.bucklerfamily.estate": {"vars": {"--navy": "P", "--blue": "P"}},
+  "fb.bucklerfamily.estate": {"vars": {"--blue": "P"}},
+  "2026-10-22.bucklerfamily.estate": {"vars": {"--slate": "P", "--moss": "P"}},
+  "email.bucklerfamily.estate": {"vars": {"--blue": "P", "--navy": "P"}, "forceHeader": True},
+  "records.bucklerfamily.estate": {"forceHeader": True},
+  "authorities.bucklerfamily.estate": {"forceHeader": True},
+  "review.bucklerfamily.estate": {"forceHeader": True},
+  "research.bucklerfamily.estate": {"forceHeader": True},
+  "wayback.bucklerfamily.estate": {"css": "body{background-color:__P__!important}"},
+}
 JS = r"""/*! basecamp.js — "Back to base camp" link for every Great House Farm (Tŷ Mawr) site, plus a
  * "stop N, next stop" hint along the numbered path on bucklerfamily.estate. Dependency-free.
  * Loaded automatically by ghf-lang.js (same folder); can also be tagged directly:
@@ -423,6 +468,98 @@ JS = r"""/*! basecamp.js — "Back to base camp" link for every Great House Farm
     for (j = 0; j < STOPS[i].h.length; j++) if (STOPS[i].h[j] === host) { here = STOPS[i]; break; }
     if (!here && apex) for (j = 0; j < STOPS[i].p.length; j++) if (path.indexOf(STOPS[i].p[j]) === 0) { here = STOPS[i]; break; }
   }
+
+  // ---------- two-colour identity (colors = [primary, secondary] in campus/basecamp_stops.json) ----------
+  // primary is deep (white text passes WCAG AA on it); secondary is bright (black text passes AA on it, and it
+  // passes AA as text on black). Styling only: no words are changed. Opt out per page with <html data-ghf-brand="off">.
+  var BRAND_PATHS = __BRANDPATHS__, TWEAKS = __TWEAKS__;
+  function rgb(c) { var m = /rgba?\(([\d.]+),\s*([\d.]+),\s*([\d.]+)(?:,\s*([\d.]+))?/.exec(c || ""); return m ? [+m[1], +m[2], +m[3], m[4] == null ? 1 : +m[4]] : null; }
+  function lumi(a) { var f = function (v) { v /= 255; return v <= 0.04045 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); }; return 0.2126 * f(a[0]) + 0.7152 * f(a[1]) + 0.0722 * f(a[2]); }
+  function hexL(h) { h = h.replace("#", ""); return lumi([parseInt(h.slice(0, 2), 16), parseInt(h.slice(2, 4), 16), parseInt(h.slice(4, 6), 16)]); }
+  function ratio(a, b) { var x = Math.max(a, b), y = Math.min(a, b); return (x + 0.05) / (y + 0.05); }
+  function bgOf(e) { // effective background colour behind an element
+    for (; e && e.nodeType === 1; e = e.parentElement) {
+      var cs = getComputedStyle(e), c = rgb(cs.backgroundColor);
+      if (cs.backgroundImage && cs.backgroundImage !== "none" && !/gradient/.test(cs.backgroundImage)) return null;
+      if (c && c[3] > 0.6) return c;
+    }
+    return [255, 255, 255, 1];
+  }
+  function brand(stop) {
+    var de = document.documentElement;
+    if (de.getAttribute("data-ghf-brand") === "off") return;
+    var pair = null, k;
+    for (k in BRAND_PATHS) if (apex && path.indexOf(k) === 0) pair = BRAND_PATHS[k];
+    if (!pair && stop) pair = stop.c;
+    if (!pair) return;
+    var P = pair[0], S = pair[1], tw = TWEAKS[host] || {};
+    window.GHFBasecamp.colors = pair;
+    de.style.setProperty("--ghf-p", P); de.style.setProperty("--ghf-s", S);
+    de.setAttribute("data-ghf-brand", "on");
+    var css = el("style"); css.setAttribute("data-ghf-brand", "");
+    var vars = "";
+    for (k in (tw.vars || {})) vars += k + ":" + (tw.vars[k] === "P" ? P : tw.vars[k] === "S" ? S : tw.vars[k]) + "!important;";
+    css.textContent =
+      (vars ? ":root{" + vars + "}" : "") +
+      ".ghf-band{position:fixed;left:0;right:0;top:0;height:6px;z-index:2147481991;pointer-events:none;background:linear-gradient(90deg," + P + " 0 62%," + S + " 62% 100%)}" +
+      "html[data-ghf-brand=on] ::selection{background:" + S + ";color:#000}" +
+      "html[data-ghf-brand=on] :focus-visible{outline-color:" + S + "}" +
+      ".ghf-hdr{background-color:" + P + "!important;border-bottom:3px solid " + S + "!important;color:#fff!important}" +
+      ".ghf-hdr :is(a,span,b,strong,small,em,i,h1,h2,h3,h4,p,li,label,div,summary):not(.ghf-keep){color:#fff!important}" +
+      ".ghf-hdr a:hover,.ghf-hdr a:focus-visible{color:" + S + "!important}" +
+      ".ghf-hdr-edge{border-bottom:4px solid " + S + "!important;box-shadow:inset 0 -7px 0 " + P + "}" +
+      ".ghf-btn{background:" + S + "!important;color:#000!important;border-color:" + S + "!important}" +
+      ".ghf-btn *{color:#000!important}" +
+      ".ghf-ghost{border-color:" + S + "!important}" +
+      ".ghf-bc-home,.ghf-bc-open{border-color:" + S + "!important}.ghf-bc-arrow{color:" + S + "!important}" +
+      "@media print{.ghf-band{display:none}}" + (tw.css || "").replace(/__P__/g, P).replace(/__S__/g, S);
+    (document.head || de).appendChild(css);
+    var mt = document.querySelector('meta[name="theme-color"]');
+    if (!mt) { mt = document.createElement("meta"); mt.name = "theme-color"; (document.head || de).appendChild(mt); }
+    mt.content = P;
+    function paintPage() {
+      if (!document.body) return;
+      if (!document.querySelector(".ghf-band")) { var b = el("div", "ghf-band"); b.setAttribute("aria-hidden", "true"); document.body.appendChild(b); }
+      var lP = hexL(P), lS = hexL(S), vw = window.innerWidth || 390, q, i, e, r;
+      // 1. the header / nav bar at the top of the page
+      if (tw.header !== false) {
+        q = document.querySelectorAll(tw.header || "header, [role=banner], .site-header, .topbar, .navbar, .nav, .navrow, body > nav");
+        for (i = 0; i < q.length; i++) {
+          e = q[i]; if (e.closest(".ghf-bc")) continue;
+          r = e.getBoundingClientRect();
+          if (r.width < vw * 0.6 || r.height < 24 || r.top > 160 || r.height > 260) continue;
+          var cs = getComputedStyle(e), img = cs.backgroundImage && cs.backgroundImage !== "none" && !/gradient/.test(cs.backgroundImage);
+          var fg = rgb(cs.color), light = fg && lumi(fg) > 0.5;
+          // a plain header whose own text is already light (dark theme), or a plain light bar: paint it primary
+          if (!img && (light || tw.forceHeader)) e.classList.add("ghf-hdr"); else e.classList.add("ghf-hdr-edge");
+          break;
+        }
+      }
+      // 2. buttons and calls to action
+      if (tw.buttons !== false) {
+        q = document.querySelectorAll(tw.buttons || "a.btn, button.btn, .button, a.cta, .cta, .buy, a[class*='btn-'], button[type=submit], input[type=submit]");
+        for (i = 0; i < q.length && i < 400; i++) {
+          e = q[i]; if (e.closest(".ghf-bc, .ghf-hdr")) continue;
+          var bc = rgb(getComputedStyle(e).backgroundColor);
+          if (bc && bc[3] > 0.6) e.classList.add("ghf-btn"); else e.classList.add("ghf-ghost");
+        }
+      }
+      // 3. links in running text: secondary on dark ground, primary on light ground (whichever passes AA)
+      if (tw.links !== false) {
+        q = document.querySelectorAll("p a:not([class]), li a:not([class]), td a:not([class]), dd a:not([class]), figcaption a:not([class]), blockquote a:not([class])");
+        for (i = 0; i < q.length && i < 1500; i++) {
+          e = q[i]; if (e.closest(".ghf-bc, .ghf-hdr, .ghf-btn, nav, header, footer")) continue;
+          var g = bgOf(e); if (!g) continue;
+          var lg = lumi(g);
+          if (ratio(lS, lg) >= 4.5) e.style.setProperty("color", S, "important");
+          else if (ratio(lP, lg) >= 4.5) e.style.setProperty("color", P, "important");
+        }
+      }
+    }
+    if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", paintPage); else paintPage();
+    window.addEventListener("load", function () { setTimeout(paintPage, 400); });
+  }
+  brand(here);
   var next = here && here.n < TOTAL ? STOPS[here.n] : null;
   var T = {
     en: { back: "Back to base camp", stop: "Stop", of: "of", next: "Next", hide: "Hide", show: "Base camp", end: "Journey’s end" },
@@ -504,6 +641,7 @@ JS = r"""/*! basecamp.js — "Back to base camp" link for every Great House Farm
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start); else start();
 })();
 """
+JS = JS.replace("__BRANDPATHS__", json.dumps(BRAND_PATHS)).replace("__TWEAKS__", json.dumps(TWEAKS, ensure_ascii=False))
 JS = JS.replace("__STOPS__", json.dumps(js_stops, ensure_ascii=False)).replace("__VER__", D["version"]).replace("__DATE__", D["updated"])
 open(os.path.join(ROOT, "public", "ghf-lang", "basecamp.js"), "w", encoding="utf-8").write(JS)
 est = json.load(open(os.path.join(ROOT, "public", "ghf-lang", "sites", "estate.json"), encoding="utf-8"))

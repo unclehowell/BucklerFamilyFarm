@@ -2,7 +2,7 @@
  * Dependency-free. Translates interface text only (nav, headings, buttons, labels) from a static
  * per-site dictionary; long evidence and legal text stays in its original English, which is the
  * authoritative record. Choice is remembered (?lang=, localStorage, and a .bucklerfamily.estate cookie)
- * and sets <html lang>.  Source: bucklerfamily.estate/ghf-lang/  ·  v1.0.0 (20 Oct 2026)
+ * and sets <html lang>.  Source: bucklerfamily.estate/ghf-lang/  ·  v1.0.1 (20 Oct 2026)
  */
 (function () {
   "use strict";
@@ -312,20 +312,28 @@
   }
   function load() {
     var url = (me && me.getAttribute("data-dict")) || (base + "sites/" + SITE + ".json");
+    var fallback = base + "sites/estate.json";
     var done1 = false;
     function go(d) { if (done1) return; done1 = true; start(d); }
-    try {
-      var x = new XMLHttpRequest();
-      x.open("GET", url, true);
-      x.onload = function () { var d = null; try { d = JSON.parse(x.responseText); } catch (e) {} go(x.status < 400 ? d : null); };
-      x.onerror = function () { go(null); };
-      x.timeout = 8000; x.ontimeout = function () { go(null); };
-      x.send();
-    } catch (e) { go(null); }
+    function get(u, last) {
+      try {
+        var x = new XMLHttpRequest();
+        x.open("GET", u, true);
+        x.onload = function () {
+          var d = null; try { d = JSON.parse(x.responseText); } catch (e) {}
+          if ((x.status >= 400 || !d) && !last && u !== fallback) return get(fallback, true);
+          go(x.status < 400 ? d : null);
+        };
+        x.onerror = function () { if (!last && u !== fallback) get(fallback, true); else go(null); };
+        x.timeout = 8000; x.ontimeout = function () { go(null); };
+        x.send();
+      } catch (e) { go(null); }
+    }
+    get(url, false);
   }
   window.GHFLang = {
     set: function (l) { set(l); }, get: function () { return cur; },
-    open: function () { open(false); }, close: close, site: SITE, version: "1.0.0"
+    open: function () { open(false); }, close: close, site: SITE, version: "1.0.1"
   };
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", load); else load();
 })();

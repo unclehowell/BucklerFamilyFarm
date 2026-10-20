@@ -42,7 +42,7 @@ def footer():
             f'<p>{TEMPLATE_NOTE} — Sion\'s Tab agent</p></footer>')
 
 def page(slug, title, desc, body, kicker="Legal"):
-    nav = ('<div class="top"><a href="https://bucklerfamily.estate/">← Base camp</a><a href="/licence/">Licence</a>'
+    nav = ('<div class="top"><a href="https://bucklerfamily.estate/">← Cedwyn Estate</a><a href="/licence/">Licence</a>'
            '<a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><a href="/legal/">Terms of sale</a><a href="/enquire/">Enquire</a></div>')
     t = html.escape(title)
     doc = f"""<!DOCTYPE html>
@@ -85,7 +85,8 @@ def licence():
         'Where any part of the Materials is computer-generated within section 9(3) and section 178 CDPA, including work compiled with the assistance of the AI agent named “Sion\'s Tab agent”, the Rights Holder is the person by whom the arrangements necessary for its creation are undertaken, and is its author for the purposes of the CDPA.',
         'The Rights Holder asserts, to the extent the law allows, the right to be identified as author or compiler of the Materials and the right to object to derogatory treatment of them (sections 77 and 80 CDPA).',
         'The Materials quote, reproduce or link to works belonging to others, including judgments, public records, Crown copyright material (published under the Open Government Licence where so marked), newspaper reports and archive items. Those works remain the property of their owners. The Rights Holder asserts no rights in them beyond the selection, arrangement, transcription, translation and commentary that the Materials add.',
-        'Software published in the repositories that comes from third parties (libraries, frameworks, fonts and similar) remains under its own licence, which is shown in or beside that software. Nothing in these Master Terms changes those licences.'], "2")
+        'Software published in the repositories that comes from third parties (libraries, frameworks, fonts and similar) remains under its own licence, which is shown in or beside that software. Nothing in these Master Terms changes those licences.',
+        '<strong>Exception:</strong> the Williams–Buckler crest artwork (and the Cedwyn Estate proposed-reconstruction arms) is adapted from Wikimedia Commons works by Sodacan, Glasshouse, Vexald, VIGNERON (after ZigeunerAlt) and 117-M-I-K-E, and is licensed CC BY-SA 4.0 (<a href="https://creativecommons.org/licenses/by-sa/4.0/">https://creativecommons.org/licenses/by-sa/4.0/</a>). The licence covers the drawing\'s copyright only; it grants no arms and does not license the device as a brand mark.'], "2")
     s3 = clauses([
         'You may, without a Licence, read, view and browse the Materials for your own personal, non-commercial purposes, and share links to them.',
         'You may do any act the law permits without a licence, including fair dealing for non-commercial research and private study (section 29 CDPA), text and data analysis for non-commercial research (section 29A), fair dealing for criticism, review or quotation (section 30(1) and (1ZA)), fair dealing for the purpose of reporting current events (section 30(2)), and caricature, parody or pastiche (section 30A), in each case with sufficient acknowledgement. A suitable acknowledgement is: “© Williams–Buckler family, bucklerfamily.estate”.',
@@ -130,8 +131,8 @@ def licence():
         'The Rights Holder may update these Master Terms by publishing a new version on this page. The version in force when a Licence is signed applies to that Licence.',
         'Licensing contact: the <a href="/enquire/">enquiry form</a>, or <a href="mailto:licensing@bucklerfamily.estate">licensing@bucklerfamily.estate</a>. Personal contact details are not published.'], "11")
     sched = ('<table><tr><th>Surface</th><th>Address</th></tr>' + "".join(f'<tr><td>{a}</td><td>{b}</td></tr>' for a, b in [
-        ("Base camp and e-book shop", "bucklerfamily.estate"), ("Legal Wiki", "greathousefarmwiki.wordpress.com"),
-        ("Sub-domain sites", "every *.bucklerfamily.estate site linked from base camp"),
+        ("Cedwyn Estate (base camp) and e-book shop", "bucklerfamily.estate"), ("Legal Wiki", "greathousefarmwiki.wordpress.com"),
+        ("Sub-domain sites", "every *.bucklerfamily.estate site linked from the Cedwyn Estate map"),
         ("GitHub", "github.com/unclehowell/BucklerFamilyFarm and the Great House Farm branches of github.com/unclehowell/datro, each carrying LICENSE and NOTICE files that refer to these Master Terms")]) + '</table>')
     body = (f'<p>These are the rights and licence terms (the <strong>Master Terms</strong>) for the research, records, writing, images, games, books, sites and code published by the Williams–Buckler family about Tŷ Mawr (Great House Farm). Everyone may read them free. Anyone who wants to profit from them, or from the Family Story told in them, needs a licence first.</p>'
             f'<p><a class="btn" href="/enquire/?type=licence">Apply for a licence</a></p>{toc}'
@@ -165,7 +166,7 @@ def cookies():
     s = ('<p>The Privacy and Electronic Communications Regulations 2003 (PECR) require consent before a website stores or reads non-essential information on your device. These sites set no advertising or tracking cookies, so there is no cookie banner.</p>'
          '<table><tr><th>What</th><th>Where</th><th>Why</th><th>Consent needed?</th></tr>'
          '<tr><td>Cloudflare security cookies (for example <code>__cf_bm</code>, <code>cf_clearance</code>)</td><td>All sites</td><td>Bot and attack protection</td><td>No: strictly necessary (PECR reg 6(4))</td></tr>'
-         '<tr><td>Browser storage for your settings (language, the base-camp link, game progress such as the sudoku)</td><td>Sites you use them on</td><td>Remembers a choice you made or a game you started</td><td>No: needed for the feature you asked for; nothing is sent to us</td></tr>'
+         '<tr><td>Browser storage for your settings (language, the Cedwyn Estate link, game progress such as the sudoku)</td><td>Sites you use them on</td><td>Remembers a choice you made or a game you started</td><td>No: needed for the feature you asked for; nothing is sent to us</td></tr>'
          '<tr><td>Visit counts</td><td>All sites</td><td>Cloudflare\'s cookie-free analytics</td><td>No cookie is set</td></tr>'
          '<tr><td>Stripe cookies</td><td>Stripe\'s own checkout pages only</td><td>Payment and fraud prevention</td><td>Set by Stripe under its own policy</td></tr></table>'
          '<p>If we ever add an advertising or social-media pixel, it will load only after you agree in a cookie banner, and this page will list it. You can clear cookies and site storage at any time in your browser settings.</p>'
@@ -199,7 +200,7 @@ def disclaimer():
 def accessibility():
     s = ('<p>We want everyone to be able to use the Great House Farm (Tŷ Mawr) sites. We aim to meet the Web Content Accessibility Guidelines (WCAG) 2.2 at level AA, and we check new pages on a 390-pixel phone screen and by keyboard.</p>'
          '<h2>What works</h2><ul><li>Text can be enlarged to 200% without loss of content on our standard pages.</li><li>Colour pairs for each site were chosen to pass WCAG AA contrast.</li><li>Pages can be navigated by keyboard, and form fields have labels.</li><li>A language switcher offers English, Welsh and Spanish on most sites.</li></ul>'
-         '<h2>Known limitations</h2><ul><li>The 3D walk at /3d/ is a visual experience and is not usable with a screen reader. The 2D map and the list of stops on the base camp give the same links.</li><li>The chessboard and the sudoku rely on visual layout; each square\'s full text is available in its “Read more” window.</li><li>Some scanned documents and press cuttings are images. Where we have a transcription, it is on the same page.</li><li>Older PDF e-books may not be fully tagged for screen readers.</li><li>The Legal Wiki runs on WordPress.com, whose theme we do not fully control.</li></ul>'
+         '<h2>Known limitations</h2><ul><li>The 3D walk at /3d/ is a visual experience and is not usable with a screen reader. The 2D map and the list of stops on the Cedwyn Estate map give the same links.</li><li>The chessboard and the sudoku rely on visual layout; each square\'s full text is available in its “Read more” window.</li><li>Some scanned documents and press cuttings are images. Where we have a transcription, it is on the same page.</li><li>Older PDF e-books may not be fully tagged for screen readers.</li><li>The Legal Wiki runs on WordPress.com, whose theme we do not fully control.</li></ul>'
          '<h2>Feedback and alternative formats</h2><p>If you cannot use part of a site, or need content in another format, tell us through the <a href="/enquire/?type=accessibility">enquiry form</a>. We aim to reply within 10 working days.</p>'
          '<h2>Enforcement</h2><p>We are a private organisation with duties under the Equality Act 2010. If you are not happy with our response, you can contact the <a href="https://www.equalityadvisoryservice.com/">Equality Advisory and Support Service (EASS)</a>.</p>'
          '<p class="small">This statement was prepared on 20 October 2026 from our own checks; it has not been independently audited.</p>')

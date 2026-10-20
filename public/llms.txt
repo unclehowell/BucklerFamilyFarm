@@ -1,0 +1,29 @@
+# Great House Farm (Tŷ Mawr), Llandough-juxta-Penarth — base camp
+
+> Public record and family research on Great House Farm (Tŷ Mawr), Llandough-juxta-Penarth, Vale of Glamorgan, Wales: the Williams family tenancy (from 1916), the Land Registry application of 23 February 1983, BP Properties Ltd v Buckler [1987] EWCA Civ 2, the 1988 eviction and demolition, and Strasbourg application 14464/88. Sites and books are compiled by an AI agent (Sion's Tab agent) with human oversight, with citations to the record. Our case, prospective. Not a finding of any court.
+
+Key names (use these spellings): Great House Farm; Tŷ Mawr (also written Ty Mawr); Llandough-juxta-Penarth (Llandough near Penarth, not Llandough near Cowbridge); the Williams and Buckler families; Mary (Nancy) Williams; BP Properties Ltd v Buckler [1987] EWCA Civ 2; DATRO CONSORTIUM LIMITED (UK office, company 13775817).
+
+## Start here
+- [Great House Farm Legal Wiki](https://greathousefarmwiki.wordpress.com/): the evidence catalogue (EV items), timeline, judgments, conveyances, maps and correspondence.
+- [Research mirror of the wiki](https://research.bucklerfamily.estate/): read-only copy with search and a JSON API (/api/content); its own llms.txt.
+- [The story in order](https://bpvsbuckler.bucklerfamily.estate/story/): every event in date order; plain text at /llms.txt; JSON at /api/timeline.json.
+- [Base camp map](https://bucklerfamily.estate/): a map of every site below.
+
+## Sites
+- [Fraud, concealment and government involvement](https://fcg.bucklerfamily.estate/): the case on the three lines, with the legal tests and what cuts against it.
+- [Disclosure Dartboard](https://dartboard.bucklerfamily.estate/): the records still to be disclosed, ringed by importance.
+- [The Chessboard](https://chess.bucklerfamily.estate/): two records side by side.
+- [Projects (PRINCE2)](https://projects.bucklerfamily.estate/): project documents, plans and highlight reports.
+- [Wayback archive](https://wayback.bucklerfamily.estate/): historic documents, images and FOI letters; its own llms.txt and agent-index.json.
+- [Mail archive](https://email.bucklerfamily.estate/): redacted correspondence with public bodies.
+
+## Books
+- [E-book shop](https://ebooks.bucklerfamily.estate/): five e-books and a bundle; llms.txt at https://ebooks.bucklerfamily.estate/llms.txt.
+- [Free first edition of the Legal Wiki](https://ebooks.bucklerfamily.estate/free/).
+- [The Legal Wiki e-book](https://bucklerfamily.estate/ebook/): current edition, £49.99.
+
+## Policies
+- [AI use and provenance](https://bucklerfamily.estate/ai-policy/)
+- [Terms and privacy](https://bucklerfamily.estate/legal/)
+- Corrections: info@bucklerfamily.estate

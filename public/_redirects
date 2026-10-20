@@ -8,3 +8,5 @@
 /go/w/:test/:variant /ebook/?utm_source=go&utm_medium=social&utm_campaign=:test&utm_content=:variant 302
 /go/e/:test/:variant https://ebooks.bucklerfamily.estate/?utm_source=go&utm_medium=social&utm_campaign=:test&utm_content=:variant 302
 /go /ebook/ 302
+# Free-book funnel (worker ff7c2ab1, 20 Oct 2026): short link to the lead-magnet landing page
+/free https://ebooks.bucklerfamily.estate/free/?utm_source=basecamp&utm_medium=shortlink&utm_campaign=free-wiki 302

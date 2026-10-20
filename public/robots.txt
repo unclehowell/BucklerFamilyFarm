@@ -1,0 +1,24 @@
+# Great House Farm (Tŷ Mawr) base camp. Search and answer engines welcome. — Sion's Tab agent
+User-agent: OAI-SearchBot
+Allow: /
+User-agent: ChatGPT-User
+Allow: /
+User-agent: PerplexityBot
+Allow: /
+User-agent: Perplexity-User
+Allow: /
+User-agent: Claude-SearchBot
+Allow: /
+User-agent: Claude-User
+Allow: /
+User-agent: Bingbot
+Allow: /
+User-agent: Googlebot
+Allow: /
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /ebook/api/
+Disallow: /ebook/thank-you/
+Sitemap: https://bucklerfamily.estate/sitemap.xml
+# Plain-text guide for language models: https://bucklerfamily.estate/llms.txt

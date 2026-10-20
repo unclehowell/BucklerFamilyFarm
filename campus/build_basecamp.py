@@ -694,15 +694,17 @@ JS = r"""/*! basecamp.js — "Back to Cedwyn Estate" link for every Great House 
   brand(here);
   var next = here && here.n < TOTAL ? STOPS[here.n] : null;
   var T = {
-    en: { home: "Cedwyn Estate · Base Camp", back: "Back to Cedwyn Estate", sub: "Great House", stop: "Stop", of: "of", next: "Next", hide: "Hide", show: "Cedwyn Estate", end: "Journey’s end" },
-    cy: { home: "Ystâd Cedwyn · Gwersyll Sylfaen", back: "Yn ôl i Ystâd Cedwyn", sub: "Tŷ Mawr", stop: "Arhosfan", of: "o", next: "Nesaf", hide: "Cuddio", show: "Ystâd Cedwyn", end: "Diwedd y daith" },
-    es: { home: "Finca Cedwyn · Campamento base", back: "Volver a la Finca Cedwyn", sub: "Great House", stop: "Parada", of: "de", next: "Siguiente", hide: "Ocultar", show: "Finca Cedwyn", end: "Fin del recorrido" }
+    en: { less: "Close", all: "All sites", prev: "Previous site", nxt: "Next site", site: "Site", sof: "of", home: "Cedwyn Estate · Base Camp", back: "Back to Cedwyn Estate", sub: "Great House", stop: "Stop", of: "of", next: "Next", hide: "Hide", show: "Cedwyn Estate", end: "Journey’s end" },
+    cy: { less: "Cau", all: "Pob safle", prev: "Safle blaenorol", nxt: "Safle nesaf", site: "Safle", sof: "o", home: "Ystâd Cedwyn · Gwersyll Sylfaen", back: "Yn ôl i Ystâd Cedwyn", sub: "Tŷ Mawr", stop: "Arhosfan", of: "o", next: "Nesaf", hide: "Cuddio", show: "Ystâd Cedwyn", end: "Diwedd y daith" },
+    es: { less: "Cerrar", all: "Todos los sitios", prev: "Sitio anterior", nxt: "Sitio siguiente", site: "Sitio", sof: "de", home: "Finca Cedwyn · Campamento base", back: "Volver a la Finca Cedwyn", sub: "Great House", stop: "Parada", of: "de", next: "Siguiente", hide: "Ocultar", show: "Finca Cedwyn", end: "Fin del recorrido" }
   };
   function lang() {
     var l = (document.documentElement.getAttribute("lang") || "en").slice(0, 2).toLowerCase();
     return T[l] ? l : "en";
   }
-  var KEY = "ghf-bc-min", nav, css, bar;
+  var KEY = "ghf-bc-min", nav, css, bar, sub = null, shiftNow = null;
+  var TWO = !apex && /(^|\.)bucklerfamily\.estate$/.test(host); // a subdomain: master bar collapses, the site's own tier shows
+  var RING = STOPS.filter(function (st, i) { return /^https:\/\/[a-z0-9-]+\.bucklerfamily\.estate\//.test(st.u) && STOPS.map(function (x) { return x.u; }).indexOf(st.u) === i; }); // the subdomain sites, in base camp order (the WordPress wiki and external pages cannot show these arrows)
   function mini() { try { return sessionStorage.getItem(KEY) === "1"; } catch (e) { return false; } }
   function setMini(v) { try { sessionStorage.setItem(KEY, v ? "1" : "0"); } catch (e) {} render(); }
   function el(tag, cls, txt) { var e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; }
@@ -744,7 +746,11 @@ JS = r"""/*! basecamp.js — "Back to Cedwyn Estate" link for every Great House 
     var s = T[lang()], home = bar.querySelector(".ghf-top-home");
     home.setAttribute("aria-label", s.back);
     home.querySelector(".ghf-top-name").textContent = s.home;
+    var sh = home.querySelector(".ghf-top-short"); if (sh) sh.textContent = s.show;
     var sn = bar.querySelector(".ghf-top-site"); if (sn) sn.textContent = here ? here.t : "";
+    var tg = bar.querySelector(".ghf-top-tog");
+    if (tg) { var o = document.documentElement.classList.contains("ghf-open"); tg.setAttribute("aria-expanded", o ? "true" : "false"); tg.setAttribute("aria-label", o ? s.less : s.all); tg.title = o ? s.less : s.all; tg.innerHTML = '<span class="ghf-tog-t">' + (o ? s.less : s.all) + '</span><span class="ghf-tog-i" aria-hidden="true">' + (o ? "\u25B4" : "\u25BE") + "</span>"; }
+    if (sub) fillSub();
   }
   function buildBar() {
     bar = el("header", "ghf-top ghf-ui"); bar.setAttribute("data-no-translate", ""); bar.setAttribute("translate", "no");
@@ -752,13 +758,21 @@ JS = r"""/*! basecamp.js — "Back to Cedwyn Estate" link for every Great House 
     var a = el("a", "ghf-top-home"); a.href = HOME;
     var badge = el("span", "ghf-top-badge"); var mk = document.createElement("img"); mk.src = ICON; mk.alt = ""; mk.width = 24; mk.height = 24; badge.appendChild(mk);
     a.appendChild(badge);
-    var tx = el("span", "ghf-top-tx"); tx.appendChild(el("span", "ghf-top-name")); tx.appendChild(el("span", "ghf-top-site"));
+    var tx = el("span", "ghf-top-tx"); tx.appendChild(el("span", "ghf-top-name")); tx.appendChild(el("span", "ghf-top-short")); tx.appendChild(el("span", "ghf-top-site"));
     a.appendChild(tx); bar.appendChild(a);
     var right = el("div", "ghf-top-r");
     right.appendChild(el("span", "ghf-top-lang"));
     var mb = el("button", "ghf-top-mode"); mb.setAttribute("data-ghf-mode-toggle", ""); right.appendChild(mb);
+    if (TWO) { // two tiers: on a subdomain the master bar starts as a thin strip, one tap to open
+      var mn = el("span", "ghf-top-mini"); right.insertBefore(mn, right.firstChild);
+      var tg = el("button", "ghf-top-tog"); tg.type = "button"; tg.setAttribute("aria-expanded", "false");
+      tg.onclick = function () { var o = !document.documentElement.classList.contains("ghf-open"); document.documentElement.classList.toggle("ghf-open", o); renderBar(); if (shiftNow) shiftNow(); };
+      right.appendChild(tg);
+      document.documentElement.classList.add("ghf-two");
+    }
     bar.appendChild(right);
     document.body.insertBefore(bar, document.body.firstChild);
+    if (TWO) { sub = buildSub(); bar.parentNode.insertBefore(sub, bar.nextSibling); }
     GT.wire(mb);
     renderBar();
     moveLang();
@@ -771,17 +785,37 @@ JS = r"""/*! basecamp.js — "Back to Cedwyn Estate" link for every Great House 
       r = e.getBoundingClientRect();
       if (r.top <= 2 && r.height > 0 && r.height < 170 && r.width > (window.innerWidth || 390) * 0.5) pinned.push(e);
     }
-    var bh = function () { return bar.offsetHeight || 46; };
+    var bh = function () { var last = sub || bar, r = last.getBoundingClientRect(); return Math.round(r.bottom + (window.pageYOffset || 0)) || bar.offsetHeight || 46; };
     var shift = function () { var off = Math.max(0, bh() - (window.pageYOffset || 0)); for (var k = 0; k < pinned.length; k++) pinned[k].style.setProperty("top", off + "px", "important"); };
     if (pinned.length) { shift(); window.addEventListener("scroll", shift, { passive: true }); window.addEventListener("resize", shift); }
+    shiftNow = shift; setTimeout(shift, 900);
     // the floating pill appears only once the bar is out of view, so the way home is always one tap away
     if ("IntersectionObserver" in window) {
       new IntersectionObserver(function (en) { var away = !en[0].isIntersecting; nav.setAttribute("data-away", away ? "1" : "0"); nav.classList.toggle("ghf-bc-hide", !away); }).observe(bar);
     } else nav.setAttribute("data-away", "1");
   }
+  // ---------- second tier (21 Oct 2026): this site's own bar under the master bar ----------
+  // "bucklerfamily.estate › maps" shows that every subdomain sits under the master page; ‹ and › step through the sites
+  // in base camp order (campus/basecamp_stops.json, wrapping round), so a visitor can browse them all one by one.
+  function label(st) { var h = st.h[0]; if (!h) return st.p[0] ? "bucklerfamily.estate" + st.p[0].replace(/\/$/, "") : st.t;
+    return /\.bucklerfamily\.estate$/.test(h) ? h.replace(/\.bucklerfamily\.estate$/, "") : h; }
+  function buildSub() { var d = el("nav", "ghf-sub ghf-ui"); d.setAttribute("data-no-translate", ""); d.setAttribute("translate", "no"); return d; }
+  function fillSub() {
+    var s = T[lang()], k = here ? RING.indexOf(here) : -1, n = RING.length;
+    var pv = RING[k < 0 ? n - 1 : (k - 1 + n) % n], nx = RING[k < 0 ? 0 : (k + 1) % n];
+    sub.textContent = ""; sub.setAttribute("aria-label", here ? here.t : host);
+    var mk = function (st, cls, ch, lab) { var a = el("a", "ghf-sub-arr " + cls); a.href = st.u; a.setAttribute("aria-label", lab + ": " + st.t); a.title = lab + ": " + st.t; a.appendChild(el("span", "ghf-sub-ch", ch)); a.setAttribute("aria-hidden", "false"); return a; };
+    sub.appendChild(mk(pv, "ghf-sub-prev", "\u2039", s.prev));
+    var mid = el("div", "ghf-sub-mid"), cr = el("div", "ghf-sub-crumb"), ap = el("a", "ghf-sub-apex", "bucklerfamily.estate"); ap.href = HOME;
+    cr.appendChild(ap); cr.appendChild(el("span", "ghf-sub-sep", " \u203A ")); cr.appendChild(el("span", "ghf-sub-host", here ? label(here) : host.replace(/\.bucklerfamily\.estate$/, "")));
+    mid.appendChild(cr);
+    var tt = el("div", "ghf-sub-title"); tt.appendChild(el("b", null, here ? here.t : host)); if (k >= 0) tt.appendChild(el("small", null, s.site + " " + (k + 1) + " " + s.sof + " " + n)); mid.appendChild(tt);
+    sub.appendChild(mid);
+    sub.appendChild(mk(nx, "ghf-sub-next", "\u203A", s.nxt));
+  }
   // Cedwyn Estate locations strip (WALES / PATAGONIA / CYBERSPACE) under the shared bar: /ghf-lang/locations.js, generated by campus/build_locations.py
   function locStrip() {
-    var go = function () { if (window.GHFLoc && bar) window.GHFLoc.strip(bar); };
+    var go = function () { if (window.GHFLoc && bar) { window.GHFLoc.strip(bar); var m = bar.querySelector(".ghf-top-mini"); if (m && window.GHFLoc.mini) window.GHFLoc.mini(m); if (shiftNow) setTimeout(shiftNow, 50); } };
     if (window.GHFLoc) return go();
     var ls = document.createElement("script"); ls.src = ASSET + "/ghf-lang/locations.js?v=__VER__"; ls.async = true; ls.onload = go;
     (document.head || document.documentElement).appendChild(ls);
@@ -831,6 +865,26 @@ JS = r"""/*! basecamp.js — "Back to Cedwyn Estate" link for every Great House 
       "html[data-ghf-mode=day] .ghf-top .ghf-lang{--ghf-lang-fg:#000;--ghf-lang-bd:rgba(0,0,0,.6)}" +
       ".ghf-top .ghf-lang-btn{border-radius:2px!important;box-shadow:none!important;min-height:32px!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important;font-family:Barlow,'Helvetica Neue',Arial,sans-serif!important;letter-spacing:.08em!important}" +
       "@media (max-width:440px){.ghf-mode-txt{display:none}.ghf-top-mode{padding:0 9px!important}.ghf-top-name{letter-spacing:.09em;font-size:10.5px}.ghf-top{padding:7px 8px!important;gap:6px}}" +
+      ".ghf-top-tog{display:none!important}.ghf-top-mini{display:none!important}.ghf-top-short{display:none}" +
+      "html.ghf-two:not(.ghf-open) .ghf-top-name{display:none}html.ghf-two:not(.ghf-open) .ghf-top-short{display:block;font-weight:500;letter-spacing:.12em;text-transform:uppercase;font-size:10.5px;white-space:nowrap}" +
+      "html.ghf-two .ghf-top-tog{display:inline-flex!important;align-items:center;gap:5px;height:28px;padding:0 8px!important;margin:0!important;border:1px solid var(--ghf-s,#f2c94c)!important;border-radius:2px!important;background:transparent!important;cursor:pointer;font-size:10px!important;font-weight:500!important;letter-spacing:.12em;text-transform:uppercase;line-height:1!important;white-space:nowrap}" +
+      ".ghf-tog-i{font-size:12px;letter-spacing:0}" +
+      "html.ghf-two:not(.ghf-open) .ghf-top{min-height:34px;padding:3px 8px!important;transition:min-height .2s,padding .2s}" +
+      "html.ghf-two:not(.ghf-open) .ghf-top-badge{width:24px;height:24px;border-width:1.5px}html.ghf-two:not(.ghf-open) .ghf-top-badge img{width:16px!important;height:16px!important}" +
+      "html.ghf-two:not(.ghf-open) .ghf-top-site{display:none}html.ghf-two:not(.ghf-open) .ghf-top-name{font-size:10px;letter-spacing:.12em}" +
+      "html.ghf-two:not(.ghf-open) .ghf-top-mini{display:inline-flex!important;align-items:center;gap:4px}html.ghf-two:not(.ghf-open) .ghf-loc{display:none!important}" +
+      "html.ghf-two:not(.ghf-open) .ghf-top-mode,html.ghf-two:not(.ghf-open) .ghf-top .ghf-lang-btn{height:28px!important;min-height:28px!important}html.ghf-two:not(.ghf-open) .ghf-top-lang{display:none}" +
+      ".ghf-top-mini .ghf-loc-ic svg{width:18px!important;height:10.8px!important}.ghf-top-mini .ghf-loc-ic svg[aria-label='AI agent']{width:15px!important;height:15px!important}.ghf-top-mini a{color:inherit!important}" +
+      ".ghf-sub{position:relative;z-index:2147481988;display:flex!important;align-items:stretch;justify-content:space-between;box-sizing:border-box;width:100%;margin:0!important;padding:0!important;background:var(--ghf-p,#111)!important;color:#fff!important;border-bottom:1px solid var(--ghf-s,#f2c94c)!important;font:400 12px/1.2 Barlow,'Helvetica Neue',Arial,system-ui,sans-serif!important;-webkit-font-smoothing:antialiased;text-align:center}" +
+      ".ghf-sub a{color:#fff!important;text-decoration:none!important;font-family:inherit!important}" +
+      ".ghf-sub-arr{flex:0 0 46px;display:flex!important;align-items:center;justify-content:center;min-height:52px;background:rgba(0,0,0,.18)!important}.ghf-sub-arr:hover,.ghf-sub-arr:focus-visible{background:rgba(0,0,0,.4)!important}" +
+      ".ghf-sub-ch{font-size:30px;line-height:1;font-weight:300;margin-top:-3px}" +
+      ".ghf-sub-mid{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:3px;padding:6px 4px}" +
+      ".ghf-sub-crumb{font-size:10.5px;letter-spacing:.08em;opacity:.9;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.ghf-sub-apex{text-decoration:underline!important;text-underline-offset:2px}.ghf-sub-host{font-weight:700}" +
+      ".ghf-sub-title b{display:block;font-weight:500;font-size:14px;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.ghf-sub-title small{display:block;font-size:10px;letter-spacing:.14em;text-transform:uppercase;opacity:.8;margin-top:2px}" +
+      ".ghf-sub a,.ghf-sub b,.ghf-sub small,.ghf-sub span{color:#fff!important}.ghf-sub-title small{opacity:.85}" +
+      ".ghf-sub :focus-visible{outline:2px solid var(--ghf-s,#f2c94c);outline-offset:-2px}" +
+      "@media (max-width:440px){html.ghf-two .ghf-tog-t{display:none}.ghf-sub-title b{font-size:13px;letter-spacing:.06em}}@media print{.ghf-sub{display:none!important}}" +
       "@media print{.ghf-top{display:none!important}}";
     (document.head || document.documentElement).appendChild(css);
     nav = el("nav", "ghf-bc ghf-ui ghf-bc-hide");

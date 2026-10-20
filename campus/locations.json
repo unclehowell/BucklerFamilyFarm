@@ -1,5 +1,5 @@
 {
- "version": "1.0.0",
+ "version": "1.1.0",
  "updated": "2026-10-20",
  "note": "Cedwyn Estate locations (chooser, /wales/, /patagonia/, /cyberspace/). Edit here, then run python3 campus/build_basecamp.py (it calls campus/build_locations.py). — Sion's Tab agent",
  "endpoint": "/visit/api/",

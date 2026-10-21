@@ -637,13 +637,14 @@ JS = r"""/*! basecamp.js — "Back to Cedwyn Estate" link for every Great House 
     var de = document.documentElement, wrap = null, chainBar = null, locBar = null, drawer = null, scrim = null, fsx = null, bgx = null;
     var shift = null, fsApi = false, lastFocus = null;
     var L = {
-      en: { prev: "Previous site", next: "Next site", of: "of", fs: "Full screen", fsx: "Exit full screen", menu: "Menu", close: "Close menu", here: "On this site", all: "Every site, in order", home: "Cedwyn Estate · Base Camp", mode: "Day / Night", top: "Top of this page", loc: "Location" },
-      cy: { prev: "Safle blaenorol", next: "Safle nesaf", of: "o", fs: "Sgrin lawn", fsx: "Gadael y sgrin lawn", menu: "Dewislen", close: "Cau’r ddewislen", here: "Ar y safle hwn", all: "Pob safle, yn eu trefn", home: "Ystâd Cedwyn · Gwersyll Sylfaen", mode: "Dydd / Nos", top: "Brig y dudalen hon", loc: "Lleoliad" },
-      es: { prev: "Sitio anterior", next: "Sitio siguiente", of: "de", fs: "Pantalla completa", fsx: "Salir de pantalla completa", menu: "Menú", close: "Cerrar el menú", here: "En este sitio", all: "Todos los sitios, en orden", home: "Finca Cedwyn · Campamento base", mode: "Día / Noche", top: "Inicio de esta página", loc: "Lugar" }
+      en: { prev: "Previous site", next: "Next site", of: "of", fs: "Full screen", fsx: "Exit full screen", menu: "Menu", close: "Close menu", here: "On this site", all: "Every site, in order", home: "Cedwyn Estate · Base Camp", mode: "Day / Night", top: "Top of this page", loc: "Location", chat: "Agent chat" },
+      cy: { prev: "Safle blaenorol", next: "Safle nesaf", of: "o", fs: "Sgrin lawn", fsx: "Gadael y sgrin lawn", menu: "Dewislen", close: "Cau’r ddewislen", here: "Ar y safle hwn", all: "Pob safle, yn eu trefn", home: "Ystâd Cedwyn · Gwersyll Sylfaen", mode: "Dydd / Nos", top: "Brig y dudalen hon", loc: "Lleoliad", chat: "Sgwrs â’r asiant" },
+      es: { prev: "Sitio anterior", next: "Sitio siguiente", of: "de", fs: "Pantalla completa", fsx: "Salir de pantalla completa", menu: "Menú", close: "Cerrar el menú", here: "En este sitio", all: "Todos los sitios, en orden", home: "Finca Cedwyn · Campamento base", mode: "Día / Noche", top: "Inicio de esta página", loc: "Lugar", chat: "Chat con el agente" }
     };
     var IC_FS = '<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>';
     var IC_FSX = '<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"/></svg>';
     var IC_MENU = '<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6.5h16M4 12h16M4 17.5h16"/></svg>';
+    var IC_CHAT = '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A1.5 1.5 0 0 1 5.5 4h13A1.5 1.5 0 0 1 20 5.5v9a1.5 1.5 0 0 1-1.5 1.5H9l-4.5 4v-4H5.5A1.5 1.5 0 0 1 4 14.5z"/><path d="M8 9h8M8 12.5h5"/></svg>';
     function lg() { var l = (de.getAttribute("lang") || "en").slice(0, 2).toLowerCase(); return L[l] ? l : "en"; }
     function mk(tag, cls, txt) { var e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; }
     function nm(st) { var l = lg(); return (l !== "en" && st[l]) || st.t; }
@@ -723,14 +724,18 @@ JS = r"""/*! basecamp.js — "Back to Cedwyn Estate" link for every Great House 
       var s = L[lg()], k = find(), inn = drawer.querySelector(".ghf-v2-din"); inn.textContent = "";
       var hd = mk("div", "ghf-v2-dhd"); hd.appendChild(mk("b", null, k >= 0 ? nm(CHAIN[k]) : host));
       var x = mk("button", "ghf-v2-btn ghf-v2-dx", "\u00D7"); x.type = "button"; x.setAttribute("aria-label", s.close); x.title = s.close; x.onclick = closeDrawer; hd.appendChild(x); inn.appendChild(hd);
+      // v2.1.1 (Sion, 21 Oct 2026): Day/Night and the Agent chat sit at the TOP of the menu; nothing floats on the page.
+      var row = mk("div", "ghf-v2-drow"), mb = mk("button", "ghf-v2-mode"); mb.setAttribute("data-ghf-mode-toggle", ""); row.appendChild(mb);
+      if (window.GHFChatAllowed && window.GHFChatAllowed()) { var cb = mk("button", "ghf-v2-mode ghf-v2-chat"); cb.type = "button"; cb.setAttribute("aria-haspopup", "dialog"); cb.setAttribute("aria-label", s.chat); cb.title = s.chat;
+        cb.innerHTML = IC_CHAT + '<span class="ghf-mode-txt">' + s.chat + "</span>"; cb.onclick = function () { closeDrawer(); if (window.GHFChatOpen) window.GHFChatOpen(); }; row.appendChild(cb); }
+      inn.appendChild(row);
+      try { GT.wire(mb); } catch (e) {}
       var links = harvest();
       var dh1 = mk("div", "ghf-v2-dh", s.here); dh1.setAttribute("role", "heading"); dh1.setAttribute("aria-level", "2"); inn.appendChild(dh1);
       var ul = mk("ul", "ghf-v2-dl"), li, a;
       li = mk("li"); a = mk("a", null, s.top); a.href = "#"; a.onclick = function (e) { e.preventDefault(); closeDrawer(); window.scrollTo(0, 0); }; li.appendChild(a); ul.appendChild(li);
       links.forEach(function (l) { li = mk("li"); a = mk("a", null, l[0]); a.href = l[1]; a.onclick = function () { setTimeout(closeDrawer, 10); }; li.appendChild(a); ul.appendChild(li); });
       inn.appendChild(ul);
-      var row = mk("div", "ghf-v2-drow"), mb = mk("button", "ghf-v2-mode"); mb.setAttribute("data-ghf-mode-toggle", ""); row.appendChild(mb); inn.appendChild(row);
-      try { GT.wire(mb); } catch (e) {}
       var dh2 = mk("div", "ghf-v2-dh", s.all); dh2.setAttribute("role", "heading"); dh2.setAttribute("aria-level", "2"); inn.appendChild(dh2);
       var ol = mk("ol", "ghf-v2-dl ghf-v2-dall");
       CHAIN.forEach(function (st, i) { li = mk("li"); a = mk("a", null, nm(st)); a.href = st.u; if (i === k) a.setAttribute("aria-current", "page"); li.appendChild(a); ol.appendChild(li); });
@@ -888,7 +893,7 @@ JS = r"""/*! basecamp.js — "Back to Cedwyn Estate" link for every Great House 
       ".ghf-v2-dl a,.ghf-v2-dhome{display:block;padding:9px 4px!important;color:#eee!important;text-decoration:none!important;border-bottom:1px solid rgba(255,255,255,.08);font-size:var(--ghf-fs-base,16px)!important;line-height:1.3!important}" +
       ".ghf-v2-dl a:hover,.ghf-v2-dl a:focus-visible,.ghf-v2-dhome:hover{color:var(--ghf-s,#f2c94c)!important}.ghf-v2-dl a[aria-current=page]{color:var(--ghf-s,#f2c94c)!important;font-weight:600}" +
       ".ghf-v2-dall{counter-reset:ghfc}.ghf-v2-dall li{counter-increment:ghfc}.ghf-v2-dall a::before{content:counter(ghfc) '. ';opacity:.55;font-size:.85em}" +
-      ".ghf-v2-drow{margin:14px 0 0}.ghf-v2-mode{display:inline-flex!important;align-items:center;gap:6px;height:36px;padding:0 12px!important;border:1px solid rgba(255,255,255,.35)!important;border-radius:4px!important;background:transparent!important;color:#fff!important;cursor:pointer;letter-spacing:.12em;text-transform:uppercase;font-size:12px!important}" +
+      ".ghf-v2-drow{margin:12px 0 4px;display:flex;flex-wrap:wrap;gap:8px}.ghf-v2-chat svg{flex:0 0 18px}.ghfc-btn{display:none!important}.ghf-bc{display:none!important}.ghf-v2-mode{display:inline-flex!important;align-items:center;gap:6px;height:36px;padding:0 12px!important;border:1px solid rgba(255,255,255,.35)!important;border-radius:4px!important;background:transparent!important;color:#fff!important;cursor:pointer;letter-spacing:.12em;text-transform:uppercase;font-size:12px!important}" +
       ".ghf-v2-dhome{margin-top:18px;border:1px solid rgba(255,255,255,.2)!important;border-radius:4px;text-align:center;letter-spacing:.1em;text-transform:uppercase;font-size:13px!important}" +
       ".ghf-v2-gone{display:none!important}.ghf-v2-dup{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}" +
       "html[data-ghf-mode=day] .ghf-v2,html[data-ghf-mode=day] .ghf-v2-sp,html[data-ghf-mode=day] .ghf-v2-loc,html[data-ghf-mode=day] .ghf-v2-chain{background:#fff;color:#000}" +
@@ -1197,13 +1202,11 @@ JS = r"""/*! basecamp.js — "Back to Cedwyn Estate" link for every Great House 
     nav.setAttribute("aria-label", "Cedwyn Estate");
     nav.setAttribute("data-no-translate", "");
     nav.setAttribute("translate", "no");
-    document.body.appendChild(nav);
+    // v2.1.1 (Sion, 21 Oct 2026): the floating "back to base camp" pill and its "stop N · next" line are gone from every
+    // page; the way home is the menu's last line and the ‹ › chain. The nav is built but never attached.
     render();
     var vw = V2.mount(); // header standard v2: spacer, locations + language, ‹ page name ›, full screen, menu
     if (!vw) buildBar();
-    else if ("IntersectionObserver" in window) {
-      new IntersectionObserver(function (en) { var away = !en[0].isIntersecting; nav.setAttribute("data-away", away ? "1" : "0"); nav.classList.toggle("ghf-bc-hide", !away); }).observe(vw);
-    } else nav.setAttribute("data-away", "1");
     var place = function () {
       var h = nav.querySelector(".ghf-bc-home"), x = nav.querySelector(".ghf-bc-x");
       if (h && x) { x.style.left = (h.offsetLeft + h.offsetWidth - 30) + "px"; x.style.top = h.offsetTop + "px"; x.style.height = h.offsetHeight + "px"; x.style.lineHeight = h.offsetHeight + "px"; }
@@ -1239,14 +1242,28 @@ JS = r"""/*! basecamp.js — "Back to Cedwyn Estate" link for every Great House 
  * source links; may be wrong. Served by chat.bucklerfamily.estate. Opt out per site or page with <html data-ghf-chat="off">
  * or <meta name="ghf-chat" content="off">. Never loaded on clerk., chess. or email. */
 (function () {
-  try {
-    var h = location.hostname, d = document.documentElement;
-    if (window.GHFChat || /^(clerk|chess|email)\./.test(h) || !/(^|\.)bucklerfamily\.estate$/.test(h)) return;
-    if (d.getAttribute("data-ghf-chat") === "off") return;
-    var m = document.querySelector('meta[name="ghf-chat"]'); if (m && /off/i.test(m.getAttribute("content") || "")) return;
-    var s = document.createElement("script"); s.src = "https://chat.bucklerfamily.estate/widget.js"; s.async = true;
-    (document.head || d).appendChild(s);
-  } catch (e) {}
+  // v2.1.1 (Sion, 21 Oct 2026): nothing floats on the page. The widget loads only when "Agent chat" is tapped in the menu
+  // (next to Day / Night); its own floating button stays hidden (CSS in basecamp.js), and its × takes it off the screen.
+  function allowed() {
+    try {
+      var h = location.hostname, d = document.documentElement;
+      if (/^(clerk|chess|email)\./.test(h) || !/(^|\.)bucklerfamily\.estate$/.test(h)) return false;
+      if (d.getAttribute("data-ghf-chat") === "off") return false;
+      var m = document.querySelector('meta[name="ghf-chat"]'); if (m && /off/i.test(m.getAttribute("content") || "")) return false;
+      return true;
+    } catch (e) { return false; }
+  }
+  var loading = null;
+  function open() {
+    if (!allowed()) return;
+    if (window.GHFChat && window.GHFChat.open) return window.GHFChat.open();
+    if (!loading) {
+      loading = document.createElement("script"); loading.src = "https://chat.bucklerfamily.estate/widget.js"; loading.async = true;
+      (document.head || document.documentElement).appendChild(loading);
+    }
+    var n = 0, t = setInterval(function () { if (window.GHFChat && window.GHFChat.open) { clearInterval(t); window.GHFChat.open(); } else if (++n > 100) clearInterval(t); }, 100);
+  }
+  window.GHFChatAllowed = allowed; window.GHFChatOpen = open;
 })();
 """
 JS = JS.replace("__BRANDPATHS__", json.dumps(BRAND_PATHS)).replace("__TWEAKS__", json.dumps(TWEAKS, ensure_ascii=False))

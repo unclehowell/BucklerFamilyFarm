@@ -1,5 +1,5 @@
 {
- "version": "2.0.7",
+ "version": "2.0.8",
  "updated": "2026-10-21",
  "note": "ONE merry-go-round order for every Great House Farm site. Edit here, then run python3 campus/build_basecamp.py: it writes public/ghf-lang/chain.json and embeds the order in basecamp.js, which every site loads. The arrows wrap: › from the last entry goes to the first. Script-free pages (the WordPress Legal Wiki) carry static links that must match this order (campus/wiki_header.py prints them). Sion's Tab agent. 21 Oct 2026: Home (the apex root) is the Disclosure Dartboard (served at / by the apex-home Worker, which also answers dartboard.bucklerfamily.estate's own paths); the Cedwyn Estate base camp moved to https://bucklerfamily.estate/cedwyn/ and takes the Dartboard's old place in the order. 21 Oct 2026: Cedwyn Estate Directory (directory.bucklerfamily.estate) added after the Cedwyn Estate base camp. 21 Oct 2026: Nomenclature (nomenclature.bucklerfamily.estate; aliases nomlecture./nolecture.) added after Watchtower. 21 Oct 2026: optional \"d\" (other wordings of the site's own title) and \"x\" (CSS selectors of a title block that only repeats the bar's name) per site; basecamp.js hides those under the bars, kept for screen readers, so pages start right under the header (Sion 17:39: no repeated page titles).",
  "sites": [
@@ -111,6 +111,16 @@
    "u": "https://wayback.bucklerfamily.estate/",
    "h": [
     "wayback.bucklerfamily.estate"
+   ]
+  },
+  {
+   "id": "wdtk",
+   "t": "FOI Requests (WhatDoTheyKnow)",
+   "cy": "Ceisiadau Rhyddid Gwybodaeth (WhatDoTheyKnow)",
+   "es": "Solicitudes de información (WhatDoTheyKnow)",
+   "u": "https://whatdotheyknow.bucklerfamily.estate/",
+   "h": [
+    "whatdotheyknow.bucklerfamily.estate"
    ]
   },
   {

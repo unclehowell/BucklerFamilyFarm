@@ -2,7 +2,8 @@
 // password reset from onboard-team@bucklerfamily.estate, free eligibility checks with uploads (R2), admin eligibility + one-time codes,
 // code-gated £49.99/month subscription with the subscriber base camp, optional £19.99 full deep search. Demo at /demo/ unchanged.
 // Bindings: DB (D1), UPLOADS (R2), MAILER (send_email to Sion's verified address), SENDER (send_email, any address once
-// Cloudflare Email Sending is onboarded), secrets SALT, MAIL_TO, TEST_TOKEN, optional STRIPE_KEY, RESEND_KEY. — Sion's Tab agent
+// Cloudflare Email Sending is onboarded), TAB_MAILER (send_email to Tab's inbound address: lead copies), secrets SALT, MAIL_TO, TEST_TOKEN, optional STRIPE_KEY, RESEND_KEY.
+// v2.1.0 (21 Oct 2026): call-back consent on the eligibility check; every lead mail also copied to Tab. — Sion's Tab agent
 import { EmailMessage } from "cloudflare:email";
 import { CO, TEMPLATE_NOTE, TERMS, PRIVACY, CAMP_SVG, CFG } from "./gen.js";
 
@@ -149,6 +150,18 @@ async function sendMail(env, { to, subject, text, html, kind = "mail" }) {
   const error = errs.join(" | ") || "no mail route configured";
   await mailLog(env, kind, to, "none", false, error);
   return { ok: false, route: "none", error };
+}
+// --- Tab lead copy (Sion's Tab agent, 21 Oct 2026): each lead mail to Sion is also copied to Tab's inbound address (binding TAB_MAILER) for the lead playbook.
+const TAB_TO = "tymawr.giftshop@mail.tab.bot";
+async function tabLead(env, type, name, fields, details) {
+  const binding = env.TAB_MAILER;
+  if (!binding) return false;
+  try {
+    const subject = `[ENQUIRY] app.bucklerfamily.estate · ${type} · ${name || "(no name)"}`.replace(/[\r\n]+/g, " ").slice(0, 240);
+    const text = ["Site: app.bucklerfamily.estate", `Type: ${type}`, ...fields.map(([k, v]) => `${k}: ${v == null || v === "" ? "-" : String(v)}`), `Received (UTC): ${iso()}`, "", "Details (as sent to the estate mailbox):", details, "", "--", "Copy for Tab (lead playbook). The same lead went to the estate mailbox."].join("\n");
+    await binding.send(new EmailMessage(MAIL_FROM_ONBOARD, TAB_TO, rawMime(MAIL_FROM_ONBOARD, "Cedwyn Estate app", TAB_TO, subject, text)));
+    return true;
+  } catch (e) { console.log("tab lead copy failed", String(e && e.message || e)); return false; }
 }
 // to Sion only (verified destination fixed in the MAILER binding)
 async function mailSion(env, subject, body) {
@@ -349,7 +362,7 @@ ${err ? `<p class="err">${esc(err)}</p>` : ""}
 <label for="fl">Files (optional): photos, scans or PDFs · up to 6 files, 10 MB each</label><input id="fl" name="files" type="file" multiple accept="image/jpeg,image/png,image/webp,image/gif,image/heic,application/pdf"></fieldset>
 <fieldset><legend>Contact</legend>
 <label for="ce">Email for our reply</label><input id="ce" name="contact_email" type="email" maxlength="160" value="${val("contact_email", user.email)}" required>
-<label for="cp">Phone (optional)</label><input id="cp" name="contact_phone" maxlength="30" inputmode="tel" value="${val("contact_phone")}"></fieldset>
+<label for="cp">Phone (optional)</label><input id="cp" name="contact_phone" type="tel" autocomplete="tel" maxlength="30" inputmode="tel" value="${val("contact_phone")}"><label class="chk"><input type="checkbox" name="callback" value="yes"${val("callback") === "yes" ? " checked" : ""}> Yes, I'd like a call back. The call may be made by an AI assistant on behalf of the Great House Farm team.</label><p class="small">We keep your details, files and check to answer you (your phone number only to call you back, if you ask) for up to 2 years; a copy goes to our AI assistant, which helps with replies and call-backs. To have them deleted, email sales@bucklerfamily.estate.</p></fieldset>
 <div class="discbox"><p class="k">Before you send</p>${DISCLAIMER}
 <label class="chk"><input type="checkbox" name="disclaimer" value="1" required> I have read this and want to send my check.</label></div>
 <p class="actions"><button class="btn solid" name="go" value="free">Send my free check</button><button class="btn alt" name="go" value="deep">Skip the queue: full deep search · ${DEEP_LABEL}</button></p>
@@ -433,7 +446,7 @@ function enquiryText(e, user, files, test, paidNote) {
     "WHERE", `Holding / farm: ${e.place || ""}`, `Parish / town: ${e.parish || ""}`, `County: ${e.county || "-"}`, `Parcel / address: ${e.parcel || "-"}`, `Country: ${e.country || ""}`, "",
     "WHAT THEY KNOW OR REMEMBER", e.know || "", "", `Dates / documents: ${e.dates || "-"}`, `Year lost: ${e.year_lost || "-"}`, "",
     `FILES (${files.length})`, ...(files.length ? files.map((f) => `- ${f.name} · ${f.type} · ${fmtSize(f.size)} · ${APP}/admin/file/?k=${encodeURIComponent(f.key)}`) : ["- none"]), "",
-    "CONTACT", `Email: ${e.contact_email}`, `Phone: ${e.contact_phone || "-"}`, `Account: user #${user.id} (${user.email}; email ${user.email_verified ? "confirmed" : "NOT yet confirmed"})`, "",
+    "CONTACT", `Email: ${e.contact_email}`, `Phone: ${e.contact_phone || "-"}`, `CALLBACK_CONSENT: ${e.callback ? "yes" : "no"}`, `Account: user #${user.id} (${user.email}; email ${user.email_verified ? "confirmed" : "NOT yet confirmed"})`, "",
     `Disclaimer ticked: ${e.disclaimer_at || "-"}`, "",
     `Review it, mark it eligible or not, and send a code: ${APP}/admin/enquiry/?ref=${e.ref}`);
   return L.join("\n");
@@ -934,12 +947,13 @@ export default {
           if (req.method === "GET") return checkForm(user, "");
           const f = await req.formData();
           const g = (k, n) => String(f.get(k) || "").trim().slice(0, n);
-          const v = { for_whom: g("for_whom", 30), claimant_name: g("claimant_name", 100), relation: g("relation", 80), family_names: g("family_names", 300), place: g("place", 160), parish: g("parish", 120), county: g("county", 80), parcel: g("parcel", 300), country: g("country", 40), know: g("know", 6000), dates: g("dates", 2000), year_lost: g("year_lost", 4), contact_email: g("contact_email", 160).toLowerCase(), contact_phone: g("contact_phone", 30) };
+          const v = { for_whom: g("for_whom", 30), claimant_name: g("claimant_name", 100), relation: g("relation", 80), family_names: g("family_names", 300), place: g("place", 160), parish: g("parish", 120), county: g("county", 80), parcel: g("parcel", 300), country: g("country", 40), know: g("know", 6000), dates: g("dates", 2000), year_lost: g("year_lost", 4), contact_email: g("contact_email", 160).toLowerCase(), contact_phone: g("contact_phone", 30), callback: f.get("callback") === "yes" ? "yes" : "" };
           if (botCheck(f)) return checkForm(user, "Please try again.", v);
           const deep = f.get("go") === "deep";
           if (!(await limit(env, `chk|${user.id}`, 8, 86400))) return checkForm(user, "You've sent a lot of checks today. Please try again tomorrow, or email us.", v);
           if (!v.claimant_name || !v.place || !v.parish || !v.know || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.contact_email)) return checkForm(user, "Please fill in the name, the holding, the parish, what you know, and a valid email.", v);
           if (!f.get("disclaimer")) return checkForm(user, "Please tick the box to confirm you've read the notes before sending.", v);
+          if (v.callback && v.contact_phone.replace(/[^0-9]/g, "").length < 7) return checkForm(user, "Please add a phone number for the call back, or untick the call-back box.", v);
           const ref = (deep ? "DS-" : "EC-") + code(6);
           const up = await takeFiles(f, env, ref);
           if (up.error) { for (const p of up.partial || []) await env.UPLOADS.delete(p.key); return checkForm(user, up.error, v); }
@@ -950,12 +964,14 @@ export default {
             await env.DB.prepare("INSERT INTO enquiries (ref,user_id,kind,for_whom,claimant_name,relation,family_names,place,parish,county,parcel,title_no,country,know,dates,year_lost,happened,contact_name,contact_email,contact_phone,files,status,created,score,grade,score_notes,disclaimer_at,eligibility,test) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,'unreviewed',?)")
             .bind(ref, user.id, deep ? "deep" : "free", v.for_whom, v.claimant_name, v.relation, v.family_names, v.place, v.parish, v.county, v.parcel, tn, v.country, v.know, v.dates, v.year_lost, v.know.slice(0, 5000), v.claimant_name, v.contact_email, v.contact_phone, JSON.stringify(up.files), status, iso(), q.score, q.grade, q.notes, iso(), test ? 1 : 0).run();
           } catch (insErr) { for (const p of up.files) await env.UPLOADS.delete(p.key); throw insErr; }
+          try { await env.DB.prepare("UPDATE enquiries SET callback=? WHERE ref=?").bind(v.callback ? 1 : 0, ref).run(); } catch (cbErr) { console.log("callback column", String(cbErr)); }
           if (deep) return redirect(`/enquire/pay/?ref=${ref}`);
           const e = await env.DB.prepare("SELECT * FROM enquiries WHERE ref=?").bind(ref).first();
           const subj = `${test ? "[TEST] " : ""}Free eligibility check ${ref} · grade ${q.grade} · ${v.claimant_name.slice(0, 40)} · ${v.place.slice(0, 40)}`;
           if (test && req.headers.get("x-apps-test-mail") === "dry") return json({ dry: true, ref, subject: subj, files: up.files.length });
           try { await mailSion(env, subj, enquiryText(e, user, up.files, test)); await env.DB.prepare("UPDATE enquiries SET emailed=1 WHERE ref=?").bind(ref).run(); }
           catch (err) { await env.DB.prepare("UPDATE enquiries SET mail_error=? WHERE ref=?").bind(String(err).slice(0, 300), ref).run(); }
+          await tabLead(env, "Free eligibility check", v.claimant_name, [["Reference", ref], ["Name", v.claimant_name], ["Email", v.contact_email], ["Phone", v.contact_phone], ["CALLBACK_CONSENT", v.callback ? "yes" : "no"], ["Holding", v.place], ["Parish", v.parish], ["Grade", `${q.grade} (${q.score}/100)`], ["Test submission", test ? "yes" : "no"]], enquiryText(e, user, up.files, test));
           return redirect("/dashboard/?m=sent");
         }
         case "/enquire/pay/": {
@@ -988,6 +1004,7 @@ export default {
             if (test && req.headers.get("x-apps-test-mail") === "dry") return json({ dry: true, subject: subj });
             try { await mailSion(env, subj, body); await env.DB.prepare("UPDATE enquiries SET emailed=1 WHERE id=?").bind(e.id).run(); }
             catch (err) { await env.DB.prepare("UPDATE enquiries SET mail_error=? WHERE id=?").bind(String(err).slice(0, 300), e.id).run(); }
+            await tabLead(env, "Paid deep search", e.claimant_name, [["Reference", e.ref], ["Name", e.claimant_name], ["Email", e.contact_email], ["Phone", e.contact_phone], ["CALLBACK_CONSENT", e.callback ? "yes" : "no"], ["Holding", e.place], ["Parish", e.parish], ["Payment", status], ["Test submission", t ? "yes" : "no"]], body);
           }
           return redirect("/dashboard/?m=paid");
         }
@@ -1050,6 +1067,7 @@ export default {
             if (test && req.headers.get("x-apps-test-mail") === "dry") return json({ dry: true, subject: subj, body_chars: body.length });
             try { await mailSion(env, subj, body); await env.DB.prepare("UPDATE users SET sub_emailed=1 WHERE id=?").bind(user.id).run(); }
             catch (err) { await env.DB.prepare("UPDATE users SET sub_mail_error=? WHERE id=?").bind(String(err).slice(0, 300), user.id).run(); }
+            await tabLead(env, "Case Agent subscription", user.name, [["Name", user.name], ["Email", user.email], ["Phone", ""], ["CALLBACK_CONSENT", "no (not asked on the subscription form)"], ["Parcel", user.parcel], ["Location", user.location], ["Payment", st], ["Test submission", t ? "yes" : "no"]], body);
           }
           return redirect("/dashboard/?m=sub");
         }

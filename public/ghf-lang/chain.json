@@ -1,5 +1,5 @@
 {
- "version": "2.0.0",
+ "version": "2.0.3",
  "updated": "2026-10-21",
  "note": "ONE merry-go-round order for every Great House Farm site. Edit here, then run python3 campus/build_basecamp.py: it writes public/ghf-lang/chain.json and embeds the order in basecamp.js, which every site loads. The arrows wrap: › from the last entry goes to the first. Script-free pages (the WordPress Legal Wiki) carry static links that must match this order (campus/wiki_header.py prints them). Sion's Tab agent.",
  "sites": [
@@ -161,16 +161,6 @@
    ]
   },
   {
-   "id": "research",
-   "t": "The Research Library",
-   "cy": "Y Llyfrgell Ymchwil",
-   "es": "La Biblioteca de Investigación",
-   "u": "https://research.bucklerfamily.estate/",
-   "h": [
-    "research.bucklerfamily.estate"
-   ]
-  },
-  {
    "id": "projects",
    "t": "The Project Office",
    "cy": "Swyddfa’r Prosiect",
@@ -254,6 +244,10 @@
   }
  ],
  "excluded": [
+  {
+   "h": "research.bucklerfamily.estate",
+   "why": "out of the loop while it is down (21 Oct 2026); put it back here when it is restored"
+  },
   {
    "h": "clerk.bucklerfamily.estate",
    "why": "a redirect to a Legal Wiki section, not a site of its own"

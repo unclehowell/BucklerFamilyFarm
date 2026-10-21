@@ -23,7 +23,7 @@ html[data-ghf-native=light]{--ghf-line:var(--ghf-p,#0a0a0a);--ghf-on-line:#fff}
    canvases (the chessboard) and the shared header are flipped back so they keep their real colours. */
 html.ghf-inv{filter:invert(1) hue-rotate(180deg)}
 html.ghf-inv :is(img,video,canvas,iframe,embed,object,svg image,.ghf-ui,.ghf-bgimg,[data-ghf-keep]){filter:invert(1) hue-rotate(180deg)}
-html.ghf-inv :is(.ghf-ui,.ghf-bgimg,[data-ghf-keep]) :is(img,video,canvas,iframe,embed,object,svg image,.ghf-bgimg,[data-ghf-keep]){filter:none}
+html.ghf-inv :is(.ghf-ui,.ghf-bgimg,[data-ghf-keep]) :is(img,video,canvas,iframe,embed,object,svg image,.ghf-ui,.ghf-bgimg,[data-ghf-keep]){filter:none}
 html[data-ghf-native=dark]:not(.ghf-inv),html[data-ghf-native=dark]:not(.ghf-inv) body{background-color:#000!important}
 html[data-ghf-native=light]:not(.ghf-inv),html[data-ghf-native=light]:not(.ghf-inv) body{background-color:#fff}
 /* type: one family everywhere; headings thin, uppercase, tracked */
@@ -41,6 +41,10 @@ html[data-ghf-mode=day] .ghf-glow{background:radial-gradient(130% 70% at 50% 0%,
 html[data-ghf-mode=day] .ghf-lf{background:#fff!important;color:#444!important;border-top-color:#ddd!important}
 html[data-ghf-mode=day] .ghf-lf p{color:#444!important}html[data-ghf-mode=day] .ghf-lf :is(a,b){color:#111!important}
 @media print{html.ghf-inv{filter:none}.ghf-glow{display:none}}
+/* header standard v2.0.3: the bars' exact height is reserved before the first paint (ghf-boot.js adds .ghf-v2-pre; basecamp.js
+   removes it the moment the bars are in), so page content never jumps down when they arrive. */
+html.ghf-v2-pre body::before{content:"";display:block;height:148px;background:#000}
+@media (min-width:783px){html.ghf-v2-pre body::before{height:152px}}
 """
 
 TR = {
@@ -404,6 +408,7 @@ footer{max-width:720px;margin:34px auto 0;padding:18px 20px;border-top:1px solid
 footer p{margin:6px 0}footer a{color:#d6d6d6}
 @media (max-width:420px){.body{padding-left:4px}.t b{font-size:15.5px}}
 </style>
+<script src="https://bucklerfamily.estate/ghf-lang/ghf-boot.js?v=__VER__"></script>
 </head>
 <body>
 <a class="skip" href="#list">Skip to the list</a>
@@ -441,7 +446,7 @@ __ROWS__
   if(location.hash){var n=document.getElementById(location.hash.slice(1));if(n&&n.tagName==="DETAILS")n.open=true;}
 })();
 </script>
-<script src="https://bucklerfamily.estate/ghf-lang/ghf-lang.js" data-site="basecamp1d" defer></script>
+<script src="https://bucklerfamily.estate/ghf-lang/ghf-lang.js?v=__VER__" data-site="basecamp1d" defer></script>
 </body>
 </html>
 """

@@ -423,6 +423,7 @@ footer p{{margin:6px 0}}
 .daybtn:hover{{border-color:#f2c94c}}@media (max-width:440px){{.daybtn .ghf-mode-txt{{display:none}}}}
 .mode>*{{font-weight:500}}
 </style>
+<script src="https://bucklerfamily.estate/ghf-lang/ghf-boot.js?v={D["version"]}"></script>
 </head>
 <body>
 <a class="skip" href="#board">Skip to the map</a>
@@ -430,7 +431,7 @@ footer p{{margin:6px 0}}
 <div id="lang-slot"></div>
 <button class="daybtn" type="button" data-ghf-mode-toggle><span aria-hidden="true">☀</span><span class="ghf-mode-txt">Day</span></button>
 <img class="mark" src="/brand/cedwyn-tent-icon-128.png" width="72" height="72" alt="">
-<h1><b>Cedwyn Estate</b></h1>
+<h1 style="position:absolute!important;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0" data-ghf-title><b>Cedwyn Estate</b></h1>
 <p class="eyebrow sub">Great House</p>
 <p class="lead">Follow the numbered stepping stones. Each building opens one part of the record. Every site has a link back here, so you can always return to Cedwyn Estate.</p>
 <p class="note">Case theories on these sites are our case, prospective. Not a finding of any court.</p>
@@ -461,7 +462,7 @@ footer p{{margin:6px 0}}
 </footer>
 <script>(function(){{var v=document.querySelectorAll("[data-view]");for(var i=0;i<v.length;i++)v[i].addEventListener("click",function(){{try{{localStorage.setItem("ghf-view",this.getAttribute("data-view"))}}catch(e){{}}}});try{{localStorage.setItem("ghf-view","map")}}catch(e){{}}}})();</script>
 <link rel="stylesheet" href="/ghf-lang/ghf-theme.css?v={D["version"]}" data-ghf-theme>
-<script src="https://bucklerfamily.estate/ghf-lang/ghf-lang.js" data-site="basecamp" defer></script>
+<script src="https://bucklerfamily.estate/ghf-lang/ghf-lang.js?v={D["version"]}" data-site="basecamp" defer></script>
 </body>
 </html>
 """
@@ -554,7 +555,7 @@ JS = r"""/*! basecamp.js — "Back to Cedwyn Estate" link for every Great House 
         crit = document.createElement("style"); crit.setAttribute("data-ghf-theme-crit", "");
         crit.textContent = "html.ghf-inv{filter:invert(1) hue-rotate(180deg)}" +
           "html.ghf-inv :is(img,video,canvas,iframe,embed,object,svg image,.ghf-ui,.ghf-bgimg,[data-ghf-keep]){filter:invert(1) hue-rotate(180deg)}" +
-          "html.ghf-inv :is(.ghf-ui,.ghf-bgimg,[data-ghf-keep]) :is(img,video,canvas,iframe,embed,object,svg image,.ghf-bgimg,[data-ghf-keep]){filter:none}" +
+          "html.ghf-inv :is(.ghf-ui,.ghf-bgimg,[data-ghf-keep]) :is(img,video,canvas,iframe,embed,object,svg image,.ghf-ui,.ghf-bgimg,[data-ghf-keep]){filter:none}" +
           "html[data-ghf-native=dark]:not(.ghf-inv),html[data-ghf-native=dark]:not(.ghf-inv) body{background-color:#000!important}";
         (document.head || de).appendChild(crit);
         if (!document.querySelector("link[data-ghf-theme]")) {
@@ -589,7 +590,7 @@ JS = r"""/*! basecamp.js — "Back to Cedwyn Estate" link for every Great House 
     }
     function boot() {
       var kp = (TWEAKS[host] || {}).keep; if (kp) { var kq = document.querySelectorAll(kp); for (var ki = 0; ki < kq.length; ki++) kq[ki].setAttribute("data-ghf-keep", ""); }
-      apply(mode());
+      native = null; apply(mode()); // re-read the site's own scheme now that its CSS and body have loaded
       var q = document.querySelectorAll("[data-ghf-mode-toggle]"); for (var i = 0; i < q.length; i++) wire(q[i]);
       document.addEventListener("ghf-lang-change", function () { for (var i = 0; i < btns.length; i++) paintBtn(btns[i]); });
       window.addEventListener("load", function () { if (de.classList.contains("ghf-inv")) setTimeout(markBg, 300); });
@@ -599,6 +600,8 @@ JS = r"""/*! basecamp.js — "Back to Cedwyn Estate" link for every Great House 
   })();
   window.GHFTheme = GT;
   function whenBody(f) { if (document.body && document.readyState !== "loading") f(); else document.addEventListener("DOMContentLoaded", f); }
+  // v2.0.3: run as soon as <body> exists (before the first paint when this file is loaded by the synchronous ghf-boot.js in <head>)
+  function bodyNow(f) { if (document.body) return f(); var mo0 = new MutationObserver(function () { if (document.body) { mo0.disconnect(); f(); } }); mo0.observe(document.documentElement, { childList: true }); }
   if (apex && /^\/3d(\/|$)/.test(path)) return; // the full-screen 3D walk keeps its own look
 
   // ---------- header standard v2 (21 Oct 2026, Sion's Tab agent) ----------
@@ -738,6 +741,41 @@ JS = r"""/*! basecamp.js — "Back to Cedwyn Estate" link for every Great House 
         if (h.hasAttribute("data-ghf-title") || names.some(function (n) { return n && (t === n || (n.length > 5 && (t.indexOf(n) === 0 || n.indexOf(t) === 0) && Math.abs(t.length - n.length) <= 14)); })) h.classList.add("ghf-v2-dup");
       }
     }
+    // ---- v2.0.3: the bars are built the moment <body> exists; these re-run once the page has parsed ----
+    function fitBody() { // cancel the page's own body margin/padding so the bars run edge to edge
+      if (!wrap) return;
+      var bs = getComputedStyle(document.body), mt = (parseFloat(bs.marginTop) || 0) + (parseFloat(bs.paddingTop) || 0), ml = (parseFloat(bs.marginLeft) || 0) + (parseFloat(bs.paddingLeft) || 0), mr = (parseFloat(bs.marginRight) || 0) + (parseFloat(bs.paddingRight) || 0);
+      wrap.style.removeProperty("margin"); wrap.style.removeProperty("width"); wrap.style.removeProperty("margin-bottom");
+      if (mt || ml || mr) { wrap.style.setProperty("margin", (-mt) + "px " + (-mr) + "px 0 " + (-ml) + "px", "important"); wrap.style.setProperty("width", "calc(100% + " + (ml + mr) + "px)", "important"); }
+      if (mt) wrap.style.setProperty("margin-bottom", mt + "px", "important");
+    }
+    var pinned = [], pinWired = false;
+    function pins() { // keep the bars above any header the site pins to the top of the screen
+      if (!wrap) return;
+      var q = document.querySelectorAll("body > *, body > * > *, body > * > * > *"), i, e, r, cs;
+      for (i = 0; i < q.length && i < 600; i++) {
+        e = q[i]; if (e === wrap || e.closest(".ghf-ui") || pinned.indexOf(e) >= 0) continue;
+        cs = getComputedStyle(e); if (cs.position !== "fixed" && cs.position !== "sticky") continue;
+        r = e.getBoundingClientRect();
+        if (r.top <= 2 && r.height > 0 && r.height < 170 && r.width > (window.innerWidth || 390) * 0.5) pinned.push(e);
+      }
+      shift = function () {
+        var off = isFs() ? 0 : Math.max(0, Math.round(wrap.getBoundingClientRect().bottom));
+        for (var k2 = 0; k2 < pinned.length; k2++) { if (getComputedStyle(pinned[k2]).position === "fixed") pinned[k2].style.setProperty("top", off + "px", "important"); }
+      };
+      if (pinned.length) { shift(); if (!pinWired) { pinWired = true; window.addEventListener("scroll", shift, { passive: true }); window.addEventListener("resize", shift); setTimeout(shift, 900); } }
+    }
+    function watchTitles() { // hide a repeated page title the moment the parser adds it, so it is never painted
+      if (document.readyState !== "loading" || !window.MutationObserver) return;
+      var mo = new MutationObserver(function (recs) {
+        for (var a = 0; a < recs.length; a++) for (var b = 0; b < recs[a].addedNodes.length; b++) {
+          var n = recs[a].addedNodes[b];
+          if (n.nodeType === 1 && (n.tagName === "H1" || n.hasAttribute("data-ghf-title") || (n.querySelector && n.querySelector("h1,[data-ghf-title]")))) { dedupe(); return; }
+        }
+      });
+      mo.observe(document.body, { childList: true, subtree: true });
+      document.addEventListener("DOMContentLoaded", function () { mo.disconnect(); });
+    }
     // ---- language menu: one switch, always at the right end of the location bar ----
     function moveLang() {
       var slot = wrap && wrap.querySelector(".ghf-v2-lang"), l = document.querySelector(".ghf-lang");
@@ -756,8 +794,10 @@ JS = r"""/*! basecamp.js — "Back to Cedwyn Estate" link for every Great House 
       (document.head || de).appendChild(ls);
     }
     function mount() {
-      if (wrap || !document.body || window.self !== window.top && !/[?&]ghfbars\b/.test(location.search)) return null;
-      if (!document.querySelector("link[data-ghf-tokens]")) { var tl = document.createElement("link"); tl.rel = "stylesheet"; tl.href = ASSET + "/ghf-lang/ghf-tokens.css?v=__VER__"; tl.setAttribute("data-ghf-tokens", ""); tl.onerror = function () { var ts = document.createElement("style"); ts.setAttribute("data-ghf-tokens-inline", ""); ts.textContent = TOKENS; (document.head || de).appendChild(ts); }; (document.head || de).appendChild(tl); }
+      if (wrap) return wrap;
+      if (!document.body || window.self !== window.top && !/[?&]ghfbars\b/.test(location.search)) return null;
+      // the shared type tokens go in inline (same bytes as /ghf-lang/ghf-tokens.css), so sizes and fonts never change after the first paint
+      if (!document.querySelector("style[data-ghf-tokens-inline]")) { var ts = document.createElement("style"); ts.setAttribute("data-ghf-tokens-inline", ""); ts.textContent = TOKENS; (document.head || de).appendChild(ts); }
       var st = document.createElement("style"); st.setAttribute("data-ghf-v2", ""); st.textContent = V2CSS; (document.head || de).appendChild(st);
       wrap = mk("div", "ghf-v2 ghf-ui"); wrap.setAttribute("data-no-translate", ""); wrap.setAttribute("translate", "no");
       var sp = mk("div", "ghf-v2-sp"); sp.setAttribute("aria-hidden", "true");
@@ -766,29 +806,18 @@ JS = r"""/*! basecamp.js — "Back to Cedwyn Estate" link for every Great House 
       chainBar = mk("nav", "ghf-v2-chain");
       wrap.appendChild(sp); wrap.appendChild(locBar); wrap.appendChild(chainBar);
       document.body.insertBefore(wrap, document.body.firstChild);
-      var bs = getComputedStyle(document.body), mt = (parseFloat(bs.marginTop) || 0) + (parseFloat(bs.paddingTop) || 0), ml = (parseFloat(bs.marginLeft) || 0) + (parseFloat(bs.paddingLeft) || 0), mr = (parseFloat(bs.marginRight) || 0) + (parseFloat(bs.paddingRight) || 0);
-      if (mt || ml || mr) { wrap.style.setProperty("margin", (-mt) + "px " + (-mr) + "px 0 " + (-ml) + "px", "important"); wrap.style.setProperty("width", "calc(100% + " + (ml + mr) + "px)", "important"); }
-      if (mt) wrap.style.setProperty("margin-bottom", mt + "px", "important");
+      fitBody();
       fsx = btn("ghf-v2-btn ghf-v2-fsx ghf-ui", IC_FSX, L[lg()].fsx, toggleFs); bgx = btn("ghf-v2-btn ghf-v2-bgx ghf-ui", IC_MENU, L[lg()].menu, openDrawer);
       document.body.appendChild(fsx); document.body.appendChild(bgx);
-      de.classList.add("ghf-v2-on"); if (/^(maps|chess)\./.test(host)) de.classList.add("ghf-keep-type");
+      de.classList.add("ghf-v2-on"); de.classList.remove("ghf-v2-pre"); if (/^(maps|chess)\./.test(host)) de.classList.add("ghf-keep-type");
       fillChain(); locs(); moveLang();
-      if (!window.GHFLang && !document.querySelector('script[src*="ghf-lang.js"]')) { var gs = document.createElement("script"); gs.src = ASSET + "/ghf-lang/ghf-lang.js"; gs.async = true; (document.head || de).appendChild(gs); }
       var mo = new MutationObserver(moveLang); mo.observe(document.body, { childList: true, subtree: true }); setTimeout(function () { mo.disconnect(); }, 15000);
       document.addEventListener("ghf-lang-change", function () { fillChain(); if (de.classList.contains("ghf-v2-open")) fillDrawer(); });
-      // keep the bars above any header the site pins to the top of the screen
-      var pinned = [], q = document.querySelectorAll("body > *, body > * > *, body > * > * > *"), i, e, r, cs;
-      for (i = 0; i < q.length && i < 600; i++) {
-        e = q[i]; if (e === wrap || e.closest(".ghf-ui")) continue;
-        cs = getComputedStyle(e); if (cs.position !== "fixed" && cs.position !== "sticky") continue;
-        r = e.getBoundingClientRect();
-        if (r.top <= 2 && r.height > 0 && r.height < 170 && r.width > (window.innerWidth || 390) * 0.5) pinned.push(e);
-      }
-      shift = function () {
-        var off = isFs() ? 0 : Math.max(0, Math.round(wrap.getBoundingClientRect().bottom));
-        for (var k2 = 0; k2 < pinned.length; k2++) { if (getComputedStyle(pinned[k2]).position === "fixed") pinned[k2].style.setProperty("top", off + "px", "important"); }
-      };
-      if (pinned.length) { shift(); window.addEventListener("scroll", shift, { passive: true }); window.addEventListener("resize", shift); setTimeout(shift, 900); }
+      pins();
+      watchTitles();
+      var later = function () { fitBody(); pins(); hideSiteBurgers(); dedupe(); // after parsing, so a page's own ghf-lang.js tag (with its data-site) is seen first
+        if (!window.GHFLang && !document.querySelector('script[src*="ghf-lang.js"]')) { var gs = document.createElement("script"); gs.src = ASSET + "/ghf-lang/ghf-lang.js?v=__VER__"; gs.async = true; (document.head || de).appendChild(gs); } };
+      if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", later); else setTimeout(later, 0);
       hideSiteBurgers(); setTimeout(hideSiteBurgers, 1200); dedupe(); setTimeout(dedupe, 1200); window.addEventListener("load", function () { setTimeout(dedupe, 300); });
       return wrap;
     }
@@ -796,18 +825,18 @@ JS = r"""/*! basecamp.js — "Back to Cedwyn Estate" link for every Great House 
       ".ghf-v2{position:relative;z-index:2147481990;display:block!important;width:100%;margin:0!important;padding:0!important;background:#000;color:#fff;font:400 var(--ghf-fs-sm,14px)/1.2 var(--ghf-font,Barlow,'Helvetica Neue',Arial,system-ui,sans-serif)!important;-webkit-font-smoothing:antialiased;text-align:left;box-sizing:border-box}" +
       ".ghf-v2 *{box-sizing:border-box}" +
       ".ghf-v2-sp{display:block;height:45px;background:#000;border:0;margin:0;padding:0}@media (min-width:783px){.ghf-v2-sp{height:49px}}" +
-      ".ghf-v2-loc{display:flex!important;align-items:center;gap:4px;margin:0;padding:0 6px 0 2px!important;min-height:48px;background:#000;border-top:1px solid rgba(255,255,255,.14);border-bottom:1px solid rgba(255,255,255,.14)}" +
+      ".ghf-v2-loc{display:flex!important;align-items:center;gap:4px;margin:0;padding:0 6px 0 2px!important;height:50px;min-height:50px;max-height:50px;box-sizing:border-box!important;overflow:hidden;background:#000;border-top:1px solid rgba(255,255,255,.14);border-bottom:1px solid rgba(255,255,255,.14)}" +
       ".ghf-v2-locs{flex:1 1 auto;min-width:0;display:flex}.ghf-v2 .ghf-loc{flex:1 1 auto;width:auto!important;background:transparent!important;border:0!important;padding:0!important;z-index:auto}" +
       ".ghf-v2 .ghf-loc a.ghf-loc-ch{display:none!important}.ghf-v2 .ghf-loc a{background:transparent!important;box-shadow:none!important;outline-offset:-2px}" +
-      ".ghf-v2-lang{flex:0 0 auto;display:flex;align-items:center}.ghf-v2-lang:empty{display:none}" +
+      ".ghf-v2-lang{flex:0 0 auto;display:flex;align-items:center;justify-content:flex-end;min-width:58px}" +
       ".ghf-v2 .ghf-lang{position:relative!important;top:auto!important;right:auto!important;left:auto!important;bottom:auto!important;margin:0!important;--ghf-lang-bg:transparent;--ghf-lang-fg:#fff;--ghf-lang-bd:rgba(255,255,255,.4)}" +
       ".ghf-v2 .ghf-lang-btn{min-height:32px!important;padding:4px 8px!important;border-radius:4px!important;font-size:12px!important}" +
       ".ghf-v2 .ghf-lang-menu{right:0!important;left:auto!important}" +
-      ".ghf-v2-chain{display:flex!important;align-items:center;gap:2px;margin:0;padding:0 4px!important;min-height:52px;background:#000;border-bottom:1px solid var(--ghf-s,#f2c94c)}" +
-      ".ghf-v2-name{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:4px 2px}" +
+      ".ghf-v2-chain{display:flex!important;align-items:center;gap:2px;margin:0;padding:0 4px!important;height:53px;min-height:53px;max-height:53px;box-sizing:border-box!important;overflow:hidden;background:#000;border-bottom:1px solid var(--ghf-s,#f2c94c)}" +
+      ".ghf-v2-name{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:2px 2px;overflow:hidden;max-height:52px}" +
       ".ghf-v2-name b{display:block;max-width:100%;font-weight:500;font-size:var(--ghf-fs-md,17px);line-height:1.15;letter-spacing:.08em;text-transform:uppercase;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}" +
-      ".ghf-v2-name small{display:block;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ghf-s,#f2c94c);margin-top:3px}" +
-      "@media (max-width:420px){.ghf-v2-name b{font-size:14.5px;letter-spacing:.05em;white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}}" +
+      ".ghf-v2-name small{display:block;font-size:10.5px;line-height:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--ghf-s,#f2c94c);margin-top:2px}" +
+      "@media (max-width:420px){.ghf-v2-name b{font-size:14px;line-height:16px;letter-spacing:.05em;white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}}" +
       ".ghf-v2 a.ghf-v2-arr{flex:0 0 40px;display:flex!important;align-items:center;justify-content:center;height:44px;color:#fff!important;text-decoration:none!important;font-size:34px;line-height:1;font-weight:300;border-radius:4px}" +
       ".ghf-v2 a.ghf-v2-arr span{display:block;transform:translateY(-2px)}" +
       ".ghf-v2 a.ghf-v2-arr:hover,.ghf-v2 a.ghf-v2-arr:focus-visible{color:var(--ghf-s,#f2c94c)!important;background:rgba(255,255,255,.08)}" +
@@ -841,6 +870,8 @@ JS = r"""/*! basecamp.js — "Back to Cedwyn Estate" link for every Great House 
       "@media print{.ghf-v2,.ghf-v2-fsx,.ghf-v2-bgx,.ghf-v2-drawer,.ghf-v2-scrim{display:none!important}}";
     return { mount: mount, find: find, chain: CHAIN, wrap: function () { return wrap; }, fullscreen: toggleFs, menu: openDrawer };
   })();
+  // v2.0.3: theme and bars as soon as <body> exists (no late pop-in, no light-to-dark flash); the full theme pass re-runs after parsing
+  if (!(window.self !== window.top && !/[?&]ghfbars\b/.test(location.search))) bodyNow(function () { try { GT.apply(GT.mode()); } catch (e) {} try { V2.mount(); } catch (e) {} });
   if (apex && (path === "/" || path === "/index.html" || /^\/1d(\/|$)/.test(path))) { whenBody(GT.boot); whenBody(function () { V2.mount(); }); return; } // this IS base camp (1D list, 2D map)
   var here = null, i, j;
   for (i = 0; i < STOPS.length && !here; i++) {
@@ -1249,3 +1280,40 @@ _loc = open(os.path.join(ROOT, "public", "ghf-lang", "locations.js"), encoding="
 JS = JS.replace("/*__LOCATIONS_INLINE__*/", "/* ---- locations.js (inlined by build_basecamp.py) ---- */\n" + _loc + "\n/* ---- end locations.js ---- */")
 open(os.path.join(ROOT, "public", "ghf-lang", "basecamp.js"), "w", encoding="utf-8").write(JS)
 print("index.html", len(PAGE), "bytes; board height", int(H), "; basecamp.js", len(JS), "bytes")
+
+# ---------- ghf-boot.js (v2.0.3): the small SYNCHRONOUS loader every site puts at the end of its <head> ----------
+# <script src="https://bucklerfamily.estate/ghf-lang/ghf-boot.js?v=VERSION"></script>
+# It reserves the bars' exact height before the first paint, writes the shared theme CSS as a render-blocking stylesheet,
+# preloads the header font, then writes basecamp.js as a parser-blocking script, so basecamp.js builds the three bars the
+# moment <body> exists: no late pop-in and no content jump. Versioned URLs: a new release is a new URL on every site.
+BOOT = r"""/*! ghf-boot.js — header standard v2 loader for every Great House Farm site · v__VER__ (__DATE__) · Sion's Tab agent
+ * Put ONE line at the end of <head> (not async, not defer):
+ *   <script src="https://bucklerfamily.estate/ghf-lang/ghf-boot.js?v=__VER__"></script>
+ * Generated by campus/build_basecamp.py. */
+(function () {
+  var d = document, de = d.documentElement, me = d.currentScript;
+  if (window.GHFBoot) return; window.GHFBoot = "__VER__";
+  if (window.self !== window.top && !/[?&]ghfbars\b/.test(location.search)) return; // framed pages carry no bars
+  var B = (me && me.src ? me.src.replace(/[^\/?#]*([?#].*)?$/, "") : "") || "https://bucklerfamily.estate/ghf-lang/";
+  var V = "?v=__VER__", sync = d.readyState === "loading" && me && !me.async && !me.defer;
+  de.className += (de.className ? " " : "") + "ghf-v2-pre";
+  var s = d.createElement("style"); s.setAttribute("data-ghf-boot", "");
+  s.textContent = "html.ghf-v2-pre body::before{content:'';display:block;height:148px;background:#000}@media (min-width:783px){html.ghf-v2-pre body::before{height:152px}}";
+  (d.head || de).appendChild(s);
+  setTimeout(function () { de.classList.remove("ghf-v2-pre"); }, 8000); // never leave an empty band if the bars cannot load
+  var F = B.replace(/ghf-lang\/$/, "") + "fonts/barlow-latin-", out = "";
+  if (!d.querySelector("link[data-ghf-theme]")) out += '<link rel="stylesheet" href="' + B + "ghf-theme.css" + V + '" data-ghf-theme>';
+  out += '<link rel="preload" as="font" type="font/woff2" crossorigin href="' + F + '400-normal.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="' + F + '700-normal.woff2">';
+  var needBc = !window.GHFBasecamp && !d.querySelector('script[src*="basecamp.js"]');
+  if (needBc) out += '<script src="' + B + "basecamp.js" + V + '"><\/script>';
+  if (sync) { d.write(out); return; }
+  var x, t = d.createElement("template"); t.innerHTML = out; // late or async load: same files, appended
+  [].slice.call(t.content.childNodes).forEach(function (n) {
+    if (n.tagName === "SCRIPT") { x = d.createElement("script"); x.src = n.src; x.async = false; n = x; }
+    (d.head || de).appendChild(n);
+  });
+})();
+"""
+BOOT = BOOT.replace("__VER__", D["version"]).replace("__DATE__", D["updated"])
+open(os.path.join(ROOT, "public", "ghf-lang", "ghf-boot.js"), "w", encoding="utf-8").write(BOOT)
+print("ghf-boot.js", len(BOOT), "bytes")

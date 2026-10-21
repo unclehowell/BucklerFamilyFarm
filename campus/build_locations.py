@@ -94,7 +94,7 @@ def head(title, desc, canon, img, site="locations", extra=""):
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <link rel="preload" href="/fonts/barlow-latin-300-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/ghf-lang/ghf-theme.css" data-ghf-theme>
+<link rel="stylesheet" href="/ghf-lang/ghf-theme.css?v=2.0.3" data-ghf-theme>
 <style>
 @font-face{{font-family:"Barlow";font-weight:300;font-display:swap;src:url(/fonts/barlow-latin-300-normal.woff2) format("woff2")}}
 @font-face{{font-family:"Barlow";font-weight:400;font-display:swap;src:url(/fonts/barlow-latin-400-normal.woff2) format("woff2")}}
@@ -102,7 +102,8 @@ def head(title, desc, canon, img, site="locations", extra=""):
 {CSS}
 </style>
 {extra}
-<script src="https://bucklerfamily.estate/ghf-lang/ghf-lang.js" data-site="{site}" defer></script>
+<script src="https://bucklerfamily.estate/ghf-lang/ghf-lang.js?v=2.0.3" data-site="{site}" defer></script>
+<script src="https://bucklerfamily.estate/ghf-lang/ghf-boot.js?v=2.0.3"></script>
 </head>
 """
 
@@ -417,7 +418,7 @@ def page_cyber(cfg, D):
 <main>
 <header class="stage">
 <p class="kick">Cyberspace · The digital estate</p>
-<h1 class="glow-c">The digital estate</h1>
+<h1 class="glow-c" style="position:absolute!important;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0" data-ghf-title>The digital estate</h1>
 <p class="lede">Everything Cedwyn Estate publishes online: the record, the library, the shops and the maps.</p>
 <figure class="screen" style="margin-bottom:0"><img src="/locations-img/album-098-wireframe.webp" width="840" height="887" alt="Neon wireframe line drawing of the farmhouse, traced from a family album photograph"></figure>
 <p class="cap">Wireframe rendering: edges traced by computer from family album photo no. 098 (Great House Farm Part 1, Wayback Vault). <a href="/locations-img/album-098.webp">Original photograph</a></p>
@@ -458,7 +459,7 @@ def page_cyber(cfg, D):
                 extra='<link rel="preload" href="/fonts/press-start-2p-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>\n<meta name="color-scheme" content="dark">\n<style>' + ARCADE_CSS + '</style>') + body
 
 def page_choose(cfg):
-    return head("Choose your destination · Cedwyn Estate", "Cedwyn Estate: Great House Farm, Llandough, Wales; Great House Farm II, Puerto Madryn, Patagonia; or Cyberspace.", "https://bucklerfamily.estate/choose/", "/locations-img/album-098.webp", extra='<script src="/ghf-lang/locations.js"></script>') + """<body>
+    return head("Choose your destination · Cedwyn Estate", "Cedwyn Estate: Great House Farm, Llandough, Wales; Great House Farm II, Puerto Madryn, Patagonia; or Cyberspace.", "https://bucklerfamily.estate/choose/", "/locations-img/album-098.webp", extra='<script src="/ghf-lang/locations.js?v=2.0.3"></script>') + """<body>
 <main class="wrap" style="padding:60px 20px">
 <noscript><h1>Choose your destination</h1><p><a class="btn" href="/wales/">Wales</a> <a class="btn" href="/patagonia/">Patagonia</a> <a class="btn" href="/cyberspace/">Cyberspace</a></p></noscript>
 </main>

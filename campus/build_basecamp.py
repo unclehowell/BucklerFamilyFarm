@@ -1349,6 +1349,21 @@ print("locations:", build_locations.build(D, ROOT))
 # basecamp.js (email.) still get the WALES | PATAGONIA | AI bar; locations.js guards itself (window.GHFLoc) against a second copy.
 _loc = open(os.path.join(ROOT, "public", "ghf-lang", "locations.js"), encoding="utf-8").read()
 JS = JS.replace("/*__LOCATIONS_INLINE__*/", "/* ---- locations.js (inlined by build_basecamp.py) ---- */\n" + _loc + "\n/* ---- end locations.js ---- */")
+# agent readability (21 Oct 2026): the WebMCP loader rides at the end of basecamp.js; the tools themselves are served by the
+# agent-ready Worker at /agent/webmcp.js on each site (work/agent-ready on the Tab box). ghf-boot.js is not touched.
+JS += r"""
+/* ghf-webmcp loader (agent readability, 21 Oct 2026): loads this site's read-only WebMCP tools (/agent/webmcp.js, served
+   by the agent-ready Worker on every bucklerfamily.estate site; it does nothing unless the browser has navigator.modelContext).
+   Not on the frozen meeting site. Source: campus/build_basecamp.py. Sion's Tab agent. */
+(function () {
+  try {
+    var h = location.hostname, d = document;
+    if (window.GHFWebMCP || !("modelContext" in navigator) || !/(^|\.)bucklerfamily\.estate$/.test(h) || /^2026-10-22\./.test(h) || d.querySelector("script[data-ghf-webmcp]")) return;
+    var s = d.createElement("script"); s.src = "/agent/webmcp.js?v=1"; s.async = true; s.setAttribute("data-ghf-webmcp", "");
+    (d.head || d.documentElement).appendChild(s);
+  } catch (e) {}
+})();
+"""
 open(os.path.join(ROOT, "public", "ghf-lang", "basecamp.js"), "w", encoding="utf-8").write(JS)
 print("index.html", len(PAGE), "bytes; board height", int(H), "; basecamp.js", len(JS), "bytes")
 

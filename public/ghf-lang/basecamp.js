@@ -902,3 +902,15 @@
   }
   window.GHFChatAllowed = allowed; window.GHFChatOpen = open;
 })();
+
+/* ghf-webmcp loader (agent readability, 21 Oct 2026): loads this site's read-only WebMCP tools (/agent/webmcp.js, served
+   by the agent-ready Worker on every bucklerfamily.estate site; it does nothing unless the browser has navigator.modelContext).
+   Not on the frozen meeting site. Source: campus/build_basecamp.py. Sion's Tab agent. */
+(function () {
+  try {
+    var h = location.hostname, d = document;
+    if (window.GHFWebMCP || !("modelContext" in navigator) || !/(^|\.)bucklerfamily\.estate$/.test(h) || /^2026-10-22\./.test(h) || d.querySelector("script[data-ghf-webmcp]")) return;
+    var s = d.createElement("script"); s.src = "/agent/webmcp.js?v=1"; s.async = true; s.setAttribute("data-ghf-webmcp", "");
+    (d.head || d.documentElement).appendChild(s);
+  } catch (e) {}
+})();

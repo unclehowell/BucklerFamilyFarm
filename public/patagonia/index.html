@@ -110,13 +110,13 @@ details.site .d{padding:0 0 16px 22px;color:#cfcfcf;font-size:15.5px}details.sit
 <input type="hidden" name="loc" value="patagonia"><input type="hidden" name="ts" value="">
 <label>What are you interested in?<select name="offer"><option value="museum">Museum visit</option><option value="weddings">Weddings</option><option value="stables">Stables and livery</option><option value="bnb">B&amp;B stays</option><option value="general">General interest</option></select></label>
 <label>Your name<input name="name" autocomplete="name" required maxlength="120"></label>
-<label>Email<input name="email" type="email" autocomplete="email" required maxlength="160"></label>
+<label>Email<input name="email" type="email" autocomplete="email" required maxlength="160"></label><label>Phone (optional)<input name="phone" type="tel" autocomplete="tel" inputmode="tel" maxlength="40" placeholder="Only if you would like a call back"></label>
 <div class="row"><label>Group size<input name="group" type="number" min="1" max="500" value="2" inputmode="numeric"></label>
 <label>Preferred month or date<select name="month"><option value="any">Any month</option><option value="jan">January</option><option value="feb">February</option><option value="mar">March</option><option value="apr">April</option><option value="may">May</option><option value="jun">June</option><option value="jul">July</option><option value="aug">August</option><option value="sep">September</option><option value="oct">October</option><option value="nov">November</option><option value="dec">December</option></select></label></div>
 <label>Message (optional)<textarea name="message" rows="4" maxlength="2000"></textarea></label>
 <div class="hp" aria-hidden="true"><label>Website<input name="website" tabindex="-1" autocomplete="off"></label></div>
-<label class="tick"><input type="checkbox" name="consent" value="1" required><span>I agree that Cedwyn Estate may store this enquiry and email me about it.</span></label>
-<p class="muted"><a href="/privacy/#visits">Privacy notice</a></p>
+<label class="tick"><input type="checkbox" name="callback" value="yes"><span>Yes, I'd like a call back. The call may be made by an AI assistant on behalf of the Great House Farm team.</span></label><label class="tick"><input type="checkbox" name="consent" value="1" required><span>I agree that Cedwyn Estate may store this enquiry and email me about it.</span></label>
+<p class="muted">We keep your details and enquiry to reply to you (your phone number only to call you back, if you ask), for up to 2 years; a copy goes to our AI assistant, which helps with replies and call-backs. To have them deleted, email sales@bucklerfamily.estate. <a href="/privacy/#visits">Privacy notice</a></p>
 <div><button class="btn solid" type="submit" data-busy="Sending…">Send</button></div>
 <div class="note ok" role="status"><span>Thank you. Your interest is registered. We will email you when there is news.</span> <span class="muted">Reference</span> <b class="ref"></b></div>
 <div class="note bad" role="alert"><span class="msg">That did not send. Please check the form and try again, or email sales@bucklerfamily.estate.</span></div>

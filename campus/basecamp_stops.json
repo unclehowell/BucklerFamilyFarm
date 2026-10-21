@@ -85,9 +85,9 @@
     {
       "n": 5,
       "key": "fcg",
-      "title": "Fraud, Concealment & Government Involvement",
-      "tag": "OUR CASE",
-      "caption": "Our case on what was kept from view and the part public bodies played. Prospective; not a finding of any court.",
+      "title": "FCG · Security Clearance",
+      "tag": "CLEARANCE",
+      "caption": "Institutions scored out of 1000 on how they answered requests for the record. Prospective; not a finding of any court.",
       "url": "https://fcg.bucklerfamily.estate/",
       "hosts": [
         "fcg.bucklerfamily.estate"
@@ -98,7 +98,7 @@
         "#C274F6"
       ],
       "hue": "Purple",
-      "desc": "Our case on fraud, concealment and government involvement, set out topic by topic with the sources for each point. Our case, prospective. Not a finding of any court."
+      "desc": "Security clearance: every institution starts at 500 of 1000 and gains or loses points only on dated emails and letters; cleared at 900. Case files behind the menu. Our case, prospective. Not a finding of any court."
     },
     {
       "key": "csscpsg",

@@ -437,7 +437,7 @@ export const ClaimAgentSaaSPage: React.FC<ClaimAgentSaaSPageProps> = ({
               <span className="font-bold text-xs">details</span>
             </button>
             <span className="text-[#484642]">•</span>
-            <span>T&C's apply. Our case, prospective.</span>
+            <span>T&C's apply.</span>
           </div>
 
           {/* CTA Buttons (Try Now | Account) */}

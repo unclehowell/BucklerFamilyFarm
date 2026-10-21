@@ -952,7 +952,7 @@ export const THREE_PLOT_CHRONOLOGY_SECTIONS: ChronologySection[] = [
         "title": "Press: Water Cut Off \"for nearly 10 years by order of Western Ground Rents\"",
         "subtitle": "Added 19 Oct 2026 · EV-0037 · snippet only · SC-48",
         "textCitation": "Western Mail, 20 Nov 1958, p.7 (snippet only): \"Mrs. Buckler claimed that the water was cut off from her house and grounds for nearly 10 years by order of Western Ground Rents\"; \"a Welsh case of Crichel Down\"; land \"farmed by her family since 1667\".",
-        "propertyArrangement": "Reported as Mrs Buckler's claim, not a finding. \"Nearly 10 years\" would put the start around 1948–49 (inferred). Per Branwen Buckler (voice testimony, relayed by Sion Buckler 19 Oct 2026): the water was cut off while it was a dairy farm, cattle drowned in the River Ely, Nancy said no bills were outstanding, and it was \"discussed in Parliament\".",
+        "propertyArrangement": "Reported as Mrs Buckler's claim. \"Nearly 10 years\" would put the start around 1948–49 (inferred). Per Branwen Buckler (voice testimony, relayed by Sion Buckler 19 Oct 2026): the water was cut off while it was a dairy farm, cattle drowned in the River Ely, Nancy said no bills were outstanding, and it was \"discussed in Parliament\".",
         "table": {
           "farmLand": {
             "status": "Farm in Buckler occupation",

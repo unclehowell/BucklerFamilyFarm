@@ -505,12 +505,12 @@ JS = r"""/*! basecamp.js — "Back to Cedwyn Estate" link for every Great House 
   "use strict";
   if (window.GHFBasecamp) return;
   var STOPS = __STOPS__;
-  var TOTAL = STOPS.length, HOME = "https://bucklerfamily.estate/";
+  var TOTAL = STOPS.length, HOME = "https://bucklerfamily.estate/cedwyn/"; // 21 Oct 2026: the apex root is the Disclosure Dartboard; Cedwyn Estate base camp lives at /cedwyn/
   // assets come from the apex, or same-origin where a site serves /ghf-lang/ itself (a strict CSP, e.g. the mail archive)
   var SRC = (document.currentScript && document.currentScript.src) || "", ASSET = "https://bucklerfamily.estate";
   try { var su = new URL(SRC); if (su.origin !== ASSET && /^\/ghf-lang\//.test(su.pathname)) ASSET = su.origin; } catch (e) {}
   window.GHFBasecamp = { version: "__VER__", stops: STOPS };
-  var host = location.hostname.replace(/^www\./, ""), path = location.pathname || "/";
+  var host = (document.documentElement.getAttribute("data-ghf-host") || location.hostname).replace(/^www\./, ""), path = location.pathname || "/"; // a page served on the apex for another site (the dartboard at /) names its own host
   var apex = host === "bucklerfamily.estate" || /(^|\.)bucklerfamilyfarm\.pages\.dev$/.test(host);
   var BRAND_PATHS = __BRANDPATHS__, TWEAKS = __TWEAKS__;
 
@@ -552,7 +552,7 @@ JS = r"""/*! basecamp.js — "Back to Cedwyn Estate" link for every Great House 
       var forced = pageNative || (TWEAKS[host] || {}).native;
       if (forced) return forced;
       de.style.colorScheme = ""; de.removeAttribute("data-ghf-native"); // read the page's own scheme, not the one an earlier pass set (ghf-theme.css paints body by data-ghf-native)
-      if (apex && (path === "/" || path === "/index.html" || /^\/1d(\/|$)/.test(path))) return "dark";
+      if (apex && (path === "/" || path === "/index.html" || /^\/(1d|cedwyn)(\/|$)/.test(path))) return "dark";
       var els = [document.body, de], i, c;
       for (i = 0; i < els.length; i++) {
         if (!els[i]) continue;
@@ -895,7 +895,7 @@ JS = r"""/*! basecamp.js — "Back to Cedwyn Estate" link for every Great House 
   })();
   // v2.0.3: theme and bars as soon as <body> exists (no late pop-in, no light-to-dark flash); the full theme pass re-runs after parsing
   if (!(window.self !== window.top && !/[?&]ghfbars\b/.test(location.search))) bodyNow(function () { try { GT.apply(GT.mode()); } catch (e) {} try { V2.mount(); } catch (e) {} });
-  if (apex && (path === "/" || path === "/index.html" || /^\/1d(\/|$)/.test(path))) { whenBody(GT.boot); whenBody(function () { V2.mount(); }); return; } // this IS base camp (1D list, 2D map)
+  if (apex && (path === "/" || path === "/index.html" || /^\/(1d|cedwyn)(\/|$)/.test(path))) { whenBody(GT.boot); whenBody(function () { V2.mount(); }); return; } // this IS base camp (1D list, 2D map)
   var here = null, i, j;
   for (i = 0; i < STOPS.length && !here; i++) {
     for (j = 0; j < STOPS[i].h.length; j++) if (STOPS[i].h[j] === host) { here = STOPS[i]; break; }

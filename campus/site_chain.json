@@ -1,20 +1,16 @@
 {
- "version": "2.0.3",
+ "version": "2.0.4",
  "updated": "2026-10-21",
- "note": "ONE merry-go-round order for every Great House Farm site. Edit here, then run python3 campus/build_basecamp.py: it writes public/ghf-lang/chain.json and embeds the order in basecamp.js, which every site loads. The arrows wrap: › from the last entry goes to the first. Script-free pages (the WordPress Legal Wiki) carry static links that must match this order (campus/wiki_header.py prints them). Sion's Tab agent.",
+ "note": "ONE merry-go-round order for every Great House Farm site. Edit here, then run python3 campus/build_basecamp.py: it writes public/ghf-lang/chain.json and embeds the order in basecamp.js, which every site loads. The arrows wrap: › from the last entry goes to the first. Script-free pages (the WordPress Legal Wiki) carry static links that must match this order (campus/wiki_header.py prints them). Sion's Tab agent. 21 Oct 2026: Home (the apex root) is the Disclosure Dartboard (served at / by the apex-home Worker, which also answers dartboard.bucklerfamily.estate's own paths); the Cedwyn Estate base camp moved to https://bucklerfamily.estate/cedwyn/ and takes the Dartboard's old place in the order.",
  "sites": [
   {
-   "id": "estate",
-   "t": "Cedwyn Estate",
-   "cy": "Ystâd Cedwyn",
-   "es": "Finca Cedwyn",
+   "id": "dartboard",
+   "t": "Home · The Disclosure Dartboard",
+   "cy": "Hafan · Bwrdd Dartiau Datgelu",
+   "es": "Inicio · La Diana de la Divulgación",
    "u": "https://bucklerfamily.estate/",
    "h": [
-    "bucklerfamily.estate",
-    "www.bucklerfamily.estate"
-   ],
-   "p": [
-    "/"
+    "dartboard.bucklerfamily.estate"
    ]
   },
   {
@@ -121,13 +117,18 @@
    ]
   },
   {
-   "id": "dartboard",
-   "t": "The Disclosure Dartboard",
-   "cy": "Bwrdd Dartiau Datgelu",
-   "es": "La Diana de la Divulgación",
-   "u": "https://dartboard.bucklerfamily.estate/",
+   "id": "estate",
+   "t": "Cedwyn Estate",
+   "cy": "Ystâd Cedwyn",
+   "es": "Finca Cedwyn",
+   "u": "https://bucklerfamily.estate/cedwyn/",
    "h": [
-    "dartboard.bucklerfamily.estate"
+    "bucklerfamily.estate",
+    "www.bucklerfamily.estate"
+   ],
+   "p": [
+    "/",
+    "/cedwyn/"
    ]
   },
   {

@@ -131,6 +131,16 @@
    ]
   },
   {
+   "id": "watchtower",
+   "t": "Watchtower",
+   "cy": "Y Tŵr Gwylio",
+   "es": "La Atalaya",
+   "u": "https://watchtower.bucklerfamily.estate/",
+   "h": [
+    "watchtower.bucklerfamily.estate"
+   ]
+  },
+  {
    "id": "qa",
    "t": "The Q&A Hall",
    "cy": "Neuadd Holi ac Ateb",

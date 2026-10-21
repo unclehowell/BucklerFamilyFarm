@@ -674,13 +674,14 @@ JS = r"""/*! basecamp.js — "Back to Cedwyn Estate" link for every Great House 
         if (!m || m.querySelectorAll("a[href]").length >= 2) b.classList.add("ghf-v2-gone");
       });
     }
+    function txt(n) { var w = document.createTreeWalker(n, 4), o = [], c; while ((c = w.nextNode())) o.push(c.nodeValue); return o.join(" "); }
     function harvest() {
       var sel = "header a[href], nav a[href], [role=navigation] a[href], .menu a[href], .nav a[href]";
       document.querySelectorAll(".ghf-v2-gone[aria-controls]").forEach(function (b) { sel = "#" + b.getAttribute("aria-controls") + " a[href], " + sel; });
       var out = [], seen = {}, q = document.querySelectorAll(sel), i, a, t, h;
       for (i = 0; i < q.length && out.length < 24; i++) {
         a = q[i]; if (a.closest(".ghf-ui") || a.closest(".ghf-v2-drawer")) continue;
-        t = (a.innerText || [].map.call(a.childNodes, function (c) { return c.textContent; }).join(" ") || a.getAttribute("aria-label") || a.title || "").replace(/\s+/g, " ").trim();
+        t = (a.innerText || txt(a) || a.getAttribute("aria-label") || a.title || "").replace(/\s+/g, " ").trim();
         h = a.getAttribute("href"); if (!t || t.length > 70 || !h || /^javascript:/i.test(h) || h === "#") continue;
         h = a.href; if (seen[h]) continue; seen[h] = 1; out.push([t, h]);
       }

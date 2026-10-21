@@ -17,7 +17,7 @@ def block(site_id="wiki", accent="#0F9DF0"):
     tr = lambda l: f"https://greathousefarmwiki-wordpress-com.translate.goog/?_x_tr_sl=en&amp;_x_tr_tl={l}&amp;_x_tr_hl=en"
     opt = 'display:block;padding:9px 12px;color:#fff;text-decoration:none;font-size:13px;white-space:nowrap;border-bottom:1px solid rgba(255,255,255,.1)'
     lang = ('<details style="position:relative;flex:0 0 auto;margin:0 4px 0 2px">'
-            '<summary style="list-style:none;cursor:pointer;display:flex;align-items:center;gap:4px;height:32px;padding:0 9px;border:1px solid rgba(255,255,255,.4);border-radius:4px;color:#fff;font-size:12px;letter-spacing:.06em">EN <span aria-hidden="true">▾</span></summary>'
+            '<summary style="cursor:pointer;display:flex;align-items:center;gap:4px;height:32px;padding:0 9px;border:1px solid rgba(255,255,255,.4);border-radius:4px;color:#fff;font-size:12px;letter-spacing:.06em">EN <span aria-hidden="true">▾</span></summary>'
             '<div style="position:absolute;right:0;top:36px;z-index:99;min-width:150px;background:#111;border:1px solid rgba(255,255,255,.25);border-radius:6px;overflow:hidden">'
             f'<a href="https://greathousefarmwiki.wordpress.com/" style="{opt}" aria-current="page">English ✓</a>'
             f'<a href="{tr("cy")}" style="{opt}" rel="nofollow">Cymraeg (machine translation)</a>'
@@ -25,13 +25,13 @@ def block(site_id="wiki", accent="#0F9DF0"):
     arr = 'flex:0 0 44px;display:flex;align-items:center;justify-content:center;min-height:52px;color:#fff;text-decoration:none;font-size:34px;font-weight:300;line-height:1'
     e = html.escape
     out = (f'<div class="ghf-estate-bar ghf-v2-static" style="margin:0;padding:0;background:#000;color:#fff;font-family:Barlow,\'Helvetica Neue\',Arial,sans-serif;font-size:12px;line-height:1.2">'
-           f'<nav aria-label="Location" style="display:flex;align-items:center;gap:4px;padding:0 4px 0 2px;border-bottom:1px solid rgba(255,255,255,.14)">{locs}{lang}</nav>'
-           f'<nav aria-label="{e(me["t"])}" style="display:flex;align-items:center;gap:2px;padding:0 4px;background:#000;border-bottom:1px solid {accent};text-align:center">'
+           f'<div role="navigation" aria-label="Location" style="display:flex;align-items:center;gap:4px;padding:0 4px 0 2px;border-bottom:1px solid rgba(255,255,255,.14)">{locs}{lang}</div>'
+           f'<div role="navigation" aria-label="{e(me["t"])}" style="display:flex;align-items:center;gap:2px;padding:0 4px;background:#000;border-bottom:1px solid {accent};text-align:center">'
            f'<a href="{pv["u"]}" title="Previous site: {e(pv["t"])}" aria-label="Previous site: {e(pv["t"])}" style="{arr}">‹</a>'
            f'<div style="flex:1 1 auto;min-width:0;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:4px 2px">'
            f'<div style="font-weight:500;font-size:15px;letter-spacing:.08em;text-transform:uppercase;line-height:1.15">{e(me["t"])}</div>'
            f'<div style="font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:{accent};margin-top:3px">{k + 1} of {n}</div></div>'
-           f'<a href="{nx["u"]}" title="Next site: {e(nx["t"])}" aria-label="Next site: {e(nx["t"])}" style="{arr}">›</a></nav></div>')
+           f'<a href="{nx["u"]}" title="Next site: {e(nx["t"])}" aria-label="Next site: {e(nx["t"])}" style="{arr}">›</a></div></div>')
     return "<!-- wp:html -->\n" + out + "\n<!-- /wp:html -->"
 if __name__ == "__main__":
     print(block())

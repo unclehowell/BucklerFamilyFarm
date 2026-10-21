@@ -267,8 +267,12 @@
    "why": "DATRO docs library (Sphinx theme); does not carry the Great House Farm header"
   },
   {
-   "h": "bucklerfamily.estate/campus/, /coins/, /enemy/, /wales/, /patagonia/",
+   "h": "bucklerfamily.estate/campus/, /enemy/, /wales/, /patagonia/",
    "why": "pages of the main domain: they show the Cedwyn Estate bars and step on from it"
+  },
+  {
+   "h": "bucklerfamily.estate/coins/ (the Treasury)",
+   "why": "retired 21 Oct 2026 on the owner's instruction; left out of the loop and the menus"
   }
  ]
 }

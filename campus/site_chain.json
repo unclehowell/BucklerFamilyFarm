@@ -1,0 +1,274 @@
+{
+ "version": "2.0.0",
+ "updated": "2026-10-21",
+ "note": "ONE merry-go-round order for every Great House Farm site. Edit here, then run python3 campus/build_basecamp.py: it writes public/ghf-lang/chain.json and embeds the order in basecamp.js, which every site loads. The arrows wrap: › from the last entry goes to the first. Script-free pages (the WordPress Legal Wiki) carry static links that must match this order (campus/wiki_header.py prints them). Sion's Tab agent.",
+ "sites": [
+  {
+   "id": "estate",
+   "t": "Cedwyn Estate",
+   "cy": "Ystâd Cedwyn",
+   "es": "Finca Cedwyn",
+   "u": "https://bucklerfamily.estate/",
+   "h": [
+    "bucklerfamily.estate",
+    "www.bucklerfamily.estate"
+   ],
+   "p": [
+    "/"
+   ]
+  },
+  {
+   "id": "wiki",
+   "t": "The Legal Wiki",
+   "cy": "Y Wici Cyfreithiol",
+   "es": "La Wiki Legal",
+   "u": "https://greathousefarmwiki.wordpress.com/",
+   "h": [
+    "greathousefarmwiki.wordpress.com",
+    "wiki.bucklerfamily.estate"
+   ]
+  },
+  {
+   "id": "story",
+   "t": "The Story",
+   "cy": "Y Stori",
+   "es": "La Historia",
+   "u": "https://bpvsbuckler.bucklerfamily.estate/",
+   "h": [
+    "bpvsbuckler.bucklerfamily.estate",
+    "story.bucklerfamily.estate"
+   ]
+  },
+  {
+   "id": "maps",
+   "t": "The Map Room",
+   "cy": "Ystafell y Mapiau",
+   "es": "La Sala de Mapas",
+   "u": "https://maps.bucklerfamily.estate/",
+   "h": [
+    "maps.bucklerfamily.estate"
+   ]
+  },
+  {
+   "id": "chess",
+   "t": "The Chessboard",
+   "cy": "Y Bwrdd Gwyddbwyll",
+   "es": "El Tablero",
+   "u": "https://chess.bucklerfamily.estate/",
+   "h": [
+    "chess.bucklerfamily.estate"
+   ]
+  },
+  {
+   "id": "fcg",
+   "t": "Fraud, Concealment & Government Involvement",
+   "cy": "Twyll, Cuddio a Rhan y Llywodraeth",
+   "es": "Fraude, Ocultación e Implicación del Gobierno",
+   "u": "https://fcg.bucklerfamily.estate/",
+   "h": [
+    "fcg.bucklerfamily.estate"
+   ]
+  },
+  {
+   "id": "csscpsg",
+   "t": "The Grammar House (CSSCPSGP)",
+   "cy": "Tŷ’r Gramadeg (CSSCPSGP)",
+   "es": "La Casa de la Gramática (CSSCPSGP)",
+   "u": "https://csscpsg.bucklerfamily.estate/",
+   "h": [
+    "csscpsg.bucklerfamily.estate",
+    "csscpsgp.bucklerfamily.estate"
+   ]
+  },
+  {
+   "id": "records",
+   "t": "Primary Records",
+   "cy": "Cofnodion Sylfaenol",
+   "es": "Registros Primarios",
+   "u": "https://records.bucklerfamily.estate/",
+   "h": [
+    "records.bucklerfamily.estate"
+   ]
+  },
+  {
+   "id": "wayback",
+   "t": "The Wayback Vault",
+   "cy": "Claddgell Wayback",
+   "es": "La Bóveda Wayback",
+   "u": "https://wayback.bucklerfamily.estate/",
+   "h": [
+    "wayback.bucklerfamily.estate"
+   ]
+  },
+  {
+   "id": "email",
+   "t": "The Post Office",
+   "cy": "Swyddfa’r Post",
+   "es": "La Oficina de Correos",
+   "u": "https://email.bucklerfamily.estate/",
+   "h": [
+    "email.bucklerfamily.estate"
+   ]
+  },
+  {
+   "id": "authorities",
+   "t": "Public Authorities",
+   "cy": "Awdurdodau Cyhoeddus",
+   "es": "Autoridades Públicas",
+   "u": "https://authorities.bucklerfamily.estate/",
+   "h": [
+    "authorities.bucklerfamily.estate"
+   ]
+  },
+  {
+   "id": "dartboard",
+   "t": "The Disclosure Dartboard",
+   "cy": "Bwrdd Dartiau Datgelu",
+   "es": "La Diana de la Divulgación",
+   "u": "https://dartboard.bucklerfamily.estate/",
+   "h": [
+    "dartboard.bucklerfamily.estate"
+   ]
+  },
+  {
+   "id": "qa",
+   "t": "The Q&A Hall",
+   "cy": "Neuadd Holi ac Ateb",
+   "es": "La Sala de Preguntas",
+   "u": "https://qa.bucklerfamily.estate/",
+   "h": [
+    "qa.bucklerfamily.estate"
+   ]
+  },
+  {
+   "id": "meeting",
+   "t": "The Council Chamber",
+   "cy": "Siambr y Cyngor",
+   "es": "La Sala del Consejo",
+   "u": "https://2026-10-22.bucklerfamily.estate/",
+   "h": [
+    "2026-10-22.bucklerfamily.estate"
+   ]
+  },
+  {
+   "id": "review",
+   "t": "Independent Review",
+   "cy": "Adolygiad Annibynnol",
+   "es": "Revisión Independiente",
+   "u": "https://review.bucklerfamily.estate/",
+   "h": [
+    "review.bucklerfamily.estate"
+   ]
+  },
+  {
+   "id": "research",
+   "t": "The Research Library",
+   "cy": "Y Llyfrgell Ymchwil",
+   "es": "La Biblioteca de Investigación",
+   "u": "https://research.bucklerfamily.estate/",
+   "h": [
+    "research.bucklerfamily.estate"
+   ]
+  },
+  {
+   "id": "projects",
+   "t": "The Project Office",
+   "cy": "Swyddfa’r Prosiect",
+   "es": "La Oficina de Proyectos",
+   "u": "https://projects.bucklerfamily.estate/",
+   "h": [
+    "projects.bucklerfamily.estate"
+   ]
+  },
+  {
+   "id": "fb",
+   "t": "The Farm Album",
+   "cy": "Albwm y Fferm",
+   "es": "El Álbum de la Granja",
+   "u": "https://fb.bucklerfamily.estate/",
+   "h": [
+    "fb.bucklerfamily.estate"
+   ]
+  },
+  {
+   "id": "cyberspace",
+   "t": "The Digital Estate",
+   "cy": "Yr Ystâd Ddigidol",
+   "es": "La Finca Digital",
+   "u": "https://bucklerfamily.estate/cyberspace/",
+   "h": [],
+   "p": [
+    "/cyberspace/"
+   ]
+  },
+  {
+   "id": "accounts",
+   "t": "The Counting House",
+   "cy": "Y Tŷ Cyfrif",
+   "es": "La Casa de Cuentas",
+   "u": "https://accounts.bucklerfamily.estate/",
+   "h": [
+    "accounts.bucklerfamily.estate"
+   ]
+  },
+  {
+   "id": "app",
+   "t": "The Case Office",
+   "cy": "Swyddfa’r Achos",
+   "es": "La Oficina del Caso",
+   "u": "https://app.bucklerfamily.estate/",
+   "h": [
+    "app.bucklerfamily.estate",
+    "apps.bucklerfamily.estate"
+   ]
+  },
+  {
+   "id": "chat",
+   "t": "Ask the Archive",
+   "cy": "Holi’r Archif",
+   "es": "Pregunte al Archivo",
+   "u": "https://chat.bucklerfamily.estate/",
+   "h": [
+    "chat.bucklerfamily.estate"
+   ]
+  },
+  {
+   "id": "ebooks",
+   "t": "The E-book Shelf",
+   "cy": "Y Silff E-lyfrau",
+   "es": "La Estantería de Libros",
+   "u": "https://ebooks.bucklerfamily.estate/",
+   "h": [
+    "ebooks.bucklerfamily.estate"
+   ]
+  },
+  {
+   "id": "shop",
+   "t": "Gift Shop & Marketplace",
+   "cy": "Siop Anrhegion a Marchnad",
+   "es": "Tienda y Mercado",
+   "u": "https://shop.bucklerfamily.estate/",
+   "h": [
+    "shop.bucklerfamily.estate"
+   ]
+  }
+ ],
+ "excluded": [
+  {
+   "h": "clerk.bucklerfamily.estate",
+   "why": "a redirect to a Legal Wiki section, not a site of its own"
+  },
+  {
+   "h": "www.facebook.com/901925066346636",
+   "why": "Facebook page: cannot carry the bars"
+  },
+  {
+   "h": "library.bucklerfamily.estate",
+   "why": "DATRO docs library (Sphinx theme); does not carry the Great House Farm header"
+  },
+  {
+   "h": "bucklerfamily.estate/campus/, /coins/, /enemy/, /wales/, /patagonia/",
+   "why": "pages of the main domain: they show the Cedwyn Estate bars and step on from it"
+  }
+ ]
+}

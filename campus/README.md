@@ -13,6 +13,22 @@ Legal Wiki to the gift shop). The original campus map moved, unchanged, to `/cam
 - `npm run build` (Vite) builds `dist/index.html` (base camp), `dist/campus/index.html` (campus) and
   `dist/webapp/index.html` (WebApp).
 
+## Header standard v2 (21 Oct 2026) — every Great House Farm site
+
+Top to bottom on every site: (1) a blank bar the height of the WordPress.com bar on the Legal Wiki (measured 21 Oct 2026:
+45px up to 782px wide, 49px above; on the wiki itself the WordPress bar fills this slot); (2) WALES | PATAGONIA | AI with
+the EN / CY / ES language menu at its right end; (3) ‹ PAGE NAME › — the page's own name, stepping round ONE merry-go-round
+of every site, with a full-screen toggle at its left (Fullscreen API + a class that hides bars 1–3; class only on iOS
+Safari) and the menu at its right (slides in from the right: this site's links, Day/Night, every site in order). A page
+title that only repeats the bar's name is hidden visually (kept for screen readers).
+
+- The order: `campus/site_chain.json` → `public/ghf-lang/chain.json`, embedded in `basecamp.js` by `build_basecamp.py`.
+  Pressing › from any site visits every site once and returns to the start; ‹ goes back and wraps.
+- Shared type scale and colour tokens: `public/ghf-lang/ghf-tokens.css` (loaded by basecamp.js; each site keeps its accent).
+- The script-free WordPress wiki carries the same bars as static HTML: `python3 campus/wiki_header.py` prints the block for
+  the archivist `header` and `home-header` template parts (re-run it after changing the order).
+- Sites that serve their own copy of /ghf-lang/ (email.) need the new files copied after each change.
+
 ## Campus map (original notes)
 
 The root of bucklerfamily.estate is a map of the Tŷ Mawr case: each building is one part of the case

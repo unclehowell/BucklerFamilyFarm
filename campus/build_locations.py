@@ -648,23 +648,23 @@ ICONS = {
 LOC_ICONS = {"wales": ["wales", "uk"], "patagonia": ["wales", "argentina"], "cyberspace": ["robot"]}
 
 T_JS = {
- "en": {"loc": "Location", "wales": "Wales", "patagonia": "Patagonia", "cyberspace": "Super Intelligence (SI)", "choose": "Choose a location", "estate": "Cedwyn Estate",
+ "en": {"loc": "Location", "wales": "Wales", "patagonia": "Patagonia", "cyberspace": "AI", "choose": "Choose a location", "estate": "Cedwyn Estate",
         "title": "Choose your destination", "soon": "Coming soon",
         "w_kick": "Llandough, Wales", "w_name": "Great House Farm", "w_line": "Virtual-reality guided tour",
         "p_kick": "Puerto Madryn, Patagonia, Argentina", "p_name": "Great House Farm II", "p_line": "Cedwyn Estate: replica farmhouse, wax museum, weddings, stables, B&B",
-        "c_kick": "Online", "c_name": "Super Intelligence (SI)", "c_line": "The digital estate: maps, library, shops, app",
+        "c_kick": "Online", "c_name": "AI", "c_line": "The digital estate: maps, library, shops, app",
         "note": "Your choice is remembered on this device. Change it any time with the bar at the top."},
- "cy": {"loc": "Lleoliad", "wales": "Cymru", "patagonia": "Patagonia", "cyberspace": "Uwch-ddeallusrwydd (SI)", "choose": "Dewiswch leoliad", "estate": "Ystâd Cedwyn",
+ "cy": {"loc": "Lleoliad", "wales": "Cymru", "patagonia": "Patagonia", "cyberspace": "DA", "choose": "Dewiswch leoliad", "estate": "Ystâd Cedwyn",
         "title": "Dewiswch eich cyrchfan", "soon": "Yn dod cyn hir",
         "w_kick": "Llandochau, Cymru", "w_name": "Tŷ Mawr", "w_line": "Taith dywys rhith-wirionedd",
         "p_kick": "Porth Madryn, Patagonia, yr Ariannin", "p_name": "Tŷ Mawr II", "p_line": "Ystâd Cedwyn: ffermdy replica, amgueddfa gwyr, priodasau, stablau, gwely a brecwast",
-        "c_kick": "Ar-lein", "c_name": "Uwch-ddeallusrwydd (SI)", "c_line": "Yr ystâd ddigidol: mapiau, llyfrgell, siopau, ap",
+        "c_kick": "Ar-lein", "c_name": "DA", "c_line": "Yr ystâd ddigidol: mapiau, llyfrgell, siopau, ap",
         "note": "Cofir eich dewis ar y ddyfais hon. Newidiwch ef unrhyw bryd gyda’r bar ar y brig."},
- "es": {"loc": "Lugar", "wales": "Gales", "patagonia": "Patagonia", "cyberspace": "Superinteligencia (SI)", "choose": "Elija un lugar", "estate": "Finca Cedwyn",
+ "es": {"loc": "Lugar", "wales": "Gales", "patagonia": "Patagonia", "cyberspace": "IA", "choose": "Elija un lugar", "estate": "Finca Cedwyn",
         "title": "Elija su destino", "soon": "Próximamente",
         "w_kick": "Llandough, Gales", "w_name": "Great House Farm", "w_line": "Visita guiada en realidad virtual",
         "p_kick": "Puerto Madryn, Patagonia, Argentina", "p_name": "Great House Farm II", "p_line": "Finca Cedwyn: réplica de la casa, museo de cera, bodas, caballerizas, B&B",
-        "c_kick": "En línea", "c_name": "Superinteligencia (SI)", "c_line": "La finca digital: mapas, biblioteca, tiendas, app",
+        "c_kick": "En línea", "c_name": "IA", "c_line": "La finca digital: mapas, biblioteca, tiendas, app",
         "note": "Su elección se recuerda en este dispositivo. Cámbiela cuando quiera con la barra superior."}
 }
 

@@ -394,6 +394,86 @@ body.arcade.calm:before{opacity:.5}
 @media (min-width:760px){.stage{padding-top:40px}.segs{gap:14px}}
 """
 
+ARCADE_EXTRA_CSS = r"""
+/* 1987 cyber-grid cabinet refresh */
+html body.arcade{background:#050711;color:#eaf7ff;background-image:radial-gradient(ellipse at 50% -10%,rgba(25,73,139,.34),transparent 54%),linear-gradient(180deg,#070816 0%,#050711 55%,#0a0717 100%);font-family:Barlow,"Helvetica Neue",Arial,sans-serif}
+body.arcade:before,body.arcade:after{z-index:9;pointer-events:none}
+body.arcade:before{opacity:.22;background:repeating-linear-gradient(180deg,transparent 0,transparent 3px,rgba(0,0,0,.16) 4px)}
+body.arcade:after{animation:flick 7s steps(2) infinite;opacity:.3}
+.arcade-page{position:relative;isolation:isolate;overflow:hidden;padding:22px 18px 46px}
+.arcade-page:before{content:"";position:absolute;z-index:-1;left:-18%;right:-18%;bottom:80px;height:42vh;min-height:220px;transform:perspective(310px) rotateX(62deg);transform-origin:bottom;background-image:linear-gradient(rgba(0,240,255,.23) 1px,transparent 1px),linear-gradient(90deg,rgba(0,240,255,.23) 1px,transparent 1px);background-size:38px 28px;mask-image:linear-gradient(transparent,#000 30%,#000 82%,transparent)}
+.arcade-hero{max-width:1160px;margin:0 auto 24px;text-align:center;padding:12px 0 18px}
+.arcade-hero .eyebrow{font:400 10px/1.8 var(--px);letter-spacing:.2em;color:var(--mg);margin:0 0 14px}
+.arcade-hero h1{font:700 clamp(27px,5vw,48px)/1.07 Barlow,Arial,sans-serif;letter-spacing:.16em;margin:0 0 12px;color:#f4f7ff;text-shadow:0 0 4px #fff,0 0 16px rgba(0,240,255,.6),0 0 32px rgba(255,61,219,.4)}
+.arcade-hero h1 span{color:var(--cy)}
+.arcade-hero p:last-child{font-size:16px;color:#9eb9d3;margin:0}
+.arcade-grid{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(280px,.8fr);gap:20px;max-width:1160px;margin:0 auto;align-items:start}
+.cabinet{position:relative;min-width:0;padding:15px 15px 12px;border-radius:20px 20px 12px 12px;border:2px solid #29365e;background:linear-gradient(145deg,#202741 0%,#0e1224 24%,#080b17 65%,#18152d 100%);box-shadow:0 24px 70px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.18),inset 0 0 32px rgba(0,240,255,.06)}
+.cabinet:before{content:"";position:absolute;inset:5px;border-radius:14px 14px 7px 7px;border:1px solid rgba(255,61,219,.26);pointer-events:none}
+.machine-top,.machine-bottom{display:flex;justify-content:space-between;gap:12px;align-items:center;color:#8499b6;font:400 8px/1.5 var(--px);letter-spacing:.12em;padding:4px 2px 12px}
+.machine-top span:last-child{color:var(--yl)}
+.marquee{position:relative;overflow:hidden;text-align:center;padding:14px 10px 12px;margin:0 1px 14px;border:1px solid #435180;background:radial-gradient(ellipse at 50% 0%,rgba(0,240,255,.18),transparent 62%),linear-gradient(120deg,#090c1a,#17102a 65%,#080b18);box-shadow:inset 0 0 18px rgba(0,240,255,.07),0 0 19px rgba(255,61,219,.14)}
+.marquee:before,.marquee:after{content:"";position:absolute;top:0;bottom:0;width:3px;background:linear-gradient(transparent,var(--cy),var(--mg),transparent);box-shadow:0 0 10px var(--cy)}
+.marquee:before{left:0}.marquee:after{right:0}
+.marquee .marquee-kicker{font:400 8px/1.6 var(--px);letter-spacing:.2em;color:var(--mg)}
+.marquee h2{font:700 clamp(18px,3.5vw,31px)/1.25 Barlow,Arial,sans-serif;letter-spacing:.2em;margin:4px 0;color:#f4f7ff;text-shadow:0 0 5px #fff,0 0 18px rgba(0,240,255,.65),0 0 25px rgba(255,61,219,.45)}
+.marquee p{font:400 8px/1.6 var(--px);letter-spacing:.15em;color:var(--yl);margin:0}
+.bezel{padding:9px;border-radius:12px;border:2px solid #262d4d;background:linear-gradient(135deg,#080a13,#171b2b 50%,#05060c);box-shadow:inset 0 0 0 2px #05060c,inset 0 0 24px #000}
+.screen-wrap{position:relative;overflow:hidden;aspect-ratio:16/9;background:#03050c;border:2px solid #344263;box-shadow:0 0 0 1px #02030a,0 0 24px rgba(0,240,255,.1)}
+#game-canvas{display:block;width:100%;height:100%;image-rendering:pixelated;background:#03050c}
+.screen-hud{position:absolute;z-index:4;top:0;left:0;right:0;display:flex;justify-content:space-between;gap:8px;padding:8px 10px;background:linear-gradient(#03050ce8,transparent);font:400 8px/1.5 var(--px);letter-spacing:.05em;color:#b7faff;text-shadow:0 0 8px var(--cy);pointer-events:none}
+.screen-hud span:nth-child(2){color:var(--yl)}.screen-hud span:last-child{color:var(--mg)}
+.screen-overlay{position:absolute;z-index:3;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center;gap:8px;padding:28px 20px;background:radial-gradient(ellipse at center,rgba(9,20,43,.80),rgba(4,5,13,.94))}
+.screen-overlay .screen-label{font:400 8px/1.7 var(--px);color:var(--mg);letter-spacing:.18em;margin:0}
+.screen-overlay h3{font:700 clamp(20px,4vw,32px)/1.15 Barlow,Arial,sans-serif;letter-spacing:.16em;color:#fff;text-shadow:0 0 9px var(--cy),0 0 20px rgba(255,61,219,.65);margin:0}
+.screen-overlay p.copy{max-width:420px;font-size:13px;color:#bfcee8;margin:0 0 4px}
+.screen-overlay .start{font:400 10px/1.5 var(--px)!important;letter-spacing:.08em;padding:12px 15px;border:1px solid var(--yl);box-shadow:0 0 18px rgba(0,240,255,.25);cursor:pointer}
+.screen-overlay.hidden{display:none}
+.control-deck{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:16px 8px 12px}
+.joystick-art{position:relative;flex:0 0 66px;height:66px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#353d60,#101425 60%,#04050c);border:2px solid #303b5b;box-shadow:inset 0 0 12px #000,0 0 0 2px #080b16}
+.joystick-art:before{content:"";position:absolute;width:11px;height:31px;left:26px;top:10px;border-radius:8px;background:linear-gradient(90deg,#464d70,#101426,#697395);transform:rotate(-14deg);box-shadow:0 0 8px rgba(0,240,255,.2)}
+.joystick-art:after{content:"";position:absolute;width:25px;height:20px;left:19px;top:3px;border-radius:60% 60% 48% 48%;background:linear-gradient(145deg,#ff79df,#ab1b89 55%,#4b1049);box-shadow:0 0 10px rgba(255,61,219,.45)}
+.controls-copy{flex:1;min-width:0;color:#9db4cd;font-size:12px;line-height:1.6}.controls-copy strong{display:block;color:#e7f6ff;font:400 8px/1.8 var(--px);letter-spacing:.06em;margin-bottom:3px}
+.deck-buttons{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:7px}
+.deck-btn{min-height:38px;border:1px solid #344866;background:linear-gradient(#171e35,#090d1a);color:var(--cy);padding:8px 10px;font:400 8px/1.4 var(--px);cursor:pointer}
+.deck-btn:hover,.deck-btn:focus-visible{border-color:var(--yl);color:var(--yl);box-shadow:0 0 12px rgba(0,240,255,.16)}
+.machine-bottom{padding:10px 2px 2px;border-top:1px solid rgba(128,159,204,.15);font-size:7px}
+.machine-bottom span:nth-child(2){color:var(--cy)}
+.selector{min-width:0;overflow:hidden;border:1px solid #293a61;border-radius:12px;background:linear-gradient(160deg,rgba(15,20,40,.97),rgba(7,9,20,.98));box-shadow:0 15px 42px rgba(0,0,0,.32)}
+.selector-head{padding:20px 18px 15px;border-bottom:1px solid #26304e;background:linear-gradient(120deg,rgba(0,240,255,.06),transparent 55%,rgba(255,61,219,.07))}
+.selector-head .kicker{font:400 8px/1.8 var(--px);letter-spacing:.13em;color:var(--mg);margin:0 0 7px}
+.selector-head h2{font:700 23px/1.2 Barlow,Arial,sans-serif;letter-spacing:.08em;color:#edf7ff;margin:0 0 7px}
+.selector-head p{font-size:13px;color:#92a8c6;margin:0}
+.game-list{display:grid}
+.game-option{display:grid;grid-template-columns:28px minmax(0,1fr) 14px;gap:10px;width:100%;text-align:left;align-items:start;padding:15px 15px 14px;border:0;border-bottom:1px solid rgba(75,97,143,.28);background:transparent;color:#d9e8f9;cursor:pointer}
+.game-option:last-child{border-bottom:0}
+.game-option:hover,.game-option:focus-visible{background:rgba(0,240,255,.055)}
+.game-option[aria-pressed=true]{background:linear-gradient(90deg,rgba(0,240,255,.1),rgba(255,61,219,.04));box-shadow:inset 3px 0 var(--cy)}
+.game-index{font:400 9px/2 var(--px);color:var(--mg)}
+.game-copy strong{display:block;font:700 15px/1.25 Barlow,Arial,sans-serif;letter-spacing:.09em;color:#eaf8ff}
+.game-copy small{display:block;font:400 7px/1.8 var(--px);color:var(--yl);letter-spacing:.06em;margin:3px 0 6px}
+.game-copy em{display:block;font-style:normal;font-size:12px;line-height:1.45;color:#91a6c4}
+.game-option>span:last-child{align-self:center;color:var(--cy);font-size:15px}
+.selector-load{padding:15px 16px 17px;border-top:1px solid #26304e;background:rgba(2,4,11,.45)}
+.selector-load .load-label{display:block;font:400 7px/1.8 var(--px);color:#839ab8;letter-spacing:.13em}
+.selector-load output{display:block;color:var(--cy);font:400 9px/1.8 var(--px);margin:3px 0 12px}
+.load-game{width:100%;min-height:43px;border:1px solid var(--mg);background:linear-gradient(100deg,rgba(255,61,219,.16),rgba(0,240,255,.09));color:#fff;font:400 9px/1.5 var(--px);letter-spacing:.07em;cursor:pointer;text-shadow:0 0 8px rgba(0,240,255,.35)}
+.load-game:hover,.load-game:focus-visible{background:var(--mg);color:#080916}
+.game-instructions{max-width:1160px;margin:22px auto 0;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.instruction{padding:16px 17px;border:1px solid rgba(67,92,143,.45);background:rgba(8,12,27,.75)}
+.instruction h2{font:400 8px/1.8 var(--px);color:var(--yl);letter-spacing:.08em;margin:0 0 8px}
+.instruction p{font-size:13px;color:#9db1ca;margin:0}
+.touch-pad{display:none;grid-template-columns:repeat(3,42px);grid-template-rows:repeat(2,38px);gap:4px;margin:0 auto}
+.touch-pad button{border:1px solid #3a4c73;border-radius:6px;background:#10172b;color:var(--cy);font-size:16px;touch-action:none}
+.touch-pad [data-dir=up]{grid-column:2;grid-row:1}.touch-pad [data-dir=left]{grid-column:1;grid-row:2}.touch-pad [data-dir=down]{grid-column:2;grid-row:2}.touch-pad [data-dir=right]{grid-column:3;grid-row:2}
+.game-disclaimer{max-width:1160px;margin:15px auto 0;color:#7589a8;font-size:11.5px;line-height:1.5}
+body.arcade .foot{max-width:1160px;margin-top:22px;border-top:1px solid rgba(0,240,255,.3)}
+body.arcade .foot .px{font:400 8px/1.8 var(--px);letter-spacing:.1em;color:var(--cy)}
+@media(max-width:850px){.arcade-grid{grid-template-columns:minmax(0,1fr)}.selector{order:2}.cabinet{order:1}.game-list{grid-template-columns:1fr 1fr}.game-option{border-right:1px solid rgba(75,97,143,.25)}.game-option:nth-child(even){border-right:0}.game-option:nth-last-child(-n+2){border-bottom:0}}
+@media(max-width:570px){.arcade-page{padding:12px 10px 35px}.arcade-hero{margin-bottom:14px;padding:8px 0 12px}.arcade-hero h1{font-size:25px;letter-spacing:.1em}.arcade-hero p:last-child{font-size:14px}.cabinet{padding:10px;border-radius:14px}.machine-top{font-size:6px}.marquee{padding:11px 5px}.marquee h2{font-size:21px}.marquee p,.marquee .marquee-kicker{font-size:6px}.bezel{padding:5px}.screen-hud{font-size:6px;padding:6px}.screen-overlay{padding:22px 12px}.screen-overlay p.copy{font-size:11px}.screen-overlay .start{font-size:8px!important;padding:10px 9px}.control-deck{flex-wrap:wrap;gap:10px;padding:12px 4px}.joystick-art{flex-basis:48px;height:48px}.joystick-art:before{left:18px;top:7px;height:24px}.joystick-art:after{left:13px;top:2px;width:21px;height:17px}.controls-copy{font-size:10px;min-width:145px}.controls-copy strong{font-size:6px}.deck-buttons{width:100%;justify-content:stretch}.deck-btn{flex:1;font-size:7px;padding:7px 4px}.machine-bottom{font-size:5.5px;gap:4px}.selector-head{padding:16px}.game-list{grid-template-columns:1fr}.game-option{border-right:0!important;border-bottom:1px solid rgba(75,97,143,.28)!important;padding:13px}.game-option:last-child{border-bottom:0!important}.game-instructions{grid-template-columns:1fr;margin-top:14px}.touch-pad{display:grid}.game-disclaimer{font-size:10px}}
+@media(prefers-reduced-motion:reduce){body.arcade:after{animation:none!important}.game-option,.deck-btn{transition:none!important}}
+"""
+
 ARCADE_JS = r"""<script>
 (function(){
   var segs=[].slice.call(document.querySelectorAll("details.seg"));
@@ -420,7 +500,196 @@ ARCADE_JS = r"""<script>
 })();
 </script>"""
 
+ARCADE_GAME_JS = r"""<script>
+(function(){
+  "use strict";
+  var $=function(id){return document.getElementById(id);};
+  var canvas=$("game-canvas"),ctx=canvas&&canvas.getContext("2d");
+  if(!canvas||!ctx)return;
+  var overlay=$("screen-overlay"),overlayTitle=$("overlay-title"),overlayCopy=$("overlay-copy"),startBtn=$("btn-start");
+  var marquee=$("marquee-title"),hudGame=$("hud-game"),hudScore=$("hud-score"),hudTime=$("hud-time"),status=$("machine-status");
+  var musicBtn=$("music-toggle"),pauseBtn=$("btn-pause"),loadBtn=$("load-game"),profileOut=$("loaded-profile");
+  var W=640,H=360,selected="farm-attack",keys={},touch={},last=0,stars=[],audioCtx=null,musicLoop=null,musicEnabled=true,beat=0;
+  var configs={
+    "farm-attack":{name:"FARM ATTACK",genre:"EVICTION RUN / ACTION",kind:"attack",goal:5,time:75,pickup:"FAMILY",hazard:"RECORD",copy:"Route the notice crew through the property. Collect a family marker, then escort it to the exit portal."},
+    "hold-house":{name:"HOLD THE HOUSE",genre:"DEFENCE / SURVIVAL",kind:"defend",goal:10,time:75,pickup:"RECORD",hazard:"NOTICE",copy:"Stay on the grid, collect the records, and avoid the incoming notices. How many can you preserve?"},
+    "registry-rush":{name:"REGISTRY RUSH",genre:"COLLECTION / SPEED",kind:"records",goal:12,time:60,pickup:"FILE FRAGMENT",hazard:"MISSING FILE",copy:"Race across the archive grid to gather twelve file fragments before the clock runs out."},
+    "courtroom-87":{name:"COURTROOM 87",genre:"DEADLINE DODGER / ARCADE",kind:"appeal",goal:9,time:65,pickup:"APPEAL POINT",hazard:"DEADLINE",copy:"Collect the appeal points, dodge deadline pulses and try to build a new high score."}
+  };
+  var state={running:false,paused:false,score:0,lives:3,time:0,player:{x:320,y:285},targets:[],hazards:[],carried:null,done:0,goal:0,shield:0,invuln:0,won:false};
+  for(var i=0;i<58;i++)stars.push({x:(i*97+41)%W,y:(i*53+11)%H,r:.5+(i%3)*.4,p:i*.91});
+  function random(min,max){return min+Math.random()*(max-min);}
+  function dist(a,b){var dx=a.x-b.x,dy=a.y-b.y;return Math.sqrt(dx*dx+dy*dy);}
+  function showOverlay(title,copy,label){overlayTitle.textContent=title;overlayCopy.textContent=copy;startBtn.textContent=label||"PRESS START";overlay.classList.remove("hidden");}
+  function chooseGame(id){
+    if(!configs[id])return;selected=id;var c=configs[id];
+    Array.prototype.forEach.call(document.querySelectorAll("[data-game-select]"),function(b){var on=b.getAttribute("data-game-select")===id;b.setAttribute("aria-pressed",on?"true":"false");b.classList.toggle("selected",on);});
+    marquee.textContent=c.name;hudGame.textContent=c.name;profileOut.textContent=c.genre;showOverlay(c.name,c.copy,"PRESS START");
+    status.textContent="READY / "+c.genre;if(state.running){state.running=false;state.paused=false;}updateHud();
+  }
+  function spawnTargets(){
+    state.targets=[];state.hazards=[];state.carried=null;state.done=0;var c=configs[selected],n=c.goal;
+    for(var i=0;i<n;i++){var x=c.kind==="attack"?random(108,235):random(45,595),y=c.kind==="attack"?random(135,208):random(68,315);state.targets.push({x:x,y:y,homeX:x,homeY:y,phase:random(0,7),type:"pickup"});}
+    var count=c.kind==="attack"?5:6;
+    for(var j=0;j<count;j++)state.hazards.push({x:random(70,590),y:random(60,320),vx:random(-75,75),vy:random(-55,55),phase:random(0,7)});
+  }
+  function startGame(){
+    var c=configs[selected];state={running:true,paused:false,score:0,lives:3,time:c.time,player:{x:320,y:286},targets:[],hazards:[],carried:null,done:0,goal:c.goal,shield:0,invuln:0,won:false};
+    spawnTargets();overlay.classList.add("hidden");status.textContent="PLAYING / "+c.genre;startMusic();updateHud();last=performance.now();
+  }
+  function updateHud(){var c=configs[selected];hudScore.textContent="SCORE "+String(state.score||0).padStart(6,"0");hudTime.textContent="TIME "+String(Math.max(0,Math.ceil(state.time||c.time))).padStart(2,"0")+" · "+(state.lives==null?3:state.lives)+" ♥";}
+  function finish(won){
+    state.running=false;state.paused=false;state.won=won;var c=configs[selected];status.textContent=won?"MISSION COMPLETE":"GAME OVER";
+    showOverlay(won?"STAGE CLEAR":"GAME OVER",won?("Score "+state.score+" · "+state.done+" / "+state.goal+" objective units complete."):("Score "+state.score+" · "+(selected==="farm-attack"?"The exit portal stays open. Try another run.":"The cabinet is ready for another run.")),won?"PLAY AGAIN":"TRY AGAIN");
+  }
+  function update(dt){
+    var p=state.player,c=configs[selected],speed=190;
+    var dx=(keys.ArrowRight||keys.d||touch.right?1:0)-(keys.ArrowLeft||keys.a||touch.left?1:0);
+    var dy=(keys.ArrowDown||keys.s||touch.down?1:0)-(keys.ArrowUp||keys.w||touch.up?1:0);
+    if(dx&&dy){dx*=.7071;dy*=.7071;}p.x=Math.max(20,Math.min(W-20,p.x+dx*speed*dt));p.y=Math.max(32,Math.min(H-18,p.y+dy*speed*dt));
+    state.time-=dt;state.shield=Math.max(0,state.shield-dt);state.invuln=Math.max(0,state.invuln-dt);
+    state.hazards.forEach(function(h){h.x+=h.vx*dt;h.y+=h.vy*dt;if(h.x<28||h.x>W-28)h.vx*=-1;if(h.y<48||h.y>H-22)h.vy*=-1;});
+    if(c.kind==="attack"){
+      if(state.carried){state.carried.x=p.x;state.carried.y=p.y-22;state.carried.phase+=dt*5;if(p.x>520&&p.y<110){state.done++;state.score+=100;state.carried=null;if(state.done>=state.goal){updateHud();finish(true);return;}}}
+      else{for(var i=state.targets.length-1;i>=0;i--){if(dist(p,state.targets[i])<20){state.carried=state.targets.splice(i,1)[0];break;}}}
+    }else{
+      for(var k=state.targets.length-1;k>=0;k--){if(dist(p,state.targets[k])<18){state.targets.splice(k,1);state.done++;state.score+=100;if(state.done>=state.goal){updateHud();finish(true);return;}state.targets.push({x:random(45,595),y:random(65,320),homeX:0,homeY:0,phase:random(0,7),type:"pickup"});}}
+    }
+    if(state.invuln<=0&&state.shield<=0){for(var j=0;j<state.hazards.length;j++){if(dist(p,state.hazards[j])<17){state.lives--;state.invuln=1.15;p.x=320;p.y=286;if(state.lives<=0){updateHud();finish(false);return;}break;}}}
+    if(state.time<=0){updateHud();finish(false);return;}updateHud();
+  }
+  function text(txt,x,y,size,color,align){ctx.font="700 "+size+"px Barlow,Arial,sans-serif";ctx.textAlign=align||"center";ctx.fillStyle=color;ctx.shadowColor=color;ctx.shadowBlur=8;ctx.fillText(txt,x,y);ctx.shadowBlur=0;}
+  function drawGrid(t){
+    var g=ctx.createLinearGradient(0,0,0,H);g.addColorStop(0,"#07091a");g.addColorStop(.55,"#080d20");g.addColorStop(1,"#03040c");ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+    stars.forEach(function(s){ctx.globalAlpha=.25+.4*(.5+.5*Math.sin(t*.0009+s.p));ctx.fillStyle="#aefaff";ctx.fillRect(s.x,s.y,s.r,s.r);});ctx.globalAlpha=1;
+    var horizon=206,shift=(t*.018)%26;ctx.lineWidth=1;ctx.strokeStyle="rgba(0,240,255,.21)";
+    for(var i=-13;i<=13;i++){ctx.beginPath();ctx.moveTo(W/2+i*5,horizon);ctx.lineTo(W/2+i*34,H);ctx.stroke();}
+    for(var y=0;y<8;y++){var yy=horizon+Math.pow(y/7,1.7)*(H-horizon)+shift%16;ctx.beginPath();ctx.moveTo(0,yy);ctx.lineTo(W,yy);ctx.stroke();}
+    var vg=ctx.createLinearGradient(0,horizon,0,H);vg.addColorStop(0,"rgba(255,61,219,0)");vg.addColorStop(1,"rgba(255,61,219,.09)");ctx.fillStyle=vg;ctx.fillRect(0,horizon,W,H-horizon);
+  }
+  function drawHouse(t){
+    var x=96,y=89,w=156,h=100;ctx.save();ctx.shadowColor="#00f0ff";ctx.shadowBlur=10;ctx.lineWidth=2;ctx.strokeStyle="#00f0ff";
+    ctx.beginPath();ctx.moveTo(x-8,y+21);ctx.lineTo(x+w/2,y-20);ctx.lineTo(x+w+8,y+21);ctx.lineTo(x+w+8,y+100);ctx.lineTo(x-8,y+100);ctx.closePath();ctx.stroke();
+    ctx.strokeStyle="#ff3ddb";ctx.beginPath();ctx.moveTo(x+10,y+22);ctx.lineTo(x+w/2,y-9);ctx.lineTo(x+w-10,y+22);ctx.stroke();
+    ctx.strokeStyle="rgba(0,240,255,.65)";ctx.strokeRect(x+13,y+39,27,26);ctx.strokeRect(x+w-40,y+39,27,26);ctx.strokeStyle="#ffe94a";ctx.strokeRect(x+w/2-12,y+57,24,43);
+    ctx.shadowBlur=0;ctx.fillStyle="#0b152a";ctx.fillRect(x+1,y+25,w-2,74);ctx.fillStyle="rgba(0,240,255,.18)";ctx.fillRect(x+14,y+40,25,24);ctx.fillRect(x+w-39,y+40,25,24);ctx.strokeStyle="#ff3ddb";ctx.strokeRect(x+w/2-12,y+57,24,43);ctx.restore();text("TŶ MAWR",x+w/2,y+14,10,"#e6fbff");
+  }
+  function drawExit(){ctx.save();ctx.shadowColor="#ffe94a";ctx.shadowBlur=15;ctx.strokeStyle="#ffe94a";ctx.lineWidth=2;ctx.strokeRect(530,43,83,59);ctx.shadowBlur=0;ctx.fillStyle="rgba(255,233,74,.10)";ctx.fillRect(530,43,83,59);text("EXIT",571,68,13,"#ffe94a");text("ZONE",571,84,7,"#ffe94a");ctx.restore();}
+  function drawPickup(o,t){
+    var c=configs[selected],farm=c.kind==="attack",color=farm?"#ff3ddb":c.kind==="defend"?"#00f0ff":c.kind==="records"?"#ffe94a":"#a38bff";
+    var bob=Math.sin(t*.004+o.phase)*3,x=o.x,y=o.y+bob;ctx.save();ctx.translate(x,y);ctx.shadowColor=color;ctx.shadowBlur=13;ctx.strokeStyle=color;ctx.lineWidth=1.7;
+    if(farm){ctx.beginPath();ctx.moveTo(-8,-8);ctx.lineTo(0,-12);ctx.lineTo(8,-5);ctx.lineTo(7,8);ctx.lineTo(-7,8);ctx.closePath();ctx.stroke();text("F",0,4,9,color);}
+    else{ctx.strokeRect(-8,-10,16,20);ctx.beginPath();ctx.moveTo(-4,-4);ctx.lineTo(4,-4);ctx.moveTo(-4,0);ctx.lineTo(4,0);ctx.moveTo(-4,4);ctx.lineTo(2,4);ctx.stroke();}ctx.restore();
+  }
+  function drawHazard(h,t){
+    var c=configs[selected],color=c.kind==="attack"?"#a7f5ff":c.kind==="defend"?"#ff3d83":c.kind==="records"?"#9a8bff":"#ff6e53";
+    ctx.save();ctx.translate(h.x,h.y);ctx.rotate(t*.001+h.phase);ctx.shadowColor=color;ctx.shadowBlur=10;ctx.strokeStyle=color;ctx.fillStyle="rgba(255,61,219,.12)";ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(0,-10);ctx.lineTo(9,0);ctx.lineTo(0,10);ctx.lineTo(-9,0);ctx.closePath();ctx.fill();ctx.stroke();ctx.restore();
+  }
+  function drawPlayer(t){
+    var p=state.player,c=configs[selected],color=c.kind==="attack"?"#ffe94a":"#00f0ff";if(state.invuln>0&&Math.floor(t/90)%2===0)return;
+    ctx.save();ctx.translate(p.x,p.y);ctx.shadowColor=color;ctx.shadowBlur=14;ctx.fillStyle=color;ctx.strokeStyle="#f6fbff";ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(0,-12);ctx.lineTo(11,9);ctx.lineTo(0,5);ctx.lineTo(-11,9);ctx.closePath();ctx.fill();ctx.stroke();
+    if(state.shield>0){ctx.strokeStyle="#ffe94a";ctx.lineWidth=2;ctx.beginPath();ctx.arc(0,0,21,0,Math.PI*2);ctx.stroke();}
+    if(state.carried){ctx.strokeStyle="#ff3ddb";ctx.strokeRect(-11,-32,22,15);text("F",0,-21,9,"#ff3ddb");}ctx.restore();
+  }
+  function draw(t){drawGrid(t);drawHouse(t);if(configs[selected].kind==="attack")drawExit();state.targets.forEach(function(o){drawPickup(o,t);});state.hazards.forEach(function(h){drawHazard(h,t);});if(state.running)drawPlayer(t);if(!state.running)text("FREE PLAY",W/2,286,10,"#4e6b96");if(state.paused){ctx.fillStyle="rgba(4,6,17,.8)";ctx.fillRect(0,0,W,H);text("PAUSED",W/2,H/2,24,"#00f0ff");}}
+  function frame(now){var dt=Math.min(.035,(now-(last||now))/1000);last=now;if(state.running&&!state.paused)update(dt);draw(now);requestAnimationFrame(frame);}
+  function action(){if(state.paused){state.paused=false;if(pauseBtn)pauseBtn.textContent="PAUSE";overlay.classList.add("hidden");return;}if(!state.running){startGame();return;}state.shield=.85;}
+  startBtn.addEventListener("click",action);
+  if(loadBtn)loadBtn.addEventListener("click",function(){chooseGame(selected);var cabinet=$("console");if(cabinet)cabinet.scrollIntoView({behavior:"smooth",block:"start"});});
+  Array.prototype.forEach.call(document.querySelectorAll("[data-game-select]"),function(b){b.addEventListener("click",function(){chooseGame(b.getAttribute("data-game-select"));});b.addEventListener("dblclick",function(){chooseGame(b.getAttribute("data-game-select"));startGame();});});
+  if(pauseBtn)pauseBtn.addEventListener("click",function(){if(!state.running){showOverlay(configs[selected].name,"Press start to begin this game.","PRESS START");return;}state.paused=!state.paused;pauseBtn.textContent=state.paused?"RESUME":"PAUSE";status.textContent=state.paused?"PAUSED":"PLAYING / "+configs[selected].genre;if(state.paused)showOverlay("PAUSED","Take a breath. Resume when ready.","RESUME");else overlay.classList.add("hidden");});
+  document.addEventListener("keydown",function(e){
+    if(["ArrowUp","ArrowDown","ArrowLeft","ArrowRight"," "].indexOf(e.key)>=0&&!(e.target&&/INPUT|TEXTAREA|SELECT/.test(e.target.tagName)))e.preventDefault();
+    if(e.key==="Enter"&&!state.running){startGame();return;}if(e.key.toLowerCase()==="p"){if(state.running){state.paused=!state.paused;if(pauseBtn)pauseBtn.textContent=state.paused?"RESUME":"PAUSE";if(state.paused)showOverlay("PAUSED","Resume when you're ready.","RESUME");else overlay.classList.add("hidden");}return;}
+    if(e.key===" "&&state.running){state.shield=.85;return;}keys[e.key]=true;keys[e.key.toLowerCase()]=true;
+  });
+  document.addEventListener("keyup",function(e){keys[e.key]=false;keys[e.key.toLowerCase()]=false;});
+  Array.prototype.forEach.call(document.querySelectorAll("[data-dir]"),function(b){
+    var d=b.getAttribute("data-dir");function on(){touch[d]=true;}function off(){touch[d]=false;}
+    b.addEventListener("pointerdown",function(e){e.preventDefault();on();try{b.setPointerCapture(e.pointerId);}catch(_e){}});
+    ["pointerup","pointercancel","pointerleave","lostpointercapture"].forEach(function(ev){b.addEventListener(ev,off);});
+  });
+  function musicLabel(){if(!musicBtn)return;musicBtn.textContent=musicEnabled?(musicLoop?"♫ MUSIC ON":"♫ MUSIC ON · TAP"):"♫ MUSIC OFF";musicBtn.setAttribute("aria-pressed",musicEnabled?"true":"false");}
+  function tone(freq,when,dur,wave,vol){
+    if(!audioCtx)return;var osc=audioCtx.createOscillator(),gain=audioCtx.createGain();osc.type=wave;osc.frequency.setValueAtTime(freq,when);gain.gain.setValueAtTime(.0001,when);gain.gain.exponentialRampToValueAtTime(vol,when+.018);gain.gain.exponentialRampToValueAtTime(.0001,when+dur);osc.connect(gain);gain.connect(audioCtx.destination);osc.start(when);osc.stop(when+dur+.02);
+  }
+  function scheduleMusic(){
+    if(musicLoop||!audioCtx||audioCtx.state!=="running"||!musicEnabled)return;var melody=[220,277.18,329.63,440,392,329.63,277.18,246.94,329.63,392,493.88,440,329.63,277.18,220,196],bass=[110,110,138.59,138.59,164.81,164.81,146.83,146.83];
+    musicLoop=window.setInterval(function(){if(!musicEnabled||!audioCtx||audioCtx.state!=="running")return;var t=audioCtx.currentTime+.025;tone(melody[beat%melody.length],t,.16,"square",.023);if(beat%2===0)tone(bass[Math.floor(beat/2)%bass.length],t,.24,"triangle",.035);if(beat%4===2)tone(880,t,.045,"square",.007);beat++;},190);musicLabel();
+  }
+  function startMusic(){
+    if(!musicEnabled)return;try{var AC=window.AudioContext||window.webkitAudioContext;if(!AC){musicLabel();return;}if(!audioCtx)audioCtx=new AC();var r=audioCtx.state==="suspended"?audioCtx.resume():Promise.resolve();if(r&&r.then)r.then(scheduleMusic).catch(musicLabel);else scheduleMusic();if(audioCtx.state==="running")scheduleMusic();musicLabel();}catch(e){musicLabel();}
+  }
+  function stopMusic(){if(musicLoop){clearInterval(musicLoop);musicLoop=null;}musicLabel();}
+  if(musicBtn)musicBtn.addEventListener("click",function(){if(musicLoop){musicEnabled=false;stopMusic();}else{musicEnabled=true;startMusic();}});
+  window.addEventListener("pointerdown",function(e){if(e.target&&e.target.closest&&e.target.closest("#music-toggle"))return;startMusic();},{once:true});
+  window.addEventListener("keydown",function(){startMusic();},{once:true});
+  chooseGame(selected);musicLabel();startMusic();requestAnimationFrame(frame);
+})();
+</script>"""
+
+
 def page_cyber(cfg, D):
+    """Cyberspace: a focused, mobile-friendly 1980s cyber-grid arcade cabinet. The shared three-row header is unchanged."""
+    body = f"""<body class="arcade">
+<a class="skip" href="#top-level">Skip to the menu</a>
+<div class="bar"><button id="menu-btn" type="button" aria-controls="menu" aria-expanded="false" aria-label="Open the menu">☰</button><a class="logo" href="/cyberspace/">Cedwyn·Net</a><span id="lang-slot"></span><button id="fx-btn" type="button" aria-pressed="true" title="Screen flicker and blinking on or off">FX ON</button></div>
+<div class="drawer" id="menu" role="dialog" aria-modal="true" aria-label="Arcade menu"><div class="shade" data-close></div><nav>
+<button class="x" type="button" data-close aria-label="Close the menu">✕</button>
+<h2>ARCADE SELECT</h2>
+<ol>
+<li><a href="#console">1P · Arcade cabinet</a></li>
+<li><a href="#game-select">2P · Select game</a></li>
+<li><a href="#how-to-play">Controls &amp; rules</a></li>
+<li><a href="/choose/">Change location ↩</a></li>
+<li><button type="button" data-collapse>▲ Back to top</button></li>
+</ol></nav></div>
+<main id="top-level" class="arcade-page">
+<header class="arcade-hero">
+<p class="eyebrow">CEDWYN·NET / ARCADE SYSTEM 1987</p>
+<h1>CYBERSPACE <span>ARCADE</span></h1>
+<p>Pick a cabinet. Load a game. Chase a high score.</p>
+</header>
+<div class="arcade-grid">
+<section class="cabinet" id="console" aria-label="Playable arcade cabinet">
+<div class="machine-top"><span>MODEL 87 · DIGITAL EDITION</span><span>FREE PLAY / NO COINS</span></div>
+<div class="marquee"><div class="marquee-kicker">CEDWYN·NET PRESENTS</div><h2 id="marquee-title">FARM ATTACK</h2><p>ONE PLAYER · INSERT IMAGINATION</p></div>
+<div class="bezel"><div class="screen-wrap">
+<canvas id="game-canvas" width="640" height="360" aria-label="Playable neon grid arcade game">Your browser does not support the game canvas.</canvas>
+<div class="screen-hud" aria-live="polite"><span id="hud-game">FARM ATTACK</span><span id="hud-score">SCORE 000000</span><span id="hud-time">TIME 75</span></div>
+<div class="screen-overlay" id="screen-overlay"><p class="screen-label">READY PLAYER ONE</p><h3 id="overlay-title">FARM ATTACK</h3><p class="copy" id="overlay-copy">Route the notice crew through the property. Collect a family marker, then escort it to the exit portal.</p><button class="start" id="btn-start" type="button">PRESS START</button></div>
+</div></div>
+<div class="control-deck"><div class="joystick-art" aria-hidden="true"></div><div class="controls-copy"><strong>CONTROLS / PLAYER 1</strong>ARROWS or WASD to move · SPACE for a shield · P to pause</div><div class="deck-buttons"><button class="deck-btn" id="btn-pause" type="button">PAUSE</button><button class="deck-btn" id="music-toggle" type="button" aria-pressed="true">♫ MUSIC ON · TAP</button></div></div>
+<div class="touch-pad" aria-label="Touch movement controls"><button type="button" data-dir="up" aria-label="Move up">▲</button><button type="button" data-dir="left" aria-label="Move left">◀</button><button type="button" data-dir="down" aria-label="Move down">▼</button><button type="button" data-dir="right" aria-label="Move right">▶</button></div>
+<div class="machine-bottom"><span>ARCADE OS 87</span><span id="machine-status">READY / SELECT GAME</span><span>FREE PLAY</span></div>
+</section>
+<aside class="selector" id="game-select" aria-label="Game selector">
+<div class="selector-head"><p class="kicker">GAME SELECT / 01—04</p><h2>Choose your game</h2><p>Select a title, then load it into the cabinet.</p></div>
+<div class="game-list" role="group" aria-label="Available games">
+<button class="game-option" type="button" data-game-select="farm-attack" aria-pressed="true"><span class="game-index">01</span><span class="game-copy"><strong>FARM ATTACK</strong><small>EVICTION RUN / ACTION</small><em>Route the notice crew through the house. Collect a family marker and escort it to the exit portal.</em></span><span aria-hidden="true">▶</span></button>
+<button class="game-option" type="button" data-game-select="hold-house" aria-pressed="false"><span class="game-index">02</span><span class="game-copy"><strong>HOLD THE HOUSE</strong><small>DEFENCE / SURVIVAL</small><em>Collect the records, protect the door, and dodge incoming notices.</em></span><span aria-hidden="true">▶</span></button>
+<button class="game-option" type="button" data-game-select="registry-rush" aria-pressed="false"><span class="game-index">03</span><span class="game-copy"><strong>REGISTRY RUSH</strong><small>COLLECTION / SPEED</small><em>Race across the archive grid and gather file fragments before time runs out.</em></span><span aria-hidden="true">▶</span></button>
+<button class="game-option" type="button" data-game-select="courtroom-87" aria-pressed="false"><span class="game-index">04</span><span class="game-copy"><strong>COURTROOM 87</strong><small>DEADLINE DODGER / ARCADE</small><em>Collect appeal points, evade deadline pulses, and chase a new high score.</em></span><span aria-hidden="true">▶</span></button>
+</div>
+<div class="selector-load"><span class="load-label">LOADED PROFILE</span><output id="loaded-profile">EVICTION RUN / ACTION</output><button class="load-game" id="load-game" type="button">LOAD SELECTED GAME ↗</button></div>
+</aside>
+</div>
+<section class="game-instructions" id="how-to-play" aria-label="How to play"><div class="instruction"><h2>01 / MOVE</h2><p>Use the arrow keys or W, A, S, D. On phones, use the directional pad beneath the cabinet.</p></div><div class="instruction"><h2>02 / ACTION</h2><p>In Farm Attack, collect each family marker and carry it to the glowing EXIT zone. In the other games, collect the glowing records and avoid the moving hazards.</p></div></section>
+<p class="game-disclaimer">Original browser mini-games inspired by themes in the BP v Buckler dispute. The gameplay is fictionalised and does not represent findings about the legal case. No ROMs or downloads required.</p>
+</main>
+<footer class="foot"><p class="px">THANKS FOR PLAYING</p><p>CEDWYN·NET ARCADE SYSTEM / FREE PLAY</p><p style="font-size:11px">Music is an original synthesised loop. A browser may require a tap before it allows playback.</p></footer>
+{ARCADE_JS}
+{ARCADE_GAME_JS}
+<script>
+(function(){var d=document.querySelector(".drawer");if(!d)return;Array.prototype.forEach.call(d.querySelectorAll('a[href^="#"]'),function(a){a.addEventListener("click",function(){d.classList.remove("on");var b=document.getElementById("menu-btn");if(b)b.setAttribute("aria-expanded","false");});});})();
+</script>
+</body>
+</html>
+"""
+    return head("Cyberspace Arcade · Cedwyn Estate", "An original neon-grid browser arcade for the Cedwyn Estate digital campus.", "https://bucklerfamily.estate/cyberspace/", "/locations-img/album-098-wireframe.webp",
+                extra='<link rel="preload" href="/fonts/press-start-2p-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>\n<meta name="color-scheme" content="dark">\n<style>' + ARCADE_CSS + '</style><style id="arcade-console-theme">' + ARCADE_EXTRA_CSS + '</style>') + body
+
+def page_choose(cfg):
     """Cyberspace in a retro cyberpunk arcade theme (Sion, 00:26 BST 21 Oct 2026), built on the progressive-disclosure
     design rule for every site: a minimal landing view; detail only by opening the side menu or a segment; each tap
     reveals the next level; every top-level option stays visible; a collapse control at every level.

@@ -221,7 +221,7 @@ def enquire():
          '<label for="org">Organisation (optional)</label><input id="org" name="org" type="text" autocomplete="organization" maxlength="160">'
          '<label for="email">Email</label><input id="email" name="email" type="email" autocomplete="email" maxlength="200" required>'
          '<label for="item">The item you hold, or the use you propose</label><input id="item" name="item" type="text" maxlength="300" placeholder="e.g. oak dresser from the farmhouse; documentary for broadcast">'
-         '<label for="phone">Phone (optional)</label><input id="phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" maxlength="40" placeholder="Only if you would like a call back"><label class="c"><input type="checkbox" id="callback" name="callback" value="yes"><span>Yes, I\'d like a call back. The call may be made by an AI assistant on behalf of the Great House Farm team.</span></label>'
+         '<label for="phone">Phone (optional)</label><input id="phone" name="phone" type="text" autocomplete="tel" inputmode="tel" maxlength="40" placeholder="Only if you would like a call back"><label class="c"><input type="checkbox" id="callback" name="callback" value="yes"><span>Yes, I\'d like a call back. The call may be made by an AI assistant on behalf of the Great House Farm team.</span></label>'
          '<label for="message">Message</label><textarea id="message" name="message" maxlength="5000" required></textarea>'
          '<div class="hp" aria-hidden="true"><label for="website">Leave this empty</label><input id="website" name="website" type="text" tabindex="-1" autocomplete="off"></div>'
          '<input type="hidden" name="ts" id="ts" value="">'

@@ -846,7 +846,10 @@
   // Skipped where the page already carries it (data-ghf-legal-foot) and on the full-screen 3D walk.
   function legalFoot() {
     if (!document.body || document.querySelector("[data-ghf-legal-foot]") || /^\/3d(\/|$)/.test(path)) return;
-    var B = "https://bucklerfamily.estate", L = [["Licence", "/licence/"], ["Privacy", "/privacy/"], ["Cookies", "/cookies/"], ["Terms", "/terms/"], ["Disclaimer", "/disclaimer/"], ["Accessibility", "/accessibility/"], ["Enquire", "/enquire/"]];
+    // A page whose body does not scroll (a full-screen app such as chess.) has no bottom for an in-flow footer: it would sit at the top, so none is added there (21 Oct 2026).
+    var appPage = function () { try { return /hidden|clip/.test(getComputedStyle(document.body).overflowY + " " + getComputedStyle(document.documentElement).overflowY); } catch (e) { return false; } };
+    if (appPage()) return;
+    var B = "https://bucklerfamily.estate", L = [["Licence", "/licence/"], ["Privacy", "/privacy/"], ["Cookies", "/cookies/"], ["Terms", "/terms/"], ["Accessibility", "/accessibility/"], ["Enquire", "/enquire/"]];
     var st = el("style"); st.setAttribute("data-ghf-lf", "");
     st.textContent = ".ghf-lf{display:block!important;clear:both;position:relative;z-index:2;box-sizing:border-box;width:100%;flex:0 0 auto;margin:32px 0 0!important;padding:16px 16px 76px!important;background:#0a0a0a!important;border-top:1px solid #333!important;color:#b8b8b8!important;font:400 12.5px/1.6 Barlow,'Helvetica Neue',Arial,system-ui,sans-serif!important;text-align:center!important;letter-spacing:0!important;text-transform:none!important}" +
       ".ghf-lf p{margin:3px auto!important;max-width:760px;color:#b8b8b8!important;font:inherit!important}.ghf-lf b{color:#eaeaea!important;font-weight:700}" +
@@ -856,8 +859,18 @@
     var p1 = el("p"); p1.appendChild(el("b", null, "\u00a9 Williams\u2013Buckler family. All rights reserved. Licence terms apply.")); f.appendChild(p1);
     var nv = el("p"); nv.setAttribute("role", "navigation"); nv.setAttribute("aria-label", "Legal");
     L.forEach(function (x) { var a = el("a", null, x[0]); a.href = B + x[1]; nv.appendChild(a); }); f.appendChild(nv);
-    f.appendChild(el("p", null, "Our case, prospective. Not a finding of any court. Not legal advice. \u2014 Sion's Tab agent"));
     document.body.appendChild(f);
+    // Keep the footer the last thing on the page: content a page adds to <body> after load goes above it, never below (21 Oct 2026).
+    var keepLast = function () {
+      if (!f.parentNode) return;
+      for (var n = f.nextElementSibling; n; n = n.nextElementSibling) {
+        if (/^(SCRIPT|STYLE|LINK|TEMPLATE|NOSCRIPT)$/.test(n.tagName) || (n.classList && n.classList.contains("ghf-ui"))) continue;
+        var cs = getComputedStyle(n);
+        if (cs.position !== "fixed" && cs.position !== "absolute" && cs.display !== "none") { document.body.appendChild(f); return; }
+      }
+    };
+    var fo = new MutationObserver(keepLast); fo.observe(document.body, { childList: true }); setTimeout(function () { fo.disconnect(); }, 20000);
+    window.addEventListener("load", function () { if (appPage() && f.parentNode) { f.parentNode.removeChild(f); return; } keepLast(); });
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", legalFoot); else legalFoot();
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start); else start();

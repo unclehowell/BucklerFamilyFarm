@@ -391,25 +391,6 @@
   },
   {
    "n": 22,
-   "key": "treasury",
-   "title": "The Treasury",
-   "tag": "CEDWYN ESTATE COINS",
-   "caption": "Coins: store credit for e-books, from 100 coins for £9.99. No cash value.",
-   "url": "https://bucklerfamily.estate/coins/",
-   "hosts": [],
-   "paths": [
-    "/coins/"
-   ],
-   "icon": "treasury",
-   "colors": [
-    "#0A0A0A",
-    "#F2C94C"
-   ],
-   "hue": "Gold",
-   "desc": "Cedwyn Estate coins: prepaid store credit for e-books and goods. No cash value."
-  },
-  {
-   "n": 23,
    "key": "accounts",
    "title": "The Counting House",
    "tag": "PUBLIC ACCOUNTS",
@@ -428,7 +409,7 @@
    "desc": "Open accounts for the project: money in and out, AI and records costs, kept as a public ledger."
   },
   {
-   "n": 24,
+   "n": 23,
    "key": "apps",
    "title": "The Case Office",
    "tag": "YOUR OWN CASE",
@@ -448,7 +429,7 @@
    "desc": "The Case Office web app: register, start a paid live records search, or set up your own virtual base camp for your land."
   },
   {
-   "n": 25,
+   "n": 24,
    "key": "shop",
    "title": "Gift Shop & Marketplace",
    "tag": "JOURNEY'S END",
@@ -495,5 +476,5 @@
   "note": "Two-colour identity per department: colors = [primary, secondary]. Primary is deep (white text passes WCAG AA on it); secondary is bright (black text passes AA on it, and it passes AA as text on black). Stops pointing at the same site share a pair. Red is reserved for the Public Authorities (enemy camp). Table: work/brand/palette.md. — Sion's Tab agent",
   "hue": "Gold"
  },
- "note_hues": "One signature hue family per site (20 Oct 2026: red is the app, purple is fcg). colors = [primary (deep, white text passes AA), secondary (bright, passes AA as text on black)], both from the same hue family. Stops on the same site share it (clerk and kissed frogs are Legal Wiki pages; the film and the album are the Facebook family; campus, treasury and gift shop are base camp pages, gold). Table: work/brand/palette.md. — Sion's Tab agent"
+ "note_hues": "One signature hue family per site (20 Oct 2026: red is the app, purple is fcg). colors = [primary (deep, white text passes AA), secondary (bright, passes AA as text on black)], both from the same hue family. Stops on the same site share it (clerk and kissed frogs are Legal Wiki pages; the film and the album are the Facebook family; campus and gift shop are base camp pages, gold). Table: work/brand/palette.md. — Sion's Tab agent"
 }

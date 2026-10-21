@@ -357,7 +357,7 @@ export const ClaimAgentSaaSPage: React.FC<ClaimAgentSaaSPageProps> = ({
           }}
         />
 
-        {/* £9.99 Eligibility Check Modal */}
+        {/* Eligibility Check Modal */}
         <EligibilityCheckModal
           isOpen={isEligibilityModalOpen}
           onClose={() => setIsEligibilityModalOpen(false)}
@@ -407,7 +407,7 @@ export const ClaimAgentSaaSPage: React.FC<ClaimAgentSaaSPageProps> = ({
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#34332F] border border-[#484642] text-xs font-mono">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
               <span className="font-bold text-[#D08856] tracking-wider uppercase">
-                Autonomous Land Restitution Platform
+                Ancestral Land Records Platform
               </span>
             </div>
             <ShareButton viewTarget="home" buttonLabel="Share App" variant="secondary" />
@@ -415,12 +415,12 @@ export const ClaimAgentSaaSPage: React.FC<ClaimAgentSaaSPageProps> = ({
 
           {/* Exact Requested Title */}
           <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight text-[#EDEFEE] leading-[1.15]">
-            Locate & Reclaim Ancestral Birthland
+            Locate & Reclaim Ancestral Land
           </h1>
 
-          {/* Exact Requested Small Print with Details Trigger */}
+          {/* Measured, prospective copy — aligned with site disclaimers */}
           <p className="text-base sm:text-lg lg:text-xl text-[#EDEFEE]/90 font-medium leading-relaxed max-w-3xl mx-auto">
-            We are these lands! We literally own parcels of land nationwide. Our AI agents will autonomously locate, recover and/or assist in reporations for unlawful disspossesion and decades of unlawful occupancy.
+            We are these lands. Families across the country may still hold rights in parcels their ancestors farmed for generations. Our AI agents help locate the records, rebuild your family's story and seek evidence of how the land was lost, so you can seek repossession or reparations.
           </p>
 
           {/* Details & T&C's */}
@@ -437,7 +437,7 @@ export const ClaimAgentSaaSPage: React.FC<ClaimAgentSaaSPageProps> = ({
               <span className="font-bold text-xs">details</span>
             </button>
             <span className="text-[#484642]">•</span>
-            <span>T&C&apos;s apply.</span>
+            <span>T&C's apply. Our case, prospective.</span>
           </div>
 
           {/* CTA Buttons (Try Now | Account) */}
@@ -503,15 +503,10 @@ export const ClaimAgentSaaSPage: React.FC<ClaimAgentSaaSPageProps> = ({
         }}
         onSuccessLogin={() => {
           setIsWebAppSubscribeModalOpen(false);
-          setCurrentUser({
-            email: '[redacted]',
-            name: 'Sion Buckler',
-            isDemo: false,
-          });
         }}
       />
 
-      {/* £9.99 Eligibility Check Modal */}
+      {/* Eligibility Check Modal */}
       <EligibilityCheckModal
         isOpen={isEligibilityModalOpen}
         onClose={() => setIsEligibilityModalOpen(false)}

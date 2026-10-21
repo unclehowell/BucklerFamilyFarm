@@ -246,10 +246,10 @@ PATAGONIA_ROADMAP_FUNDING = """<section class="s" id="project-roadmap"><div clas
 
 def page_patagonia(cfg):
     C = cfg["credits"]
-    offers = [("museum", "Museum visit", "Wax museum", "The story of Tŷ Mawr and its people in wax figures, with a guide figure of Guglielmo Marconi, whose 1897 wireless trials took place a few kilometres from the original farm."),
-              ("weddings", "Weddings", "Weddings", "A Welsh farmhouse wedding at the edge of Patagonia: house, yard and gardens."),
-              ("stables", "Stables and livery", "Stables and livery", "High-end stables and livery for horses, with rides on the Atlantic coast."),
-              ("bnb", "B&B stays", "Luxury B&B", "Rooms in the reconstructed farmhouse, with Welsh tea and a Patagonian breakfast.")]
+    offers = [("museum", "Museum visit", "House museum and guided tours", "Source-led rooms and interpretation about the farmhouse, working land, family history and the Welsh landscape."),
+              ("weddings", "Future events", "Events and hospitality", "Talks, cultural gatherings and possible celebrations, subject to site, permissions, local consultation and a separate operating plan."),
+              ("stables", "Optional equestrian facilities", "Landscape and horses", "Stables or paddocks only if suitable for the land, lawful, ecologically acceptable and financially viable."),
+              ("bnb", "Future stays", "Potential stays and hospitality", "Guest accommodation is a later option to test; no rooms, service model or opening date is promised.")]
     cards = "".join(f"""<a class="card" href="#enquire" data-offer="{k}"><h3>{E(t)}</h3><p>{E(d)}</p><span class="go">Register interest</span></a>""" for k, _, t, d in offers)
     body = f"""<body>
 <main>
@@ -262,12 +262,12 @@ def page_patagonia(cfg):
 <div class="status-grid" aria-label="Project status"><div class="status-item"><b>Digital experience</b><span>Website and planning in development</span></div><div class="status-item"><b>Land</b><span>South of Puerto Madryn is a search area, not a selected site</span></div><div class="status-item"><b>Design</b><span>Concept stage; no approved plans</span></div><div class="status-item"><b>Opening</b><span>No date set</span></div></div>
 </div></header>
 <section class="s"><div class="wrap">
-<p>A reconstruction of Great House Farm, the Tŷ Mawr farmhouse of Llandough, is planned for Puerto Madryn, the town where Welsh settlers landed in 1865.</p>
-<p>The plans: a museum of wax figures, a wedding venue, high-end stables and a luxury bed and breakfast.</p>
-<p class="muted">Plans only. Site, designs and dates are not fixed yet.</p>
+<p>The proposal is to interpret Great House Farm / Tŷ Mawr through a researched farmhouse reconstruction and landscape near Puerto Madryn. The public page presents a visitor proposition, not an operating venue.</p>
+<p>The core offer is the house and guided interpretation. Events, accommodation, wax figures and equestrian facilities are options to assess, not a fixed build specification.</p>
 <div class="cards" style="margin-top:20px">{cards}</div>
 {PATAGONIA_VISITOR_ADDONS}
-<p class="muted" style="margin-top:14px">Longer-term amenities remain options pending site selection, permissions and a costed business case.</p>
+<p class="disclaimer">Visitor-experience reference: the <a href="https://marktwainhouse.org/">Mark Twain House &amp; Museum</a> shows how a historic home can be supported by guided tours, education and a shop. Adapt the model to Welsh heritage and Patagonian community priorities; do not copy the building or assume equal scale. <a href="https://marktwainhouse.org/admission/">Tour information</a> · <a href="https://marktwainhouse.org/edu/">education programmes</a>.</p>
+<p class="muted" style="margin-top:14px">No prices, bookings or opening dates have been set.</p>
 </div></section>
 {PATAGONIA_LAND_SECTION}
 <section class="s"><div class="wrap">

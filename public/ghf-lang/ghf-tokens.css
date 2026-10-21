@@ -22,3 +22,12 @@ html.ghf-shell:not(.ghf-keep-type) body :where(main,article,section,.content,.co
 html.ghf-shell:not(.ghf-keep-type) body :where(main,article,section,.content,.container,.wrap,#content) h3{font-size:var(--ghf-fs-lg);line-height:1.3}
 html.ghf-shell:not(.ghf-keep-type) body :where(main,article,.content,#content) :where(p,li,dd,td){font-size:var(--ghf-fs-base)}
 html.ghf-shell:not(.ghf-keep-type) body :where(main,article,.content,#content) :where(small,figcaption,.caption){font-size:var(--ghf-fs-sm)}
+/* v2.1.0 HYBRID THEME (21 Oct 2026): the Legal Wiki's reading size and spacing, in the estate's sharp Starlink look.
+   Measured live on greathousefarmwiki.wordpress.com: running text uses the theme's "medium" size,
+   clamp(1rem, 1rem + (1vw - .2rem) * .545, 1.3rem) = 16.4px on a 390px phone and 20.8px on a laptop; line-height 1.55;
+   one line (1em) between paragraphs; a 760px reading column. Spec: work/hybrid-theme/SPEC.md. Applies where basecamp.js
+   sets html.ghf-hy (every site except the map, the chessboard, fb. and the 22 Oct meeting site). */
+:root{--ghf-fs-text:clamp(1rem,calc(1rem + (1vw - .2rem) * .545),1.3rem);--ghf-lh-text:1.55;--ghf-para:1em;--ghf-measure:760px;--ghf-radius:0px}
+html.ghf-hy:not(.ghf-keep-type) body :where(main,article,.content,#content) :where(p,li,dd,blockquote){font-size:var(--ghf-fs-text);line-height:var(--ghf-lh-text)}
+html.ghf-hy:not(.ghf-keep-type) body :where(main,article,.content,#content) p:not(:last-child){margin-bottom:var(--ghf-para)}
+html.ghf-hy :is(button,input,select,textarea,.btn,.button,.card,.cta):not(.ghf-round){border-radius:0}

@@ -1,8 +1,8 @@
-// app.bucklerfamily.estate (was apps.; 301) — Cedwyn Estate · Case Office (registration, paid live-search enquiry, Case Agent subscription,
-// subscriber base camp) plus the existing FOI Evidence Tree demo at /demo/ (served unchanged from bucklerfamily.estate/webapp/).
-// Free Cloudflare only: this Worker + D1 (DB) + Email Routing send_email (MAILER, Sion's verified address set in the binding).
-// STRIPE_KEY (secret, optional): when present, Stripe Checkout Sessions are verified server-side; otherwise returns are
-// recorded as "paid_claimed" and Sion checks Stripe by hand. — Sion's Tab agent, 20 Oct 2026
+// app.bucklerfamily.estate — Cedwyn Estate (v2, 21 Oct 2026): simple landing (demo or free eligibility check), email verification and
+// password reset from onboard-team@bucklerfamily.estate, free eligibility checks with uploads (R2), admin eligibility + one-time codes,
+// code-gated £49.99/month subscription with the subscriber base camp, optional £19.99 full deep search. Demo at /demo/ unchanged.
+// Bindings: DB (D1), UPLOADS (R2), MAILER (send_email to Sion's verified address), SENDER (send_email, any address once
+// Cloudflare Email Sending is onboarded), secrets SALT, MAIL_TO, TEST_TOKEN, optional STRIPE_KEY, RESEND_KEY. — Sion's Tab agent
 import { EmailMessage } from "cloudflare:email";
 import { CO, TEMPLATE_NOTE, TERMS, PRIVACY, CAMP_SVG, CFG } from "./gen.js";
 
@@ -95,24 +95,66 @@ function qualify(e) {
   return { score: s, grade, notes: notes.join("; ") };
 }
 
-// ---------- email to Sion (Email Routing send_email; destination fixed in the binding) ----------
-function mimeB64(s) { const b = enc.encode(s); let o = ""; for (let i = 0; i < b.length; i++) o += String.fromCharCode(b[i]); return btoa(o).replace(/.{76}/g, "$&\r\n"); }
-async function mailSion(env, subject, body) {
-  const from = CFG.mail_from;
-  const raw = [
-    `From: Cedwyn Estate Case Office <${from}>`,
-    `To: <${env.MAIL_TO}>`,
-    `Subject: =?UTF-8?B?${btoa(String.fromCharCode(...enc.encode(subject)))}?=`,
-    `Date: ${new Date().toUTCString()}`,
-    `Message-ID: <${hex(rand(12))}@bucklerfamily.estate>`,
-    "MIME-Version: 1.0",
-    "Content-Type: text/plain; charset=UTF-8",
-    "Content-Transfer-Encoding: base64",
-    "", mimeB64(body + "\n\n— Sion's Tab agent (app.bucklerfamily.estate)\n")].join("\r\n");
-  // destination: MAIL_TO secret = the send_email binding's verified address (never in this source or the repo)
-  await env.MAILER.send(new EmailMessage(from, env.MAIL_TO, raw));
-}
 
+// ---------- email (v2, 21 Oct 2026) ----------
+// Sion's notifications: Email Routing send_email binding MAILER (fixed to his verified address, secret MAIL_TO).
+// Mail to anyone else (verification, password reset, eligibility codes), tried in this order:
+//   1. Resend HTTP API, when a key is stored (Worker secret RESEND_KEY, or the encrypted D1 meta row set through /ops/mailkey);
+//   2. Cloudflare send_email binding SENDER (no fixed destination). Cloudflare delivers this only to verified addresses
+//      until the zone is onboarded to Cloudflare Email Sending (dashboard: Email > Email Sending > Onboard domain).
+// Every send is logged in mail_log (recipient stored as a salted hash only).
+const MAIL_FROM_ONBOARD = "onboard-team@bucklerfamily.estate";
+const MAIL_NAME = "Cedwyn Estate onboarding team";
+function mimeB64(s) { const b = enc.encode(s); let o = ""; for (let i = 0; i < b.length; i++) o += String.fromCharCode(b[i]); return btoa(o).replace(/.{76}/g, "$&\r\n"); }
+const hdrB64 = (s) => `=?UTF-8?B?${btoa(String.fromCharCode(...enc.encode(s)))}?=`;
+function rawMime(from, fromName, to, subject, text, html) {
+  const h = [`From: ${hdrB64(fromName)} <${from}>`, `To: <${to}>`, `Reply-To: <${from}>`, `Subject: ${hdrB64(subject)}`, `Date: ${new Date().toUTCString()}`,
+    `Message-ID: <${hex(rand(12))}@bucklerfamily.estate>`, "MIME-Version: 1.0"];
+  if (!html) return [...h, "Content-Type: text/plain; charset=UTF-8", "Content-Transfer-Encoding: base64", "", mimeB64(text)].join("\r\n");
+  const bd = "b" + hex(rand(10));
+  return [...h, `Content-Type: multipart/alternative; boundary="${bd}"`, "", `--${bd}`, "Content-Type: text/plain; charset=UTF-8", "Content-Transfer-Encoding: base64", "", mimeB64(text),
+    `--${bd}`, "Content-Type: text/html; charset=UTF-8", "Content-Transfer-Encoding: base64", "", mimeB64(html), `--${bd}--`, ""].join("\r\n");
+}
+async function aesKey(env) {
+  const raw = await crypto.subtle.digest("SHA-256", enc.encode((env.SALT || "s") + "|mailkey"));
+  return crypto.subtle.importKey("raw", raw, "AES-GCM", false, ["encrypt", "decrypt"]);
+}
+async function sealStr(env, s) { const iv = rand(12); const ct = await crypto.subtle.encrypt({ name: "AES-GCM", iv }, await aesKey(env), enc.encode(s)); return b64(iv) + "." + b64(ct); }
+async function openStr(env, v) { const [a, c] = String(v).split("."); const iv = Uint8Array.from(atob(a), (x) => x.charCodeAt(0)); const ct = Uint8Array.from(atob(c), (x) => x.charCodeAt(0)); return new TextDecoder().decode(await crypto.subtle.decrypt({ name: "AES-GCM", iv }, await aesKey(env), ct)); }
+async function mailKey(env) {
+  if (env.RESEND_KEY) return { provider: "resend", key: env.RESEND_KEY, source: "secret" };
+  try { const r = await env.DB.prepare("SELECT v FROM meta WHERE k='mail_key'").first(); if (r) { const o = JSON.parse(await openStr(env, r.v)); o.source = "d1"; return o; } } catch (e) {}
+  return null;
+}
+async function mailLog(env, kind, to, route, ok, error) {
+  try { await env.DB.prepare("INSERT INTO mail_log (at,kind,to_hash,route,ok,error) VALUES (?,?,?,?,?,?)").bind(iso(), kind, (await sha256((env.SALT || "s") + "|" + to)).slice(0, 16), route, ok ? 1 : 0, error ? String(error).slice(0, 300) : null).run(); } catch (e) {}
+}
+// send to anyone; returns { ok, route, error }
+async function sendMail(env, { to, subject, text, html, kind = "mail" }) {
+  to = String(to || "").trim();
+  const errs = [];
+  const k = await mailKey(env);
+  if (k && k.provider === "resend") {
+    try {
+      const r = await fetch("https://api.resend.com/emails", { method: "POST", headers: { Authorization: `Bearer ${k.key}`, "Content-Type": "application/json" },
+        body: JSON.stringify({ from: `${MAIL_NAME} <${MAIL_FROM_ONBOARD}>`, to: [to], subject, text, html: html || undefined, reply_to: MAIL_FROM_ONBOARD }) });
+      if (r.ok) { await mailLog(env, kind, to, "resend", true); return { ok: true, route: "resend" }; }
+      errs.push(`resend ${r.status} ${(await r.text()).slice(0, 160)}`);
+    } catch (e) { errs.push("resend " + String(e).slice(0, 160)); }
+  }
+  if (env.SENDER) {
+    try { await env.SENDER.send(new EmailMessage(MAIL_FROM_ONBOARD, to, rawMime(MAIL_FROM_ONBOARD, MAIL_NAME, to, subject, text, html))); await mailLog(env, kind, to, "cloudflare", true); return { ok: true, route: "cloudflare" }; }
+    catch (e) { errs.push("cloudflare: " + String(e.message || e).slice(0, 160)); }
+  }
+  const error = errs.join(" | ") || "no mail route configured";
+  await mailLog(env, kind, to, "none", false, error);
+  return { ok: false, route: "none", error };
+}
+// to Sion only (verified destination fixed in the MAILER binding)
+async function mailSion(env, subject, body) {
+  await env.MAILER.send(new EmailMessage(MAIL_FROM_ONBOARD, env.MAIL_TO, rawMime(MAIL_FROM_ONBOARD, "Cedwyn Estate app", env.MAIL_TO, subject, body + "\n\n— Sion's Tab agent (app.bucklerfamily.estate)\n")));
+}
+const emailHtml = (title, paras, btn) => `<!doctype html><html><body style="margin:0;background:#f4f1ec;font-family:Arial,Helvetica,sans-serif;color:#222"><table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td align="center" style="padding:24px 12px"><table role="presentation" width="100%" style="max-width:560px;background:#fff;border-radius:6px" cellpadding="0" cellspacing="0"><tr><td style="background:#000;color:#fff;padding:18px 24px;font-size:13px;letter-spacing:3px;text-transform:uppercase">Cedwyn Estate</td></tr><tr><td style="padding:24px"><h1 style="font-size:20px;margin:0 0 14px">${esc(title)}</h1>${paras.map((p) => `<p style="font-size:15px;line-height:1.55;margin:0 0 12px">${p}</p>`).join("")}${btn ? `<p style="margin:22px 0"><a href="${esc(btn.href)}" style="background:#000;color:#fff;text-decoration:none;padding:12px 22px;border-radius:3px;display:inline-block;font-size:14px">${esc(btn.label)}</a></p><p style="font-size:12px;color:#666;word-break:break-all">Or paste this link into your browser: ${esc(btn.href)}</p>` : ""}<p style="font-size:12px;color:#777;margin-top:22px">Our case, prospective. Not a finding of any court. A records and evidence service, not a law firm; nothing in this email is legal advice.</p></td></tr></table></td></tr></table></body></html>`;
 // ---------- Stripe (feature flag: STRIPE_KEY) ----------
 async function stripeSession(env, sid, plink, ref) {
   if (!env.STRIPE_KEY) return null;
@@ -151,8 +193,8 @@ const HERO_CAP = "Tŷ Mawr (Great House Farm), Llandough: survey photograph, 29 
 const NAME = "Cedwyn Estate · Case Office";
 function shell(title, body, { user = null, chat = true, hero = null, desc = "Cedwyn Estate Case Office: help to request records and organise evidence about your land. Your case, prospective." } = {}) {
   const nav = user
-    ? `${user.role === "admin" ? `<a href="/admin/">Admin</a>` : ""}<a href="/dashboard/">Dashboard</a><a href="/enquire/">Live search</a><form method="post" action="/logout/" class="inl"><button class="lnk">Log out</button></form>`
-    : `<a href="/pricing/">Pricing</a><a href="/demo/">Demo</a><a href="/login/">Log in</a><a href="/signup/" class="ghost">Sign up</a>`;
+    ? `${user.role === "admin" ? `<a href="/admin/">Admin</a>` : ""}<a href="/dashboard/">Dashboard</a><a href="/check/">New check</a><form method="post" action="/logout/" class="inl"><button class="lnk">Log out</button></form>`
+    : `<a href="/demo/">Demo</a><a href="/pricing/">Pricing</a><a href="/login/">Log in</a><a href="/signup/?next=/check/" class="ghost">Sign up</a>`;
   const heroHtml = hero ? `<section class="hero${hero.full ? " full" : ""}"><div class="hero-bg" role="img" aria-label="${esc(HERO_CAP)}"></div><div class="hero-in">${hero.html}</div>${hero.full ? `<p class="cap">${esc(HERO_CAP)}</p>` : ""}</section>` : `<div class="spacer"></div>`;
   return new Response(`<!DOCTYPE html><html lang="en-GB" data-ghf-brand="off"${chat ? "" : ' data-ghf-chat="off"'}><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${esc(title)} · ${NAME}</title><meta name="description" content="${esc(desc)}"><meta name="theme-color" content="#000000">
@@ -165,18 +207,18 @@ function shell(title, body, { user = null, chat = true, hero = null, desc = "Ced
 :root{--line:rgba(255,255,255,.16);--muted:#a3a3a3;--acc:${S}}
 *{box-sizing:border-box}html{background:#000;color-scheme:dark}body{margin:0;font-family:Barlow,"Helvetica Neue",Arial,sans-serif;background:#000;color:#d4d4d4;line-height:1.65;font-size:17px;font-weight:400;-webkit-font-smoothing:antialiased;overflow-x:hidden}
 a{color:#fff;text-underline-offset:.18em;text-decoration-color:rgba(255,255,255,.45)}strong,b{color:#fff;font-weight:500}
-.top{position:absolute;top:0;left:0;right:0;z-index:20;display:flex;flex-wrap:wrap;align-items:center;gap:.6rem 1.4rem;padding:1.1rem 1.25rem;font-size:.74rem;letter-spacing:.16em;text-transform:uppercase;font-weight:500}
+.top{position:relative;background:#000;border-bottom:1px solid var(--line);z-index:20;display:flex;flex-wrap:wrap;align-items:center;gap:.6rem 1.4rem;padding:1.1rem 1.25rem;font-size:.74rem;letter-spacing:.16em;text-transform:uppercase;font-weight:500}
 .top .brand{margin-right:auto;color:#fff;text-decoration:none;font-weight:700;letter-spacing:.22em;font-size:.78rem}
 .top nav{display:flex;flex-wrap:wrap;gap:.6rem 1.3rem;align-items:center}.top nav a,.lnk{color:#fff;text-decoration:none;opacity:.9;background:none;border:0;font:inherit;letter-spacing:inherit;text-transform:inherit;cursor:pointer;padding:0}
 .top nav a.ghost{border:1px solid #fff;padding:.42rem .9rem;border-radius:2px;opacity:1}.inl{display:inline;margin:0}
-.hero{position:relative;min-height:56vh;display:flex;align-items:flex-end;padding:7.5rem 1.25rem 3rem;color:#fff;overflow:hidden;border-bottom:1px solid var(--line)}
-.hero.full{min-height:100vh;min-height:100svh;align-items:center}
+.hero{position:relative;min-height:56vh;display:flex;align-items:flex-end;padding:3.2rem 1.25rem 3rem;color:#fff;overflow:hidden;border-bottom:1px solid var(--line)}
+.hero.full{min-height:72vh;min-height:72svh;align-items:flex-end}
 .hero-bg{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.55) 0%,rgba(0,0,0,.45) 40%,rgba(0,0,0,.92) 100%),url("${HERO_IMG}") center 35%/cover no-repeat;filter:grayscale(.25) contrast(1.05)}
 .hero-in{position:relative;z-index:1;width:100%;max-width:68rem;margin:0 auto}
 .hero h1{margin:0 0 1rem;font-weight:500;font-size:clamp(2rem,8vw,4.6rem);line-height:1.04;letter-spacing:.02em;text-transform:uppercase;color:#fff;max-width:18ch}
 .hero p{max-width:38rem;margin:0 0 .9rem;color:#e5e5e5;font-size:1.04rem}
 .hero .cap{position:absolute;left:1.25rem;right:1.25rem;bottom:.8rem;margin:0;font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.55);z-index:1}
-.spacer{height:5.2rem;border-bottom:1px solid var(--line)}
+.spacer{height:.5rem}
 main{max-width:52rem;margin:0 auto;padding:2.2rem 1.25rem 3.5rem}
 h1{font-size:clamp(1.8rem,7vw,3rem);font-weight:500;letter-spacing:.02em;text-transform:uppercase;line-height:1.08;color:#fff;margin:.2em 0 .5em}
 h2{font-size:.8rem;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);margin:2.6rem 0 1rem}
@@ -201,9 +243,17 @@ ol.cl{padding-left:0;list-style:none}ol.cl li{margin:1rem 0}ol.cl .n{color:#fff;
 iframe.map{width:100%;height:240px;border:0;margin-top:1rem;filter:grayscale(.6) invert(.9) hue-rotate(180deg)}
 footer.af{border-top:1px solid var(--line);padding:2rem 1.25rem 3rem;max-width:52rem;margin:0 auto;font-size:.78rem;color:var(--muted)}footer.af a{color:#e5e5e5;margin-right:1rem;text-decoration:none;letter-spacing:.12em;text-transform:uppercase;font-size:.7rem}
 @media(min-width:760px){.top{padding:1.4rem 2rem}.hero{padding:9rem 2rem 4rem}main{padding:3rem 2rem 4rem}}
+.choice{display:grid;grid-template-columns:1fr;gap:1rem;margin:0 0 1rem}@media(min-width:720px){.choice{grid-template-columns:1fr 1fr}}
+.opt{border:1px solid var(--line);padding:1.3rem 1.2rem;border-radius:3px}.opt .h{font-size:1.35rem;letter-spacing:.04em;color:#fff;margin:.2rem 0 .6rem;text-transform:uppercase;font-weight:500}.opt p{margin:0 0 1rem}
+ol.steps{list-style:none;padding:0;margin:0}ol.steps li{display:flex;gap:.9rem;align-items:flex-start;border-top:1px solid var(--line);padding:.9rem 0}ol.steps .n{flex:0 0 2rem;height:2rem;border:1px solid #fff;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:500}
+details.tap{border-top:1px solid var(--line)}details.tap:last-child{border-bottom:1px solid var(--line)}details.tap summary{cursor:pointer;list-style:none;padding:1rem 0;color:#fff;font-weight:500;font-size:1.05rem;display:flex;justify-content:space-between;gap:1rem;align-items:center}details.tap summary::-webkit-details-marker{display:none}
+details.tap .more{font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:var(--acc);white-space:nowrap}details.tap[open] .more{visibility:hidden}details.tap .tapbody{padding:0 0 1rem}details.tap ul{padding-left:1.1rem}
+.actions.center{justify-content:center;margin:2rem 0 1rem}fieldset{border:1px solid var(--line);border-radius:3px;padding:.4rem 1rem 1.1rem;margin:1.2rem 0}legend{color:#fff;font-size:.78rem;letter-spacing:.16em;text-transform:uppercase;padding:0 .4rem}
+.discbox{border:1px solid var(--acc);padding:1rem 1.1rem;border-radius:3px;margin:1.4rem 0}.disc{padding-left:1.1rem;margin:.6rem 0}.disc li{margin:.35rem 0}.note{border-left:3px solid var(--acc);padding:.2rem 0 .2rem 1rem;margin:1rem 0}
+.coins{opacity:.8;margin-top:.8rem}form.f input[type=file]{border:0;padding:.6rem 0}
 </style>
 <script src="https://bucklerfamily.estate/ghf-lang/ghf-lang.js" defer></script></head>
-<body><header class="top"><a class="brand" href="/">Cedwyn Estate · Case Office</a><nav>${nav}</nav></header>
+<body><header class="top"><nav><a href="/">Home</a>${nav}</nav></header>
 ${heroHtml}<main>${body}</main>
 <footer class="af"><p><strong>Our case, prospective. Not a finding of any court.</strong> A records-request and evidence-organising service. Not a law firm; no legal advice.</p>
 <p><a href="/terms/">Terms</a><a href="/privacy/">Privacy</a><a href="/pricing/">Pricing</a><a href="mailto:sales@bucklerfamily.estate">Contact</a><a href="${ORIGIN}/">Cedwyn Estate</a></p>
@@ -214,33 +264,46 @@ let PATHNOW = "/";
 const tsField = () => `<input type="hidden" name="t" value="${Date.now()}"><div class="hp" aria-hidden="true"><label>Website<input name="website" tabindex="-1" autocomplete="off"></label></div>`;
 const botCheck = (f) => (f.get("website") || "") !== "" || Date.now() - +(f.get("t") || 0) < 2000;
 
-// ---------- pages ----------
+
+// ---------- pages (v2, 21 Oct 2026: simple landing, free eligibility check, code-gated subscription) ----------
+const DEEP_LABEL = CFG.search_price_label;
+const COINS_LINE = `<p class="small coins">Cedwyn estate tokens can also be <a href="https://bucklerfamily.estate/coins/">purchased</a> for use online, in Wales or Patagonia, anywhere within our estate.</p>`;
+const STORY = [
+  ["For centuries, the land was the family", `<p>For hundreds of years families farmed the same fields, under the same names, in the same parish. The industrial economic era changed that. Farms and smallholdings were turned into dense housing, roads and estates, and towns and cities grew into tightly packed streets.</p><p>Today many people own nothing of the land beneath them, cut off from their history, their heritage, their ancestry and, above all, their ancestral land.</p>`],
+  ["A new era, 100 times faster", `<p>The industrial era took two centuries to reshape the countryside. The AI era is a new economic era, and we believe it is sweeping through the land around 100 times faster.</p><p>That same speed can now work for families. AI agents can read archives, tithe maps, land registers, court records and old newspapers in hours rather than years.</p>`],
+  ["What happened to one family", `<p>The Williams–Buckler family held Great House Farm (Tŷ Mawr) in Llandough, Vale of Glamorgan, for generations. The family asserts the land was lost through a process that was never fully disclosed.</p><p>What happened to the Williams–Buckler family appears to be repeated across the country: families who may have lost their land to a century of planning and development, often without ever seeing the records.</p><p class="small">Our case, prospective. Not a finding of any court.</p>`],
+  ["Your estate, reconstructed with AI", `<p>Your subscription uses the Williams–Buckler case as its blueprint. Everything done for Great House Farm becomes the template for your family. We aim to build:</p><ul><li>a personal legal wiki explaining how your family's land may have been lost;</li><li>one chronology, from the earliest record to today;</li><li>records requests (FOI, EIR and subject access) drafted and tracked;</li><li>a title trail linking deeds, plans and registers;</li><li>a search for evidence of concealment, fraud or government involvement;</li><li>and, where evidence is found, a clear report that can be passed to a lawyer, who may seek to reopen the matter and seek reparations or repossession.</li></ul><p>While subscriptions keep coming in, we keep working to find and help other families.</p><p class="small">A records and evidence service, not a law firm. No outcome is promised.</p>`],
+  ["Helping reopen the primary cases", `<p>Every subscription also helps fund the family's effort to seek to reopen and set aside the two primary cases: <strong>BP Properties Ltd v Buckler [1987]</strong> and <strong>Buckler v United Kingdom (ECHR, 1989)</strong>, on grounds the family asserts of fraud, concealment and government involvement.</p><p class="small">Our case, prospective. No court has made any such finding.</p>`],
+  ["Strength in numbers", `<p>Families whose stories echo the Williams–Buckler case may later be invited to join any group action, if one is brought.</p><p class="small">Subscribing does not make you a party to any claim, and no group action has been started.</p>`],
+];
 function landing(user) {
-  const go = user ? "/enquire/" : "/signup/?next=/enquire/", sub = user ? "/subscribe/" : "/signup/?next=/subscribe/";
-  return shell("Request the records. Organise the evidence.", `
-<h2 style="margin-top:0">What it does</h2>
-<p>If you believe land your family held was lost through a process you want to understand, the Case Office helps you request records (FOI, EIR and subject access requests) and organise what comes back into a title trail, an evidence log and a timeline.</p>
-<p class="muted">We are not a law firm and give no legal advice. We do not promise any outcome.</p>
-<h2>Two ways to start</h2>
-<div class="card"><p class="k">Live search · one-off</p><p class="price">${CFG.search_price_label}</p><p>Tell us the parcel and what happened. A person reviews your enquiry, runs a live records search and emails you what we found and what you could request next.</p><div class="actions"><a class="btn solid" href="${go}">Start a live search</a></div></div>
-<div class="card"><p class="k">Case Agent · monthly</p><p class="price">£49.99 <small>a month · renews monthly · cancel any time</small></p><p>Your own virtual base camp for your land parcel, with six stages: records requests, title trail, evidence log, timeline, authorities list and costs ledger. Your case agent starts work once onboarding is complete.</p><div class="actions"><a class="btn" href="${sub}">Subscribe</a></div></div>
-<h2>Worked example</h2>
-<div class="card"><p><strong>Great House Farm (Tŷ Mawr), Llandough.</strong> The method comes from one family's own records work: the title registers, the records requests to public bodies, the court record of BP Properties Ltd v Buckler (1987) and a single chronology. The demo shows how the evidence tree and timeline fit together.</p><div class="actions"><a class="btn alt" href="/demo/">Open the demo</a></div></div>`,
-    { user, hero: { full: true, html: `<p class="k" style="color:#e5e5e5">Cedwyn Estate · Case Office</p><h1>Request the records. Organise the evidence.</h1><p>Your case, prospective. Help to request records about your family's land and to put what comes back in order.</p><div class="actions"><a class="btn solid" href="${go}">Live search · ${CFG.search_price_label}</a><a class="btn" href="/pricing/">Pricing</a></div>` } });
+  const check = user ? "/check/" : "/signup/?next=/check/";
+  const story = STORY.map(([t, b]) => `<details class="tap"><summary>${esc(t)}<span class="more">Read more</span></summary><div class="tapbody">${b}</div></details>`).join("");
+  return shell("Locate and reclaim your ancestral land parcel", `
+<section class="choice"><div class="opt"><p class="k">See it working</p><h2 class="h">Try the demo</h2><p>Explore the real Williams–Buckler evidence tree and chronological bible: Great House Farm (Tŷ Mawr), Llandough, from the first records to today.</p><a class="btn" href="/demo/">Try the demo</a></div>
+<div class="opt"><p class="k">Free</p><h2 class="h">Free eligibility check</h2><p>Tell us who you are, where your family's land was, and what you know or remember. Add old photos, deeds or letters. A person reads every check.</p><a class="btn solid" href="${check}">Sign up · free eligibility check</a></div></section>
+<h2>How it works</h2>
+<ol class="steps"><li><span class="n">1</span><span><strong>Free eligibility check.</strong> Who you are, where the land is, what you remember.</span></li><li><span class="n">2</span><span><strong>If you're eligible, we email you a code.</strong></span></li><li><span class="n">3</span><span><strong>Enter your code and subscribe for £49.99 a month.</strong> We start reconstructing your estate with AI.</span></li></ol>
+<p class="muted">In a hurry? <a href="${user ? "/check/" : "/signup/?next=/check/"}">Skip the queue with a full deep search (${DEEP_LABEL})</a>, our most thorough search before we tell you whether your family may have a case paralleling the Williams–Buckler case.</p>
+<h2>The story</h2><div class="story">${story}</div>
+<div class="actions center"><a class="btn" href="/demo/">Try the demo</a><a class="btn solid" href="${check}">Sign up · free eligibility check</a></div>`,
+    { user, hero: { full: true, html: `<p class="k" style="color:#e5e5e5">Cedwyn Estate · Ancestral land</p><h1>Locate and reclaim your ancestral land parcel</h1><p>We are these lands. Families across the country may still hold rights in parcels their ancestors farmed for generations. Our AI agents help locate the records, rebuild your family's story and seek evidence of how the land was lost, so you can seek repossession or reparations.</p><div class="actions"><a class="btn" href="/demo/">Try the demo</a><a class="btn solid" href="${check}">Sign up · free eligibility check</a></div><p class="small" style="color:#d4d4d4">The eligibility check is free. T&amp;Cs apply.</p>` },
+      desc: "Locate and reclaim your ancestral land parcel. Free eligibility check, a demo of the Williams–Buckler evidence tree, and AI estate reconstruction for £49.99 a month." });
 }
 function pricing(user) {
+  const check = user ? "/check/" : "/signup/?next=/check/";
   return shell("Pricing", `
-<div class="card"><p class="price">${CFG.search_price_label} <small>one-off, including any VAT</small></p><p><strong>Live search (enquiry).</strong> A person reviews your enquiry and runs a live records search. We reply by email, usually within 10 working days. Third-party fees, such as an HM Land Registry official copy, are extra and only with your agreement.</p>
-<p><a class="btn" href="${user ? "/enquire/" : "/signup/?next=/enquire/"}">Start a live search</a></p></div>
-<div class="card"><p class="price">£49.99 <small>a month, including any VAT</small></p><p><strong>Cedwyn Estate Case Agent (monthly).</strong> Renews automatically every month until you cancel. Includes your virtual base camp and help to prepare and track records requests and organise your evidence, once onboarding is complete.</p>
-<p><strong>Cancel any time:</strong> through the <a href="${CFG.portal_url}">customer portal</a> (sign in with the email you paid with) or by emailing <a href="mailto:sales@bucklerfamily.estate">sales@bucklerfamily.estate</a>.</p>
-<p><strong>14-day cooling-off:</strong> you can cancel within 14 days of your first payment for a refund, less the value of any service already supplied at your request (Consumer Contracts Regulations 2013).</p>
-<p><a class="btn" href="${user ? "/subscribe/" : "/signup/?next=/subscribe/"}">Subscribe</a></p></div>
-<p class="muted">A records-request and evidence-organising service. Not a law firm; no legal advice; no outcome promised. See the <a href="/terms/">terms</a>.</p>`, { user, hero: { html: `<p class="k" style="color:#e5e5e5">Pricing</p><h1>Simple prices, in pounds</h1>` } });
+<div class="card"><p class="price">Free</p><p><strong>Eligibility check.</strong> Tell us who you are, where the land is and what you know. A person reads it and replies by email. Best-effort lead qualification; some or excessive free checks may be subject to a small fee, and we always ask first.</p><p><a class="btn solid" href="${check}">Start my free check</a></p></div>
+<div class="card"><p class="price">${DEEP_LABEL} <small>one-off, including any VAT</small></p><p><strong>Full deep search.</strong> Skip the queue: our most thorough search, to be as sure as we can before we tell you whether your family may have a case paralleling the Williams–Buckler case. Third-party fees, such as an HM Land Registry official copy, are extra and only with your agreement.</p><p><a class="btn" href="${check}">Choose the deep search</a></p></div>
+<div class="card"><p class="price">£49.99 <small>a month, including any VAT · by code after eligibility</small></p><p><strong>Estate reconstruction.</strong> Your personal legal wiki, chronology, records requests and evidence search, with the Williams–Buckler case as the blueprint. Renews monthly until you cancel.</p>
+<p><strong>Cancel any time</strong> through the <a href="${CFG.portal_url}">customer portal</a> or by emailing <a href="mailto:${MAIL_FROM_ONBOARD}">${MAIL_FROM_ONBOARD}</a>. <strong>14-day cooling-off:</strong> cancel within 14 days of your first payment for a refund, less the value of any service already supplied at your request.</p>
+<p><a class="btn" href="/code/">I have a code</a></p></div>
+<p class="muted">A records and evidence service, not a law firm; no legal advice; no outcome promised. See the <a href="/terms/">terms</a>.</p>`, { user, hero: { html: `<p class="k" style="color:#e5e5e5">Pricing</p><h1>Simple prices, in pounds</h1>` } });
 }
 function authForm(kind, err, next, email = "") {
   const up = kind === "signup";
-  return shell(up ? "Sign up" : "Log in", `<p class="k">${up ? "Create your account" : "Welcome back"}</p><h1>${up ? "Sign up" : "Log in"}</h1>
+  return shell(up ? "Sign up" : "Log in", `<p class="k">${up ? "Free eligibility check · step 1 of 2" : "Welcome back"}</p><h1>${up ? "Sign up" : "Log in"}</h1>
+${up ? `<p class="muted">Create your account, then tell us about your family's land. We email you a link to confirm your address.</p>` : ""}
 ${err ? `<p class="err">${esc(err)}</p>` : ""}
 <form class="f" method="post" action="/${kind}/">${tsField()}<input type="hidden" name="next" value="${esc(next || "/dashboard/")}">
 ${up ? `<label for="n">Your name</label><input id="n" name="name" autocomplete="name" maxlength="80" required>` : ""}
@@ -248,36 +311,71 @@ ${up ? `<label for="n">Your name</label><input id="n" name="name" autocomplete="
 <label for="p">Password${up ? " (at least 10 characters)" : ""}</label><input id="p" name="password" type="password" autocomplete="${up ? "new-password" : "current-password"}" minlength="${up ? 10 : 1}" maxlength="200" required>
 ${up ? `<label class="chk"><input type="checkbox" name="agree" value="1" required> I am 18 or over and agree to the <a href="/terms/">terms</a> and <a href="/privacy/">privacy notice</a>.</label>` : ""}
 <p><button class="btn solid">${up ? "Create account" : "Log in"}</button></p></form>
-<p class="muted">${up ? `Already have an account? <a href="/login/?next=${encodeURIComponent(next || "")}">Log in</a>` : `New here? <a href="/signup/?next=${encodeURIComponent(next || "")}">Sign up</a>. Forgotten your password? Email <a href="mailto:sales@bucklerfamily.estate">sales@bucklerfamily.estate</a> from your account email.`}</p>`, { chat: true });
+<p class="muted">${up ? `Already have an account? <a href="/login/?next=${encodeURIComponent(next || "")}">Log in</a>` : `New here? <a href="/signup/?next=${encodeURIComponent(next || "")}">Sign up</a> · <a href="/forgot/">Forgotten your password?</a>`}</p>`, { chat: false });
 }
-function enquireForm(user, err) {
-  return shell("Live search enquiry", `<p class="k">Live search · ${CFG.search_price_label}</p><h1>Tell us about the land</h1>
-<p class="muted">After this form you pay ${CFG.search_price_label} on Stripe's secure page. A person reviews every enquiry by hand.</p>
+function forgotForm(msg, err) {
+  return shell("Reset your password", `<p class="k">Account</p><h1>Reset your password</h1>${msg ? `<p class="ok">${esc(msg)}</p>` : ""}${err ? `<p class="err">${esc(err)}</p>` : ""}
+<form class="f" method="post" action="/forgot/">${tsField()}<label for="e">Your account email</label><input id="e" name="email" type="email" autocomplete="email" maxlength="160" required>
+<p><button class="btn solid">Email me a reset link</button></p></form><p class="muted"><a href="/login/">Back to log in</a></p>`, { chat: false });
+}
+function resetForm(tok, err) {
+  return shell("Choose a new password", `<p class="k">Account</p><h1>Choose a new password</h1>${err ? `<p class="err">${esc(err)}</p>` : ""}
+<form class="f" method="post" action="/reset/">${tsField()}<input type="hidden" name="tok" value="${esc(tok)}"><label for="p">New password (at least 10 characters)</label><input id="p" name="password" type="password" autocomplete="new-password" minlength="10" maxlength="200" required>
+<p><button class="btn solid">Save new password</button></p></form>`, { chat: false });
+}
+const DISCLAIMER = `<ul class="disc"><li>Free checks are best-effort lead qualification: a person reads your check and tells you whether we think we can help.</li><li>Some or excessive free checks (for example many from one account, or repeat checks on the same land) may be subject to a small fee. We always ask before charging.</li><li>If we find nothing at first, we may offer a more in-depth search for a small fee. You can also choose the full deep search (${DEEP_LABEL}) at any time.</li><li>This is a records and evidence service, not a law firm. Nothing here is legal advice, and no outcome is promised.</li></ul>`;
+function checkForm(user, err, v = {}) {
+  const val = (k, d = "") => esc(v[k] ?? d);
+  const sel = (k, o) => o.map((x) => `<option${(v[k] || o[0]) === x ? " selected" : ""}>${esc(x)}</option>`).join("");
+  return shell("Free eligibility check", `<p class="k">Free eligibility check</p><h1>Tell us about the land</h1>
+<p class="muted">The same three questions as our demo: who you are, where the land is, and what you know or remember. You can send more than one check, including for friends and family.</p>
 ${err ? `<p class="err">${esc(err)}</p>` : ""}
-<form class="f" method="post" action="/enquire/">${tsField()}
-<label for="pa">Land parcel or address</label><input id="pa" name="parcel" maxlength="300" required placeholder="e.g. the field north of Church Lane, Llandough">
-<label for="tn">Title number, if known</label><input id="tn" name="title_no" maxlength="20" placeholder="e.g. WA231076">
-<label for="co">Country</label><select id="co" name="country"><option>United Kingdom</option><option>Ireland</option><option>Other</option></select>
-<label for="yr">Roughly what year was the land lost? (optional)</label><input id="yr" name="year_lost" inputmode="numeric" maxlength="4" placeholder="e.g. 1987">
-<label for="hp">What happened?</label><textarea id="hp" name="happened" maxlength="5000" required placeholder="In your own words: who held the land, what changed, and what records you already have."></textarea>
-<label for="cn">Your name</label><input id="cn" name="contact_name" maxlength="80" value="${esc(user.name)}" required>
-<label for="ce">Email for our reply</label><input id="ce" name="contact_email" type="email" maxlength="160" value="${esc(user.email)}" required>
-<label for="cp">Phone (optional)</label><input id="cp" name="contact_phone" maxlength="30" inputmode="tel">
-<label class="chk"><input type="checkbox" name="start" value="1" required> I ask you to start the search straight away. I understand that if I cancel within 14 days I get a refund less the value of work already done, and that once the search is fully done the right to cancel ends.</label>
-<p><button class="btn solid">Continue to payment · ${CFG.search_price_label}</button></p></form>`, { user, chat: true });
+<form class="f" method="post" action="/check/" enctype="multipart/form-data" id="chk">${tsField()}
+<fieldset><legend>1 · Who</legend>
+<label for="fw">Who is this check for?</label><select id="fw" name="for_whom">${sel("for_whom", ["Myself", "A family member", "A friend"])}</select>
+<label for="cn">Claimant / representative full name</label><input id="cn" name="claimant_name" maxlength="100" required value="${val("claimant_name", user.name === "there" ? "" : user.name)}" placeholder="e.g. your full legal name">
+<label for="rl">Your relationship to them (if not yourself)</label><input id="rl" name="relation" maxlength="80" value="${val("relation")}" placeholder="e.g. grandson, friend">
+<label for="fn">Family names in the bloodline</label><input id="fn" name="family_names" maxlength="300" value="${val("family_names")}" placeholder="e.g. Williams, Buckler (include maiden names)"></fieldset>
+<fieldset><legend>2 · Where</legend>
+<label for="pl">Ancestral holding, farm or estate</label><input id="pl" name="place" maxlength="160" required value="${val("place")}" placeholder="e.g. Great House Farm, tithe plot">
+<label for="pa">Parish / town</label><input id="pa" name="parish" maxlength="120" required value="${val("parish")}" placeholder="e.g. Llandough">
+<label for="ct">County</label><input id="ct" name="county" maxlength="80" value="${val("county")}" placeholder="e.g. Glamorgan">
+<label for="pc">Approximate parcel, field or address</label><input id="pc" name="parcel" maxlength="300" value="${val("parcel")}" placeholder="e.g. the field north of the church; title number if known">
+<label for="co">Country</label><select id="co" name="country">${sel("country", ["United Kingdom", "Ireland", "Other"])}</select></fieldset>
+<fieldset><legend>3 · What you know or remember</legend>
+<label for="kn">In your own words</label><textarea id="kn" name="know" maxlength="6000" required placeholder="Who held the land, what changed, what the family always said, any letters, court cases or sales you know about.">${val("know")}</textarea>
+<label for="dt">Dates and documents you know of</label><textarea id="dt" name="dates" maxlength="2000" rows="3" placeholder="e.g. 1840 tithe map; 1916 tenancy; 1969 sale; title WA240304">${val("dates")}</textarea>
+<label for="yr">Roughly when was the land lost? (optional)</label><input id="yr" name="year_lost" inputmode="numeric" maxlength="4" value="${val("year_lost")}" placeholder="e.g. 1987">
+<label for="fl">Files (optional): photos, scans or PDFs · up to 6 files, 10 MB each</label><input id="fl" name="files" type="file" multiple accept="image/jpeg,image/png,image/webp,image/gif,image/heic,application/pdf"></fieldset>
+<fieldset><legend>Contact</legend>
+<label for="ce">Email for our reply</label><input id="ce" name="contact_email" type="email" maxlength="160" value="${val("contact_email", user.email)}" required>
+<label for="cp">Phone (optional)</label><input id="cp" name="contact_phone" maxlength="30" inputmode="tel" value="${val("contact_phone")}"></fieldset>
+<div class="discbox"><p class="k">Before you send</p>${DISCLAIMER}
+<label class="chk"><input type="checkbox" name="disclaimer" value="1" required> I have read this and want to send my check.</label></div>
+<p class="actions"><button class="btn solid" name="go" value="free">Send my free check</button><button class="btn alt" name="go" value="deep">Skip the queue: full deep search · ${DEEP_LABEL}</button></p>
+<p class="small">The deep search is paid on Stripe's secure page after you press it. If you cancel within 14 days you get a refund less the value of work already done; once the search is fully done the right to cancel ends.</p></form>
+<script>document.getElementById("chk").addEventListener("submit",function(e){var f=document.getElementById("fl").files,t=0;if(f.length>6){alert("Please choose up to 6 files.");e.preventDefault();return}for(var i=0;i<f.length;i++){t+=f[i].size;if(f[i].size>10485760){alert(f[i].name+" is over 10 MB.");e.preventDefault();return}}var b=e.submitter;if(b){b.textContent="Sending…";}});</script>`, { user, chat: false });
+}
+function codeForm(user, err, c = "") {
+  return shell("Enter your code", `<p class="k">Estate reconstruction · £49.99 a month</p><h1>Enter your code</h1>
+<p>If your free eligibility check shows we may be able to help, we email you a personal code. Enter it here to unlock the subscription.</p>${err ? `<p class="err">${esc(err)}</p>` : ""}
+<form class="f" method="post" action="/code/">${tsField()}<label for="c">Your code</label><input id="c" name="code" maxlength="20" required value="${esc(c)}" placeholder="CE-XXXX-XXXX" autocapitalize="characters" autocomplete="one-time-code">
+<p><button class="btn solid">Unlock</button></p></form>
+<p class="muted">No code yet? <a href="/check/">Start a free eligibility check</a>.</p>`, { user, chat: false });
 }
 function subscribeForm(user, err) {
-  return shell("Subscribe to the Case Agent", `<p class="k">Case Agent · £49.99 a month</p><h1>Set up your base camp</h1>
-<p>Tell us which land parcel your base camp is for. We place it on a map, then you pay on Stripe's secure page. Your base camp appears on your dashboard straight after.</p>
+  return shell("Subscribe", `<p class="k">Estate reconstruction · £49.99 a month</p><h1>Set up your base camp</h1>
+<p>Your code is accepted. Tell us which land parcel your base camp is for. We place it on a map, then you pay on Stripe's secure page. Your base camp appears on your dashboard straight after.</p>
 ${err ? `<p class="err">${esc(err)}</p>` : ""}
 <form class="f" method="post" action="/subscribe/">${tsField()}
 <label for="pn">Name of the land parcel or farm</label><input id="pn" name="parcel" maxlength="120" required value="${esc(user.parcel || "")}" placeholder="e.g. Great House Farm">
 <label for="lo">Where is it? (town, village or postcode area)</label><input id="lo" name="location" maxlength="160" required value="${esc(user.location || "")}" placeholder="e.g. Llandough, Vale of Glamorgan">
-<div class="card"><p><strong>£49.99 a month</strong>, renewing monthly until you cancel. Cancel any time in the customer portal or by emailing sales@bucklerfamily.estate. You can cancel within 14 days of the first payment for a refund, less the value of any service already supplied.</p></div>
+<div class="card"><p><strong>£49.99 a month</strong>, renewing monthly until you cancel. Cancel any time in the customer portal or by emailing ${MAIL_FROM_ONBOARD}. You can cancel within 14 days of the first payment for a refund, less the value of any service already supplied.</p></div>
 <label class="chk"><input type="checkbox" name="start" value="1" required> I agree to the <a href="/terms/">terms</a> and ask you to start the service during the 14-day cancellation period.</label>
-<p><button class="btn solid">Continue to payment · £49.99/month</button></p></form>`, { user, chat: true });
+<p><button class="btn solid">Continue to payment · £49.99/month</button></p></form>${COINS_LINE}`, { user, chat: false });
 }
-const STATUS_LABEL = { pending: "Awaiting payment", paid_claimed: "Payment received, being checked", paid_verified: "Paid", in_review: "In review", qualified: "Qualified", rejected: "Not taken forward", done: "Done", refund_requested: "Refund requested", refunded: "Refunded" };
+const STATUS_LABEL = { received: "Received: a person will read it", pending: "Awaiting payment", paid_claimed: "Deep search paid, being checked", paid_verified: "Deep search paid", in_review: "In review", qualified: "Qualified", rejected: "Not taken forward", done: "Done", refund_requested: "Refund requested", refunded: "Refunded" };
+const ELIG_LABEL = { unreviewed: "", eligible: "Eligible: code sent", not_eligible: "Nothing found yet", more_info: "We need more information" };
 const placeLabel = (u) => (u.geo_label || u.location || "").split(",").map((x) => x.trim()).filter((x) => x && !/\d/.test(x)).slice(0, 3).join(", ");
 function campBlock(user) {
   const name = user.parcel || "Your land";
@@ -293,38 +391,114 @@ function campBlock(user) {
   return `<div class="card"><p class="k">Your virtual base camp</p><h2 style="margin-top:.2em">${esc(name)}</h2>
 <p><strong>Your case agent starts work once onboarding is complete.</strong> We will email you to arrange onboarding. Until then each stage below shows as queued.</p>
 ${svg}${map}<ul class="stages">${stages}</ul>
-<div class="card" style="border-left-color:${P}"><p class="k">SpaceXSI Agent</p><p>Questions about the service, your stages or the worked example? Ask the SpaceXSI Agent. It answers from our published pages; it may be wrong and gives no legal advice.</p><p><button class="btn alt" type="button" onclick="window.GHFChat&&window.GHFChat.open?window.GHFChat.open():alert('The SpaceXSI Agent is loading; please try again in a moment.')">Ask the SpaceXSI Agent</button></p></div>
+<div class="card" style="border-left-color:${P}"><p class="k">Agent</p><p>Questions about the service, your stages or the worked example? Ask the Agent. It answers from our published pages; it may be wrong and gives no legal advice.</p><p><button class="btn alt" type="button" onclick="window.GHFChat&&window.GHFChat.open?window.GHFChat.open():alert('The Agent is loading; please try again in a moment.')">Ask the Agent</button></p></div>
 <p class="small">Modelled on the Great House Farm (Llandough) records work: see the <a href="/demo/">demo</a>. Our case, prospective. Not a finding of any court.</p></div>`;
 }
-async function dashboard(user, env, msg) {
-  const { results } = await env.DB.prepare("SELECT ref,parcel,status,created FROM enquiries WHERE user_id=? ORDER BY id DESC LIMIT 20").bind(user.id).all();
-  const rows = results.length ? `<table><tr><th>Ref</th><th>Parcel</th><th>Status</th></tr>${results.map((r) => `<tr><td>${esc(r.ref)}</td><td>${esc(r.parcel.slice(0, 60))}</td><td>${esc(STATUS_LABEL[r.status] || r.status)}${r.status === "pending" ? ` · <a href="/enquire/pay/?ref=${esc(r.ref)}">pay</a>` : ""}</td></tr>`).join("")}</table>` : `<p class="muted">No enquiries yet.</p>`;
-  const subbed = ["claimed", "active"].includes(user.sub_status);
-  const sub = subbed ? campBlock(user) + `<p class="muted">Subscription: £49.99 a month, renews monthly. <a href="${CFG.portal_url}">Manage or cancel</a> (sign in with the email you paid with), or email sales@bucklerfamily.estate.</p>`
-    : `<div class="card"><p class="k">Case Agent · £49.99 a month</p><p>Get your own virtual base camp for your land parcel, with records requests, title trail, evidence log, timeline, authorities list and costs ledger.</p><p><a class="btn" href="/subscribe/">Subscribe</a></p></div>`;
-  return shell("Dashboard", `<p class="k">Signed in as ${esc(user.email)}</p><h1>Hello, ${esc(user.name)}</h1>${msg ? `<p class="ok">${esc(msg)}</p>` : ""}
-<h2>Your live searches</h2>${rows}<p><a class="btn" href="/enquire/">New live search · ${CFG.search_price_label}</a></p>
-<h2>Your base camp</h2>${sub}`, { user, chat: true });
-}
+
 const legalPage = (user, title, body) => shell(title, `<p class="k">Legal · 20 October 2026</p><h1>${title}</h1><p class="muted">${esc(TEMPLATE_NOTE)}</p>${body}`, { user });
-
-// ---------- enquiry email ----------
-function enquiryText(e, q, verified, test) {
-  return [
-    `${test ? "[TEST] " : ""}New paid live-search enquiry ${e.ref}`,
-    `Payment: ${verified ? "VERIFIED with Stripe" : "reported by the buyer's return from Stripe, NOT yet verified: check Stripe for the session below (Payment Link " + CFG.search_plink + ")"}`,
-    `Stripe session: ${e.session_id || "-"}`,
-    "",
-    `LEAD SCORE: ${q.score}/100, grade ${q.grade} — ${q.notes}`,
-    "",
-    `Parcel / address: ${e.parcel}`, `Title number: ${e.title_no || "-"}`, `Country: ${e.country || "-"}`, `Year lost: ${e.year_lost || "-"}`,
-    "", "What happened:", e.happened, "",
-    `Name: ${e.contact_name}`, `Email: ${e.contact_email}`, `Phone: ${e.contact_phone || "-"}`,
-    `Account: user #${e.user_id}; enquiry created ${e.created}`,
-    "", "Next: run the search by hand, reply to the customer, and move the HubSpot deal (Apps leads)."].join("\n");
+const fmtSize = (n) => n > 1048576 ? (n / 1048576).toFixed(1) + " MB" : Math.max(1, Math.round(n / 1024)) + " KB";
+const filesOf = (e) => { try { return JSON.parse(e.files || "[]"); } catch (x) { return []; } };
+function enqStatus(e) {
+  const el = ELIG_LABEL[e.eligibility || "unreviewed"];
+  return el || STATUS_LABEL[e.status] || e.status;
 }
-
-// ---------- the demo (existing FOI Evidence Tree web app, unchanged) ----------
+async function dashboard(user, env, msg, coins) {
+  const { results: enqs } = await env.DB.prepare("SELECT * FROM enquiries WHERE user_id=? ORDER BY id DESC LIMIT 50").bind(user.id).all();
+  const subbed = ["claimed", "active"].includes(user.sub_status);
+  const verify = !user.email_verified ? `<div class="note"><p><strong>Please confirm your email.</strong> We sent a link to ${esc(user.email)}. It can take a few minutes; check your spam folder too.</p><form method="post" action="/verify/resend/" class="inl">${tsField()}<button class="btn alt">Send the link again</button></form></div>` : "";
+  const list = enqs.map((e) => {
+    const fl = filesOf(e);
+    return `<div class="card enq"><p class="k">${esc(e.ref)} · ${e.kind === "deep" ? "Full deep search" : e.kind === "paid" ? "Live search" : "Free eligibility check"} · ${esc((e.created || "").slice(0, 10))}</p>
+<p><strong>${esc(e.place || e.parcel || "")}</strong>${e.parish ? ", " + esc(e.parish) : ""}${e.county ? ", " + esc(e.county) : ""}</p>
+<p class="small">For: ${esc(e.for_whom || "Myself")}${e.claimant_name ? " · " + esc(e.claimant_name) : e.contact_name ? " · " + esc(e.contact_name) : ""}${fl.length ? ` · ${fl.length} file${fl.length > 1 ? "s" : ""}` : ""}</p>
+<p><span class="pill">${esc(enqStatus(e))}</span></p>
+${e.status === "pending" ? `<p><a class="btn alt" href="/enquire/pay/?ref=${esc(e.ref)}">Pay for the deep search · ${DEEP_LABEL}</a></p>` : ""}
+${fl.length ? `<p class="small">${fl.map((f) => `<a href="/file/?k=${encodeURIComponent(f.key)}">${esc(f.name)}</a> (${fmtSize(f.size)})`).join(" · ")}</p>` : ""}</div>`;
+  }).join("") || `<p class="muted">No checks yet.</p>`;
+  const unlocked = !!user.unlock_code || user.role === "admin";
+  const subBlock = subbed ? campBlock(user) + COINS_LINE
+    : unlocked ? `<div class="card"><p class="k">Your code is accepted</p><p>You can now subscribe to estate reconstruction for £49.99 a month.</p><p><a class="btn solid" href="/subscribe/">Subscribe · £49.99/month</a></p></div>`
+    : `<div class="card"><p class="k">Have a code?</p><p class="small">If your check shows we may be able to help, we email you a code that unlocks the £49.99 a month subscription.</p><form class="f" method="post" action="/code/">${tsField()}<label for="c">Your code</label><input id="c" name="code" maxlength="20" required placeholder="CE-XXXX-XXXX" autocapitalize="characters"><p><button class="btn">Unlock</button></p></form></div>`;
+  return shell("Dashboard", `<p class="k">Signed in as ${esc(user.email)}</p><h1>Your dashboard</h1>
+${msg ? `<p class="ok">${esc(msg)}</p>${coins ? COINS_LINE : ""}` : ""}${verify}
+<h2>Your checks</h2>${list}
+<p class="actions"><a class="btn solid" href="/check/">New free check</a></p><p class="small">You can send checks for friends and family too. Some or excessive free checks may be subject to a small fee; we always ask first.</p>
+<h2>Estate reconstruction</h2>${subBlock}`, { user, chat: subbed });
+}
+function enquiryText(e, user, files, test, paidNote) {
+  const L = [`${test ? "[TEST] " : ""}${e.kind === "deep" ? "FULL DEEP SEARCH (paid " + DEEP_LABEL + ")" : "Free eligibility check"} ${e.ref}`];
+  if (paidNote) L.push(`Payment: ${paidNote}`);
+  L.push(`Lead score: ${e.grade} (${e.score}/100) — ${e.score_notes}`, "",
+    "WHO", `For: ${e.for_whom || "Myself"}`, `Claimant / representative: ${e.claimant_name || ""}`, `Relationship: ${e.relation || "-"}`, `Family names: ${e.family_names || "-"}`, "",
+    "WHERE", `Holding / farm: ${e.place || ""}`, `Parish / town: ${e.parish || ""}`, `County: ${e.county || "-"}`, `Parcel / address: ${e.parcel || "-"}`, `Country: ${e.country || ""}`, "",
+    "WHAT THEY KNOW OR REMEMBER", e.know || "", "", `Dates / documents: ${e.dates || "-"}`, `Year lost: ${e.year_lost || "-"}`, "",
+    `FILES (${files.length})`, ...(files.length ? files.map((f) => `- ${f.name} · ${f.type} · ${fmtSize(f.size)} · ${APP}/admin/file/?k=${encodeURIComponent(f.key)}`) : ["- none"]), "",
+    "CONTACT", `Email: ${e.contact_email}`, `Phone: ${e.contact_phone || "-"}`, `Account: user #${user.id} (${user.email}; email ${user.email_verified ? "confirmed" : "NOT yet confirmed"})`, "",
+    `Disclaimer ticked: ${e.disclaimer_at || "-"}`, "",
+    `Review it, mark it eligible or not, and send a code: ${APP}/admin/enquiry/?ref=${e.ref}`);
+  return L.join("\n");
+}
+// ---------- uploads (R2 bucket UPLOADS, private; served only to the owner and admins) ----------
+const MAX_FILES = 6, MAX_FILE = 10 * 1024 * 1024, MAX_TOTAL = 30 * 1024 * 1024;
+function sniff(b) {
+  const s = (i, arr) => arr.every((x, j) => b[i + j] === x);
+  if (s(0, [0xff, 0xd8, 0xff])) return ["image/jpeg", "jpg"];
+  if (s(0, [0x89, 0x50, 0x4e, 0x47])) return ["image/png", "png"];
+  if (s(0, [0x47, 0x49, 0x46, 0x38])) return ["image/gif", "gif"];
+  if (s(0, [0x52, 0x49, 0x46, 0x46]) && s(8, [0x57, 0x45, 0x42, 0x50])) return ["image/webp", "webp"];
+  if (s(0, [0x25, 0x50, 0x44, 0x46])) return ["application/pdf", "pdf"];
+  if (s(4, [0x66, 0x74, 0x79, 0x70])) { const brand = String.fromCharCode(...b.slice(8, 12)); if (/^(heic|heix|mif1|msf1|heim|heis|hevc)$/.test(brand)) return ["image/heic", "heic"]; }
+  return null;
+}
+async function takeFiles(f, env, ref) {
+  const items = f.getAll("files").filter((x) => x && typeof x === "object" && x.size > 0);
+  if (!items.length) return { files: [] };
+  if (items.length > MAX_FILES) return { error: `Please attach up to ${MAX_FILES} files.` };
+  let total = 0; const out = [];
+  for (const it of items) {
+    if (it.size > MAX_FILE) return { error: `${it.name} is over 10 MB. Please make it smaller or leave it out.` };
+    total += it.size; if (total > MAX_TOTAL) return { error: "Your files add up to more than 30 MB. Please send fewer." };
+  }
+  if (!env.UPLOADS) return { error: "File uploads are briefly unavailable. Please send the check without files and email them later." };
+  let i = 0;
+  for (const it of items) {
+    const buf = new Uint8Array(await it.arrayBuffer());
+    const t = sniff(buf);
+    if (!t) return { error: `${it.name} isn't a photo (JPEG, PNG, WebP, GIF, HEIC) or a PDF.`, partial: out };
+    i++;
+    const base = String(it.name || "file").replace(/\.[^.]*$/, "").replace(/[^A-Za-z0-9 _-]+/g, "").trim().slice(0, 60) || "file";
+    const key = `enq/${ref}/${i}-${base.replace(/\s+/g, "-")}.${t[1]}`;
+    await env.UPLOADS.put(key, buf, { httpMetadata: { contentType: t[0] }, customMetadata: { ref, name: base + "." + t[1] } });
+    out.push({ key, name: base + "." + t[1], type: t[0], size: buf.length });
+  }
+  return { files: out };
+}
+async function serveFile(env, key) {
+  const o = await env.UPLOADS.get(key);
+  if (!o) return new Response("Not found", { status: 404 });
+  const name = (o.customMetadata && o.customMetadata.name) || key.split("/").pop();
+  return new Response(o.body, { headers: { "content-type": o.httpMetadata.contentType || "application/octet-stream", "content-disposition": `inline; filename="${name.replace(/"/g, "")}"`, "x-content-type-options": "nosniff", "content-security-policy": "sandbox", "cache-control": "private, no-store" } });
+}
+// ---------- codes ----------
+const newCode = () => `CE-${code(4)}-${code(4)}`;
+const DEFAULT_TPL = {
+  subject: "Your Cedwyn Estate eligibility code",
+  body: "Dear {{name}},\n\nThank you for your free eligibility check{{ref_line}}. We have read it, and we would like to help your family reconstruct its estate.\n\nYour personal code is: {{code}}\n\nTo use it, sign in and enter the code here:\n{{link}}\n\nIt unlocks the Cedwyn Estate reconstruction service at £49.99 a month, which you can cancel at any time. The code works once.\n\nWith best wishes,\nThe Cedwyn Estate onboarding team\n\nOur case, prospective. Not a finding of any court. A records and evidence service, not a law firm; this email is not legal advice and no outcome is promised.",
+};
+async function getTpl(env) {
+  const r = await env.DB.prepare("SELECT k,v FROM meta WHERE k IN ('tpl_code_subject','tpl_code_body')").all();
+  const m = Object.fromEntries((r.results || []).map((x) => [x.k, x.v]));
+  return { subject: m.tpl_code_subject || DEFAULT_TPL.subject, body: m.tpl_code_body || DEFAULT_TPL.body };
+}
+const fillTpl = (s, v) => String(s).replace(/\{\{(\w+)\}\}/g, (_, k) => v[k] ?? "");
+async function verifyMail(env, user, test) {
+  const tok = b64(rand(24)).replace(/[+/=]/g, "");
+  await env.DB.prepare("UPDATE users SET verify_hash=?, verify_exp=? WHERE id=?").bind(await sha256(tok), now() + 3 * DAY, user.id).run();
+  const link = `${APP}/verify/?t=${tok}`;
+  const subj = `${test ? "[TEST] " : ""}Confirm your email for Cedwyn Estate`;
+  const text = `Hello ${user.name || ""},\n\nPlease confirm your email address for your Cedwyn Estate account:\n\n${link}\n\nThe link works for 3 days. If you didn't sign up, ignore this email.\n\nThe Cedwyn Estate onboarding team\n\nOur case, prospective. Not a finding of any court. Not legal advice.`;
+  return await sendMail(env, { to: user.email, subject: subj, text, html: emailHtml("Confirm your email", [`Hello ${esc(user.name || "")},`, "Please confirm your email address for your Cedwyn Estate account. The link works for 3 days.", "If you didn't sign up, you can ignore this email."], { href: link, label: "Confirm my email" }), kind: "verify" });
+}
 const PROXY = [/^\/assets\//, /^\/evidence\//, /^\/api\/(stripe|eligibility|auth)\//, /^\/api\/health$/, /^\/fonts\//];
 async function proxy(req, path) {
   const u = new URL(req.url);
@@ -351,7 +525,7 @@ async function stripeApi(env, method, path, form) {
 }
 function adminShell(user, title, body, msg, err) {
   return shell(`Admin · ${title}`, `<p class="k">Admin · signed in as ${esc(user.email)}</p><h1>${esc(title)}</h1>
-<p><a href="/admin/">Users</a> · <a href="/admin/enquiries/">Enquiries</a> · <a href="/admin/audit/">Audit log</a> · <a href="/dashboard/">My dashboard</a></p>
+<p><a href="/admin/enquiries/">Enquiries</a> · <a href="/admin/codes/">Codes</a> · <a href="/admin/">Users</a> · <a href="/admin/mail/">Email</a> · <a href="/admin/audit/">Audit log</a> · <a href="/dashboard/">My dashboard</a></p>
 ${msg ? `<p class="ok">${esc(msg)}</p>` : ""}${err ? `<p class="err">${esc(err)}</p>` : ""}${body}`, { user, chat: true });
 }
 const btnForm = (csrf, action, fields, label, confirmText) => `<form method="post" action="/admin/action/" class="inl" ${confirmText ? `onsubmit="return confirm('${esc(confirmText)}')"` : ""}><input type="hidden" name="csrf" value="${csrf}"><input type="hidden" name="action" value="${action}">${Object.entries(fields).map(([k, v]) => `<input type="hidden" name="${k}" value="${esc(v)}">`).join("")}<button class="btn alt" style="padding:6px 12px;font-size:14px;margin:3px 0">${esc(label)}</button></form>`;
@@ -415,8 +589,106 @@ async function handleAdmin(req, env, u, user) {
 <table><tr><th>ID</th><th>User</th><th>Subscription</th><th>Enquiries</th></tr>${rows || `<tr><td colspan="4">No users found.</td></tr>`}</table>`, msg, err);
   }
   if (path === "/admin/enquiries/") {
-    const { results } = await env.DB.prepare("SELECT ref,user_id,parcel,status,grade,score,created,test FROM enquiries ORDER BY id DESC LIMIT 100").all();
-    return adminShell(user, "Enquiries", `<table><tr><th>Ref</th><th>Parcel</th><th>Status</th><th>Grade</th></tr>${results.map((e) => `<tr><td><a href="/admin/user/?id=${e.user_id}">${esc(e.ref)}</a>${e.test ? " (test)" : ""}</td><td>${esc((e.parcel || "").slice(0, 50))}</td><td>${esc(STATUS_LABEL[e.status] || e.status)}</td><td>${esc(e.grade)} ${e.score}</td></tr>`).join("") || `<tr><td colspan="4">None yet.</td></tr>`}</table>`, msg, err);
+    const fl = u.searchParams.get("f") || "open";
+    const where = fl === "all" ? "" : fl === "eligible" ? "WHERE eligibility='eligible'" : "WHERE eligibility IN ('unreviewed','more_info') AND status NOT IN ('pending','rejected','done','refunded')";
+    const { results } = await env.DB.prepare(`SELECT ref,user_id,kind,place,parish,parcel,claimant_name,contact_name,status,eligibility,grade,score,created,test,files FROM enquiries ${where} ORDER BY id DESC LIMIT 200`).all();
+    const tab = (k, l) => k === fl ? `<strong>${l}</strong>` : `<a href="/admin/enquiries/?f=${k}">${l}</a>`;
+    return adminShell(user, "Enquiries", `<p>${tab("open", "To review")} · ${tab("eligible", "Eligible")} · ${tab("all", "All")}</p>
+<table><tr><th>Ref</th><th>Who / where</th><th>Status</th><th>Grade</th></tr>${results.map((e) => `<tr><td><a href="/admin/enquiry/?ref=${esc(e.ref)}">${esc(e.ref)}</a><br><span class="small">${esc((e.created || "").slice(0, 10))}${e.kind === "deep" ? " · deep" : ""}${e.test ? " · test" : ""}</span></td><td>${esc(e.claimant_name || e.contact_name || "")}<br><span class="small">${esc([e.place, e.parish].filter(Boolean).join(", ") || (e.parcel || "").slice(0, 50))}${filesOf(e).length ? " · " + filesOf(e).length + " file(s)" : ""}</span></td><td>${esc(enqStatus(e))}</td><td>${esc(e.grade || "")}</td></tr>`).join("") || `<tr><td colspan="4">Nothing here.</td></tr>`}</table>`, msg, err);
+  }
+
+  if (path === "/admin/file/") {
+    const k = u.searchParams.get("k") || "";
+    if (!/^enq\/[A-Z0-9-]+\/[\w.-]+$/.test(k)) return new Response("Not found", { status: 404 });
+    return serveFile(env, k);
+  }
+  if (path === "/admin/enquiry/") {
+    const ref = u.searchParams.get("ref") || "";
+    const e = await env.DB.prepare("SELECT e.*, us.email AS acct_email, us.email_verified AS acct_verified FROM enquiries e LEFT JOIN users us ON us.id=e.user_id WHERE e.ref=?").bind(ref).first();
+    if (!e) return adminShell(user, "Enquiry not found", `<p><a href="/admin/enquiries/">Back to enquiries</a></p>`);
+    const fl = filesOf(e);
+    const { results: cs } = await env.DB.prepare("SELECT * FROM codes WHERE enquiry_ref=? ORDER BY id DESC").bind(ref).all();
+    const tpl = await getTpl(env);
+    const to = e.contact_email || e.acct_email || "";
+    const vars = { name: e.claimant_name || e.contact_name || "there", ref: e.ref, ref_line: ` (${e.ref})`, code: "{{code}}", link: "{{link}}" };
+    const row = (k, v) => v ? `<tr><th>${k}</th><td style="white-space:pre-wrap">${esc(v)}</td></tr>` : "";
+    const ef = (a, extra, label, cls = "btn alt") => `<form method="post" action="/admin/enq/" class="inl"><input type="hidden" name="csrf" value="${csrf}"><input type="hidden" name="ref" value="${esc(ref)}"><input type="hidden" name="action" value="${a}">${extra || ""}<button class="${cls}">${label}</button></form>`;
+    return adminShell(user, `${e.ref}`, `<p><a href="/admin/enquiries/">← All enquiries</a></p>
+<p><span class="pill">${esc(e.kind === "deep" ? "Full deep search" : e.kind === "paid" ? "Live search (v1)" : "Free check")}</span> <span class="pill">${esc(STATUS_LABEL[e.status] || e.status)}</span> <span class="pill">eligibility: ${esc(e.eligibility || "unreviewed")}</span>${e.test ? " <span class=\"pill\">test</span>" : ""}</p>
+<p class="small">Lead score ${esc(e.grade)} (${e.score}/100): ${esc(e.score_notes)}</p>
+<table>${row("For", e.for_whom)}${row("Claimant", e.claimant_name || e.contact_name)}${row("Relationship", e.relation)}${row("Family names", e.family_names)}${row("Holding / farm", e.place)}${row("Parish / town", e.parish)}${row("County", e.county)}${row("Parcel / address", e.parcel)}${row("Title no.", e.title_no)}${row("Country", e.country)}${row("What they know", e.know || e.happened)}${row("Dates / documents", e.dates)}${row("Year lost", e.year_lost)}${row("Contact email", e.contact_email)}${row("Phone", e.contact_phone)}${row("Account", `#${e.user_id} ${e.acct_email || ""} (email ${e.acct_verified ? "confirmed" : "not confirmed"})`)}${row("Sent", e.created)}${row("Disclaimer ticked", e.disclaimer_at)}${row("Emailed to you", e.emailed ? "yes" : e.mail_error ? "failed: " + e.mail_error : "no")}</table>
+${fl.length ? `<h2>Files</h2><p>${fl.map((f) => `<a href="/admin/file/?k=${encodeURIComponent(f.key)}">${esc(f.name)}</a> (${esc(f.type)}, ${fmtSize(f.size)})`).join("<br>")}</p>` : ""}
+<h2>Decision</h2><p>${ef("eligible", "", "Mark eligible", "btn")} ${ef("not_eligible", "", "Mark not eligible")} ${ef("more_info", "", "Need more info")} ${ef("in_review", "", "In review")}</p>
+<form class="f" method="post" action="/admin/enq/"><input type="hidden" name="csrf" value="${csrf}"><input type="hidden" name="ref" value="${esc(ref)}"><input type="hidden" name="action" value="note"><label>Private note</label><textarea name="note" rows="2" maxlength="2000">${esc(e.admin_note || "")}</textarea><p><button class="btn alt">Save note</button></p></form>
+<h2>Generate &amp; email code</h2>
+<form class="f" method="post" action="/admin/code/"><input type="hidden" name="csrf" value="${csrf}"><input type="hidden" name="ref" value="${esc(ref)}"><input type="hidden" name="action" value="send">
+<label>To</label><input name="to" type="email" maxlength="160" value="${esc(to)}" required><label>Name in the greeting</label><input name="name" maxlength="100" value="${esc(vars.name)}">
+<label>Subject</label><input name="subject" maxlength="200" value="${esc(tpl.subject)}"><label>Message ({{name}}, {{code}}, {{link}}, {{ref_line}} are filled in)</label><textarea name="body" rows="12" maxlength="6000">${esc(tpl.body)}</textarea>
+<label class="chk"><input type="checkbox" name="save_tpl" value="1"> Save this subject and message as my default template</label>
+<p><button class="btn solid">Generate code &amp; send email</button></p><p class="small">Also marks the enquiry eligible. From ${MAIL_FROM_ONBOARD}.</p></form>
+${cs.length ? `<h2>Codes for this enquiry</h2><table><tr><th>Code</th><th>To</th><th>Emailed</th><th>Used</th></tr>${cs.map((c) => `<tr><td>${esc(c.code)}${c.revoked ? " (revoked)" : ""}</td><td>${esc(c.email || "-")}</td><td>${c.emailed_at ? esc(c.emailed_at) : c.mail_error ? "failed" : "-"}</td><td>${c.used_at ? "#" + c.used_by + " " + esc(c.used_at) : "-"}</td></tr>`).join("")}</table>` : ""}
+<p class="small"><a href="/admin/user/?id=${e.user_id}">Open the account</a> (suspend, erase, refunds).</p>`, msg, err);
+  }
+  if (path === "/admin/enq/" && req.method === "POST") {
+    const f = await req.formData();
+    if (String(f.get("csrf") || "") !== csrf) return adminShell(user, "Expired form", `<p>That form had expired. Please go back, reload and try again.</p>`);
+    const ref = String(f.get("ref") || ""), a = String(f.get("action") || "");
+    const back = (m, e2) => redirect(`/admin/enquiry/?ref=${encodeURIComponent(ref)}&${e2 ? "e" : "m"}=${encodeURIComponent(e2 || m)}`);
+    if (["eligible", "not_eligible", "more_info"].includes(a)) { await env.DB.prepare("UPDATE enquiries SET eligibility=?, status=CASE WHEN status IN ('received','in_review') THEN 'in_review' ELSE status END WHERE ref=?").bind(a, ref).run(); await audit(env, user, "eligibility", ref, a); return back("Saved: " + a.replace("_", " ")); }
+    if (a === "in_review") { await env.DB.prepare("UPDATE enquiries SET status='in_review' WHERE ref=?").bind(ref).run(); await audit(env, user, "enq_status", ref, "in_review"); return back("Marked in review"); }
+    if (a === "note") { await env.DB.prepare("UPDATE enquiries SET admin_note=? WHERE ref=?").bind(String(f.get("note") || "").slice(0, 2000), ref).run(); return back("Note saved"); }
+    return back("", "Unknown action");
+  }
+  if (path === "/admin/code/" && req.method === "POST") {
+    const f = await req.formData();
+    if (String(f.get("csrf") || "") !== csrf) return adminShell(user, "Expired form", `<p>That form had expired. Please go back, reload and try again.</p>`);
+    const ref = String(f.get("ref") || "").trim(), to = String(f.get("to") || "").trim().toLowerCase(), name = String(f.get("name") || "").trim().slice(0, 100);
+    const backTo = ref ? `/admin/enquiry/?ref=${encodeURIComponent(ref)}` : "/admin/codes/";
+    const back = (m, e2) => redirect(`${backTo}${backTo.includes("?") ? "&" : "?"}${e2 ? "e" : "m"}=${encodeURIComponent(e2 || m)}`);
+    if (to && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(to)) return back("", "That email address doesn't look right");
+    const tpl = await getTpl(env);
+    const subject = String(f.get("subject") || tpl.subject).slice(0, 200), body = String(f.get("body") || tpl.body).slice(0, 6000);
+    if (f.get("save_tpl")) { await env.DB.batch([env.DB.prepare("INSERT OR REPLACE INTO meta (k,v) VALUES ('tpl_code_subject',?)").bind(subject), env.DB.prepare("INSERT OR REPLACE INTO meta (k,v) VALUES ('tpl_code_body',?)").bind(body)]); await audit(env, user, "template_saved", "codes", ""); }
+    const c = newCode();
+    const isTest = !!(ref && (await env.DB.prepare("SELECT test FROM enquiries WHERE ref=?").bind(ref).first() || {}).test);
+    await env.DB.prepare("INSERT INTO codes (code,enquiry_ref,email,created,created_by,test) VALUES (?,?,?,?,?,?)").bind(c, ref || null, to || null, iso(), user.id, isTest ? 1 : 0).run();
+    if (ref) await env.DB.prepare("UPDATE enquiries SET eligibility='eligible', status=CASE WHEN status IN ('received','in_review') THEN 'in_review' ELSE status END WHERE ref=?").bind(ref).run();
+    await audit(env, user, "code_created", ref || "unattached", `${c}${to ? " for " + to : ""}`);
+    if (!to) return back(`Code created: ${c} (not emailed). Give it to the person; it works once.`);
+    const link = `${APP}/code/?c=${c}`;
+    const v = { name: name || "there", code: c, link, ref: ref, ref_line: ref ? ` (${ref})` : "" };
+    const subj = (isTest ? "[TEST] " : "") + fillTpl(subject, v), text = fillTpl(body, v);
+    const paras = text.split(/\n{2,}/).map((p) => esc(p).replace(/\n/g, "<br>"));
+    const r = await sendMail(env, { to, subject: subj, text, html: emailHtml(subj, paras), kind: "code" });
+    if (r.ok) { await env.DB.prepare("UPDATE codes SET emailed_at=? WHERE code=?").bind(iso(), c).run(); await audit(env, user, "code_emailed", c, `${to} via ${r.route}`); return back(`Code ${c} emailed to ${to}.`); }
+    await env.DB.prepare("UPDATE codes SET mail_error=? WHERE code=?").bind(r.error.slice(0, 300), c).run();
+    await audit(env, user, "code_email_failed", c, r.error.slice(0, 200));
+    const mailto = `mailto:${to}?subject=${encodeURIComponent(subj)}&body=${encodeURIComponent(text)}`;
+    return adminShell(user, "Code created, email not sent", `<p class="err">The code was created but the email didn't go: ${esc(r.error)}</p><p>Code: <strong>${esc(c)}</strong></p><p><a class="btn solid" href="${esc(mailto)}">Send it from my own email</a></p><p class="small">That opens your own mail app with the message filled in. <a href="${backTo}">Back</a></p>`);
+  }
+  if (path === "/admin/codes/") {
+    const { results: cs } = await env.DB.prepare("SELECT * FROM codes ORDER BY id DESC LIMIT 200").all();
+    const tpl = await getTpl(env);
+    return adminShell(user, "Codes", `<h2>Generate a code (not tied to an enquiry)</h2>
+<form class="f" method="post" action="/admin/code/"><input type="hidden" name="csrf" value="${csrf}"><input type="hidden" name="action" value="send">
+<label>Email it to (leave empty to just create it)</label><input name="to" type="email" maxlength="160"><label>Name in the greeting</label><input name="name" maxlength="100">
+<label>Subject</label><input name="subject" maxlength="200" value="${esc(tpl.subject)}"><label>Message ({{name}}, {{code}}, {{link}}, {{ref_line}})</label><textarea name="body" rows="12" maxlength="6000">${esc(tpl.body)}</textarea>
+<label class="chk"><input type="checkbox" name="save_tpl" value="1"> Save as my default template</label><p><button class="btn solid">Generate code</button></p></form>
+<h2>All codes</h2><table><tr><th>Code</th><th>Enquiry</th><th>To</th><th>Emailed</th><th>Used</th><th></th></tr>${cs.map((c) => `<tr><td>${esc(c.code)}${c.test ? " (test)" : ""}</td><td>${c.enquiry_ref ? `<a href="/admin/enquiry/?ref=${esc(c.enquiry_ref)}">${esc(c.enquiry_ref)}</a>` : "-"}</td><td>${esc(c.email || "-")}</td><td>${c.emailed_at ? esc(c.emailed_at.slice(0, 16)) : c.mail_error ? "failed" : "-"}</td><td>${c.used_at ? "#" + c.used_by : c.revoked ? "revoked" : "-"}</td><td>${!c.used_at && !c.revoked ? `<form method="post" action="/admin/revoke/" class="inl"><input type="hidden" name="csrf" value="${csrf}"><input type="hidden" name="code" value="${esc(c.code)}"><button class="lnk">Revoke</button></form>` : ""}</td></tr>`).join("") || `<tr><td colspan="6">No codes yet.</td></tr>`}</table>`, msg, err);
+  }
+  if (path === "/admin/revoke/" && req.method === "POST") {
+    const f = await req.formData();
+    if (String(f.get("csrf") || "") !== csrf) return redirect("/admin/codes/?e=Expired%20form");
+    const c = String(f.get("code") || "");
+    await env.DB.prepare("UPDATE codes SET revoked=1 WHERE code=? AND used_at IS NULL").bind(c).run(); await audit(env, user, "code_revoked", c, "");
+    return redirect("/admin/codes/?m=" + encodeURIComponent(c + " revoked"));
+  }
+  if (path === "/admin/mail/") {
+    const k = await mailKey(env);
+    const { results: lg } = await env.DB.prepare("SELECT at,kind,route,ok,error FROM mail_log ORDER BY id DESC LIMIT 40").all();
+    return adminShell(user, "Email", `<p>Emails to users (confirm email, password reset, codes) go from <strong>${MAIL_FROM_ONBOARD}</strong>.</p>
+<p>Route now: ${k ? `<strong>${esc(k.provider)}</strong> (key stored)` : "<strong>Cloudflare only</strong>: Cloudflare delivers only to verified addresses until the domain is onboarded to Cloudflare Email Sending"}. Enquiries reach you through Cloudflare Email Routing.</p>
+<table><tr><th>When (UTC)</th><th>Kind</th><th>Route</th><th>Result</th></tr>${lg.map((x) => `<tr><td>${esc(x.at)}</td><td>${esc(x.kind)}</td><td>${esc(x.route)}</td><td>${x.ok ? "sent" : "failed: " + esc((x.error || "").slice(0, 120))}</td></tr>`).join("") || `<tr><td colspan="4">Nothing sent yet.</td></tr>`}</table>`, msg, err);
   }
   if (path === "/admin/audit/") {
     const { results } = await env.DB.prepare("SELECT at,admin_id,action,target,detail FROM audit ORDER BY id DESC LIMIT 200").all();
@@ -543,6 +815,7 @@ export default {
     if (path === "/demo") return redirect("/demo/");
     if (path === "/demo/" || path === "/webapp/" || path === "/webapp") return proxy(new Request(req.url, { method: "GET", headers: req.headers }), "/webapp/");
     if (path === "/health") return json({ ok: true, stripe_verified_payments: !!env.STRIPE_KEY, mailer: !!env.MAILER });
+    if (path.startsWith("/ops/") && !path.endsWith("/")) path += "/";
     if (path !== "/" && !path.endsWith("/") && !path.includes(".")) return redirect(path + "/" + u.search);
     let user = null;
     let dbDown = false;
@@ -556,6 +829,19 @@ export default {
     const test = !!env.TEST_TOKEN && req.headers.get("x-apps-test") === env.TEST_TOKEN;
     try {
       if (path.startsWith("/admin/")) return await handleAdmin(req, env, u, user);
+      if (path === "/ops/mailkey/" || path === "/ops/mailtest/") {
+        if (!test) return new Response("Not found", { status: 404 });
+        if (path === "/ops/mailkey/") {
+          if (req.method === "GET") { const k = await mailKey(env); return json({ set: !!k, provider: k ? k.provider : null, source: k ? k.source : null }); }
+          const b = await req.json().catch(() => ({}));
+          if (!["resend"].includes(b.provider) || !/^re_[A-Za-z0-9_]{10,200}$/.test(String(b.key || ""))) return json({ ok: false, why: "provider must be resend and key must look like re_…" }, 400);
+          await env.DB.prepare("INSERT OR REPLACE INTO meta (k,v) VALUES ('mail_key',?)").bind(await sealStr(env, JSON.stringify({ provider: b.provider, key: b.key }))).run();
+          return json({ ok: true, stored: "d1 meta (AES-GCM sealed)", provider: b.provider });
+        }
+        const b = await req.json().catch(() => ({}));
+        const r = await sendMail(env, { to: b.to, subject: "[TEST] Cedwyn Estate mail route check", text: "Route test from app.bucklerfamily.estate. Please ignore.", kind: "test" });
+        return json(r);
+      }
       switch (path) {
         case "/": return landing(user);
         case "/pricing/": return pricing(user);
@@ -563,9 +849,9 @@ export default {
         case "/privacy/": return legalPage(user, "Privacy notice", PRIVACY);
         case "/signup/": case "/login/": {
           const kind = path.slice(1, -1), next = (u.searchParams.get("next") || "/dashboard/");
-          if (req.method === "GET") return user ? redirect("/dashboard/") : authForm(kind, "", next);
+          if (req.method === "GET") return user ? redirect(next.startsWith("/") ? next : "/dashboard/") : authForm(kind, "", next);
           const f = await req.formData();
-          const nx = /^\/[a-z\/]*$/.test(f.get("next") || "") ? f.get("next") : "/dashboard/";
+          const nx = /^\/[a-z\/]*(\?c=[A-Z0-9-]{1,20})?$/.test(f.get("next") || "") ? f.get("next") : "/dashboard/";
           const email = String(f.get("email") || "").trim().toLowerCase(), pw = String(f.get("password") || "");
           if (botCheck(f)) return authForm(kind, "Please try again.", nx, email);
           if (!(await limit(env, `${kind}|ip|${ip}`, kind === "signup" ? 5 : 15, 3600))) return authForm(kind, "Too many attempts. Please wait an hour and try again.", nx, email);
@@ -578,12 +864,14 @@ export default {
             if (ex) return authForm("login", "An account with that email already exists. Please log in.", nx, email);
             const h = await hashPw(pw);
             const r = await env.DB.prepare("INSERT INTO users (email,pw,name,created,test) VALUES (?,?,?,?,?)").bind(email, h, name || "there", iso(), test ? 1 : 0).run();
-            return redirect(nx, { "Set-Cookie": await startSession(env, r.meta.last_row_id) });
+            const nu = { id: r.meta.last_row_id, email, name };
+            ctx.waitUntil(verifyMail(env, nu, test));
+            return redirect(nx, { "Set-Cookie": await startSession(env, nu.id) });
           }
           if (!(await limit(env, `login|email|${email}`, 10, 3600))) return authForm(kind, "Too many attempts for this account. Please wait an hour.", nx, email);
           const row = await env.DB.prepare("SELECT id,pw,suspended,role FROM users WHERE email=?").bind(email).first();
           if (!row || !(await checkPw(pw, row.pw))) return authForm(kind, "That email and password don't match.", nx, email);
-          if (row.suspended) return authForm(kind, "This account is suspended. Please email sales@bucklerfamily.estate.", nx, email);
+          if (row.suspended) return authForm(kind, `This account is suspended. Please email ${MAIL_FROM_ONBOARD}.`, nx, email);
           return redirect(nx, { "Set-Cookie": await startSession(env, row.id) });
         }
         case "/logout/": {
@@ -591,21 +879,84 @@ export default {
           if (tok) await env.DB.prepare("DELETE FROM sessions WHERE token_hash=?").bind(await sha256(tok)).run();
           return redirect("/", { "Set-Cookie": "ca_s=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0" });
         }
-        case "/dashboard/": return user ? dashboard(user, env, u.searchParams.get("m") === "sub" ? "Thank you. Your base camp is ready below." : u.searchParams.get("m") === "paid" ? "Thank you. Your enquiry is with our team; we reply by email." : "") : redirect("/login/?next=/dashboard/");
-        case "/enquire/": {
-          if (!user) return redirect("/signup/?next=/enquire/");
-          if (req.method === "GET") return enquireForm(user, "");
+        case "/verify/": {
+          const t = u.searchParams.get("t") || "";
+          const row = t.length > 20 ? await env.DB.prepare("SELECT id FROM users WHERE verify_hash=? AND verify_exp>?").bind(await sha256(t), now()).first() : null;
+          if (!row) return shell("Link expired", `<h1>That link has expired</h1><p>Log in and use “Send the link again” on your dashboard.</p><p><a class="btn" href="/dashboard/">Dashboard</a></p>`, { user });
+          await env.DB.prepare("UPDATE users SET email_verified=1, verify_hash=NULL, verify_exp=NULL WHERE id=?").bind(row.id).run();
+          return user ? redirect("/dashboard/?m=verified") : shell("Email confirmed", `<h1>Email confirmed</h1><p>Thank you. You can now log in and send your free eligibility check.</p><p><a class="btn solid" href="/login/?next=/check/">Log in</a></p>`, {});
+        }
+        case "/verify/resend/": {
+          if (!user) return redirect("/login/?next=/dashboard/");
+          if (req.method !== "POST") return redirect("/dashboard/");
+          if (user.email_verified) return redirect("/dashboard/");
+          if (!(await limit(env, `verify|${user.id}`, 3, 3600))) return redirect("/dashboard/?m=wait");
+          const r = await verifyMail(env, user, !!user.test);
+          return redirect(r.ok ? "/dashboard/?m=resent" : "/dashboard/?m=mailfail");
+        }
+        case "/forgot/": {
+          if (req.method === "GET") return forgotForm("", "");
           const f = await req.formData();
-          if (botCheck(f)) return enquireForm(user, "Please try again.");
-          if (!(await limit(env, `enq|${user.id}`, 5, 3600))) return enquireForm(user, "Too many enquiries in an hour. Please try again later.");
+          const email = String(f.get("email") || "").trim().toLowerCase();
+          if (botCheck(f)) return forgotForm("", "Please try again.");
+          if (!(await limit(env, `forgot|ip|${ip}`, 5, 3600)) || !(await limit(env, `forgot|em|${email}`, 3, 3600))) return forgotForm("", "Too many requests. Please wait an hour.");
+          const row = await env.DB.prepare("SELECT id,name,email,suspended FROM users WHERE email=?").bind(email).first();
+          if (row && !row.suspended) {
+            const tok = b64(rand(24)).replace(/[+/=]/g, "");
+            await env.DB.prepare("UPDATE users SET reset_hash=?, reset_exp=? WHERE id=?").bind(await sha256(tok), now() + 3600, row.id).run();
+            const link = `${APP}/reset/?t=${tok}`;
+            ctx.waitUntil(sendMail(env, { to: row.email, subject: "Reset your Cedwyn Estate password", kind: "reset",
+              text: `Hello ${row.name || ""},\n\nSomeone (hopefully you) asked to reset the password for your Cedwyn Estate account. Choose a new password here:\n\n${link}\n\nThe link works for 1 hour. If you didn't ask, ignore this email and your password stays the same.\n\nThe Cedwyn Estate onboarding team`,
+              html: emailHtml("Reset your password", [`Hello ${esc(row.name || "")},`, "Someone (hopefully you) asked to reset the password for your Cedwyn Estate account. The link works for 1 hour.", "If you didn't ask, ignore this email and your password stays the same."], { href: link, label: "Choose a new password" }) }));
+          }
+          return forgotForm("If an account uses that email, we've sent a reset link. It works for 1 hour.", "");
+        }
+        case "/reset/": {
+          if (req.method === "GET") return resetForm(u.searchParams.get("t") || "", "");
+          const f = await req.formData();
+          const t = String(f.get("tok") || ""), pw = String(f.get("password") || "");
+          if (botCheck(f)) return resetForm(t, "Please try again.");
+          if (pw.length < 10) return resetForm(t, "Please use at least 10 characters.");
+          const row = t.length > 20 ? await env.DB.prepare("SELECT id FROM users WHERE reset_hash=? AND reset_exp>?").bind(await sha256(t), now()).first() : null;
+          if (!row) return forgotForm("", "That reset link has expired. Please ask for a new one.");
+          await env.DB.batch([env.DB.prepare("UPDATE users SET pw=?, reset_hash=NULL, reset_exp=NULL, email_verified=1 WHERE id=?").bind(await hashPw(pw), row.id), env.DB.prepare("DELETE FROM sessions WHERE user_id=?").bind(row.id)]);
+          return redirect("/dashboard/", { "Set-Cookie": await startSession(env, row.id) });
+        }
+        case "/dashboard/": {
+          if (!user) return redirect("/login/?next=/dashboard/");
+          const m = u.searchParams.get("m") || "";
+          const MSG = { sub: "Thank you. Your base camp is ready below.", paid: "Thank you. Your deep search is with our team; we reply by email.", sent: "Thank you. Your free eligibility check is with us. A person will read it and reply by email.", verified: "Thank you, your email is confirmed.", resent: "We've sent the link again.", wait: "Please wait a little before asking for another link.", mailfail: "We couldn't send the email just now. Please try again later.", code: "Code accepted. You can now subscribe." };
+          return dashboard(user, env, MSG[m] || "", m === "sub" || m === "paid");
+        }
+        case "/enquire/": return redirect("/check/");
+        case "/check/": {
+          if (!user) return redirect("/signup/?next=/check/");
+          if (req.method === "GET") return checkForm(user, "");
+          const f = await req.formData();
           const g = (k, n) => String(f.get(k) || "").trim().slice(0, n);
-          const e = { parcel: g("parcel", 300), title_no: g("title_no", 20).toUpperCase(), country: g("country", 40), year_lost: g("year_lost", 4), happened: g("happened", 5000), contact_name: g("contact_name", 80), contact_email: g("contact_email", 160).toLowerCase(), contact_phone: g("contact_phone", 30) };
-          if (!e.parcel || !e.happened || !e.contact_name || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(e.contact_email)) return enquireForm(user, "Please fill in the parcel, what happened, your name and a valid email.");
-          if (!f.get("start")) return enquireForm(user, "Please tick the box to ask us to start.");
-          const q = qualify(e), ref = "LS-" + code(6);
-          await env.DB.prepare("INSERT INTO enquiries (ref,user_id,parcel,title_no,country,year_lost,happened,contact_name,contact_email,contact_phone,status,created,score,grade,score_notes,test) VALUES (?,?,?,?,?,?,?,?,?,?,'pending',?,?,?,?,?)")
-            .bind(ref, user.id, e.parcel, e.title_no, e.country, e.year_lost, e.happened, e.contact_name, e.contact_email, e.contact_phone, iso(), q.score, q.grade, q.notes, test ? 1 : 0).run();
-          return redirect(`/enquire/pay/?ref=${ref}`);
+          const v = { for_whom: g("for_whom", 30), claimant_name: g("claimant_name", 100), relation: g("relation", 80), family_names: g("family_names", 300), place: g("place", 160), parish: g("parish", 120), county: g("county", 80), parcel: g("parcel", 300), country: g("country", 40), know: g("know", 6000), dates: g("dates", 2000), year_lost: g("year_lost", 4), contact_email: g("contact_email", 160).toLowerCase(), contact_phone: g("contact_phone", 30) };
+          if (botCheck(f)) return checkForm(user, "Please try again.", v);
+          const deep = f.get("go") === "deep";
+          if (!(await limit(env, `chk|${user.id}`, 8, 86400))) return checkForm(user, "You've sent a lot of checks today. Please try again tomorrow, or email us.", v);
+          if (!v.claimant_name || !v.place || !v.parish || !v.know || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.contact_email)) return checkForm(user, "Please fill in the name, the holding, the parish, what you know, and a valid email.", v);
+          if (!f.get("disclaimer")) return checkForm(user, "Please tick the box to confirm you've read the notes before sending.", v);
+          const ref = (deep ? "DS-" : "EC-") + code(6);
+          const up = await takeFiles(f, env, ref);
+          if (up.error) { for (const p of up.partial || []) await env.UPLOADS.delete(p.key); return checkForm(user, up.error, v); }
+          const tn = ((v.parcel + " " + v.dates).match(/\b([A-Z]{2,3}\d{3,7})\b/i) || [])[1] || "";
+          const q = qualify({ ...v, title_no: tn, happened: v.know + " " + v.dates, parcel: [v.place, v.parish, v.county, v.parcel].join(" ") });
+          const status = deep ? "pending" : "received";
+          try {
+            await env.DB.prepare("INSERT INTO enquiries (ref,user_id,kind,for_whom,claimant_name,relation,family_names,place,parish,county,parcel,title_no,country,know,dates,year_lost,happened,contact_name,contact_email,contact_phone,files,status,created,score,grade,score_notes,disclaimer_at,eligibility,test) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,'unreviewed',?)")
+            .bind(ref, user.id, deep ? "deep" : "free", v.for_whom, v.claimant_name, v.relation, v.family_names, v.place, v.parish, v.county, v.parcel, tn, v.country, v.know, v.dates, v.year_lost, v.know.slice(0, 5000), v.claimant_name, v.contact_email, v.contact_phone, JSON.stringify(up.files), status, iso(), q.score, q.grade, q.notes, iso(), test ? 1 : 0).run();
+          } catch (insErr) { for (const p of up.files) await env.UPLOADS.delete(p.key); throw insErr; }
+          if (deep) return redirect(`/enquire/pay/?ref=${ref}`);
+          const e = await env.DB.prepare("SELECT * FROM enquiries WHERE ref=?").bind(ref).first();
+          const subj = `${test ? "[TEST] " : ""}Free eligibility check ${ref} · grade ${q.grade} · ${v.claimant_name.slice(0, 40)} · ${v.place.slice(0, 40)}`;
+          if (test && req.headers.get("x-apps-test-mail") === "dry") return json({ dry: true, ref, subject: subj, files: up.files.length });
+          try { await mailSion(env, subj, enquiryText(e, user, up.files, test)); await env.DB.prepare("UPDATE enquiries SET emailed=1 WHERE ref=?").bind(ref).run(); }
+          catch (err) { await env.DB.prepare("UPDATE enquiries SET mail_error=? WHERE ref=?").bind(String(err).slice(0, 300), ref).run(); }
+          return redirect("/dashboard/?m=sent");
         }
         case "/enquire/pay/": {
           if (!user) return redirect("/login/?next=/dashboard/");
@@ -617,34 +968,50 @@ export default {
         case "/paid/": {
           if (!user) return redirect("/login/?next=/dashboard/");
           let sid = u.searchParams.get("session_id") || "";
-          if (!/^cs_(live|test)_[A-Za-z0-9]{10,120}$/.test(sid)) sid = "";  // Stripe normally fills it; tolerate its absence
+          if (!/^cs_(live|test)_[A-Za-z0-9]{10,120}$/.test(sid)) sid = "";
           const e = await env.DB.prepare("SELECT * FROM enquiries WHERE ref=? AND user_id=?").bind(user.pending_ref || "", user.id).first();
           if (!e || e.status !== "pending") return redirect("/dashboard/?m=paid");
           let status = "paid_claimed";
-          const s = await stripeSession(env, sid, CFG.search_plink, e && e.ref);
+          const s = await stripeSession(env, sid, CFG.search_plink, e.ref);
           if (s) {
             if (s.id) sid = s.id;
             if (s.error || s.payment_status !== "paid" || s.amount_total !== CFG.search_price_pence || s.currency !== "gbp" || s.payment_link !== CFG.search_plink || s.client_reference_id !== e.ref)
-              return shell("Payment not confirmed", `<h1>We couldn't confirm that payment</h1><p>If you were charged, email <a href="mailto:sales@bucklerfamily.estate">sales@bucklerfamily.estate</a> with reference ${esc(e.ref)} and we will sort it out.</p>`, { user, chat: true });
+              return shell("Payment not confirmed", `<h1>We couldn't confirm that payment</h1><p>If you were charged, email <a href="mailto:${MAIL_FROM_ONBOARD}">${MAIL_FROM_ONBOARD}</a> with reference ${esc(e.ref)} and we will sort it out.</p>`, { user });
             status = "paid_verified";
           }
           const r = await env.DB.prepare("UPDATE enquiries SET status=?, session_id=?, paid_at=? WHERE id=? AND status='pending'").bind(status, sid || null, iso(), e.id).run();
           if (r.meta.changes === 1) {
             await env.DB.prepare("UPDATE users SET pending_ref=NULL WHERE id=?").bind(user.id).run();
-            e.session_id = sid;
-            const q = { score: e.score, grade: e.grade, notes: e.score_notes };
             const t = !!e.test;
-            const subj = `${t ? "[TEST] " : ""}Paid live search ${e.ref} · grade ${e.grade} · ${e.parcel.slice(0, 50)}`;
-            const body = enquiryText(e, q, status === "paid_verified", t);
-            if (test && req.headers.get("x-apps-test-mail") === "dry") return json({ dry: true, subject: subj, body_chars: body.length });
+            const subj = `${t ? "[TEST] " : ""}PAID deep search ${e.ref} · grade ${e.grade} · ${(e.claimant_name || "").slice(0, 40)} · ${(e.place || e.parcel || "").slice(0, 40)}`;
+            const body = enquiryText(e, user, filesOf(e), t, status === "paid_verified" ? "VERIFIED with Stripe" : `reported by the buyer's return from Stripe, NOT yet verified: check Stripe (Payment Link ${CFG.search_plink})${sid ? ", session " + sid : ""}`);
+            if (test && req.headers.get("x-apps-test-mail") === "dry") return json({ dry: true, subject: subj });
             try { await mailSion(env, subj, body); await env.DB.prepare("UPDATE enquiries SET emailed=1 WHERE id=?").bind(e.id).run(); }
             catch (err) { await env.DB.prepare("UPDATE enquiries SET mail_error=? WHERE id=?").bind(String(err).slice(0, 300), e.id).run(); }
           }
           return redirect("/dashboard/?m=paid");
         }
+        case "/code/": {
+          const c0 = (u.searchParams.get("c") || "").toUpperCase().slice(0, 20);
+          if (!user) return redirect(`/signup/?next=${encodeURIComponent("/code/" + (c0 ? "?c=" + c0 : ""))}`);
+          if (req.method === "GET") return codeForm(user, "", c0);
+          const f = await req.formData();
+          const c = String(f.get("code") || "").trim().toUpperCase().replace(/\s+/g, "");
+          if (!(await limit(env, `code|${user.id}`, 10, 3600)) || !(await limit(env, `code|ip|${ip}`, 20, 3600))) return codeForm(user, "Too many tries. Please wait an hour.", c);
+          const row = await env.DB.prepare("SELECT * FROM codes WHERE code=?").bind(c).first();
+          if (!row || row.revoked) return codeForm(user, "That code isn't valid. Please check it, or email us.", c);
+          if (row.used_at && row.used_by !== user.id) return codeForm(user, "That code has already been used.", c);
+          if (!row.used_at) {
+            const r = await env.DB.prepare("UPDATE codes SET used_by=?, used_at=? WHERE code=? AND used_at IS NULL").bind(user.id, iso(), c).run();
+            if (r.meta.changes !== 1) return codeForm(user, "That code has already been used.", c);
+          }
+          await env.DB.prepare("UPDATE users SET unlock_code=?, unlock_at=?, email_verified=CASE WHEN lower(email)=lower(?) THEN 1 ELSE email_verified END WHERE id=?").bind(c, iso(), row.email || "", user.id).run();
+          return redirect("/subscribe/");
+        }
         case "/subscribe/": {
-          if (!user) return redirect("/signup/?next=/subscribe/");
+          if (!user) return redirect("/signup/?next=/code/");
           if (["claimed", "active"].includes(user.sub_status)) return redirect("/dashboard/");
+          if (!user.unlock_code && user.role !== "admin") return codeForm(user, "");
           if (req.method === "GET") return subscribeForm(user, "");
           const f = await req.formData();
           if (botCheck(f)) return subscribeForm(user, "Please try again.");
@@ -685,6 +1052,15 @@ export default {
             catch (err) { await env.DB.prepare("UPDATE users SET sub_mail_error=? WHERE id=?").bind(String(err).slice(0, 300), user.id).run(); }
           }
           return redirect("/dashboard/?m=sub");
+        }
+        case "/file/": {
+          if (!user) return redirect("/login/?next=/dashboard/");
+          const k = u.searchParams.get("k") || "";
+          const m = k.match(/^enq\/([A-Z0-9-]+)\/[\w.-]+$/);
+          if (!m) return new Response("Not found", { status: 404 });
+          const own = await env.DB.prepare("SELECT 1 AS ok FROM enquiries WHERE ref=? AND user_id=?").bind(m[1], user.id).first();
+          if (!own && user.role !== "admin") return new Response("Not found", { status: 404 });
+          return serveFile(env, k);
         }
         case "/camp/": return user && ["claimed", "active"].includes(user.sub_status) ? shell("Your base camp", campBlock(user), { user, chat: true }) : redirect("/dashboard/");
       }

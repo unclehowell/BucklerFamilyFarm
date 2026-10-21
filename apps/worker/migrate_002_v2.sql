@@ -1,0 +1,24 @@
+-- v2 (21 Oct 2026): email verification/reset, free eligibility checks, uploads, unlock codes — Sion's Tab agent
+ALTER TABLE users ADD COLUMN email_verified INTEGER DEFAULT 0;
+ALTER TABLE users ADD COLUMN verify_hash TEXT;
+ALTER TABLE users ADD COLUMN verify_exp INTEGER;
+ALTER TABLE users ADD COLUMN reset_hash TEXT;
+ALTER TABLE users ADD COLUMN reset_exp INTEGER;
+ALTER TABLE users ADD COLUMN unlock_code TEXT;
+ALTER TABLE users ADD COLUMN unlock_at TEXT;
+ALTER TABLE enquiries ADD COLUMN kind TEXT DEFAULT 'paid';
+ALTER TABLE enquiries ADD COLUMN for_whom TEXT;
+ALTER TABLE enquiries ADD COLUMN relation TEXT;
+ALTER TABLE enquiries ADD COLUMN family_names TEXT;
+ALTER TABLE enquiries ADD COLUMN place TEXT;
+ALTER TABLE enquiries ADD COLUMN parish TEXT;
+ALTER TABLE enquiries ADD COLUMN county TEXT;
+ALTER TABLE enquiries ADD COLUMN know TEXT;
+ALTER TABLE enquiries ADD COLUMN dates TEXT;
+ALTER TABLE enquiries ADD COLUMN files TEXT;
+ALTER TABLE enquiries ADD COLUMN eligibility TEXT DEFAULT 'unreviewed';
+ALTER TABLE enquiries ADD COLUMN disclaimer_at TEXT;
+ALTER TABLE enquiries ADD COLUMN admin_note TEXT;
+CREATE TABLE IF NOT EXISTS codes (id INTEGER PRIMARY KEY, code TEXT UNIQUE NOT NULL, enquiry_ref TEXT, email TEXT, created TEXT, created_by INTEGER, emailed_at TEXT, mail_error TEXT, used_by INTEGER, used_at TEXT, revoked INTEGER DEFAULT 0, test INTEGER DEFAULT 0);
+CREATE TABLE IF NOT EXISTS mail_log (id INTEGER PRIMARY KEY, at TEXT, kind TEXT, to_hash TEXT, route TEXT, ok INTEGER, error TEXT);
+ALTER TABLE enquiries ADD COLUMN claimant_name TEXT;

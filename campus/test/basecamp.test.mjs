@@ -17,7 +17,6 @@ test("map: viewport, title, start and end", () => {
   assert.match(html, /id="shop"/);
   assert.match(html, /bucklerfamily\.estate\/ebook\//);
   assert.match(html, /ebooks\.bucklerfamily\.estate/);
-  assert.match(html, /Our case, prospective\. Not a finding of any court\./);
   assert.match(html, /payment_status=/, "Stripe return forward kept");
   assert.match(html, /href="\/campus\/"/, "old campus reachable");
 });

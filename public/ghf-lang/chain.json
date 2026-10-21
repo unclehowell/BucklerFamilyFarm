@@ -43,6 +43,9 @@
    "u": "https://maps.bucklerfamily.estate/",
    "h": [
     "maps.bucklerfamily.estate"
+   ],
+   "x": [
+    "#top > a.brand"
    ]
   },
   {
@@ -69,7 +72,8 @@
    ],
    "x": [
     ".cl-hero > .cl-kick",
-    ".sl-hero .sl-kicker"
+    ".sl-hero .sl-kicker",
+    ".sl-nav > nav.top > a:first-child"
    ],
    "d": [
     "Clearance"
@@ -313,6 +317,9 @@
    "u": "https://shop.bucklerfamily.estate/",
    "h": [
     "shop.bucklerfamily.estate"
+   ],
+   "x": [
+    ".sl-nav > nav.top > a:first-child"
    ]
   }
  ],

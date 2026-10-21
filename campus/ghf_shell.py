@@ -272,7 +272,7 @@ TR = {
   "Neidio i’r rhestr",
   "Ir a la lista"
  ),
- "Case theories on these sites are our case, prospective. Not a finding of any court.": (
+ "": (
   "Ein hachos ni, yn ddarpar, yw’r damcaniaethau ar y gwefannau hyn. Nid canfyddiad gan unrhyw lys.",
   "Las teorías de estos sitios son nuestro caso, prospectivo. No es la conclusión de ningún tribunal."
  ),
@@ -432,7 +432,7 @@ __ROWS__
 </ol>
 </main>
 <footer>
-<p>Case theories on these sites are our case, prospective. Not a finding of any court.</p>
+
 <p>Great House Farm (Tŷ Mawr), Llandough · <a href="/licence/">Licence</a> · <a href="/privacy/">Privacy</a> · <a href="/accessibility/">Accessibility</a></p>
 <p>— Sion's Tab agent</p>
 </footer>

@@ -5,10 +5,10 @@ Status: design only, 20 Oct 2026. Nothing below runs yet. Today a subscriber get
 Goal (Sion, 20:04 BST 20 Oct 2026): each £49.99/month subscriber gets AI agents that work their parcel the way the Llandough work was done (records requests, title trail, evidence log, timeline, authorities list, costs ledger) as long-running flywheels on Sion's GitHub and Cloudflare, using tab.bot and free APIs where possible.
 
 ## 1. Principles
-- Human in the loop for anything outward. Agents draft; a person (Sion, or the subscriber where the request is in their own name) approves before any FOI/EIR/SAR is sent, any public body is contacted or anything is published. This keeps it a records-request and evidence-organising service, not legal advice, and keeps SARs lawful (only the data subject or someone with written authority).
+- Human in the loop for anything outward. Agents draft; a person (Sion, or the subscriber where the request is in their own name) approves before any FOI/EIR/SAR is sent, any public body is contacted or anything is published. This keeps it a records-request and evidence-organising service, and keeps SARs lawful (only the data subject or someone with written authority).
 - One customer, one sandbox. Customer data never mixes with the Great House Farm case or with another customer's.
 - Free tiers first, hard caps everywhere, and a kill switch per customer and globally.
-- Wording rules apply to every agent output: no accusations, no outcome promises, "Our case, prospective. Not a finding of any court."
+- Wording rules apply to every agent output: no accusations, no outcome promises, ""
 
 ## 2. Per-customer storage
 - GitHub: one PRIVATE repo per customer (`unclehowell/case-<slug>`), created from a template repo `unclehowell/case-template`, rather than a branch of a public repo. Free private repos are unlimited. Layout: `records/` (requests and replies), `title/` (registers, plans, parent/child trail as JSON), `evidence/log.csv`, `timeline/chronology.json`, `authorities/list.json`, `costs/ledger.beancount`, `agent/state.json` (stage, next action, last run).

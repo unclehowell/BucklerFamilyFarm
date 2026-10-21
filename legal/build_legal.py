@@ -7,7 +7,7 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent / "public"
 VER = "1.0.0"; DATE = "20 October 2026"; BASE = "https://bucklerfamily.estate"
 CO = ("DATRO CONSORTIUM LIMITED, a private limited company registered in England and Wales, company number 13775817, "
       "registered office Unit 29 Highcroft Industrial Estate, Enterprise Road, Waterlooville, England, PO8 0BT")
-TEMPLATE_NOTE = "Template prepared by Sion's Tab agent; not legal advice; review by a qualified solicitor/attorney recommended."
+TEMPLATE_NOTE = "Template prepared by Sion's Tab agent."
 CSS = """@font-face{font-family:Barlow;src:url(https://bucklerfamily.estate/fonts/barlow-latin-400-normal.woff2) format("woff2");font-weight:400;font-display:swap}
 @font-face{font-family:Barlow;src:url(https://bucklerfamily.estate/fonts/barlow-latin-700-normal.woff2) format("woff2");font-weight:700;font-display:swap}
 @font-face{font-family:Barlow;src:url(https://bucklerfamily.estate/fonts/barlow-latin-ext-400-normal.woff2) format("woff2");font-weight:400;font-display:swap;unicode-range:U+0100-024F,U+0174-0177}
@@ -38,7 +38,7 @@ def footer():
     links = " ".join(f'<a href="{BASE}{u}">{t}</a>' for t, u in FOOT_LINKS)
     return (f'<footer class="ghf-legal-foot" data-ghf-legal-foot="1"><p><strong>© Williams–Buckler family. All rights reserved. Licence terms apply.</strong></p>'
             f'<nav aria-label="Legal">{links}</nav>'
-            f'<p>Published by DATRO CONSORTIUM LIMITED (company 13775817) for the Williams–Buckler family. Our case, prospective. Not a finding of any court.</p>'
+            f'<p>Published by DATRO CONSORTIUM LIMITED (company 13775817) for the Williams–Buckler family.</p>'
             f'<p>{TEMPLATE_NOTE} — Sion\'s Tab agent</p></footer>')
 
 def page(slug, title, desc, body, kicker="Legal"):
@@ -107,7 +107,7 @@ def licence():
         'No person may copy, scrape, mine, index for training, or otherwise use the Materials to train, fine-tune, evaluate or ground an artificial-intelligence or machine-learning system for Commercial Use without a Licence.',
         'For readers and services in the European Union, the Rights Holder expressly reserves the use of the Materials for text and data mining under Article 4(3) of Directive (EU) 2019/790. This page and the robots.txt file of each site are the machine-readable reservation.',
         'Search and answer services that link back to the Materials, and non-commercial research permitted by section 29A CDPA, are not restricted by this clause.'], "6")
-    s7 = ('<p class="case">Our case, prospective. Not a finding of any court.</p>' + clauses([
+    s7 = ('' + clauses([
         'The Family asserts unextinguished equitable ownership of the land known as Parcel A at Tŷ Mawr (Great House Farm), Llandough-juxta-Penarth, and of everything on and within it; and of the items the Family asserts were removed from the home without its consent, including furniture and artefacts now held by others or by institutions.',
         'The Family\'s position is that, although it lost possession and the legal title, its equitable ownership was never extinguished. It is seeking the restoration of its property and intends to bring its case before the High Court, in the King\'s Bench Division and the Chancery Division.',
         'The Family is also researching the wider Tŷ Mawr / Cedwyn estate in Leckwith and Llandough, and reserves its position in respect of that estate.',
@@ -180,7 +180,7 @@ def terms():
         '<strong>Who runs these sites.</strong> The Great House Farm (Tŷ Mawr) sites are published by ' + CO + ', for the Williams–Buckler family. By using them you agree to these terms of use. Purchases are also governed by our <a href="/legal/">terms of sale</a>.',
         '<strong>Rights in the content.</strong> The content is protected by copyright and database right. Your use of it is governed by our <a href="/licence/">rights and licence terms</a>, which form part of these terms. In short: read, share links and quote fairly with credit; any commercial use needs a licence first.',
         '<strong>Acceptable use.</strong> You must not: use the sites unlawfully; attempt to gain unauthorised access to them or to any system behind them; introduce malicious code; scrape or bulk-download content except as the licence terms allow; or use the enquiry form to send spam, abuse or unlawful material.',
-        '<strong>Nature of the content.</strong> The sites present the Family\'s case and the records it rests on. Our case, prospective. Not a finding of any court. Nothing on the sites is legal, financial or professional advice. See the <a href="/disclaimer/">disclaimer</a>.',
+        '<strong>Nature of the content.</strong> The sites present the Family\'s case and the records it rests on. Nothing on the sites is legal, financial or professional advice. See the <a href="/disclaimer/">disclaimer</a>.',
         '<strong>Availability and changes.</strong> We may change, suspend or withdraw any site or content at any time. We do not promise the sites will be uninterrupted or free of errors.',
         '<strong>Links.</strong> Links to other sites are provided for information. We are not responsible for their content.',
         '<strong>Liability.</strong> Nothing in these terms excludes or limits liability for death or personal injury caused by negligence, for fraud or fraudulent misrepresentation, or any other liability that cannot be excluded by law, or affects your statutory rights as a consumer under the Consumer Rights Act 2015. Subject to that, we are not liable for any loss arising from use of the free content of the sites, and for business users our total liability is limited to £100.',
@@ -191,13 +191,13 @@ def terms():
 def disclaimer():
     s = clauses([
         '<strong>Not legal advice.</strong> The sites, books and games set out the Williams–Buckler family\'s case and the records it rests on. They are not legal advice. Anyone with a legal problem of their own should consult a qualified solicitor.',
-        '<strong>Our case, not a finding.</strong> Theories, timelines, questions and assessments on the sites are the Family\'s case. Our case, prospective. Not a finding of any court. Where a court has decided a point, we say so and cite the decision, including <em>BP Properties Ltd v Buckler</em> [1987] EWCA Civ 2.',
+        'Theories, timelines, questions and assessments on the sites are the Family\'s case. Where a court has decided a point, we say so and cite the decision, including <em>BP Properties Ltd v Buckler</em> [1987] EWCA Civ 2.',
         '<strong>Questions, not accusations.</strong> We describe what the records show and ask questions. We do not state that any named living person, company or public body has committed a crime or acted unlawfully, unless a court has so found and we cite the finding.',
         '<strong>Accuracy.</strong> We aim to cite a record for every statement of fact and to mark anything not yet sourced as pending. Records can be incomplete, and errors happen. Tell us through the <a href="/enquire/?type=correction">enquiry form</a> and we will correct and log it.',
         '<strong>Historic material.</strong> Historic photographs, documents and press cuttings are shown as found, with their source. Their copyright may belong to others.',
         '<strong>AI assistance.</strong> The sites are compiled with an AI agent, “Sion\'s Tab agent”, under human direction. See our <a href="/ai-policy/">AI use and provenance policy</a>.',
         '<strong>External links.</strong> We do not control and are not responsible for other sites we link to.'], "D")
-    return page("disclaimer", "Disclaimer", "Disclaimer for the Great House Farm (Tŷ Mawr) sites: not legal advice; our case, not a finding of any court.", s)
+    return page("disclaimer", "Disclaimer", "Disclaimer for the Great House Farm (Tŷ Mawr) sites.", s)
 
 def accessibility():
     s = ('<p>We want everyone to be able to use the Great House Farm (Tŷ Mawr) sites. We aim to meet the Web Content Accessibility Guidelines (WCAG) 2.2 at level AA, and we check new pages on a 390-pixel phone screen and by keyboard.</p>'

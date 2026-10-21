@@ -4,7 +4,7 @@
   BucklerFamilyFarm legal/build_legal.py (the shared legal templates);
 - the "virtual base camp" board SVG, drawn with the same icon(), tent() and path style as
   campus/build_basecamp.py (the Cedwyn Estate map), so a subscriber's camp looks like the estate map.
-Run: python3 work/apps/build_apps.py <path to a BucklerFamilyFarm checkout>      — Sion's Tab agent, 20 Oct 2026
+Run: python3 work/apps/build_apps.py <path to a BucklerFamilyFarm checkout>— Sion's Tab agent, 20 Oct 2026
 """
 import sys, os, json, html, importlib.util, re
 BFF = sys.argv[1]
@@ -72,7 +72,7 @@ terms = clauses([
     '<strong>How to cancel the subscription.</strong> Cancel at any time through the customer portal linked from your dashboard (it stops at the end of the month you have paid for), or email <a href="mailto:sales@bucklerfamily.estate">sales@bucklerfamily.estate</a>. No further payments are taken after cancellation takes effect.',
     '<strong>Your 14-day right to cancel.</strong> Under the Consumer Contracts (Information, Cancellation and Additional Charges) Regulations 2013 you may cancel within 14 days of the day the contract is made (for the subscription, the first payment) without giving a reason. To cancel, tell us clearly, for example by email to sales@bucklerfamily.estate; you may use the model form in Schedule 3 to the Regulations but you do not have to. By paying you ask us to start the service during the 14 days. If you cancel within that time we refund you within 14 days, less a proportionate amount for the service supplied before you told us (regulation 36). Once a live search has been fully carried out within the 14 days, the right to cancel it ends, and you acknowledged this when you asked us to start.',
     '<strong>Your part.</strong> You will only ask us to request records you are entitled to request, and you confirm that anything you give us is accurate. A subject access request can only be made by the data subject or with their written authority. You must not use the Service to harass anyone or to publish personal data unlawfully.',
-    '<strong>Wording.</strong> Material in your base camp records what you assert and what documents show. It is not a finding of any court. We will not describe any person or body as having acted unlawfully unless a court has so found.',
+    '<strong>Wording.</strong> Material in your base camp records what you assert and what documents show. It is We will not describe any person or body as having acted unlawfully unless a court has so found.',
     '<strong>Liability.</strong> Nothing in these terms limits liability for death or personal injury caused by negligence, for fraud, or any liability that cannot be limited by law, or affects your statutory rights under the Consumer Rights Act 2015 (a service must be carried out with reasonable care and skill). Subject to that, our total liability to you is limited to the amount you paid us in the 12 months before the claim, and we are not liable for losses that were not foreseeable or for the outcome of any legal matter.',
     '<strong>Complaints.</strong> Email sales@bucklerfamily.estate. We reply within 14 days.',
     '<strong>Law.</strong> These terms are governed by the law of England and Wales. You keep the mandatory consumer protections and courts of the part of the UK where you live.'], "A")

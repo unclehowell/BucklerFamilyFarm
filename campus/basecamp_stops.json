@@ -87,7 +87,7 @@
       "key": "fcg",
       "title": "FCG · Security Clearance",
       "tag": "CLEARANCE",
-      "caption": "Institutions scored out of 1000 on how they answered requests for the record. Prospective; not a finding of any court.",
+      "caption": "Institutions scored out of 1000 on how they answered requests for the record.",
       "url": "https://fcg.bucklerfamily.estate/",
       "hosts": [
         "fcg.bucklerfamily.estate"
@@ -98,13 +98,13 @@
         "#C274F6"
       ],
       "hue": "Purple",
-      "desc": "Security clearance: every institution starts at 500 of 1000 and gains or loses points only on dated emails and letters; cleared at 900. Case files behind the menu. Our case, prospective. Not a finding of any court."
+      "desc": "Security clearance: every institution starts at 500 of 1000 and gains or loses points only on dated emails and letters; cleared at 900. Case files behind the menu."
     },
     {
       "key": "csscpsg",
       "title": "The Grammar House (CSSCPSGP)",
       "tag": "STRUCTURE",
-      "caption": "Five key documents read sentence by sentence, with a scoring model and its limits. Our case, prospective. Not a finding of any court.",
+      "caption": "Five key documents read sentence by sentence, with a scoring model and its limits.",
       "url": "https://csscpsg.bucklerfamily.estate/",
       "hosts": [
         "csscpsg.bucklerfamily.estate",
@@ -394,7 +394,7 @@
       "key": "accounts",
       "title": "The Counting House",
       "tag": "PUBLIC ACCOUNTS",
-      "caption": "Open accounts: money in and out, AI and disclosure costs, and costs claimed (prospective).",
+      "caption": "Open accounts: money in and out, AI and disclosure costs, and costs claimed.",
       "url": "https://accounts.bucklerfamily.estate/",
       "hosts": [
         "accounts.bucklerfamily.estate"

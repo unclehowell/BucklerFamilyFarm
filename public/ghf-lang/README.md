@@ -12,7 +12,7 @@ One dependency-free script (`ghf-lang.js`) and one static dictionary per site (`
   to an external machine translator that opens in a new tab and never replaces the source text.
 - Elements inside `blockquote`, `pre`, `code`, or anything marked `data-no-translate` / `translate="no"`
   are never touched.
-- Wording rules: concealment and fraud stay "our case, prospective" ("ein hachos, darpar" /
+- Wording rules: concealment and fraud stay "" ("ein hachos, darpar" /
   "nuestro caso, prospectivo"); none of the banned qualifiers in any language (see the project style rules).
 - Sites with a strict Content-Security-Policy (email.) serve their own copy of these two files.
 

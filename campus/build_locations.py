@@ -449,7 +449,7 @@ def page_cyber(cfg, D):
 </main>
 <footer class="foot">
 <p class="px">Thanks for playing</p>
-<p>Our case, prospective. Not a finding of any court.</p>
+
 <p>— Sion's Tab agent</p>
 <p style="font-size:12px">Pixel font: Press Start 2P (SIL Open Font License 1.1, <a href="/fonts/OFL-press-start-2p.txt">licence</a>).</p>
 </footer>
@@ -498,7 +498,7 @@ def page_terms(cfg):
 <h2>Who sells it</h2>
 <p>Vouchers are sold for Cedwyn Estate by DATRO Consortium Ltd, which takes card payments through Stripe. Questions: <a href="mailto:{t['contact']}">{t['contact']}</a>.</p>
 <p><a class="btn" href="/wales/#vouchers">Back to vouchers</a></p>
-<p class="muted" style="margin-top:20px">Template prepared by Sion's Tab agent; not legal advice.</p>
+<p class="muted" style="margin-top:20px">Template prepared by Sion's Tab agent.</p>
 </main>
 </body>
 </html>

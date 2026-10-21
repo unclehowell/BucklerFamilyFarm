@@ -323,7 +323,7 @@ svg.append('</svg>')
 SVG = "\n".join(svg)
 
 route_li = "\n".join(
-    f'<li><a href="{esc(s["url"])}"><i class="sw" aria-hidden="true" style="--p:{(s.get("colors") or ["#f2c94c"]*2)[0]};--s:{(s.get("colors") or ["#f2c94c"]*2)[1]}"></i><b>{s["n"]}. {esc(s["title"])}</b> — {esc(s["caption"])}</a></li>' for s in STOPS)
+    f'<li><a href="{esc(s["url"])}"><i class="sw" aria-hidden="true" style="--p:{(s.get("colors") or ["#f2c94c"]*2)[0]};--s:{(s.get("colors") or ["#f2c94c"]*2)[1]}"></i><b>{s["n"]}. {esc(s["title"])}</b>— {esc(s["caption"])}</a></li>' for s in STOPS)
 
 merch = SHOP["merch"]
 if merch.get("url"):
@@ -434,7 +434,7 @@ footer p{{margin:6px 0}}
 <h1 style="position:absolute!important;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0" data-ghf-title><b>Cedwyn Estate</b></h1>
 <p class="eyebrow sub">Great House</p>
 <p class="lead">Follow the numbered stepping stones. Each building opens one part of the record. Every site has a link back here, so you can always return to Cedwyn Estate.</p>
-<p class="note">Case theories on these sites are our case, prospective. Not a finding of any court.</p>
+
 <div class="jump"><a class="pill solid" href="https://greathousefarmwiki.wordpress.com/">Start at stop 1 →</a><a class="pill" href="#shop">Gift shop</a><a class="pill" href="/campus/">Estate campus</a></div>
 <div class="mode" role="group" aria-label="Choose a view"><a href="/1d/" data-view="list">1D list</a><span class="on" aria-current="page">2D map</span><a href="/3d/" data-view="3d">3D walk</a></div>
 </header>
@@ -456,7 +456,7 @@ footer p{{margin:6px 0}}
 </details>
 </section>
 <footer>
-<p>Great House Farm (Tŷ Mawr), Llandough. Our case, prospective. Not a finding of any court.</p>
+<p>Great House Farm (Tŷ Mawr), Llandough.</p>
 <p>More: <a href="/campus/">the estate campus map</a> · <a href="/enemy/">the enemy camp</a> · <a href="/webapp/">the Great House web app</a> · <a href="https://wiki.bucklerfamily.estate/">the wiki archive</a> · <a href="https://library.bucklerfamily.estate/">the library</a></p>
 <p>— Sion's Tab agent</p>
 </footer>

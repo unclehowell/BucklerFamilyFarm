@@ -754,8 +754,15 @@ JS = r"""/*! basecamp.js — "Back to Cedwyn Estate" link for every Great House 
     function norm(x) { return (x || "").toLowerCase().replace(/&/g, " and ").replace(/[\u2018\u2019']/g, "").replace(/[^a-z0-9\u00c0-\u024f\u0174-\u0177 ]+/g, " ").replace(/\b(the|a|an|y|yr|la|el)\b/g, " ").replace(/\s+/g, " ").trim(); }
     function dedupe() {
       var k = find(); if (k < 0) return;
-      var names = [CHAIN[k].t, CHAIN[k].cy, CHAIN[k].es].filter(Boolean).map(norm);
-      var hs = document.querySelectorAll("h1, [data-ghf-title]"), i, h, t, r, y = window.pageYOffset || 0;
+      var names = [CHAIN[k].t, CHAIN[k].cy, CHAIN[k].es].concat(CHAIN[k].d || []).filter(Boolean).map(norm);
+      var hs = document.querySelectorAll("h1, [data-ghf-title]"), i, h, t, r, y = window.pageYOffset || 0, xs = [];
+      // site_chain.json "x": that site's own title block (kicker, brand line) that only repeats the bar's name; hidden the same way
+      try { if (CHAIN[k].x && CHAIN[k].x.length) xs = document.querySelectorAll(CHAIN[k].x.join(",")); } catch (e) { xs = []; }
+      for (i = 0; i < xs.length && i < 12; i++) {
+        h = xs[i]; if (h.closest(".ghf-ui")) continue;
+        r = h.getBoundingClientRect(); if (r.top + y > 1100) continue;
+        h.classList.add("ghf-v2-dup");
+      }
       for (i = 0; i < hs.length && i < 6; i++) {
         h = hs[i]; if (h.closest(".ghf-ui")) continue;
         r = h.getBoundingClientRect(); if (r.top + y > 1100 || (r.width === 0 && r.height === 0)) continue;
@@ -789,10 +796,12 @@ JS = r"""/*! basecamp.js — "Back to Cedwyn Estate" link for every Great House 
     }
     function watchTitles() { // hide a repeated page title the moment the parser adds it, so it is never painted
       if (document.readyState !== "loading" || !window.MutationObserver) return;
+      var kx = find(), XS = kx >= 0 && CHAIN[kx].x && CHAIN[kx].x.length ? CHAIN[kx].x.join(",") : "";
+      try { if (XS) document.querySelector(XS); } catch (e) { XS = ""; }
       var mo = new MutationObserver(function (recs) {
         for (var a = 0; a < recs.length; a++) for (var b = 0; b < recs[a].addedNodes.length; b++) {
           var n = recs[a].addedNodes[b];
-          if (n.nodeType === 1 && (n.tagName === "H1" || n.hasAttribute("data-ghf-title") || (n.querySelector && n.querySelector("h1,[data-ghf-title]")))) { dedupe(); return; }
+          if (n.nodeType === 1 && (n.tagName === "H1" || n.hasAttribute("data-ghf-title") || (n.querySelector && n.querySelector("h1,[data-ghf-title]")) || (XS && (n.matches(XS) || n.querySelector(XS))))) { dedupe(); return; }
         }
       });
       mo.observe(document.body, { childList: true, subtree: true });
@@ -1279,7 +1288,7 @@ html.ghf-hy :is(button,input,select,textarea,.btn,.button,.card,.cta):not(.ghf-r
 
 # ---------- header standard v2: ONE site chain (campus/site_chain.json) + shared tokens ----------
 CHAIN_D = json.load(open(os.path.join(HERE, "site_chain.json"), encoding="utf-8"))
-js_chain = [{k: v for k, v in c.items() if k in ("id", "t", "cy", "es", "u", "h", "p")} for c in CHAIN_D["sites"]]
+js_chain = [{k: v for k, v in c.items() if k in ("id", "t", "cy", "es", "u", "h", "p", "d", "x")} for c in CHAIN_D["sites"]]  # d/x (21 Oct 2026): extra repeated titles / selectors hidden under the bars
 json.dump(CHAIN_D, open(os.path.join(ROOT, "public", "ghf-lang", "chain.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 open(os.path.join(ROOT, "public", "ghf-lang", "ghf-tokens.css"), "w", encoding="utf-8").write(TOKENS_CSS)
 JS = JS.replace("__CHAIN__", json.dumps(js_chain, ensure_ascii=False)).replace("__TOKENS__", json.dumps(re.sub(r"/\*.*?\*/", "", TOKENS_CSS, flags=re.S).strip()))

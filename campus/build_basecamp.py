@@ -818,6 +818,7 @@ JS = r"""/*! basecamp.js — "Back to Cedwyn Estate" link for every Great House 
       var later = function () { fitBody(); pins(); hideSiteBurgers(); dedupe(); // after parsing, so a page's own ghf-lang.js tag (with its data-site) is seen first
         if (!window.GHFLang && !document.querySelector('script[src*="ghf-lang.js"]')) { var gs = document.createElement("script"); gs.src = ASSET + "/ghf-lang/ghf-lang.js?v=__VER__"; gs.async = true; (document.head || de).appendChild(gs); } };
       if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", later); else setTimeout(later, 0);
+      window.addEventListener("load", function () { fitBody(); pins(); setTimeout(function () { fitBody(); pins(); }, 1200); }); // pages whose CSS arrives late (bundled apps)
       hideSiteBurgers(); setTimeout(hideSiteBurgers, 1200); dedupe(); setTimeout(dedupe, 1200); window.addEventListener("load", function () { setTimeout(dedupe, 300); });
       return wrap;
     }

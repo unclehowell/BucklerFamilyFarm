@@ -543,7 +543,7 @@ LOC_JS = r"""/*! locations.js — Cedwyn Estate: where would you like to go? (ge
   var ICO = __ICO__, LICO = __LICO__; // inline SVG flags and the robot icon for the strip (campus/build_locations.py ICONS)
   function ic(k) { var sp = document.createElement("span"); sp.className = "ghf-loc-ic"; sp.setAttribute("aria-hidden", "true"); sp.innerHTML = (LICO[k] || []).map(function (n) { return ICO[n] || ""; }).join(""); return sp; }
   var LOCS = [["wales", "/wales/"], ["patagonia", "/patagonia/"], ["cyberspace", "/cyberspace/"]];
-  var BASE = "https://bucklerfamily.estate", host = location.hostname.replace(/^www\./, ""), path = location.pathname || "/";
+  var BASE = "https://bucklerfamily.estate", host = (document.documentElement.getAttribute("data-ghf-host") || location.hostname).replace(/^www\./, ""), path = location.pathname || "/"; // the dartboard served at the apex root names its own host (21 Oct 2026)
   var apex = host === "bucklerfamily.estate" || /(^|\.)bucklerfamilyfarm\.pages\.dev$/.test(host);
   var href = function (p) { return apex ? p : BASE + p; };
   function lang() { var l = (document.documentElement.getAttribute("lang") || "en").slice(0, 2).toLowerCase(); return T[l] ? l : "en"; }
@@ -636,9 +636,9 @@ LOC_JS = r"""/*! locations.js — Cedwyn Estate: where would you like to go? (ge
   window.GHFLoc = { strip: strip, mini: mini, icon: ic, choose: choose, get: get, set: set, version: "__VER__" };
   // pages that carry their own header (the base camp map and the 1D list) get the strip at the top here;
   // every other page gets it from basecamp.js, under the shared header bar
-  var own = apex && (path === "/" || path === "/index.html" || /^\/1d(\/|$)/.test(path));
+  var own = apex && (path === "/" || path === "/index.html" || /^\/(1d|cedwyn)(\/|$)/.test(path));
   if (own) { if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", function () { strip(null); }); else strip(null); }
-  if (apex && (path === "/" || path === "/index.html")) {
+  if (apex && (path === "/" || path === "/index.html" || /^\/cedwyn\/?$/.test(path))) { // base camp (now also at /cedwyn/)
     var q = location.search || "";
     if (/[?&]choose\b/.test(q)) choose(false);
     else if (!/[?&]map\b/.test(q)) {

@@ -758,7 +758,7 @@ def page_choose(cfg):
                 extra='<link rel="preload" href="/fonts/press-start-2p-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>\n<meta name="color-scheme" content="dark">\n<style>' + ARCADE_CSS + '</style>') + body
 
 def page_choose(cfg):
-    return head("Choose your destination · Cedwyn Estate", "Cedwyn Estate: Great House Farm, Llandough, Wales; Great House Farm II, Puerto Madryn, Patagonia; or Cyberspace.", "https://bucklerfamily.estate/choose/", "/locations-img/album-098.webp", extra='<script src="/ghf-lang/locations.js?v=2.0.3"></script>') + """<body>
+    return head("Choose your destination · Cedwyn Estate", "Cedwyn Estate: Great House Farm, Llandough, Wales; Great House Farm II, Puerto Madryn, Patagonia; or Cyberspace.", "https://bucklerfamily.estate/choose/", "/locations-img/album-098.webp", extra='<script src="/ghf-lang/locations.js?v=1.1.2"></script>') + """<body>
 <main class="wrap" style="padding:60px 20px">
 <noscript><h1>Choose your destination</h1><p><a class="btn" href="/wales/">Wales</a> <a class="btn" href="/patagonia/">Patagonia</a> <a class="btn" href="/cyberspace/">Cyberspace</a></p></noscript>
 </main>
@@ -959,23 +959,23 @@ ICONS = {
 LOC_ICONS = {"wales": ["wales", "uk"], "patagonia": ["wales", "argentina"], "cyberspace": ["robot"]}
 
 T_JS = {
- "en": {"loc": "Location", "wales": "Wales", "patagonia": "Patagonia", "cyberspace": "AI", "choose": "Choose a location", "estate": "Cedwyn Estate",
+ "en": {"loc": "Location", "wales": "Wales", "patagonia": "Patagonia", "cyberspace": "Cyberspace", "choose": "Choose a location", "estate": "Cedwyn Estate",
         "title": "Choose your destination", "soon": "Coming soon",
         "w_kick": "Llandough, Wales", "w_name": "Great House Farm", "w_line": "Virtual-reality guided tour",
         "p_kick": "Puerto Madryn, Patagonia, Argentina", "p_name": "Great House Farm II", "p_line": "Cedwyn Estate: replica farmhouse, wax museum, weddings, stables, B&B",
-        "c_kick": "Online", "c_name": "AI", "c_line": "The digital estate: maps, library, shops, app",
+        "c_kick": "Online", "c_name": "Cyberspace", "c_line": "The digital estate: maps, library, shops, app",
         "note": "Your choice is remembered on this device. Change it any time with the bar at the top."},
- "cy": {"loc": "Lleoliad", "wales": "Cymru", "patagonia": "Patagonia", "cyberspace": "DA", "choose": "Dewiswch leoliad", "estate": "Ystâd Cedwyn",
+ "cy": {"loc": "Lleoliad", "wales": "Cymru", "patagonia": "Patagonia", "cyberspace": "Cyberspace", "choose": "Dewiswch leoliad", "estate": "Ystâd Cedwyn",
         "title": "Dewiswch eich cyrchfan", "soon": "Yn dod cyn hir",
         "w_kick": "Llandochau, Cymru", "w_name": "Tŷ Mawr", "w_line": "Taith dywys rhith-wirionedd",
         "p_kick": "Porth Madryn, Patagonia, yr Ariannin", "p_name": "Tŷ Mawr II", "p_line": "Ystâd Cedwyn: ffermdy replica, amgueddfa gwyr, priodasau, stablau, gwely a brecwast",
-        "c_kick": "Ar-lein", "c_name": "DA", "c_line": "Yr ystâd ddigidol: mapiau, llyfrgell, siopau, ap",
+        "c_kick": "Ar-lein", "c_name": "Cyberspace", "c_line": "Yr ystâd ddigidol: mapiau, llyfrgell, siopau, ap",
         "note": "Cofir eich dewis ar y ddyfais hon. Newidiwch ef unrhyw bryd gyda’r bar ar y brig."},
- "es": {"loc": "Lugar", "wales": "Gales", "patagonia": "Patagonia", "cyberspace": "IA", "choose": "Elija un lugar", "estate": "Finca Cedwyn",
+ "es": {"loc": "Lugar", "wales": "Gales", "patagonia": "Patagonia", "cyberspace": "Cyberspace", "choose": "Elija un lugar", "estate": "Finca Cedwyn",
         "title": "Elija su destino", "soon": "Próximamente",
         "w_kick": "Llandough, Gales", "w_name": "Great House Farm", "w_line": "Visita guiada en realidad virtual",
         "p_kick": "Puerto Madryn, Patagonia, Argentina", "p_name": "Great House Farm II", "p_line": "Finca Cedwyn: réplica de la casa, museo de cera, bodas, caballerizas, B&B",
-        "c_kick": "En línea", "c_name": "IA", "c_line": "La finca digital: mapas, biblioteca, tiendas, app",
+        "c_kick": "En línea", "c_name": "Cyberspace", "c_line": "La finca digital: mapas, biblioteca, tiendas, app",
         "note": "Su elección se recuerda en este dispositivo. Cámbiela cuando quiera con la barra superior."}
 }
 

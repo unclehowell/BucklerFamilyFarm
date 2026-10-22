@@ -133,7 +133,7 @@
   // assets come from the apex, or same-origin where a site serves /ghf-lang/ itself (a strict CSP, e.g. the mail archive)
   var SRC = (document.currentScript && document.currentScript.src) || "", ASSET = "https://bucklerfamily.estate";
   try { var su = new URL(SRC); if (su.origin !== ASSET && /^\/ghf-lang\//.test(su.pathname)) ASSET = su.origin; } catch (e) {}
-  window.GHFBasecamp = { version: "2.1.1", stops: STOPS };
+  window.GHFBasecamp = { version: "2.1.2", stops: STOPS };
   var host = (document.documentElement.getAttribute("data-ghf-host") || location.hostname).replace(/^www\./, ""), path = location.pathname || "/"; // a page served on the apex for another site (the dartboard at /) names its own host
   var apex = host === "bucklerfamily.estate" || /(^|\.)bucklerfamilyfarm\.pages\.dev$/.test(host);
   var BRAND_PATHS = {"/enemy/": ["#263238", "#B0BEC5"], "/wales/": ["#2F3E46", "#8CC9A0"], "/patagonia/": ["#5E4B2B", "#9AD0F5"]}, TWEAKS = {"fcg.bucklerfamily.estate": {"vars": {"--accent": "S"}}, "projects.bucklerfamily.estate": {"vars": {"--accent": "S"}}, "ebooks.bucklerfamily.estate": {"vars": {"--accent": "S"}}, "shop.bucklerfamily.estate": {"vars": {"--accent": "S"}}, "csscpsg.bucklerfamily.estate": {"vars": {"--gold": "S"}}, "csscpsgp.bucklerfamily.estate": {"vars": {"--gold": "S"}}, "chess.bucklerfamily.estate": {"buttons": false, "keep": "#board"}, "maps.bucklerfamily.estate": {"buttons": false, "header": false, "links": false, "keep": "#map", "native": "dark"}, "qa.bucklerfamily.estate": {"vars": {"--navy": "P", "--blue": "P"}}, "fb.bucklerfamily.estate": {"vars": {"--blue": "P"}}, "2026-10-22.bucklerfamily.estate": {"vars": {"--slate": "P", "--moss": "P"}}, "email.bucklerfamily.estate": {"vars": {"--blue": "P", "--navy": "P"}, "forceHeader": true}, "records.bucklerfamily.estate": {"forceHeader": true}, "authorities.bucklerfamily.estate": {"forceHeader": true}, "review.bucklerfamily.estate": {"forceHeader": true}, "research.bucklerfamily.estate": {"forceHeader": true}};
@@ -203,7 +203,7 @@
           "html[data-ghf-native=dark]:not(.ghf-inv),html[data-ghf-native=dark]:not(.ghf-inv) body{background-color:#000!important}";
         (document.head || de).appendChild(crit);
         if (!document.querySelector("link[data-ghf-theme]")) {
-          var l = document.createElement("link"); l.rel = "stylesheet"; l.href = ASSET + "/ghf-lang/ghf-theme.css?v=2.1.1"; l.setAttribute("data-ghf-theme", "");
+          var l = document.createElement("link"); l.rel = "stylesheet"; l.href = ASSET + "/ghf-lang/ghf-theme.css?v=2.1.2"; l.setAttribute("data-ghf-theme", "");
           (document.head || de).appendChild(l);
         }
       }
@@ -476,7 +476,7 @@
       pins();
       watchTitles();
       var later = function () { fitBody(); pins(); hideSiteBurgers(); dedupe(); // after parsing, so a page's own ghf-lang.js tag (with its data-site) is seen first
-        if (!window.GHFLang && !document.querySelector('script[src*="ghf-lang.js"]')) { var gs = document.createElement("script"); gs.src = ASSET + "/ghf-lang/ghf-lang.js?v=2.1.1"; gs.async = true; (document.head || de).appendChild(gs); } };
+        if (!window.GHFLang && !document.querySelector('script[src*="ghf-lang.js"]')) { var gs = document.createElement("script"); gs.src = ASSET + "/ghf-lang/ghf-lang.js?v=2.1.2"; gs.async = true; (document.head || de).appendChild(gs); } };
       if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", later); else setTimeout(later, 0);
       window.addEventListener("load", function () { fitBody(); pins(); setTimeout(function () { fitBody(); pins(); }, 1200); }); // pages whose CSS arrives late (bundled apps)
       hideSiteBurgers(); setTimeout(hideSiteBurgers, 1200); dedupe(); setTimeout(dedupe, 1200); window.addEventListener("load", function () { setTimeout(dedupe, 300); });

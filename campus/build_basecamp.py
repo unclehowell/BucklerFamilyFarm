@@ -1346,7 +1346,7 @@ print("1d/index.html", n1d, "bytes; ghf-theme.css written")
 import build_locations  # chooser + /wales/ /patagonia/ /cyberspace/ (campus/locations.json)
 print("locations:", build_locations.build(D, ROOT))
 # header standard v2: locations.js rides inside basecamp.js too, so sites with a strict same-origin CSP that proxy only
-# basecamp.js (email.) still get the WALES | PATAGONIA | AI bar; locations.js guards itself (window.GHFLoc) against a second copy.
+# basecamp.js (email.) still get the WALES | PATAGONIA | CYBERSPACE bar; locations.js guards itself (window.GHFLoc) against a second copy.
 _loc = open(os.path.join(ROOT, "public", "ghf-lang", "locations.js"), encoding="utf-8").read()
 JS = JS.replace("/*__LOCATIONS_INLINE__*/", "/* ---- locations.js (inlined by build_basecamp.py) ---- */\n" + _loc + "\n/* ---- end locations.js ---- */")
 # agent readability (21 Oct 2026): the WebMCP loader rides at the end of basecamp.js; the tools themselves are served by the

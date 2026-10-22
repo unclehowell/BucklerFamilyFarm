@@ -532,6 +532,8 @@ JS = r"""/*! basecamp.js — "Back to Cedwyn Estate" link for every Great House 
       return m ? m[1] : null;
     }
     function auto() {
+      var preferred = de.getAttribute("data-ghf-theme-default");
+      if (preferred === "day" || preferred === "night") return preferred;
       try { if (matchMedia("(prefers-color-scheme: dark)").matches) return "night"; if (matchMedia("(prefers-color-scheme: light)").matches) return "day"; } catch (e) {}
       var h = new Date().getHours(); return h >= 7 && h < 19 ? "day" : "night";
     }
@@ -1384,6 +1386,10 @@ BOOT = r"""/*! ghf-boot.js — header standard v2 loader for every Great House F
   // else the local time (day 07:00-19:00). basecamp.js applies the same rule and keeps following the device while nothing is saved.
   var M = null; try { M = localStorage.getItem("ghf-theme"); } catch (e) {}
   if (M !== "day" && M !== "night") { var mc = /(?:^|; )ghf_theme=(day|night)/.exec(d.cookie || ""); M = mc ? mc[1] : null; }
+  if (!M) {
+    var preferred = de.getAttribute("data-ghf-theme-default");
+    if (preferred === "day" || preferred === "night") M = preferred;
+  }
   if (!M) try { M = matchMedia("(prefers-color-scheme: dark)").matches ? "night" : matchMedia("(prefers-color-scheme: light)").matches ? "day" : null; } catch (e) {}
   if (!M) { var hr = new Date().getHours(); M = hr >= 7 && hr < 19 ? "day" : "night"; }
   de.setAttribute("data-ghf-mode", M);

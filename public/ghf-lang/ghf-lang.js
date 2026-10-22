@@ -2,7 +2,7 @@
  * Dependency-free. Translates interface text only (nav, headings, buttons, labels) from a static
  * per-site dictionary; long evidence and legal text stays in its original English, which is the
  * authoritative record. Choice is remembered (?lang=, localStorage, and a .bucklerfamily.estate cookie)
- * and sets <html lang>.  Source: bucklerfamily.estate/ghf-lang/  ·  v1.0.2 (21 Oct 2026; loads basecamp.js?v=2.0.3)
+ * and sets <html lang>.  Source: bucklerfamily.estate/ghf-lang/  ·  v1.0.3 (22 Oct 2026; loads basecamp.js?v=2.1.2)
  */
 (function () {
   "use strict";
@@ -333,14 +333,14 @@
   }
   window.GHFLang = {
     set: function (l) { set(l); }, get: function () { return cur; },
-    open: function () { open(false); }, close: close, site: SITE, version: "1.0.2"
+    open: function () { open(false); }, close: close, site: SITE, version: "1.0.3"
   };
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", load); else load();
   // Base camp: every GHF site gets a "Back to base camp" link (basecamp.js, same folder; 20 Oct 2026, Sion's Tab agent).
   try {
     if (!window.GHFBasecamp && !document.querySelector('script[src*="basecamp.js"]')) {
       var bc = document.createElement("script");
-      bc.src = base + "basecamp.js?v=2.0.3"; bc.async = true;
+      bc.src = base + "basecamp.js?v=2.1.2"; bc.async = true;
       (document.head || document.documentElement).appendChild(bc);
     }
   } catch (e) {}

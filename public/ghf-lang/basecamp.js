@@ -163,7 +163,7 @@
     }
     function mode() { return saved() || auto(); }
     function chrome(m) { // color-scheme (form controls, scrollbars) and the browser bar colour follow the mode
-      if (document.body) de.style.colorScheme = native === "dark" ? "dark" : "light"; // the scheme the page itself is drawn in (an inverted page keeps its own: the filter flips the rest)
+      if (document.body) de.style.colorScheme = (native === "auto" ? m === "night" : native === "dark") ? "dark" : "light"; // the scheme the page itself is drawn in (an inverted page keeps its own: the filter flips the rest)
       var q = document.querySelectorAll('meta[name="theme-color"]'), i, mt = q[0];
       for (i = 1; i < q.length; i++) q[i].parentNode.removeChild(q[i]);
       if (!mt) { mt = document.createElement("meta"); mt.name = "theme-color"; (document.head || de).appendChild(mt); }
@@ -196,7 +196,8 @@
       de.setAttribute("data-ghf-mode", m);
       de.classList.add("ghf-shell"); chrome(m);
       if (!/^(maps|chess|fb|2026-10-22)\./.test(host)) de.classList.add("ghf-hy"); // the hybrid type/spacing layer (ghf-tokens.css); these four keep their own
-      de.classList.toggle("ghf-inv", (m === "day") !== (native === "light"));
+      de.setAttribute("data-ghf-scheme", native === "auto" ? (m === "day" ? "light" : "dark") : native); // the scheme the page is drawn in
+      de.classList.toggle("ghf-inv", native !== "auto" && (m === "day") !== (native === "light")); // "auto": the page draws both schemes itself, never inverted
       if (!crit) { // critical rules inline, so there is no flash while the shared CSS file loads
         crit = document.createElement("style"); crit.setAttribute("data-ghf-theme-crit", "");
         crit.textContent = "html.ghf-inv{filter:invert(1) hue-rotate(180deg)}" +
@@ -557,14 +558,19 @@
     }
     return [255, 255, 255, 1];
   }
+  // v2.1.3 palette v3 (22 Oct 2026): one unique two-colour hint per site; the same table ghf-boot.js carries, for pages that load
+  // this file without it (ghf-lang.js, /basecamp.js). Table: palette.md.
+  var HOST_PAIRS = {"greathousefarmwiki.wordpress.com":["#1B4D6A","#0F9DF0"],"wiki.bucklerfamily.estate":["#1B4D6A","#0F9DF0"],"clerk.bucklerfamily.estate":["#1B4D6A","#0F9DF0"],"bpvsbuckler.bucklerfamily.estate":["#6A3A1B","#F1721E"],"story.bucklerfamily.estate":["#6A3A1B","#F1721E"],"maps.bucklerfamily.estate":["#1E4D45","#FF8F7A"],"chess.bucklerfamily.estate":["#3D2614","#D9AE7E"],"fcg.bucklerfamily.estate":["#4A1B6A","#C274F6"],"csscpsg.bucklerfamily.estate":["#364E13","#92DB24"],"csscpsgp.bucklerfamily.estate":["#364E13","#92DB24"],"records.bucklerfamily.estate":["#215214","#BDEBFF"],"wayback.bucklerfamily.estate":["#144E52","#0FE1F0"],"email.bucklerfamily.estate":["#145227","#24DB5B"],"email.bucklerfamily.estate/calendar/":["#145227","#FFB627"],"emails.bucklerfamily.estate":["#145227","#FFB627"],"authorities.bucklerfamily.estate":["#263238","#B0BEC5"],"dartboard.bucklerfamily.estate":["#671B6A","#EE4EF4"],"qa.bucklerfamily.estate":["#14523F","#24DBA4"],"2026-10-22.bucklerfamily.estate":["#484912","#D5DB24"],"review.bucklerfamily.estate":["#1B1D6A","#F7A8C4"],"research.bucklerfamily.estate":["#1F3D2B","#C9B6FF"],"projects.bucklerfamily.estate":["#1B356A","#6695F5"],"fb.bucklerfamily.estate":["#6A1B50","#F55CC2"],"accounts.bucklerfamily.estate":["#6A1B38","#9DE6CF"],"app.bucklerfamily.estate":["#6A1B1B","#FF5252"],"apps.bucklerfamily.estate":["#6A1B1B","#FF5252"],"ebooks.bucklerfamily.estate":["#4A1942","#F2C94C"],"shop.bucklerfamily.estate":["#5C1A2B","#F3E3B5"],"docs.bucklerfamily.estate":["#1C2E5C","#FFB27A"],"infographic.bucklerfamily.estate":["#14304A","#9BE15D"],"oldbill.bucklerfamily.estate":["#2B2B2B","#E08A4F"],"terrain.bucklerfamily.estate":["#3A2E1F","#A8D8FF"],"directory.bucklerfamily.estate":["#3D1F4A","#9FE2FF"],"watchtower.bucklerfamily.estate":["#6B2D1F","#FFE14D"],"chat.bucklerfamily.estate":["#0F4C5C","#F3A6F0"],"nomenclature.bucklerfamily.estate":["#3A1F3D","#7EF0E0"],"nomlecture.bucklerfamily.estate":["#3A1F3D","#7EF0E0"],"nolecture.bucklerfamily.estate":["#3A1F3D","#7EF0E0"],"whatdotheyknow.bucklerfamily.estate":["#5A3E12","#9DF2B8"],"bucklerfamily.estate/cyberspace/":["#0B1A2E","#39FF9C"]};
+  function hostPair() { var hp = location.hostname + location.pathname, pk = null, k; for (k in HOST_PAIRS) if (k.indexOf("/") > 0 && hp.indexOf(k) === 0 && (!pk || k.length > pk.length)) pk = k; return HOST_PAIRS[pk || location.hostname] || null; }
   function brand(stop) {
     var de = document.documentElement;
     if (de.getAttribute("data-ghf-brand") === "off") return;
     var pair = null, k;
     for (k in BRAND_PATHS) if (apex && path.indexOf(k) === 0) pair = BRAND_PATHS[k];
+    if (!pair) pair = window.GHFPair || hostPair(); // v2.1.3 palette v3: one unique pair per site, ahead of the stop's own
     if (!pair && stop) pair = stop.c;
     if (!pair) return;
-    var P = pair[0], S = pair[1], tw = TWEAKS[host] || {};
+    var P = pair[0], S = pair[1], tw = TWEAKS[host] || (stop ? {} : { buttons: false, links: false }); // a site outside the stops carries the hint only: band, header underline, focus ring
     window.GHFBasecamp.colors = pair;
     de.style.setProperty("--ghf-p", P); de.style.setProperty("--ghf-s", S);
     de.setAttribute("data-ghf-brand", "on");
@@ -575,11 +581,12 @@
       (vars ? ":root{" + vars + "}" : "") +
       ".ghf-band{position:fixed;left:0;right:0;top:0;height:6px;z-index:2147481991;pointer-events:none;background:linear-gradient(90deg," + P + " 0 62%," + S + " 62% 100%)}" +
       "html[data-ghf-brand=on] ::selection{background:" + S + ";color:#000}" +
-      "html[data-ghf-brand=on] :focus-visible{outline-color:" + S + "}" +
+      "html[data-ghf-brand=on] :focus-visible{outline-color:var(--ghf-accent," + S + ")}" +
       ".ghf-hdr,.ghf-hdr-edge{border-bottom:1px solid var(--ghf-line," + S + ")!important}" +
       ".ghf-btn,.ghf-ghost{background:transparent!important;background-image:none!important;border:1px solid var(--ghf-line," + S + ")!important;color:inherit!important;border-radius:2px!important;text-transform:uppercase;letter-spacing:.08em;font-weight:500!important;box-shadow:none!important;max-width:100%;box-sizing:border-box;white-space:normal}" +
       ".ghf-btn:hover,.ghf-ghost:hover{background:var(--ghf-line," + S + ")!important;color:var(--ghf-on-line,#000)!important}" +
       ".ghf-bc-home,.ghf-bc-open{border-color:" + S + "!important}.ghf-bc-arrow{color:" + S + "!important}" +
+      ".ghf-v2-chain{border-bottom:0!important;background-image:linear-gradient(90deg," + P + " 0 62%," + S + " 62% 100%)!important;background-size:100% 3px!important;background-repeat:no-repeat!important;background-position:0 100%!important}" + // v2.1.3 palette v3: the site's pair as a two-tone line under the site-name bar, day and night
       "@media print{.ghf-band{display:none}}" + (tw.css || "").replace(/__P__/g, P).replace(/__S__/g, S);
     (document.head || de).appendChild(css);
     var mt = document.querySelector('meta[name="theme-color"]');

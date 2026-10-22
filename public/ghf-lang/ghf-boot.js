@@ -17,6 +17,20 @@
   if (!M) try { M = matchMedia("(prefers-color-scheme: dark)").matches ? "night" : matchMedia("(prefers-color-scheme: light)").matches ? "day" : null; } catch (e) {}
   if (!M) { var hr = new Date().getHours(); M = hr >= 7 && hr < 19 ? "day" : "night"; }
   de.setAttribute("data-ghf-mode", M);
+  // v2.1.3 palette v3 (22 Oct 2026): each site's own two-colour hint, set before the first paint as --ghf-p (deep: white text
+  // passes AA on it) and --ghf-s (bright: passes AA as text on black). ghf-theme.css turns them into --ghf-accent / --ghf-accent-2
+  // for the scheme the page is drawn in; basecamp.js paints the 6px band, the header underline and the focus ring with them.
+  // The base day (white) / night (black) stays shared. A page opts out with <html data-ghf-brand="off">. Table: palette.md.
+  var PAIRS = {"greathousefarmwiki.wordpress.com":["#1B4D6A","#0F9DF0"],"wiki.bucklerfamily.estate":["#1B4D6A","#0F9DF0"],"clerk.bucklerfamily.estate":["#1B4D6A","#0F9DF0"],"bpvsbuckler.bucklerfamily.estate":["#6A3A1B","#F1721E"],"story.bucklerfamily.estate":["#6A3A1B","#F1721E"],"maps.bucklerfamily.estate":["#1E4D45","#FF8F7A"],"chess.bucklerfamily.estate":["#3D2614","#D9AE7E"],"fcg.bucklerfamily.estate":["#4A1B6A","#C274F6"],"csscpsg.bucklerfamily.estate":["#364E13","#92DB24"],"csscpsgp.bucklerfamily.estate":["#364E13","#92DB24"],"records.bucklerfamily.estate":["#215214","#BDEBFF"],"wayback.bucklerfamily.estate":["#144E52","#0FE1F0"],"email.bucklerfamily.estate":["#145227","#24DB5B"],"email.bucklerfamily.estate/calendar/":["#145227","#FFB627"],"emails.bucklerfamily.estate":["#145227","#FFB627"],"authorities.bucklerfamily.estate":["#263238","#B0BEC5"],"dartboard.bucklerfamily.estate":["#671B6A","#EE4EF4"],"qa.bucklerfamily.estate":["#14523F","#24DBA4"],"2026-10-22.bucklerfamily.estate":["#484912","#D5DB24"],"review.bucklerfamily.estate":["#1B1D6A","#F7A8C4"],"research.bucklerfamily.estate":["#1F3D2B","#C9B6FF"],"projects.bucklerfamily.estate":["#1B356A","#6695F5"],"fb.bucklerfamily.estate":["#6A1B50","#F55CC2"],"accounts.bucklerfamily.estate":["#6A1B38","#9DE6CF"],"app.bucklerfamily.estate":["#6A1B1B","#FF5252"],"apps.bucklerfamily.estate":["#6A1B1B","#FF5252"],"ebooks.bucklerfamily.estate":["#4A1942","#F2C94C"],"shop.bucklerfamily.estate":["#5C1A2B","#F3E3B5"],"docs.bucklerfamily.estate":["#1C2E5C","#FFB27A"],"infographic.bucklerfamily.estate":["#14304A","#9BE15D"],"oldbill.bucklerfamily.estate":["#2B2B2B","#E08A4F"],"terrain.bucklerfamily.estate":["#3A2E1F","#A8D8FF"],"directory.bucklerfamily.estate":["#3D1F4A","#9FE2FF"],"watchtower.bucklerfamily.estate":["#6B2D1F","#FFE14D"],"chat.bucklerfamily.estate":["#0F4C5C","#F3A6F0"],"nomenclature.bucklerfamily.estate":["#3A1F3D","#7EF0E0"],"nomlecture.bucklerfamily.estate":["#3A1F3D","#7EF0E0"],"nolecture.bucklerfamily.estate":["#3A1F3D","#7EF0E0"],"whatdotheyknow.bucklerfamily.estate":["#5A3E12","#9DF2B8"],"bucklerfamily.estate/cyberspace/":["#0B1A2E","#39FF9C"]};
+  if (de.getAttribute("data-ghf-brand") !== "off") {
+    var hp = location.hostname + location.pathname, pk = null, pq;
+    for (pq in PAIRS) if (pq.indexOf("/") > 0 && hp.indexOf(pq) === 0 && (!pk || pq.length > pk.length)) pk = pq;
+    var pr = PAIRS[pk || location.hostname];
+    if (pr) { window.GHFPair = pr; de.style.setProperty("--ghf-p", pr[0]); de.style.setProperty("--ghf-s", pr[1]); }
+  }
+  // a page drawn in both schemes by its own CSS pins <html data-ghf-native="auto">: it is never inverted, it follows the mode
+  var NV = de.getAttribute("data-ghf-native");
+  if (NV === "auto" || NV === "dark" || NV === "light") de.setAttribute("data-ghf-scheme", NV === "auto" ? (M === "day" ? "light" : "dark") : NV);
   var tc = d.querySelector('meta[name="theme-color"]'); if (!tc) { tc = d.createElement("meta"); tc.name = "theme-color"; (d.head || de).appendChild(tc); }
   tc.removeAttribute("media"); tc.content = M === "day" ? "#ffffff" : "#000000";
   var B = (me && me.src ? me.src.replace(/[^\/?#]*([?#].*)?$/, "") : "") || "https://bucklerfamily.estate/ghf-lang/";

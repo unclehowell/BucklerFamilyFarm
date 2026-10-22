@@ -19,6 +19,13 @@ THEME_CSS = """/*! ghf-theme.css — the shared Cedwyn Estate theme for every Gr
 @font-face{font-family:"Barlow";font-weight:500 700;font-display:swap;src:url(../fonts/barlow-latin-700-normal.woff2) format("woff2")}
 html{--ghf-font:Barlow,"Helvetica Neue",Arial,system-ui,sans-serif;--ghf-line:var(--ghf-s,#f2c94c);--ghf-on-line:#000}
 html[data-ghf-native=light]{--ghf-line:var(--ghf-p,#0a0a0a);--ghf-on-line:#fff}
+/* v2.1.3 palette v3 (22 Oct 2026): the site's pair (ghf-boot.js sets --ghf-p deep / --ghf-s bright) as tokens for the scheme the page
+   is drawn in (data-ghf-scheme): --ghf-accent passes as text and lines on that ground, --ghf-accent-2 is the other half of the pair.
+   A page drawn in both schemes by its own CSS pins data-ghf-native="auto" (never inverted; base ground white by day, black by night). */
+html,html[data-ghf-scheme=dark]{--ghf-accent:var(--ghf-s,#f2c94c);--ghf-accent-2:var(--ghf-p,#0a0a0a)}
+html[data-ghf-scheme=light]{--ghf-accent:var(--ghf-p,#0a0a0a);--ghf-accent-2:var(--ghf-s,#f2c94c);--ghf-line:var(--ghf-p,#0a0a0a);--ghf-on-line:#fff}
+html[data-ghf-native=auto][data-ghf-mode=night],html[data-ghf-native=auto][data-ghf-mode=night] body{background-color:#000;color-scheme:dark}
+html[data-ghf-native=auto][data-ghf-mode=day],html[data-ghf-native=auto][data-ghf-mode=day] body{background-color:#fff;color-scheme:light}
 /* Day / Night: a site keeps its own design in its own mode and is shown inverted in the other; photos, video, maps,
    canvases (the chessboard) and the shared header are flipped back so they keep their real colours. */
 html.ghf-inv{filter:invert(1) hue-rotate(180deg)}

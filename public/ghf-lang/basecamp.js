@@ -205,7 +205,7 @@
           "html[data-ghf-native=dark]:not(.ghf-inv),html[data-ghf-native=dark]:not(.ghf-inv) body{background-color:#000!important}";
         (document.head || de).appendChild(crit);
         if (!document.querySelector("link[data-ghf-theme]")) {
-          var l = document.createElement("link"); l.rel = "stylesheet"; l.href = ASSET + "/ghf-lang/ghf-theme.css?v=2.1.2"; l.setAttribute("data-ghf-theme", "");
+          var l = document.createElement("link"); l.rel = "stylesheet"; l.href = ASSET + "/ghf-lang/ghf-theme.css?v=2.1.3"; l.setAttribute("data-ghf-theme", "");
           (document.head || de).appendChild(l);
         }
       }
@@ -452,7 +452,7 @@
         if (shift) setTimeout(shift, 50);
       };
       if (window.GHFLoc) return go();
-      var ls = document.createElement("script"); ls.src = ASSET + "/ghf-lang/locations.js?v=2.1.2"; ls.async = true; ls.onload = go;
+      var ls = document.createElement("script"); ls.src = ASSET + "/ghf-lang/locations.js?v=2.1.3"; ls.async = true; ls.onload = go;
       (document.head || de).appendChild(ls);
     }
     function mount() {
@@ -754,7 +754,7 @@
   function locStrip() {
     var go = function () { if (window.GHFLoc && bar) { window.GHFLoc.strip(bar); var m = bar.querySelector(".ghf-top-mini"); if (m && window.GHFLoc.mini) window.GHFLoc.mini(m); if (shiftNow) setTimeout(shiftNow, 50); } };
     if (window.GHFLoc) return go();
-    var ls = document.createElement("script"); ls.src = ASSET + "/ghf-lang/locations.js?v=2.1.2"; ls.async = true; ls.onload = go;
+    var ls = document.createElement("script"); ls.src = ASSET + "/ghf-lang/locations.js?v=2.1.3"; ls.async = true; ls.onload = go;
     (document.head || document.documentElement).appendChild(ls);
   }
   function moveLang() { // one language switch, always in the same place: the shared header

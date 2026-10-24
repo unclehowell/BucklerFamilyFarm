@@ -1,7 +1,7 @@
 {
- "version": "2.0.12",
+ "version": "2.0.13",
  "updated": "2026-10-24",
- "note": "ONE merry-go-round order for every Great House Farm site. Edit here, then run python3 campus/build_basecamp.py: it writes public/ghf-lang/chain.json and embeds the order in basecamp.js, which every site loads. The arrows wrap: › from the last entry goes to the first. Script-free pages (the WordPress Legal Wiki) carry static links that must match this order (campus/wiki_header.py prints them). Sion's Tab agent. 21 Oct 2026: Home (the apex root) is the Disclosure Dartboard (served at / by the apex-home Worker, which also answers dartboard.bucklerfamily.estate's own paths); the Cedwyn Estate base camp moved to https://bucklerfamily.estate/cedwyn/ and takes the Dartboard's old place in the order. 21 Oct 2026: Cedwyn Estate Directory (directory.bucklerfamily.estate) added after the Cedwyn Estate base camp. 21 Oct 2026: Nomenclature (nomenclature.bucklerfamily.estate; aliases nomlecture./nolecture.) added after Watchtower. 21 Oct 2026: optional \"d\" (other wordings of the site's own title) and \"x\" (CSS selectors of a title block that only repeats the bar's name) per site; basecamp.js hides those under the bars, kept for screen readers, so pages start right under the header (Sion 17:39: no repeated page titles). 21 Oct 2026: Terrain (terrain.bucklerfamily.estate, the live voice-edited 3D estate) added after the Cedwyn Estate base camp. 22 Oct 2026: The Post Office · Calendar (emails.bucklerfamily.estate: the correspondence calendar and worst-case forecast) added right after The Post Office, so the arrow from the mail archive toggles to its calendar. 24 Oct 2026 (v2.1.4): the tour runs oldest to present as a museum walk — the record (Primary Records, Docs, Wayback Vault, Nomenclature, Map Room, Land Changing Hands, Legal Wiki), read and watch (E-book Shelf, The Story), the 1900s farmbook, the case (Chessboard … Watchtower), then the present day at the end (farmbook 2, Post Office and calendar, Dartboard, Cedwyn Estate, Directory, Patagonia museum, Virtual tour of Wales, Terrain, Digital Estate) and out through the Gift Shop. Docs, farmbook 2, /patagonia/ and /wales/ joined the tour; bucklerfamily.estate still opens on the Dartboard.",
+ "note": "ONE merry-go-round order for every Great House Farm site. Edit here, then run python3 campus/build_basecamp.py: it writes public/ghf-lang/chain.json and embeds the order in basecamp.js, which every site loads. The arrows wrap: › from the last entry goes to the first. Script-free pages (the WordPress Legal Wiki) carry static links that must match this order (campus/wiki_header.py prints them). Sion's Tab agent. 21 Oct 2026: Home (the apex root) is the Disclosure Dartboard (served at / by the apex-home Worker, which also answers dartboard.bucklerfamily.estate's own paths); the Cedwyn Estate base camp moved to https://bucklerfamily.estate/cedwyn/ and takes the Dartboard's old place in the order. 21 Oct 2026: Cedwyn Estate Directory (directory.bucklerfamily.estate) added after the Cedwyn Estate base camp. 21 Oct 2026: Nomenclature (nomenclature.bucklerfamily.estate; aliases nomlecture./nolecture.) added after Watchtower. 21 Oct 2026: optional \"d\" (other wordings of the site's own title) and \"x\" (CSS selectors of a title block that only repeats the bar's name) per site; basecamp.js hides those under the bars, kept for screen readers, so pages start right under the header (Sion 17:39: no repeated page titles). 21 Oct 2026: Terrain (terrain.bucklerfamily.estate, the live voice-edited 3D estate) added after the Cedwyn Estate base camp. 22 Oct 2026: The Post Office · Calendar (emails.bucklerfamily.estate: the correspondence calendar and worst-case forecast) added right after The Post Office, so the arrow from the mail archive toggles to its calendar. 24 Oct 2026 (v2.1.4): the tour runs oldest to present as a museum walk — the record (Primary Records, Docs, Wayback Vault, Nomenclature, Map Room, Land Changing Hands, Legal Wiki), read and watch (E-book Shelf, The Story), the 1900s farmbook, the case (Chessboard … Watchtower), then the present day at the end (farmbook 2, Post Office and calendar, Dartboard, Cedwyn Estate, Directory, Patagonia museum, Virtual tour of Wales, Terrain, Digital Estate) and out through the Gift Shop. Docs, farmbook 2, /patagonia/ and /wales/ joined the tour; bucklerfamily.estate still opens on the Dartboard. 24 Oct 2026 (chain 2.0.13): Court Drills (courtdrills.bucklerfamily.estate, procedural unfairness in the Great House Farm proceedings) added right after The Grammar House (csscpsg); nothing else moved.",
  "sites": [
   {
    "id": "records",
@@ -144,6 +144,16 @@
    "h": [
     "csscpsg.bucklerfamily.estate",
     "csscpsgp.bucklerfamily.estate"
+   ]
+  },
+  {
+   "id": "courtdrills",
+   "t": "Court Drills · Procedural Unfairness",
+   "cy": "Driliau’r Llys · Annhegwch Gweithdrefnol",
+   "es": "Simulacros Judiciales · Injusticia Procesal",
+   "u": "https://courtdrills.bucklerfamily.estate/",
+   "h": [
+    "courtdrills.bucklerfamily.estate"
    ]
   },
   {

@@ -24,7 +24,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid #ff
 .utility{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 4px 30px;color:#d3b878;font:600 10px/1.4 Georgia,serif;letter-spacing:.18em;text-transform:uppercase}
 .theme-toggle{flex:0 0 auto;border:1px solid #a77a37;background:rgba(11,5,2,.45);color:#f6dc99;padding:8px 12px;min-height:36px;letter-spacing:.08em;text-transform:uppercase;font:600 10px/1 Georgia,serif;cursor:pointer;box-shadow:inset 0 0 0 1px rgba(255,226,158,.08)}
 .theme-toggle:hover{background:rgba(242,205,120,.12)}
-.crest{display:grid;place-items:center;margin:0 auto 15px;width:66px;height:66px;border:2px solid #d3ad60;border-radius:50%;box-shadow:0 0 0 5px rgba(13,5,1,.48),0 0 0 6px rgba(208,166,80,.48),inset 0 0 16px #100602;color:#f7dfa0;font-size:24px;letter-spacing:.03em;text-shadow:0 2px #3b2009}
+.crest{display:grid;place-items:center;margin:0 auto 15px;width:112px;height:112px;border:2px solid #d3ad60;border-radius:50%;box-shadow:0 0 0 5px rgba(13,5,1,.48),0 0 0 6px rgba(208,166,80,.48),inset 0 0 16px #100602;color:#f7dfa0;font-size:24px;letter-spacing:.03em;text-shadow:0 2px #3b2009;overflow:hidden}.crest img{display:block;width:100%;height:100%;object-fit:contain;padding:7px}
 .eyebrow{margin:0 0 9px;color:#d6b66d;font:600 10px/1.5 Georgia,serif;letter-spacing:.34em;text-transform:uppercase}
 h1{margin:0;color:#f2d68e;font:normal clamp(36px,7.2vw,76px)/1.05 "Palatino Linotype","Book Antiqua",Georgia,serif;letter-spacing:.035em;text-shadow:0 1px 0 #fff0bb,0 2px 0 #8e6526,0 4px 2px #160801,0 7px 15px rgba(0,0,0,.78)}
 .family{margin:12px 0 0;color:#f0d99f;font:normal clamp(14px,2vw,20px)/1.5 "Palatino Linotype","Book Antiqua",Georgia,serif;letter-spacing:.09em;text-shadow:0 2px 3px #120702}
@@ -58,7 +58,7 @@ h2{margin:0 0 6px;color:#f0d48a;font:normal clamp(20px,3.3vw,29px)/1.2 "Palatino
 html[data-theme="day"]{color-scheme:light;--page:#4e321f}
 html[data-theme="day"] body{background:radial-gradient(ellipse at 50% 0%,#6f4827 0%,#3e2818 58%,#2b1b11 100%)}
 html[data-theme="day"] .plaque{filter:brightness(1.13);box-shadow:inset 0 0 0 2px #3f250f,inset 0 0 0 5px #bd944e,inset 0 0 0 8px rgba(42,21,7,.8),inset 0 0 38px rgba(0,0,0,.5),0 22px 54px rgba(0,0,0,.42)}
-@media(max-width:640px){body{padding-top:8px}.plaque{width:calc(100% - 12px);padding:22px 16px;border-width:4px}.plaque:before{inset:9px}.corner{width:14px;height:14px}.tl{top:14px;left:14px}.tr{top:14px;right:14px}.bl{bottom:14px;left:14px}.br{bottom:14px;right:14px}.utility{margin:0 0 25px;align-items:flex-start;font-size:8px;letter-spacing:.12em}.theme-toggle{padding:7px 8px;font-size:9px}.crest{width:54px;height:54px;font-size:20px}.masthead{padding-left:2px;padding-right:2px;padding-bottom:19px}.eyebrow{letter-spacing:.2em;font-size:9px}h1{font-size:clamp(34px,10vw,54px)}.family{letter-spacing:.03em}.menu-section{padding:18px 12px 16px}.entries{grid-template-columns:1fr;padding-left:10px}.entry{padding:9px}.entry-domain{font-size:9px}}
+@media(max-width:640px){body{padding-top:8px}.plaque{width:calc(100% - 12px);padding:22px 16px;border-width:4px}.plaque:before{inset:9px}.corner{width:14px;height:14px}.tl{top:14px;left:14px}.tr{top:14px;right:14px}.bl{bottom:14px;left:14px}.br{bottom:14px;right:14px}.utility{margin:0 0 25px;align-items:flex-start;font-size:8px;letter-spacing:.12em}.theme-toggle{padding:7px 8px;font-size:9px}.crest{width:82px;height:82px;font-size:20px}.masthead{padding-left:2px;padding-right:2px;padding-bottom:19px}.eyebrow{letter-spacing:.2em;font-size:9px}h1{font-size:clamp(34px,10vw,54px)}.family{letter-spacing:.03em}.menu-section{padding:18px 12px 16px}.entries{grid-template-columns:1fr;padding-left:10px}.entry{padding:9px}.entry-domain{font-size:9px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.entry{transition:none}}
 @media print{body{background:white;padding:0}.plaque{width:100%;filter:none;box-shadow:none}.theme-toggle{display:none}details:not([open])>*:not(summary){display:block!important}}
 </style>
@@ -68,17 +68,18 @@ html[data-theme="day"] .plaque{filter:brightness(1.13);box-shadow:inset 0 0 0 2p
 <span class="corner tl" aria-hidden="true"></span><span class="corner tr" aria-hidden="true"></span><span class="corner bl" aria-hidden="true"></span><span class="corner br" aria-hidden="true"></span>
 <header class="masthead">
 <div class="utility"><span>The family estate directory</span><button class="theme-toggle" id="theme-toggle" type="button" aria-pressed="false">☼ Day mode</button></div>
-<div class="crest" aria-hidden="true">CE</div>
+<div class="crest" aria-label="Williams-Buckler coat of arms"><img src="https://shop.bucklerfamily.estate/coat-of-arms.svg" alt="Williams-Buckler coat of arms" onerror="this.style.display='none';this.parentElement.textContent='CE'"></div>
 <p class="eyebrow">A family estate · Wales to Patagonia and beyond</p>
 <h1>Cedwyn Estate</h1>
 <p class="family">Williams-Buckler Family <span>(Est. 1667)</span></p>
 <div class="rule" aria-hidden="true"><span>✦</span></div>
 </header>
+<audio id="rmc2-radio" autoplay preload="none" playsinline aria-label="RMC2 radio stream"><source src="https://stream.rcs.revma.com/fxp289cp81uvv" type="audio/mpeg"></audio>
 <main>
 <section class="menu-section" aria-labelledby="wales-title">
 <h2 id="wales-title">Tours · Llandough, Wales — Great House Farm</h2>
 <p class="section-note">The original farmhouse, its landscape, and the family record.</p>
-<details class="submenu" open>
+<details class="submenu">
 <summary>The house &amp; its story</summary>
 <nav class="entries" aria-label="Great House Farm tour and story">
 <a class="entry" href="https://bucklerfamily.estate/wales/"><span class="entry-copy"><span class="entry-title">Virtual Tour · Wales</span><span class="entry-domain">bucklerfamily.estate/wales/</span></span><span class="entry-arrow" aria-hidden="true">↗</span></a>
@@ -131,7 +132,7 @@ html[data-theme="day"] .plaque{filter:brightness(1.13);box-shadow:inset 0 0 0 2p
 <section class="menu-section" aria-labelledby="patagonia-title">
 <h2 id="patagonia-title">Tours · Patagonia, Argentina — Great House Farm II</h2>
 <p class="section-note">The southern counterpart: a proposed Cedwyn Estate replica and visitor destination near Puerto Madryn.</p>
-<details class="submenu" open>
+<details class="submenu">
 <summary>Great House Farm II</summary>
 <nav class="entries" aria-label="Patagonia tour">
 <a class="entry" href="https://bucklerfamily.estate/patagonia/"><span class="entry-copy"><span class="entry-title">Patagonia Museum &amp; Estate</span><span class="entry-domain">bucklerfamily.estate/patagonia/</span></span><span class="entry-arrow" aria-hidden="true">↗</span></a>
@@ -143,7 +144,7 @@ html[data-theme="day"] .plaque{filter:brightness(1.13);box-shadow:inset 0 0 0 2p
 <section class="menu-section" aria-labelledby="online-title">
 <h2 id="online-title">Virtual Goods &amp; Services · Online</h2>
 <p class="section-note">Play, browse, read, build, and use the digital estate from anywhere.</p>
-<details class="submenu" open>
+<details class="submenu">
 <summary>Arcade &amp; interactive spaces</summary>
 <nav class="entries" aria-label="Arcade and interactive spaces">
 <a class="entry" href="https://bucklerfamily.estate/cyberspace/"><span class="entry-copy"><span class="entry-title">Cedwyn·Net Arcade</span><span class="entry-domain">bucklerfamily.estate/cyberspace/</span></span><span class="entry-arrow" aria-hidden="true">↗</span></a>
@@ -186,6 +187,21 @@ html[data-theme="day"] .plaque{filter:brightness(1.13);box-shadow:inset 0 0 0 2p
   if(choice!=="day"&&choice!=="night"){var m=/(?:^|; )ghf_theme=(day|night)/.exec(document.cookie||"");choice=m?m[1]:"night";}
   function apply(mode){root.setAttribute("data-theme",mode);root.style.colorScheme=mode==="day"?"light":"dark";btn.textContent=mode==="day"?"☾ Night mode":"☼ Day mode";btn.setAttribute("aria-pressed",mode==="day"?"true":"false");try{localStorage.setItem("ghf-theme",mode);}catch(e){}try{document.cookie="ghf_theme="+mode+"; path=/; max-age=31536000; SameSite=Lax; Secure; domain=.bucklerfamily.estate";}catch(e){}}
   apply(choice);btn.addEventListener("click",function(){apply(root.getAttribute("data-theme")==="day"?"night":"day");});
+})();
+</script>
+<script>
+(() => {
+ const radio = document.getElementById('rmc2-radio');
+ if (radio) {
+   radio.volume = 0.02;
+   radio.muted = false;
+   const start = () => radio.play().catch(() => {
+     const resume = () => { radio.play().catch(() => {}); document.removeEventListener('pointerdown', resume); document.removeEventListener('keydown', resume); };
+     document.addEventListener('pointerdown', resume, { once: true });
+     document.addEventListener('keydown', resume, { once: true });
+   });
+   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start, { once: true }); else start();
+ }
 })();
 </script>
 </body>

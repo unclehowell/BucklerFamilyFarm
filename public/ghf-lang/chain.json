@@ -1,38 +1,51 @@
 {
- "version": "2.0.11",
- "updated": "2026-10-22",
- "note": "ONE merry-go-round order for every Great House Farm site. Edit here, then run python3 campus/build_basecamp.py: it writes public/ghf-lang/chain.json and embeds the order in basecamp.js, which every site loads. The arrows wrap: › from the last entry goes to the first. Script-free pages (the WordPress Legal Wiki) carry static links that must match this order (campus/wiki_header.py prints them). Sion's Tab agent. 21 Oct 2026: Home (the apex root) is the Disclosure Dartboard (served at / by the apex-home Worker, which also answers dartboard.bucklerfamily.estate's own paths); the Cedwyn Estate base camp moved to https://bucklerfamily.estate/cedwyn/ and takes the Dartboard's old place in the order. 21 Oct 2026: Cedwyn Estate Directory (directory.bucklerfamily.estate) added after the Cedwyn Estate base camp. 21 Oct 2026: Nomenclature (nomenclature.bucklerfamily.estate; aliases nomlecture./nolecture.) added after Watchtower. 21 Oct 2026: optional \"d\" (other wordings of the site's own title) and \"x\" (CSS selectors of a title block that only repeats the bar's name) per site; basecamp.js hides those under the bars, kept for screen readers, so pages start right under the header (Sion 17:39: no repeated page titles). 21 Oct 2026: Terrain (terrain.bucklerfamily.estate, the live voice-edited 3D estate) added after the Cedwyn Estate base camp. 22 Oct 2026: The Post Office · Calendar (emails.bucklerfamily.estate: the correspondence calendar and worst-case forecast) added right after The Post Office, so the arrow from the mail archive toggles to its calendar.",
+ "version": "2.0.12",
+ "updated": "2026-10-24",
+ "note": "ONE merry-go-round order for every Great House Farm site. Edit here, then run python3 campus/build_basecamp.py: it writes public/ghf-lang/chain.json and embeds the order in basecamp.js, which every site loads. The arrows wrap: › from the last entry goes to the first. Script-free pages (the WordPress Legal Wiki) carry static links that must match this order (campus/wiki_header.py prints them). Sion's Tab agent. 21 Oct 2026: Home (the apex root) is the Disclosure Dartboard (served at / by the apex-home Worker, which also answers dartboard.bucklerfamily.estate's own paths); the Cedwyn Estate base camp moved to https://bucklerfamily.estate/cedwyn/ and takes the Dartboard's old place in the order. 21 Oct 2026: Cedwyn Estate Directory (directory.bucklerfamily.estate) added after the Cedwyn Estate base camp. 21 Oct 2026: Nomenclature (nomenclature.bucklerfamily.estate; aliases nomlecture./nolecture.) added after Watchtower. 21 Oct 2026: optional \"d\" (other wordings of the site's own title) and \"x\" (CSS selectors of a title block that only repeats the bar's name) per site; basecamp.js hides those under the bars, kept for screen readers, so pages start right under the header (Sion 17:39: no repeated page titles). 21 Oct 2026: Terrain (terrain.bucklerfamily.estate, the live voice-edited 3D estate) added after the Cedwyn Estate base camp. 22 Oct 2026: The Post Office · Calendar (emails.bucklerfamily.estate: the correspondence calendar and worst-case forecast) added right after The Post Office, so the arrow from the mail archive toggles to its calendar. 24 Oct 2026 (v2.1.4): the tour runs oldest to present as a museum walk — the record (Primary Records, Docs, Wayback Vault, Nomenclature, Map Room, Land Changing Hands, Legal Wiki), read and watch (E-book Shelf, The Story), the 1900s farmbook, the case (Chessboard … Watchtower), then the present day at the end (farmbook 2, Post Office and calendar, Dartboard, Cedwyn Estate, Directory, Patagonia museum, Virtual tour of Wales, Terrain, Digital Estate) and out through the Gift Shop. Docs, farmbook 2, /patagonia/ and /wales/ joined the tour; bucklerfamily.estate still opens on the Dartboard.",
  "sites": [
   {
-   "id": "dartboard",
-   "t": "Home · The Disclosure Dartboard",
-   "cy": "Hafan · Bwrdd Dartiau Datgelu",
-   "es": "Inicio · La Diana de la Divulgación",
-   "u": "https://bucklerfamily.estate/",
+   "id": "records",
+   "t": "Primary Records",
+   "cy": "Cofnodion Sylfaenol",
+   "es": "Registros Primarios",
+   "u": "https://records.bucklerfamily.estate/",
    "h": [
-    "dartboard.bucklerfamily.estate"
+    "records.bucklerfamily.estate"
+   ],
+   "d": [
+    "Great House Farm — Primary Record Register"
    ]
   },
   {
-   "id": "wiki",
-   "t": "The Legal Wiki",
-   "cy": "Y Wici Cyfreithiol",
-   "es": "La Wiki Legal",
-   "u": "https://greathousefarmwiki.wordpress.com/",
+   "id": "docs",
+   "t": "Docs · The Evidence Catalogue",
+   "cy": "Dogfennau · Y Catalog Tystiolaeth",
+   "es": "Documentos · El Catálogo de Pruebas",
+   "u": "https://docs.bucklerfamily.estate/",
    "h": [
-    "greathousefarmwiki.wordpress.com",
-    "wiki.bucklerfamily.estate"
+    "docs.bucklerfamily.estate"
    ]
   },
   {
-   "id": "story",
-   "t": "The Story",
-   "cy": "Y Stori",
-   "es": "La Historia",
-   "u": "https://bpvsbuckler.bucklerfamily.estate/",
+   "id": "wayback",
+   "t": "The Wayback Vault",
+   "cy": "Claddgell Wayback",
+   "es": "La Bóveda Wayback",
+   "u": "https://wayback.bucklerfamily.estate/",
    "h": [
-    "bpvsbuckler.bucklerfamily.estate",
-    "story.bucklerfamily.estate"
+    "wayback.bucklerfamily.estate"
+   ]
+  },
+  {
+   "id": "nomenclature",
+   "t": "Nomenclature",
+   "cy": "Enwau",
+   "es": "Nomenclatura",
+   "u": "https://nomenclature.bucklerfamily.estate/",
+   "h": [
+    "nomenclature.bucklerfamily.estate",
+    "nomlecture.bucklerfamily.estate",
+    "nolecture.bucklerfamily.estate"
    ]
   },
   {
@@ -62,6 +75,54 @@
    ]
   },
   {
+   "id": "wiki",
+   "t": "The Legal Wiki",
+   "cy": "Y Wici Cyfreithiol",
+   "es": "La Wiki Legal",
+   "u": "https://greathousefarmwiki.wordpress.com/",
+   "h": [
+    "greathousefarmwiki.wordpress.com",
+    "wiki.bucklerfamily.estate"
+   ]
+  },
+  {
+   "id": "ebooks",
+   "t": "The E-book Shelf",
+   "cy": "Y Silff E-lyfrau",
+   "es": "La Estantería de Libros",
+   "u": "https://ebooks.bucklerfamily.estate/",
+   "h": [
+    "ebooks.bucklerfamily.estate"
+   ],
+   "d": [
+    "E-books"
+   ],
+   "x": [
+    ".eb-hero .sl-hero-in > .sl-kicker"
+   ]
+  },
+  {
+   "id": "story",
+   "t": "The Story",
+   "cy": "Y Stori",
+   "es": "La Historia",
+   "u": "https://bpvsbuckler.bucklerfamily.estate/",
+   "h": [
+    "bpvsbuckler.bucklerfamily.estate",
+    "story.bucklerfamily.estate"
+   ]
+  },
+  {
+   "id": "fb",
+   "t": "The Farm Album",
+   "cy": "Albwm y Fferm",
+   "es": "El Álbum de la Granja",
+   "u": "https://fb.bucklerfamily.estate/",
+   "h": [
+    "fb.bucklerfamily.estate"
+   ]
+  },
+  {
    "id": "chess",
    "t": "The Chessboard",
    "cy": "Y Bwrdd Gwyddbwyll",
@@ -72,6 +133,17 @@
    ],
    "x": [
     ".top > .bar > a.brand"
+   ]
+  },
+  {
+   "id": "csscpsg",
+   "t": "The Grammar House (CSSCPSGP)",
+   "cy": "Tŷ’r Gramadeg (CSSCPSGP)",
+   "es": "La Casa de la Gramática (CSSCPSGP)",
+   "u": "https://csscpsg.bucklerfamily.estate/",
+   "h": [
+    "csscpsg.bucklerfamily.estate",
+    "csscpsgp.bucklerfamily.estate"
    ]
   },
   {
@@ -93,70 +165,23 @@
    ]
   },
   {
-   "id": "csscpsg",
-   "t": "The Grammar House (CSSCPSGP)",
-   "cy": "Tŷ’r Gramadeg (CSSCPSGP)",
-   "es": "La Casa de la Gramática (CSSCPSGP)",
-   "u": "https://csscpsg.bucklerfamily.estate/",
+   "id": "oldbill",
+   "t": "Old Bill · Who Gained, Who Lost",
+   "cy": "Hen Bil · Pwy Enillodd, Pwy Gollodd",
+   "es": "Old Bill · Quién Ganó, Quién Perdió",
+   "u": "https://oldbill.bucklerfamily.estate/",
    "h": [
-    "csscpsg.bucklerfamily.estate",
-    "csscpsgp.bucklerfamily.estate"
+    "oldbill.bucklerfamily.estate"
    ]
   },
   {
-   "id": "records",
-   "t": "Primary Records",
-   "cy": "Cofnodion Sylfaenol",
-   "es": "Registros Primarios",
-   "u": "https://records.bucklerfamily.estate/",
+   "id": "accounts",
+   "t": "The Counting House",
+   "cy": "Y Tŷ Cyfrif",
+   "es": "La Casa de Cuentas",
+   "u": "https://accounts.bucklerfamily.estate/",
    "h": [
-    "records.bucklerfamily.estate"
-   ],
-   "d": [
-    "Great House Farm — Primary Record Register"
-   ]
-  },
-  {
-   "id": "wayback",
-   "t": "The Wayback Vault",
-   "cy": "Claddgell Wayback",
-   "es": "La Bóveda Wayback",
-   "u": "https://wayback.bucklerfamily.estate/",
-   "h": [
-    "wayback.bucklerfamily.estate"
-   ]
-  },
-  {
-   "id": "wdtk",
-   "t": "FOI Requests (WhatDoTheyKnow)",
-   "cy": "Ceisiadau Rhyddid Gwybodaeth (WhatDoTheyKnow)",
-   "es": "Solicitudes de información (WhatDoTheyKnow)",
-   "u": "https://whatdotheyknow.bucklerfamily.estate/",
-   "h": [
-    "whatdotheyknow.bucklerfamily.estate"
-   ]
-  },
-  {
-   "id": "email",
-   "t": "The Post Office",
-   "cy": "Swyddfa’r Post",
-   "es": "La Oficina de Correos",
-   "u": "https://email.bucklerfamily.estate/",
-   "h": [
-    "email.bucklerfamily.estate"
-   ],
-   "x": [
-    ".topbar > .brand"
-   ]
-  },
-  {
-   "id": "emails",
-   "t": "The Post Office · Calendar",
-   "cy": "Swyddfa’r Post · Calendr",
-   "es": "La Oficina de Correos · Calendario",
-   "u": "https://emails.bucklerfamily.estate/",
-   "h": [
-    "emails.bucklerfamily.estate"
+    "accounts.bucklerfamily.estate"
    ]
   },
   {
@@ -173,60 +198,26 @@
    ]
   },
   {
-   "id": "estate",
-   "t": "Cedwyn Estate",
-   "cy": "Ystâd Cedwyn",
-   "es": "Finca Cedwyn",
-   "u": "https://bucklerfamily.estate/cedwyn/",
+   "id": "wdtk",
+   "t": "FOI Requests (WhatDoTheyKnow)",
+   "cy": "Ceisiadau Rhyddid Gwybodaeth (WhatDoTheyKnow)",
+   "es": "Solicitudes de información (WhatDoTheyKnow)",
+   "u": "https://whatdotheyknow.bucklerfamily.estate/",
    "h": [
-    "bucklerfamily.estate",
-    "www.bucklerfamily.estate"
+    "whatdotheyknow.bucklerfamily.estate"
+   ]
+  },
+  {
+   "id": "review",
+   "t": "Independent Review",
+   "cy": "Adolygiad Annibynnol",
+   "es": "Revisión Independiente",
+   "u": "https://review.bucklerfamily.estate/",
+   "h": [
+    "review.bucklerfamily.estate"
    ],
-   "p": [
-    "/",
-    "/cedwyn/"
-   ]
-  },
-  {
-   "id": "terrain",
-   "t": "Terrain · Cedwyn Estate in 3D",
-   "cy": "Tirwedd · Ystâd Cedwyn mewn 3D",
-   "es": "Terreno · Finca Cedwyn en 3D",
-   "u": "https://terrain.bucklerfamily.estate/",
-   "h": [
-    "terrain.bucklerfamily.estate"
-   ]
-  },
-  {
-   "id": "directory",
-   "t": "Cedwyn Estate Directory",
-   "cy": "Cyfeiriadur Ystâd Cedwyn",
-   "es": "Directorio de Finca Cedwyn",
-   "u": "https://directory.bucklerfamily.estate/",
-   "h": [
-    "directory.bucklerfamily.estate"
-   ]
-  },
-  {
-   "id": "watchtower",
-   "t": "Watchtower",
-   "cy": "Y Tŵr Gwylio",
-   "es": "La Atalaya",
-   "u": "https://watchtower.bucklerfamily.estate/",
-   "h": [
-    "watchtower.bucklerfamily.estate"
-   ]
-  },
-  {
-   "id": "nomenclature",
-   "t": "Nomenclature",
-   "cy": "Enwau",
-   "es": "Nomenclatura",
-   "u": "https://nomenclature.bucklerfamily.estate/",
-   "h": [
-    "nomenclature.bucklerfamily.estate",
-    "nomlecture.bucklerfamily.estate",
-    "nolecture.bucklerfamily.estate"
+   "d": [
+    "Great House Farm — Independent Review Register"
    ]
   },
   {
@@ -256,19 +247,6 @@
    ]
   },
   {
-   "id": "review",
-   "t": "Independent Review",
-   "cy": "Adolygiad Annibynnol",
-   "es": "Revisión Independiente",
-   "u": "https://review.bucklerfamily.estate/",
-   "h": [
-    "review.bucklerfamily.estate"
-   ],
-   "d": [
-    "Great House Farm — Independent Review Register"
-   ]
-  },
-  {
    "id": "projects",
    "t": "The Project Office",
    "cy": "Swyddfa’r Prosiect",
@@ -276,50 +254,6 @@
    "u": "https://projects.bucklerfamily.estate/",
    "h": [
     "projects.bucklerfamily.estate"
-   ]
-  },
-  {
-   "id": "fb",
-   "t": "The Farm Album",
-   "cy": "Albwm y Fferm",
-   "es": "El Álbum de la Granja",
-   "u": "https://fb.bucklerfamily.estate/",
-   "h": [
-    "fb.bucklerfamily.estate"
-   ]
-  },
-  {
-   "id": "cyberspace",
-   "t": "The Digital Estate",
-   "cy": "Yr Ystâd Ddigidol",
-   "es": "La Finca Digital",
-   "u": "https://bucklerfamily.estate/cyberspace/",
-   "h": [],
-   "p": [
-    "/cyberspace/"
-   ],
-   "x": [
-    "header.stage > p.kick"
-   ]
-  },
-  {
-   "id": "accounts",
-   "t": "The Counting House",
-   "cy": "Y Tŷ Cyfrif",
-   "es": "La Casa de Cuentas",
-   "u": "https://accounts.bucklerfamily.estate/",
-   "h": [
-    "accounts.bucklerfamily.estate"
-   ]
-  },
-  {
-   "id": "oldbill",
-   "t": "Old Bill · Who Gained, Who Lost",
-   "cy": "Hen Bil · Pwy Enillodd, Pwy Gollodd",
-   "es": "Old Bill · Quién Ganó, Quién Perdió",
-   "u": "https://oldbill.bucklerfamily.estate/",
-   "h": [
-    "oldbill.bucklerfamily.estate"
    ]
   },
   {
@@ -347,19 +281,127 @@
    ]
   },
   {
-   "id": "ebooks",
-   "t": "The E-book Shelf",
-   "cy": "Y Silff E-lyfrau",
-   "es": "La Estantería de Libros",
-   "u": "https://ebooks.bucklerfamily.estate/",
+   "id": "watchtower",
+   "t": "Watchtower",
+   "cy": "Y Tŵr Gwylio",
+   "es": "La Atalaya",
+   "u": "https://watchtower.bucklerfamily.estate/",
    "h": [
-    "ebooks.bucklerfamily.estate"
-   ],
-   "d": [
-    "E-books"
+    "watchtower.bucklerfamily.estate"
+   ]
+  },
+  {
+   "id": "fb2",
+   "t": "farmbook 2 · Today",
+   "cy": "farmbook 2 · Heddiw",
+   "es": "farmbook 2 · Hoy",
+   "u": "https://fb2.bucklerfamily.estate/",
+   "h": [
+    "fb2.bucklerfamily.estate"
+   ]
+  },
+  {
+   "id": "email",
+   "t": "The Post Office",
+   "cy": "Swyddfa’r Post",
+   "es": "La Oficina de Correos",
+   "u": "https://email.bucklerfamily.estate/",
+   "h": [
+    "email.bucklerfamily.estate"
    ],
    "x": [
-    ".eb-hero .sl-hero-in > .sl-kicker"
+    ".topbar > .brand"
+   ]
+  },
+  {
+   "id": "emails",
+   "t": "The Post Office · Calendar",
+   "cy": "Swyddfa’r Post · Calendr",
+   "es": "La Oficina de Correos · Calendario",
+   "u": "https://email.bucklerfamily.estate/calendar/",
+   "h": [
+    "emails.bucklerfamily.estate"
+   ]
+  },
+  {
+   "id": "dartboard",
+   "t": "Home · The Disclosure Dartboard",
+   "cy": "Hafan · Bwrdd Dartiau Datgelu",
+   "es": "Inicio · La Diana de la Divulgación",
+   "u": "https://bucklerfamily.estate/",
+   "h": [
+    "dartboard.bucklerfamily.estate"
+   ]
+  },
+  {
+   "id": "estate",
+   "t": "Cedwyn Estate",
+   "cy": "Ystâd Cedwyn",
+   "es": "Finca Cedwyn",
+   "u": "https://bucklerfamily.estate/cedwyn/",
+   "h": [
+    "bucklerfamily.estate",
+    "www.bucklerfamily.estate"
+   ],
+   "p": [
+    "/",
+    "/cedwyn/"
+   ]
+  },
+  {
+   "id": "directory",
+   "t": "Cedwyn Estate Directory",
+   "cy": "Cyfeiriadur Ystâd Cedwyn",
+   "es": "Directorio de Finca Cedwyn",
+   "u": "https://directory.bucklerfamily.estate/",
+   "h": [
+    "directory.bucklerfamily.estate"
+   ]
+  },
+  {
+   "id": "patagonia",
+   "t": "Great House Farm II · Patagonia Museum",
+   "cy": "Great House Farm II · Amgueddfa Patagonia",
+   "es": "Great House Farm II · Museo de la Patagonia",
+   "u": "https://bucklerfamily.estate/patagonia/",
+   "h": [],
+   "p": [
+    "/patagonia/"
+   ]
+  },
+  {
+   "id": "wales",
+   "t": "Virtual Tour · Wales",
+   "cy": "Taith Rithwir · Cymru",
+   "es": "Visita Virtual · Gales",
+   "u": "https://bucklerfamily.estate/wales/",
+   "h": [],
+   "p": [
+    "/wales/"
+   ]
+  },
+  {
+   "id": "terrain",
+   "t": "Terrain · Cedwyn Estate in 3D",
+   "cy": "Tirwedd · Ystâd Cedwyn mewn 3D",
+   "es": "Terreno · Finca Cedwyn en 3D",
+   "u": "https://terrain.bucklerfamily.estate/",
+   "h": [
+    "terrain.bucklerfamily.estate"
+   ]
+  },
+  {
+   "id": "cyberspace",
+   "t": "The Digital Estate",
+   "cy": "Yr Ystâd Ddigidol",
+   "es": "La Finca Digital",
+   "u": "https://bucklerfamily.estate/cyberspace/",
+   "h": [],
+   "p": [
+    "/cyberspace/"
+   ],
+   "x": [
+    "header.stage > p.kick"
    ]
   },
   {

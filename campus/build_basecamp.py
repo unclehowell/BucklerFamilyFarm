@@ -419,7 +419,7 @@ ol.route b{{color:var(--ink)}}
 footer{{max-width:560px;margin:0 auto;padding:18px 18px 40px;font-size:.82rem;color:var(--muted);border-top:1px solid var(--line)}}
 footer a{{color:var(--ink)}}
 footer p{{margin:6px 0}}
-.daybtn{{position:absolute;top:14px;left:14px;display:inline-flex;align-items:center;gap:6px;height:34px;min-width:36px;justify-content:center;padding:0 11px;border:1px solid #fff;border-radius:2px;background:transparent;color:#fff;font:500 11px/1 Barlow,Arial,sans-serif;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;z-index:3}}
+.daybtn{{position:relative;top:auto;left:auto;display:inline-flex;align-items:center;gap:6px;height:34px;min-width:36px;justify-content:center;padding:0 11px;margin:0 0 14px;border:1px solid #fff;border-radius:2px;background:transparent;color:#fff;font:500 11px/1 Barlow,Arial,sans-serif;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;z-index:1}}
 .daybtn:hover{{border-color:#f2c94c}}@media (max-width:440px){{.daybtn .ghf-mode-txt{{display:none}}}}
 .mode>*{{font-weight:500}}
 </style>

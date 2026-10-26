@@ -248,7 +248,7 @@ body.arcade:after{animation:flick 7s steps(2) infinite;opacity:.3}
 .game-disclaimer{max-width:1160px;margin:15px auto 0;color:#7589a8;font-size:11.5px;line-height:1.5}
 body.arcade .foot{max-width:1160px;margin-top:22px;border-top:1px solid rgba(0,240,255,.3)}
 body.arcade .foot .px{font:400 8px/1.8 var(--px);letter-spacing:.1em;color:var(--cy)}
-@media(max-width:850px){.arcade-grid{grid-template-columns:minmax(0,1fr)}.selector{order:2}.cabinet{order:1}.game-instructions{grid-template-columns:1fr 1fr}.game-list{grid-template-columns:1fr 1fr}.game-option{border-right:1px solid rgba(75,97,143,.25)}.game-option:nth-child(even){border-right:0}.game-option:nth-last-child(-n+2){border-bottom:0}}
+@media(max-width:850px){.arcade-grid{grid-template-columns:minmax(0,1fr)}.selector{order:2}.cabinet{order:1}.touch-controls{display:flex}.touch-pad{display:grid;margin:0}.deck-btn#btn-action,.deck-btn#btn-shield{display:none}.game-instructions{grid-template-columns:1fr 1fr}.game-list{grid-template-columns:1fr 1fr}.game-option{border-right:1px solid rgba(75,97,143,.25)}.game-option:nth-child(even){border-right:0}.game-option:nth-last-child(-n+2){border-bottom:0}}
 @media(max-width:570px){.arcade-page{padding:12px 10px 35px}.arcade-hero{margin-bottom:14px;padding:8px 0 12px}.arcade-hero h1{font-size:25px;letter-spacing:.1em}.arcade-hero p:last-child{font-size:14px}.cabinet{padding:10px;border-radius:14px}.machine-top{font-size:6px}.marquee{padding:11px 5px}.marquee h2{font-size:21px}.marquee p,.marquee .marquee-kicker{font-size:6px}.bezel{padding:5px}.screen-hud{font-size:6px;padding:6px}.screen-overlay{padding:22px 12px}.screen-overlay p.copy{font-size:11px}.screen-overlay .start{font-size:8px!important;padding:10px 9px}.control-deck{flex-wrap:wrap;gap:10px;padding:12px 4px}.joystick-art{flex-basis:48px;height:48px}.joystick-art:before{left:18px;top:7px;height:24px}.joystick-art:after{left:13px;top:2px;width:21px;height:17px}.controls-copy{font-size:10px;min-width:145px}.controls-copy strong{font-size:6px}.deck-buttons{width:100%;justify-content:stretch}.deck-btn{flex:1;font-size:7px;padding:7px 4px}.machine-bottom{font-size:5.5px;gap:4px}.selector-head{padding:16px}.game-list{grid-template-columns:1fr}.game-option{border-right:0!important;border-bottom:1px solid rgba(75,97,143,.28)!important;padding:13px}.game-option:last-child{border-bottom:0!important}.game-instructions{grid-template-columns:1fr;margin-top:14px}.touch-controls{display:flex}.touch-pad{display:grid;margin:0}.deck-btn#btn-action,.deck-btn#btn-shield{display:none}.game-disclaimer{font-size:10px}}
 @media(prefers-reduced-motion:reduce){body.arcade:after{animation:none!important}.game-option,.deck-btn{transition:none!important}}
 </style>
@@ -278,7 +278,7 @@ body.arcade .foot .px{font:400 8px/1.8 var(--px);letter-spacing:.1em;color:var(-
 <div class="marquee"><div class="marquee-kicker">CEDWYN·NET PRESENTS</div><h2 id="marquee-title">BP INVADERS</h2><p>ONE PLAYER · INSERT IMAGINATION</p></div>
 <div class="bezel"><div class="screen-wrap">
 <canvas id="game-canvas" width="640" height="360" aria-label="Playable neon grid arcade game">Your browser does not support the game canvas.</canvas>
-<div class="screen-hud" aria-live="polite"><span id="hud-game">BP INVADERS</span><span id="hud-score">SCORE 000000</span><span id="hud-time">TIME 075 · 3 ♥</span></div>
+<div class="screen-hud" aria-live="polite"><span id="hud-game">BP INVADERS</span><span id="hud-score">SCORE 000000</span><span id="hud-time">TIME 75 · 3 ♥</span></div>
 <div class="screen-overlay" id="screen-overlay"><p class="screen-label">READY PLAYER ONE</p><h3 id="overlay-title">BP INVADERS</h3><p class="copy" id="overlay-copy">Classic wave defence: shoot the descending green shields stamped with yellow BP letters, dodge incoming notice pulses, and keep your archive ship alive.</p><button class="start" id="btn-start" type="button">PRESS START</button></div>
 </div></div>
 <div class="control-deck"><div class="joystick-art" aria-hidden="true"></div><div class="controls-copy"><strong>PLAYER 1 · KEYBOARD / GAMEPAD</strong>Move: arrows / WASD / left stick · Action: SPACE / A · Shield: X / SHIFT / B · Pause: P / ESC / START <span id="controller-status" aria-live="polite">KEYBOARD + TOUCH READY</span></div><div class="deck-buttons"><button class="deck-btn" id="btn-action" type="button" data-control="action">FIRE</button><button class="deck-btn" id="btn-shield" type="button" data-control="shield">SHIELD</button><button class="deck-btn" id="btn-pause" type="button">PAUSE</button><button class="deck-btn" id="music-toggle" type="button" aria-pressed="true">♫ MUSIC ON · TAP</button></div></div>
@@ -287,7 +287,7 @@ body.arcade .foot .px{font:400 8px/1.8 var(--px);letter-spacing:.1em;color:var(-
 </section>
 <aside class="selector" id="game-select" aria-label="Game selector">
 <div class="selector-head"><p class="kicker">GAME SELECT / 01—03</p><h2>Choose your game</h2><p>Select a title, then load it into the cabinet.</p></div>
-<div class="game-list" role="group" aria-label="Available games"><button class="game-option" type="button" data-game-select="bp-invaders" aria-pressed="true"><span class="game-index">01</span><span class="game-copy"><strong>BP INVADERS</strong><small>SHOOTER / SHIELD BREAKER</small><em>Space Invaders-style action. The invaders are green shields with yellow BP letters; shoot, dodge, protect three lives and clear three waves.</em></span><span aria-hidden="true">▶</span></button><button class="game-option" type="button" data-game-select="title-chain" aria-pressed="false"><span class="game-index">02</span><span class="game-copy"><strong>TITLE CHAIN</strong><small>RECORD ROUTE / PUZZLE</small><em>Trace the separate Parcel A and Parcel B working models in sequence. Avoid the ruled-out 1877 Roath lease and Cydfin 107-acre lead.</em></span><span aria-hidden="true">▶</span></button><button class="game-option" type="button" data-game-select="archive-run" aria-pressed="false"><span class="game-index">03</span><span class="game-copy"><strong>ARCHIVE RUN ’88</strong><small>COLLECT / ESCORT</small><em>Recover five record fragments, dodge the moving deadline pulses, then carry the archive safely to the exit gate.</em></span><span aria-hidden="true">▶</span></button></div>
+<div class="game-list" role="group" aria-label="Available games"><button class="game-option" type="button" data-game-select="bp-invaders" aria-pressed="true"><span class="game-index">01</span><span class="game-copy"><strong>BP INVADERS</strong><small>SHOOTER / SHIELD BREAKER</small><em>Space Invaders-style action. The invaders are green shields with yellow BP letters; shoot, dodge, protect three lives and clear three waves.</em></span><span aria-hidden="true">▶</span></button><button class="game-option" type="button" data-game-select="title-chain" aria-pressed="false"><span class="game-index">02</span><span class="game-copy"><strong>TITLE CHAIN</strong><small>RECORD ROUTE / PUZZLE</small><em>Trace the separate Parcel A and Parcel B working models in sequence. Avoid the ruled-out 1877 Roath lease and Cydfin 107-acre lead.</em></span><span aria-hidden="true">▶</span></button><button class="game-option" type="button" data-game-select="archive-run" aria-pressed="false"><span class="game-index">03</span><span class="game-copy"><strong>ARCHIVE RUN ’88</strong><small>COLLECT / ESCORT</small><em>Recover five record fragments, dodge the moving deadline pulses, then find the archive gate.</em></span><span aria-hidden="true">▶</span></button></div>
 <div class="selector-load"><span class="load-label">LOADED PROFILE</span><output id="loaded-profile">SHOOTER / SHIELD BREAKER</output><button class="load-game" id="load-game" type="button">LOAD SELECTED GAME ↗</button></div>
 </aside>
 </div>
@@ -580,6 +580,7 @@ body.arcade .foot .px{font:400 8px/1.8 var(--px);letter-spacing:.1em;color:var(-
     ctx.beginPath();ctx.moveTo(0,-13);ctx.lineTo(13,10);ctx.lineTo(0,5);ctx.lineTo(-13,10);ctx.closePath();ctx.fill();ctx.stroke();
     ctx.fillStyle="#ffe94a";ctx.fillRect(-3,3,6,4);
     if(state.shield>0){ctx.strokeStyle="#ffe94a";ctx.lineWidth=2;ctx.beginPath();ctx.arc(0,0,22,0,Math.PI*2);ctx.stroke();}
+    if(selected==="archive-run"&&state.done>0){ctx.fillStyle="#111b2a";ctx.strokeStyle="#ffe94a";ctx.strokeRect(-8,-31,16,12);text("+"+state.done,0,-22,7,"#ffe94a");}
     ctx.restore();
   }
   function drawInvaders(t){
@@ -598,8 +599,8 @@ body.arcade .foot .px{font:400 8px/1.8 var(--px);letter-spacing:.1em;color:var(-
   }
   function drawChain(t){
     text("TITLE CHAIN / ROUTE MODEL — NOT A TITLE FINDING",W/2,26,9,"#c9d8ed");
-    text("PARCEL A · WORKING MODEL",W/2,49,10,"#45e4ff");
-    text("PARCEL B · WORKING MODEL",W/2,177,10,"#ffe94a");
+    text("PARCEL A · WORKING MODEL · WILLIAMS BY 1924/28",W/2,49,10,"#45e4ff");
+    text("PARCEL B · WORKING MODEL · WGR 1938 → BP TRUST 1969",W/2,177,10,"#ffe94a");
     ctx.lineWidth=2;
     for(var r=0;r<2;r++){
       var y=r===0?83:214, color=r===0?"rgba(69,228,255,.4)":"rgba(255,233,74,.4)";
@@ -686,7 +687,7 @@ body.arcade .foot .px{font:400 8px/1.8 var(--px);letter-spacing:.1em;color:var(-
   function wireHoldButtons(){
     Array.prototype.forEach.call(document.querySelectorAll("[data-control]"),function(b){
       var c=b.getAttribute("data-control");
-      function down(e){e.preventDefault();touchActions[c]=true;b.setAttribute("aria-pressed","true");try{b.setPointerCapture(e.pointerId);}catch(err){}if(c==="action"&&state.running&&selected!=="bp-invaders"&&!state.actionHeld){if(selected==="title-chain"){state.pulse=1.05;sfx(840,.09,"triangle",.024);}else{state.dash=.48;sfx(430,.06,"square",.018);}}}
+      function down(e){e.preventDefault();touchActions[c]=true;b.setAttribute("aria-pressed","true");try{b.setPointerCapture(e.pointerId);}catch(err){}}
       function up(){touchActions[c]=false;b.setAttribute("aria-pressed","false");}
       b.addEventListener("pointerdown",down);
       ["pointerup","pointercancel","pointerleave","lostpointercapture"].forEach(function(ev){b.addEventListener(ev,up);});

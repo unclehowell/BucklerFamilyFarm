@@ -208,6 +208,28 @@ body.arcade:after{animation:flick 7s steps(2) infinite;opacity:.3}
 .screen-overlay p.copy{max-width:420px;font-size:13px;color:#bfcee8;margin:0 0 4px}
 .screen-overlay .start{font:400 10px/1.5 var(--px)!important;letter-spacing:.08em;padding:12px 15px;border:1px solid var(--yl);box-shadow:0 0 18px rgba(0,240,255,.25);cursor:pointer}
 .screen-overlay.hidden{display:none}
+.screen-wrap.immersive,.screen-wrap:fullscreen,.screen-wrap:-webkit-full-screen{position:fixed!important;inset:0!important;width:100vw!important;height:100vh!important;height:100dvh!important;max-width:none!important;max-height:none!important;aspect-ratio:auto!important;margin:0!important;border:0!important;border-radius:0!important;z-index:99999!important;box-shadow:none!important;background:#03050c!important;}
+.screen-wrap.immersive #game-canvas,.screen-wrap:fullscreen #game-canvas,.screen-wrap:-webkit-full-screen #game-canvas{width:100%!important;height:100%!important;aspect-ratio:auto!important;image-rendering:pixelated;}
+.screen-wrap.immersive .screen-hud,.screen-wrap:fullscreen .screen-hud,.screen-wrap:-webkit-full-screen .screen-hud{font-size:clamp(8px,1.4vw,14px);padding:max(12px,env(safe-area-inset-top)) max(14px,env(safe-area-inset-right)) 16px max(14px,env(safe-area-inset-left));}
+#fs-controller{display:none;position:absolute;inset:0;z-index:8;pointer-events:none;color:#fff;font-family:Barlow,Arial,sans-serif;user-select:none;-webkit-user-select:none;}
+.screen-wrap.immersive #fs-controller,.screen-wrap:fullscreen #fs-controller,.screen-wrap:-webkit-full-screen #fs-controller{display:block;}
+.fs-controller-top{position:absolute;top:max(12px,env(safe-area-inset-top));right:max(14px,env(safe-area-inset-right));display:flex;align-items:center;gap:8px;pointer-events:auto;}
+.fs-controller-top span{font:400 8px/1.4 var(--px);letter-spacing:.08em;color:#83a0bd;margin-right:4px;text-shadow:0 1px 4px #000;}
+.fs-controller-top button{min-height:38px;padding:7px 10px;border:1px solid rgba(126,214,255,.65);border-radius:6px;background:rgba(4,12,27,.82);color:#dff9ff;font:400 8px/1.4 var(--px);pointer-events:auto;touch-action:manipulation;}
+.fs-controller-top #fs-exit{border-color:#d6bc50;color:#ffe94a;}
+.fs-stick{position:absolute;left:max(22px,env(safe-area-inset-left));bottom:max(22px,env(safe-area-inset-bottom));width:clamp(120px,19vh,172px);height:clamp(120px,19vh,172px);border-radius:50%;border:2px solid rgba(206,244,255,.55);background:radial-gradient(circle,rgba(29,84,109,.5),rgba(4,13,27,.55));box-shadow:inset 0 0 18px rgba(0,0,0,.7),0 0 0 5px rgba(6,20,36,.25);pointer-events:auto;touch-action:none;}
+#fs-knob{position:absolute;left:50%;top:50%;width:clamp(48px,7vh,66px);height:clamp(48px,7vh,66px);margin:calc(clamp(48px,7vh,66px)/-2) 0 0 calc(clamp(48px,7vh,66px)/-2);border-radius:50%;border:2px solid rgba(255,255,255,.75);background:linear-gradient(145deg,rgba(220,248,255,.88),rgba(79,159,190,.62));box-shadow:0 0 0 5px rgba(255,255,255,.12),0 0 18px rgba(0,240,255,.28);pointer-events:none;}
+.fs-stick-up,.fs-stick-down,.fs-stick-left,.fs-stick-right{position:absolute;color:rgba(228,250,255,.7);font-size:13px;pointer-events:none;}
+.fs-stick-up{top:7px;left:50%;transform:translateX(-50%)}.fs-stick-down{bottom:7px;left:50%;transform:translateX(-50%)}.fs-stick-left{left:7px;top:50%;transform:translateY(-50%)}.fs-stick-right{right:7px;top:50%;transform:translateY(-50%)}
+.fs-actions{position:absolute;right:max(24px,env(safe-area-inset-right));bottom:max(34px,env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:12px;align-items:center;pointer-events:auto;}
+.fs-actions button{min-width:clamp(86px,12vw,132px);min-height:clamp(54px,10vh,84px);padding:12px;border-radius:50px;border:2px solid #ffe94a;background:rgba(31,28,7,.74);color:#ffe94a;font:400 clamp(8px,1.1vw,12px)/1.4 var(--px);letter-spacing:.06em;box-shadow:0 0 18px rgba(255,233,74,.14);touch-action:none;pointer-events:auto;}
+.fs-actions #fs-shield{border-color:#55ff99;color:#7dffad;background:rgba(3,29,17,.8);}
+.fs-actions button:active,.fs-actions button[aria-pressed=true]{transform:scale(.96);background:rgba(80,79,22,.88);}
+.fs-help{position:absolute;left:50%;bottom:max(13px,env(safe-area-inset-bottom));transform:translateX(-50%);white-space:nowrap;color:rgba(216,239,255,.68);font:400 7px/1.6 var(--px);letter-spacing:.06em;text-shadow:0 1px 5px #000;pointer-events:none;}
+.fs-help span{color:#ffe94a;padding:0 5px}
+@media(max-width:850px){.screen-wrap.immersive .fs-controller-top span,.screen-wrap:fullscreen .fs-controller-top span,.screen-wrap:-webkit-full-screen .fs-controller-top span{display:none;}.screen-wrap.immersive .fs-controller-top button,.screen-wrap:fullscreen .fs-controller-top button,.screen-wrap:-webkit-full-screen .fs-controller-top button{min-height:42px;font-size:7px;padding:7px 8px;}}
+@media(orientation:portrait){.screen-wrap.immersive,.screen-wrap:fullscreen,.screen-wrap:-webkit-full-screen{background:#03050c}.screen-wrap.immersive #game-canvas,.screen-wrap:fullscreen #game-canvas,.screen-wrap:-webkit-full-screen #game-canvas{object-fit:contain;}}
+
 .control-deck{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:16px 8px 12px}
 .joystick-art{position:relative;flex:0 0 66px;height:66px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#353d60,#101425 60%,#04050c);border:2px solid #303b5b;box-shadow:inset 0 0 12px #000,0 0 0 2px #080b16}
 .joystick-art:before{content:"";position:absolute;width:11px;height:31px;left:26px;top:10px;border-radius:8px;background:linear-gradient(90deg,#464d70,#101426,#697395);transform:rotate(-14deg);box-shadow:0 0 8px rgba(0,240,255,.2)}
@@ -238,18 +260,18 @@ body.arcade:after{animation:flick 7s steps(2) infinite;opacity:.3}
 .selector-load output{display:block;color:var(--cy);font:400 9px/1.8 var(--px);margin:3px 0 12px}
 .load-game{width:100%;min-height:43px;border:1px solid var(--mg);background:linear-gradient(100deg,rgba(255,61,219,.16),rgba(0,240,255,.09));color:#fff;font:400 9px/1.5 var(--px);letter-spacing:.07em;cursor:pointer;text-shadow:0 0 8px rgba(0,240,255,.35)}
 .load-game:hover,.load-game:focus-visible{background:var(--mg);color:#080916}
-.game-instructions{max-width:1160px;margin:22px auto 0;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.game-instructions{max-width:1160px;margin:22px auto 0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
 .instruction{padding:16px 17px;border:1px solid rgba(67,92,143,.45);background:rgba(8,12,27,.75)}
 .instruction h2{font:400 8px/1.8 var(--px);color:var(--yl);letter-spacing:.08em;margin:0 0 8px}
 .instruction p{font-size:13px;color:#9db1ca;margin:0}
-.touch-pad{display:none;grid-template-columns:repeat(3,42px);grid-template-rows:repeat(2,38px);gap:4px;margin:0 auto}
+.touch-controls{display:none;align-items:center;justify-content:space-around;gap:14px;margin:12px auto 0;max-width:420px;user-select:none;-webkit-user-select:none}.touch-actions{display:flex;flex-direction:column;gap:8px}.touch-actions button{min-width:88px;min-height:48px;border:1px solid #456b61;border-radius:7px;background:linear-gradient(#113b2a,#081b17);color:#ffe94a;font:400 8px/1.5 var(--px);letter-spacing:.05em;touch-action:none;user-select:none;-webkit-user-select:none}.touch-actions [data-control=shield]{border-color:#8d7841;background:linear-gradient(#3a3115,#191506);color:#ffe94a}.touch-actions button:active,.touch-actions button[aria-pressed=true]{transform:translateY(1px);box-shadow:0 0 12px rgba(255,233,74,.18)}.controls-copy span{display:block;color:#7fe5a1;font-size:10px;margin-top:3px}.deck-btn#btn-action{border-color:#b5a13d;color:#ffe94a}.deck-btn#btn-shield{border-color:#397b58;color:#83ff9f}.arcade-log{max-width:1160px;margin:18px auto 0;color:#8198b9;font-size:11px}.arcade-log summary{cursor:pointer;color:#8198b9;font:400 8px/1.8 var(--px);letter-spacing:.08em;padding:8px 0}.arcade-log .log-scroll{overflow-x:auto}.arcade-log table{width:100%;border-collapse:collapse;text-align:left;min-width:620px}.arcade-log th,.arcade-log td{border:1px solid rgba(67,92,143,.35);padding:7px 9px;vertical-align:top}.arcade-log th{color:#cdd9ef;font-weight:500}.arcade-log td{color:#91a6c4}.touch-pad{display:none;grid-template-columns:repeat(3,42px);grid-template-rows:repeat(2,38px);gap:4px;margin:0 auto}
 .touch-pad button{border:1px solid #3a4c73;border-radius:6px;background:#10172b;color:var(--cy);font-size:16px;touch-action:none}
 .touch-pad [data-dir=up]{grid-column:2;grid-row:1}.touch-pad [data-dir=left]{grid-column:1;grid-row:2}.touch-pad [data-dir=down]{grid-column:2;grid-row:2}.touch-pad [data-dir=right]{grid-column:3;grid-row:2}
 .game-disclaimer{max-width:1160px;margin:15px auto 0;color:#7589a8;font-size:11.5px;line-height:1.5}
 body.arcade .foot{max-width:1160px;margin-top:22px;border-top:1px solid rgba(0,240,255,.3)}
 body.arcade .foot .px{font:400 8px/1.8 var(--px);letter-spacing:.1em;color:var(--cy)}
-@media(max-width:850px){.arcade-grid{grid-template-columns:minmax(0,1fr)}.selector{order:2}.cabinet{order:1}.game-list{grid-template-columns:1fr 1fr}.game-option{border-right:1px solid rgba(75,97,143,.25)}.game-option:nth-child(even){border-right:0}.game-option:nth-last-child(-n+2){border-bottom:0}}
-@media(max-width:570px){.arcade-page{padding:12px 10px 35px}.arcade-hero{margin-bottom:14px;padding:8px 0 12px}.arcade-hero h1{font-size:25px;letter-spacing:.1em}.arcade-hero p:last-child{font-size:14px}.cabinet{padding:10px;border-radius:14px}.machine-top{font-size:6px}.marquee{padding:11px 5px}.marquee h2{font-size:21px}.marquee p,.marquee .marquee-kicker{font-size:6px}.bezel{padding:5px}.screen-hud{font-size:6px;padding:6px}.screen-overlay{padding:22px 12px}.screen-overlay p.copy{font-size:11px}.screen-overlay .start{font-size:8px!important;padding:10px 9px}.control-deck{flex-wrap:wrap;gap:10px;padding:12px 4px}.joystick-art{flex-basis:48px;height:48px}.joystick-art:before{left:18px;top:7px;height:24px}.joystick-art:after{left:13px;top:2px;width:21px;height:17px}.controls-copy{font-size:10px;min-width:145px}.controls-copy strong{font-size:6px}.deck-buttons{width:100%;justify-content:stretch}.deck-btn{flex:1;font-size:7px;padding:7px 4px}.machine-bottom{font-size:5.5px;gap:4px}.selector-head{padding:16px}.game-list{grid-template-columns:1fr}.game-option{border-right:0!important;border-bottom:1px solid rgba(75,97,143,.28)!important;padding:13px}.game-option:last-child{border-bottom:0!important}.game-instructions{grid-template-columns:1fr;margin-top:14px}.touch-pad{display:grid}.game-disclaimer{font-size:10px}}
+@media(max-width:850px){.arcade-grid{grid-template-columns:minmax(0,1fr)}.selector{order:2}.cabinet{order:1}.touch-controls{display:flex}.touch-pad{display:grid;margin:0}.deck-btn#btn-action,.deck-btn#btn-shield{display:none}.game-instructions{grid-template-columns:1fr 1fr}.game-list{grid-template-columns:1fr 1fr}.game-option{border-right:1px solid rgba(75,97,143,.25)}.game-option:nth-child(even){border-right:0}.game-option:nth-last-child(-n+2){border-bottom:0}}
+@media(max-width:570px){.arcade-page{padding:12px 10px 35px}.arcade-hero{margin-bottom:14px;padding:8px 0 12px}.arcade-hero h1{font-size:25px;letter-spacing:.1em}.arcade-hero p:last-child{font-size:14px}.cabinet{padding:10px;border-radius:14px}.machine-top{font-size:6px}.marquee{padding:11px 5px}.marquee h2{font-size:21px}.marquee p,.marquee .marquee-kicker{font-size:6px}.bezel{padding:5px}.screen-hud{font-size:6px;padding:6px}.screen-overlay{padding:22px 12px}.screen-overlay p.copy{font-size:11px}.screen-overlay .start{font-size:8px!important;padding:10px 9px}.control-deck{flex-wrap:wrap;gap:10px;padding:12px 4px}.joystick-art{flex-basis:48px;height:48px}.joystick-art:before{left:18px;top:7px;height:24px}.joystick-art:after{left:13px;top:2px;width:21px;height:17px}.controls-copy{font-size:10px;min-width:145px}.controls-copy strong{font-size:6px}.deck-buttons{width:100%;justify-content:stretch}.deck-btn{flex:1;font-size:7px;padding:7px 4px}.machine-bottom{font-size:5.5px;gap:4px}.selector-head{padding:16px}.game-list{grid-template-columns:1fr}.game-option{border-right:0!important;border-bottom:1px solid rgba(75,97,143,.28)!important;padding:13px}.game-option:last-child{border-bottom:0!important}.game-instructions{grid-template-columns:1fr;margin-top:14px}.touch-controls{display:flex}.touch-pad{display:grid;margin:0}.deck-btn#btn-action,.deck-btn#btn-shield{display:none}.game-disclaimer{font-size:10px}}
 @media(prefers-reduced-motion:reduce){body.arcade:after{animation:none!important}.game-option,.deck-btn{transition:none!important}}
 </style>
 </head>
@@ -275,29 +297,26 @@ body.arcade .foot .px{font:400 8px/1.8 var(--px);letter-spacing:.1em;color:var(-
 <div class="arcade-grid">
 <section class="cabinet" id="console" aria-label="Playable arcade cabinet">
 <div class="machine-top"><span>MODEL 87 · DIGITAL EDITION</span><span>FREE PLAY / NO COINS</span></div>
-<div class="marquee"><div class="marquee-kicker">CEDWYN·NET PRESENTS</div><h2 id="marquee-title">FARM ATTACK</h2><p>ONE PLAYER · INSERT IMAGINATION</p></div>
+<div class="marquee"><div class="marquee-kicker">CEDWYN·NET PRESENTS</div><h2 id="marquee-title">BP INVADERS</h2><p>ONE PLAYER · INSERT IMAGINATION</p></div>
 <div class="bezel"><div class="screen-wrap">
 <canvas id="game-canvas" width="640" height="360" aria-label="Playable neon grid arcade game">Your browser does not support the game canvas.</canvas>
-<div class="screen-hud" aria-live="polite"><span id="hud-game">FARM ATTACK</span><span id="hud-score">SCORE 000000</span><span id="hud-time">TIME 75</span></div>
-<div class="screen-overlay" id="screen-overlay"><p class="screen-label">READY PLAYER ONE</p><h3 id="overlay-title">FARM ATTACK</h3><p class="copy" id="overlay-copy">Route the notice crew through the property. Collect a family marker, then escort it to the exit portal.</p><button class="start" id="btn-start" type="button">PRESS START</button></div>
+<div class="screen-hud" aria-live="polite"><span id="hud-game">BP INVADERS</span><span id="hud-score">SCORE 000000</span><span id="hud-time">TIME 75 · 3 ♥</span></div>
+<div class="screen-overlay" id="screen-overlay"><p class="screen-label">READY PLAYER ONE</p><h3 id="overlay-title">BP INVADERS</h3><p class="copy" id="overlay-copy">Classic wave defence: shoot the descending green shields stamped with yellow BP letters, dodge incoming notice pulses, and keep your archive ship alive.</p><button class="start" id="btn-start" type="button">PRESS START</button></div>
+<div id="fs-controller" aria-label="Fullscreen arcade controller"><div class="fs-controller-top"><span>CEDWYN ARCADE · PLAYER 1</span><button type="button" id="fs-pause">PAUSE</button><button type="button" id="fs-exit">EXIT FULLSCREEN</button></div><div class="fs-stick" id="fs-stick" role="application" aria-label="Virtual joystick. Drag to move."><div id="fs-knob"></div><span class="fs-stick-up">▲</span><span class="fs-stick-down">▼</span><span class="fs-stick-left">◀</span><span class="fs-stick-right">▶</span></div><div class="fs-actions"><button type="button" id="fs-action" data-control="action">FIRE</button><button type="button" id="fs-shield" data-control="shield">SHIELD</button></div><div class="fs-help">LEFT STICK / MOVE <span>·</span> ACTION <span>·</span> SHIELD</div></div>
 </div></div>
-<div class="control-deck"><div class="joystick-art" aria-hidden="true"></div><div class="controls-copy"><strong>CONTROLS / PLAYER 1</strong>ARROWS or WASD to move · SPACE for a shield · P to pause</div><div class="deck-buttons"><button class="deck-btn" id="btn-pause" type="button">PAUSE</button><button class="deck-btn" id="music-toggle" type="button" aria-pressed="true">♫ MUSIC ON · TAP</button></div></div>
-<div class="touch-pad" aria-label="Touch movement controls"><button type="button" data-dir="up" aria-label="Move up">▲</button><button type="button" data-dir="left" aria-label="Move left">◀</button><button type="button" data-dir="down" aria-label="Move down">▼</button><button type="button" data-dir="right" aria-label="Move right">▶</button></div>
+<div class="control-deck"><div class="joystick-art" aria-hidden="true"></div><div class="controls-copy"><strong>PLAYER 1 · KEYBOARD / GAMEPAD</strong>Move: arrows / WASD / left stick · Action: SPACE / A · Shield: X / SHIFT / B · Pause: P / ESC / START <span id="controller-status" aria-live="polite">KEYBOARD + TOUCH READY</span></div><div class="deck-buttons"><button class="deck-btn" id="btn-action" type="button" data-control="action">FIRE</button><button class="deck-btn" id="btn-shield" type="button" data-control="shield">SHIELD</button><button class="deck-btn" id="btn-pause" type="button">PAUSE</button><button class="deck-btn" id="btn-fullscreen" type="button" aria-pressed="false">FULL SCREEN ⛶</button><button class="deck-btn" id="music-toggle" type="button" aria-pressed="true">♫ MUSIC ON · TAP</button></div></div>
+<div class="touch-controls" aria-label="On-screen game controls"><div class="touch-pad" aria-label="Touch movement controls"><button type="button" data-dir="up" aria-label="Move up">▲</button><button type="button" data-dir="left" aria-label="Move left">◀</button><button type="button" data-dir="down" aria-label="Move down">▼</button><button type="button" data-dir="right" aria-label="Move right">▶</button></div><div class="touch-actions"><button type="button" id="touch-action" data-control="action" aria-label="Game action">FIRE</button><button type="button" id="touch-shield" data-control="shield" aria-label="Activate shield">SHIELD</button></div></div>
 <div class="machine-bottom"><span>ARCADE OS 87</span><span id="machine-status">READY / SELECT GAME</span><span>FREE PLAY</span></div>
 </section>
 <aside class="selector" id="game-select" aria-label="Game selector">
-<div class="selector-head"><p class="kicker">GAME SELECT / 01—04</p><h2>Choose your game</h2><p>Select a title, then load it into the cabinet.</p></div>
-<div class="game-list" role="group" aria-label="Available games">
-<button class="game-option" type="button" data-game-select="farm-attack" aria-pressed="true"><span class="game-index">01</span><span class="game-copy"><strong>FARM ATTACK</strong><small>EVICTION RUN / ACTION</small><em>Route the notice crew through the house. Collect a family marker and escort it to the exit portal.</em></span><span aria-hidden="true">▶</span></button>
-<button class="game-option" type="button" data-game-select="hold-house" aria-pressed="false"><span class="game-index">02</span><span class="game-copy"><strong>HOLD THE HOUSE</strong><small>DEFENCE / SURVIVAL</small><em>Collect the records, protect the door, and dodge incoming notices.</em></span><span aria-hidden="true">▶</span></button>
-<button class="game-option" type="button" data-game-select="registry-rush" aria-pressed="false"><span class="game-index">03</span><span class="game-copy"><strong>REGISTRY RUSH</strong><small>COLLECTION / SPEED</small><em>Race across the archive grid and gather file fragments before time runs out.</em></span><span aria-hidden="true">▶</span></button>
-<button class="game-option" type="button" data-game-select="courtroom-87" aria-pressed="false"><span class="game-index">04</span><span class="game-copy"><strong>COURTROOM 87</strong><small>DEADLINE DODGER / ARCADE</small><em>Collect appeal points, evade deadline pulses, and chase a new high score.</em></span><span aria-hidden="true">▶</span></button>
-</div>
-<div class="selector-load"><span class="load-label">LOADED PROFILE</span><output id="loaded-profile">EVICTION RUN / ACTION</output><button class="load-game" id="load-game" type="button">LOAD SELECTED GAME ↗</button></div>
+<div class="selector-head"><p class="kicker">GAME SELECT / 01—03</p><h2>Choose your game</h2><p>Choose a title, then press LOAD SELECTED GAME to start. Use FULL SCREEN on the cabinet for an immersive view.</p></div>
+<div class="game-list" role="group" aria-label="Available games"><button class="game-option" type="button" data-game-select="bp-invaders" aria-pressed="true"><span class="game-index">01</span><span class="game-copy"><strong>BP INVADERS</strong><small>SHOOTER / SHIELD BREAKER</small><em>Space Invaders-style action. The invaders are green shields with yellow BP letters; shoot, dodge, protect three lives and clear three waves.</em></span><span aria-hidden="true">▶</span></button><button class="game-option" type="button" data-game-select="title-chain" aria-pressed="false"><span class="game-index">02</span><span class="game-copy"><strong>TITLE CHAIN</strong><small>RECORD ROUTE / PUZZLE</small><em>Trace the separate Parcel A and Parcel B working models in sequence. Avoid the ruled-out 1877 Roath lease and Cydfin 107-acre lead.</em></span><span aria-hidden="true">▶</span></button><button class="game-option" type="button" data-game-select="archive-run" aria-pressed="false"><span class="game-index">03</span><span class="game-copy"><strong>ARCHIVE RUN ’88</strong><small>COLLECT / ESCORT</small><em>Recover five record fragments, dodge the moving deadline pulses, then find the archive gate.</em></span><span aria-hidden="true">▶</span></button></div>
+<div class="selector-load"><span class="load-label">LOADED PROFILE</span><output id="loaded-profile">SHOOTER / SHIELD BREAKER</output><button class="load-game" id="load-game" type="button">LOAD SELECTED GAME ↗</button></div>
 </aside>
 </div>
-<section class="game-instructions" id="how-to-play" aria-label="How to play"><div class="instruction"><h2>01 / MOVE</h2><p>Use the arrow keys or W, A, S, D. On phones, use the directional pad beneath the cabinet.</p></div><div class="instruction"><h2>02 / ACTION</h2><p>In Farm Attack, collect each family marker and carry it to the glowing EXIT zone. In the other games, collect the glowing records and avoid the moving hazards.</p></div></section>
-<p class="game-disclaimer">Original browser mini-games inspired by themes in the BP v Buckler dispute. The gameplay is fictionalised and does not represent findings about the legal case. No ROMs or downloads required.</p>
+<section class="game-instructions" id="how-to-play" aria-label="How to play"><div class="instruction"><h2>01 / MOVE</h2><p>Arrow keys or W, A, S, D. Use a gamepad left stick, the phone directional pad, or the analog joystick that appears in full screen.</p></div><div class="instruction"><h2>02 / ACTION</h2><p>SPACE or gamepad A; press and hold the ACTION button. It fires in BP Invaders, triggers a trace pulse in Title Chain, and gives a short dash in Archive Run ’88.</p></div><div class="instruction"><h2>03 / SHIELD & PAUSE</h2><p>X or SHIFT, gamepad B, or the SHIELD button gives a brief shield. Press P / ESC or gamepad START to pause. Touch buttons work by holding them down.</p></div></section>
+<p class="game-disclaimer">Original browser arcade games inspired by the Great House Farm research. Gameplay is fictionalised and is not a finding about title, possession, wrongdoing or legal liability. The Parcel A and Parcel B routes are working models that still require documentary verification. No ROMs or downloads required.</p>
+<section class="arcade-log" aria-label="Agent page change log / guest book"><details><summary>AGENT PAGE CHANGE LOG / GUEST BOOK</summary><div class="log-scroll"><table><thead><tr><th>Version</th><th>Date (UTC)</th><th>Editor</th><th>Change / reason / source</th><th>Status</th></tr></thead><tbody><tr><td>1.1.1</td><td>2026-10-26</td><td>ChatGPT (GPT-6)</td><td>Fixed LOAD SELECTED GAME to start the selected game. Added fullscreen/immersive mode and a fullscreen virtual thumbstick, action/shield buttons, pause and exit controls modelled on the 3D world touch-controller pattern.</td><td>Submitted for owner review; not live until approved and rebuilt.</td></tr><tr><td>1.1.0</td><td>2026-10-26</td><td>ChatGPT (GPT-6)</td><td>Reworked the arcade into three distinct games and improved keyboard, touch and standard gamepad controls, following the site owner’s request.</td><td>Submitted for owner review; not live until approved and rebuilt.</td></tr></tbody></table></div></details></section>
 </main>
 <footer class="foot"><p class="px">THANKS FOR PLAYING</p><p>CEDWYN·NET ARCADE SYSTEM / FREE PLAY</p><p style="font-size:11px">Music is an original synthesised loop. A browser may require a tap before it allows playback.</p></footer>
 <script>
@@ -325,131 +344,503 @@ body.arcade .foot .px{font:400 8px/1.8 var(--px);letter-spacing:.1em;color:var(-
   if(location.hash){var h=location.hash.slice(1);if(document.getElementById(h)&&/^seg-/.test(h))openSeg(h);}
 })();
 </script>
-<script>(function(){
+<script>
+(function(){
   "use strict";
-  var $=function(id){return document.getElementById(id);};
-  var canvas=$("game-canvas"),ctx=canvas&&canvas.getContext("2d");
-  if(!canvas||!ctx)return;
-  var overlay=$("screen-overlay"),overlayTitle=$("overlay-title"),overlayCopy=$("overlay-copy"),startBtn=$("btn-start");
-  var marquee=$("marquee-title"),hudGame=$("hud-game"),hudScore=$("hud-score"),hudTime=$("hud-time"),status=$("machine-status");
-  var musicBtn=$("music-toggle"),pauseBtn=$("btn-pause"),loadBtn=$("load-game"),profileOut=$("loaded-profile");
-  var W=640,H=360,selected="farm-attack",keys={},touch={},last=0,stars=[],audioCtx=null,musicLoop=null,musicEnabled=true,beat=0;
+  var $ = function(id){ return document.getElementById(id); };
+  var canvas = $("game-canvas"), ctx = canvas && canvas.getContext("2d");
+  if(!canvas || !ctx) return;
+  var overlay=$("screen-overlay"), overlayTitle=$("overlay-title"), overlayCopy=$("overlay-copy"), startBtn=$("btn-start");
+  var marquee=$("marquee-title"), hudGame=$("hud-game"), hudScore=$("hud-score"), hudTime=$("hud-time"), status=$("machine-status");
+  var musicBtn=$("music-toggle"), pauseBtn=$("btn-pause"), loadBtn=$("load-game"), profileOut=$("loaded-profile"), controllerStatus=$("controller-status");
+  var screenWrap=document.querySelector(".screen-wrap"), fullscreenBtn=$("btn-fullscreen"), fullscreenPause=$("fs-pause"), fullscreenExit=$("fs-exit"), fsStick=$("fs-stick"), fsKnob=$("fs-knob"), fsAction=$("fs-action");
+  var fsMove={x:0,y:0,id:null}, immersiveFallback=false;
+  var actionDeck=$("btn-action"), actionTouch=$("touch-action"), W=640, H=360;
+  var selected="bp-invaders", keys={}, touch={}, touchActions={}, last=0, stars=[], audioCtx=null, musicLoop=null, musicEnabled=true, beat=0;
+  var padPauseWasDown=false;
+  var CHAIN=[
+    {x:86,y:83,label:"BUTE TRUSTEES",parcel:"A"},
+    {x:320,y:83,label:"DANIEL / ALFRED",sub:"THOMAS",parcel:"A"},
+    {x:554,y:83,label:"WILLIAMS",parcel:"A"},
+    {x:86,y:214,label:"BUTE TRUSTEES",parcel:"B"},
+    {x:320,y:214,label:"WESTERN GROUND",sub:"RENTS (WGR)",parcel:"B"},
+    {x:554,y:214,label:"BP PENSION TRUST",parcel:"B"}
+  ];
   var configs={
-    "farm-attack":{name:"FARM ATTACK",genre:"EVICTION RUN / ACTION",kind:"attack",goal:5,time:75,pickup:"FAMILY",hazard:"RECORD",copy:"Route the notice crew through the property. Collect a family marker, then escort it to the exit portal."},
-    "hold-house":{name:"HOLD THE HOUSE",genre:"DEFENCE / SURVIVAL",kind:"defend",goal:10,time:75,pickup:"RECORD",hazard:"NOTICE",copy:"Stay on the grid, collect the records, and avoid the incoming notices. How many can you preserve?"},
-    "registry-rush":{name:"REGISTRY RUSH",genre:"COLLECTION / SPEED",kind:"records",goal:12,time:60,pickup:"FILE FRAGMENT",hazard:"MISSING FILE",copy:"Race across the archive grid to gather twelve file fragments before the clock runs out."},
-    "courtroom-87":{name:"COURTROOM 87",genre:"DEADLINE DODGER / ARCADE",kind:"appeal",goal:9,time:65,pickup:"APPEAL POINT",hazard:"DEADLINE",copy:"Collect the appeal points, dodge deadline pulses and try to build a new high score."}
+    "bp-invaders":{name:"BP INVADERS",genre:"SHOOTER / SHIELD BREAKER",actionLabel:"FIRE",copy:"Shoot the descending green shields stamped with yellow BP letters. Dodge the notice pulses, use a brief shield, and clear three waves before the formation reaches the archive line.",time:75,goal:72},
+    "title-chain":{name:"TITLE CHAIN",genre:"RECORD ROUTE / PUZZLE",actionLabel:"TRACE",copy:"Visit the six record nodes in order across the separate Parcel A and Parcel B working models. The moving red files are ruled-out leads, not confirmed links in either chain.",time:90,goal:6},
+    "archive-run":{name:"ARCHIVE RUN ’88",genre:"COLLECT / ESCORT",actionLabel:"DASH",copy:"Recover five archive fragments, avoid deadline pulses, and reach the archive gate. This is a fictionalised history-game scenario, not a reconstruction of any court’s findings.",time:75,goal:5}
   };
-  var state={running:false,paused:false,score:0,lives:3,time:0,player:{x:320,y:285},targets:[],hazards:[],carried:null,done:0,goal:0,shield:0,invuln:0,won:false};
-  for(var i=0;i<58;i++)stars.push({x:(i*97+41)%W,y:(i*53+11)%H,r:.5+(i%3)*.4,p:i*.91});
   function random(min,max){return min+Math.random()*(max-min);}
   function dist(a,b){var dx=a.x-b.x,dy=a.y-b.y;return Math.sqrt(dx*dx+dy*dy);}
-  function showOverlay(title,copy,label){overlayTitle.textContent=title;overlayCopy.textContent=copy;startBtn.textContent=label||"PRESS START";overlay.classList.remove("hidden");}
-  function chooseGame(id){
-    if(!configs[id])return;selected=id;var c=configs[id];
-    Array.prototype.forEach.call(document.querySelectorAll("[data-game-select]"),function(b){var on=b.getAttribute("data-game-select")===id;b.setAttribute("aria-pressed",on?"true":"false");b.classList.toggle("selected",on);});
-    marquee.textContent=c.name;hudGame.textContent=c.name;profileOut.textContent=c.genre;showOverlay(c.name,c.copy,"PRESS START");
-    status.textContent="READY / "+c.genre;if(state.running){state.running=false;state.paused=false;}updateHud();
+  function clamp(v,lo,hi){return Math.max(lo,Math.min(hi,v));}
+  function makeState(){
+    var c=configs[selected];
+    return {running:false,paused:false,score:0,lives:3,time:c.time,player:{x:320,y:310},bullets:[],enemyBullets:[],enemies:[],targets:[],hazards:[],chainIndex:0,done:0,goal:c.goal,wave:1,formationDir:1,enemyShotTimer:.7,fireCooldown:0,shield:0,shieldCooldown:0,shieldHeld:false,actionHeld:false,invuln:0,dash:0,pulse:0,won:false};
   }
-  function spawnTargets(){
-    state.targets=[];state.hazards=[];state.carried=null;state.done=0;var c=configs[selected],n=c.goal;
-    for(var i=0;i<n;i++){var x=c.kind==="attack"?random(108,235):random(45,595),y=c.kind==="attack"?random(135,208):random(68,315);state.targets.push({x:x,y:y,homeX:x,homeY:y,phase:random(0,7),type:"pickup"});}
-    var count=c.kind==="attack"?5:6;
-    for(var j=0;j<count;j++)state.hazards.push({x:random(70,590),y:random(60,320),vx:random(-75,75),vy:random(-55,55),phase:random(0,7)});
+  for(var i=0;i<58;i++) stars.push({x:(i*97+41)%W,y:(i*53+11)%H,r:.5+(i%3)*.4,p:i*.91});
+  function showOverlay(title,copy,label){
+    overlayTitle.textContent=title;overlayCopy.textContent=copy;startBtn.textContent=label||"PRESS START";overlay.classList.remove("hidden");
+  }
+  function updateControlLabels(){
+    var label=configs[selected].actionLabel;
+    if(actionDeck) actionDeck.textContent=label;
+    if(actionTouch) actionTouch.textContent=label;
+    if(actionTouch) actionTouch.setAttribute("aria-label",label+" action");
+    if(fsAction) fsAction.textContent=label;
+  }
+  function updateHud(){
+    var c=configs[selected], time=String(Math.max(0,Math.ceil(state.time))).padStart(2,"0");
+    hudScore.textContent="SCORE "+String(state.score||0).padStart(6,"0");
+    if(selected==="bp-invaders") hudTime.textContent="TIME "+time+" · "+state.lives+" ♥ · WAVE "+state.wave+"/3";
+    else if(selected==="title-chain") hudTime.textContent="TIME "+time+" · "+state.lives+" ♥ · LINK "+state.chainIndex+"/6";
+    else hudTime.textContent="TIME "+time+" · "+state.lives+" ♥ · FILES "+state.done+"/"+c.goal;
+  }
+  function spawnFormation(){
+    state.enemies=[];
+    for(var row=0;row<3;row++) for(var col=0;col<8;col++){
+      state.enemies.push({x:79+col*69,y:52+row*34,row:row,col:col,alive:true,phase:random(0,6)});
+    }
+    state.formationDir=1;
+    state.enemyShotTimer=.8;
+  }
+  function spawnHazards(kind){
+    state.hazards=[];
+    var n=kind==="chain"?4:6;
+    for(var i=0;i<n;i++){
+      state.hazards.push({x:random(60,580),y:kind==="chain"?random(125,292):random(60,315),vx:random(-80,80),vy:random(-54,54),phase:random(0,7),label:i%2===0?"1877":"CYDFIN"});
+    }
+  }
+  function spawnArchiveTargets(){
+    state.targets=[];
+    var labels=["PETITION","PHOTO","MAP","REGISTER","LETTER"];
+    for(var i=0;i<5;i++){
+      var x=65+i*105, y=150+(i%2)*94;
+      state.targets.push({x:x,y:y,phase:i*.8,label:labels[i]});
+    }
+  }
+  function seedPreview(){
+    state=makeState();
+    if(selected==="bp-invaders") spawnFormation();
+    else if(selected==="title-chain") spawnHazards("chain");
+    else {spawnArchiveTargets();spawnHazards("archive");}
+  }
+  function chooseGame(id){
+    if(!configs[id]) return;
+    selected=id;
+    Array.prototype.forEach.call(document.querySelectorAll("[data-game-select]"),function(b){
+      var on=b.getAttribute("data-game-select")===id;
+      b.setAttribute("aria-pressed",on?"true":"false");b.classList.toggle("selected",on);
+    });
+    seedPreview();
+    var c=configs[id];
+    marquee.textContent=c.name;hudGame.textContent=c.name;profileOut.textContent=c.genre;
+    updateControlLabels();showOverlay(c.name,c.copy,"PRESS START");
+    status.textContent="READY / "+c.genre;
+    if(pauseBtn) pauseBtn.textContent="PAUSE";
+    updateHud();
   }
   function startGame(){
-    var c=configs[selected];state={running:true,paused:false,score:0,lives:3,time:c.time,player:{x:320,y:286},targets:[],hazards:[],carried:null,done:0,goal:c.goal,shield:0,invuln:0,won:false};
-    spawnTargets();overlay.classList.add("hidden");status.textContent="PLAYING / "+c.genre;startMusic();updateHud();last=performance.now();
+    state=makeState();state.running=true;state.player={x:320,y:selected==="bp-invaders"?318:305};
+    if(selected==="bp-invaders") spawnFormation();
+    else if(selected==="title-chain") spawnHazards("chain");
+    else {spawnArchiveTargets();spawnHazards("archive");}
+    overlay.classList.add("hidden");
+    status.textContent="PLAYING / "+configs[selected].genre;
+    if(pauseBtn) pauseBtn.textContent="PAUSE";
+    startMusic();updateHud();last=performance.now();
   }
-  function updateHud(){var c=configs[selected];hudScore.textContent="SCORE "+String(state.score||0).padStart(6,"0");hudTime.textContent="TIME "+String(Math.max(0,Math.ceil(state.time||c.time))).padStart(2,"0")+" · "+(state.lives==null?3:state.lives)+" ♥";}
-  function finish(won){
-    state.running=false;state.paused=false;state.won=won;var c=configs[selected];status.textContent=won?"MISSION COMPLETE":"GAME OVER";
-    showOverlay(won?"STAGE CLEAR":"GAME OVER",won?("Score "+state.score+" · "+state.done+" / "+state.goal+" objective units complete."):("Score "+state.score+" · "+(selected==="farm-attack"?"The exit portal stays open. Try another run.":"The cabinet is ready for another run.")),won?"PLAY AGAIN":"TRY AGAIN");
+  function finish(won,message){
+    state.running=false;state.paused=false;state.won=won;
+    status.textContent=won?"MISSION COMPLETE":"GAME OVER";
+    if(pauseBtn) pauseBtn.textContent="PAUSE";
+    showOverlay(won?"STAGE CLEAR":"GAME OVER",message||(won?"Score "+state.score+" · objective complete.":"Score "+state.score+" · the cabinet is ready for another run."),won?"PLAY AGAIN":"TRY AGAIN");
+    updateHud();
   }
-  function update(dt){
-    var p=state.player,c=configs[selected],speed=190;
-    var dx=(keys.ArrowRight||keys.d||touch.right?1:0)-(keys.ArrowLeft||keys.a||touch.left?1:0);
-    var dy=(keys.ArrowDown||keys.s||touch.down?1:0)-(keys.ArrowUp||keys.w||touch.up?1:0);
-    if(dx&&dy){dx*=.7071;dy*=.7071;}p.x=Math.max(20,Math.min(W-20,p.x+dx*speed*dt));p.y=Math.max(32,Math.min(H-18,p.y+dy*speed*dt));
-    state.time-=dt;state.shield=Math.max(0,state.shield-dt);state.invuln=Math.max(0,state.invuln-dt);
-    state.hazards.forEach(function(h){h.x+=h.vx*dt;h.y+=h.vy*dt;if(h.x<28||h.x>W-28)h.vx*=-1;if(h.y<48||h.y>H-22)h.vy*=-1;});
-    if(c.kind==="attack"){
-      if(state.carried){state.carried.x=p.x;state.carried.y=p.y-22;state.carried.phase+=dt*5;if(p.x>520&&p.y<110){state.done++;state.score+=100;state.carried=null;if(state.done>=state.goal){updateHud();finish(true);return;}}}
-      else{for(var i=state.targets.length-1;i>=0;i--){if(dist(p,state.targets[i])<20){state.carried=state.targets.splice(i,1)[0];break;}}}
+  function togglePause(){
+    if(!state.running && !state.paused) return;
+    if(state.paused){
+      state.paused=false;if(pauseBtn)pauseBtn.textContent="PAUSE";
+      overlay.classList.add("hidden");status.textContent="PLAYING / "+configs[selected].genre;
     }else{
-      for(var k=state.targets.length-1;k>=0;k--){if(dist(p,state.targets[k])<18){state.targets.splice(k,1);state.done++;state.score+=100;if(state.done>=state.goal){updateHud();finish(true);return;}state.targets.push({x:random(45,595),y:random(65,320),homeX:0,homeY:0,phase:random(0,7),type:"pickup"});}}
+      state.paused=true;if(pauseBtn)pauseBtn.textContent="RESUME";
+      showOverlay("PAUSED","The cabinet is paused. Resume when ready.","RESUME");status.textContent="PAUSED";
     }
-    if(state.invuln<=0&&state.shield<=0){for(var j=0;j<state.hazards.length;j++){if(dist(p,state.hazards[j])<17){state.lives--;state.invuln=1.15;p.x=320;p.y=286;if(state.lives<=0){updateHud();finish(false);return;}break;}}}
-    if(state.time<=0){updateHud();finish(false);return;}updateHud();
   }
-  function text(txt,x,y,size,color,align){ctx.font="700 "+size+"px Barlow,Arial,sans-serif";ctx.textAlign=align||"center";ctx.fillStyle=color;ctx.shadowColor=color;ctx.shadowBlur=8;ctx.fillText(txt,x,y);ctx.shadowBlur=0;}
+  function inputFrom(pad){
+    var dx=((keys.ArrowRight||keys.d?1:0)-(keys.ArrowLeft||keys.a?1:0))+(touch.right?1:0)-(touch.left?1:0)+(pad.dx||0);
+    var dy=((keys.ArrowDown||keys.s?1:0)-(keys.ArrowUp||keys.w?1:0))+(touch.down?1:0)-(touch.up?1:0)+(pad.dy||0)+(fsMove.y||0);
+    return {dx:clamp(dx,-1,1),dy:clamp(dy,-1,1),action:!!(keys.action||touchActions.action||pad.action),shield:!!(keys.shield||touchActions.shield||pad.shield)};
+  }
+  function activateShield(){
+    if(state.shieldCooldown<=0){state.shield=.82;state.shieldCooldown=2.1;sfx(720,.07,"triangle",.025);}
+  }
+  function playerHit(){
+    if(state.shield>0||state.invuln>0)return;
+    state.lives--;state.invuln=1.15;
+    if(selected==="bp-invaders") state.player.x=320;
+    else {state.player.x=320;state.player.y=305;}
+    sfx(135,.15,"sawtooth",.035);
+    if(state.lives<=0) finish(false,"The run ended with "+state.score+" points. Try a different route or use the shield more often.");
+    updateHud();
+  }
+  function fireBullet(){
+    if(state.fireCooldown>0)return;
+    state.bullets.push({x:state.player.x,y:state.player.y-15,vy:-315});
+    state.fireCooldown=.22;sfx(520,.045,"square",.012);
+  }
+  function updateInvaders(dt,inp){
+    var p=state.player;p.x=clamp(p.x+inp.dx*255*dt,22,W-22);p.y=318;
+    if(inp.action) fireBullet();
+    var living=state.enemies.filter(function(e){return e.alive;});
+    if(!living.length){
+      if(state.wave>=3){finish(true,"Three waves cleared. Final score: "+state.score+".");return;}
+      state.wave++;spawnFormation();sfx(920,.13,"square",.025);return;
+    }
+    var left=Infinity,right=-Infinity;
+    living.forEach(function(e){left=Math.min(left,e.x-18);right=Math.max(right,e.x+18);});
+    var speed=39+state.wave*13+(24-living.length)*1.1, dx=state.formationDir*speed*dt;
+    if((state.formationDir>0&&right+dx>W-22)||(state.formationDir<0&&left+dx<22)){
+      state.formationDir*=-1;living.forEach(function(e){e.y+=13;});
+      if(living.some(function(e){return e.y>p.y-35;})){finish(false,"The formation reached the archive line. Start again and keep firing.");return;}
+      dx=state.formationDir*speed*dt;
+    }
+    living.forEach(function(e){e.x+=dx;});
+    state.enemyShotTimer-=dt;
+    if(state.enemyShotTimer<=0&&living.length){
+      var shooter=living[Math.floor(Math.random()*living.length)];
+      state.enemyBullets.push({x:shooter.x,y:shooter.y+14,vy:112+state.wave*16});
+      state.enemyShotTimer=random(.42,.82);
+    }
+    for(var b=state.bullets.length-1;b>=0;b--){
+      var shot=state.bullets[b];shot.y+=shot.vy*dt;
+      if(shot.y<20){state.bullets.splice(b,1);continue;}
+      var hit=false;
+      for(var e=0;e<state.enemies.length;e++){
+        var enemy=state.enemies[e];
+        if(enemy.alive&&Math.abs(shot.x-enemy.x)<18&&Math.abs(shot.y-enemy.y)<14){
+          enemy.alive=false;state.score+=100;state.done++;hit=true;sfx(300+enemy.row*80,.05,"square",.018);break;
+        }
+      }
+      if(hit)state.bullets.splice(b,1);
+    }
+    for(var eb=state.enemyBullets.length-1;eb>=0;eb--){
+      var bad=state.enemyBullets[eb];bad.y+=bad.vy*dt;
+      if(bad.y>H+5){state.enemyBullets.splice(eb,1);continue;}
+      if(Math.abs(bad.x-p.x)<12&&Math.abs(bad.y-p.y)<14){
+        state.enemyBullets.splice(eb,1);playerHit();if(!state.running)return;
+      }
+    }
+  }
+  function moveHazards(dt){
+    state.hazards.forEach(function(h){
+      if(selected==="title-chain"&&state.pulse>0)return;
+      h.x+=h.vx*dt;h.y+=h.vy*dt;
+      if(h.x<25||h.x>W-25)h.vx*=-1;
+      if(h.y<45||h.y>H-28)h.vy*=-1;
+    });
+  }
+  function updateOther(dt,inp){
+    var p=state.player;
+    if(inp.action&&!state.actionHeld){
+      if(selected==="title-chain"){state.pulse=1.05;sfx(840,.09,"triangle",.024);}
+      if(selected==="archive-run"){state.dash=.48;sfx(430,.06,"square",.018);}
+    }
+    var speed=selected==="archive-run"&&state.dash>0?315:190;
+    p.x=clamp(p.x+inp.dx*speed*dt,20,W-20);p.y=clamp(p.y+inp.dy*speed*dt,34,H-30);
+    if(selected==="title-chain"){
+      if(state.chainIndex<CHAIN.length&&dist(p,CHAIN[state.chainIndex])<23){
+        state.score+=100;state.chainIndex++;sfx(660,.085,"square",.02);
+        if(state.chainIndex>=CHAIN.length){state.done=CHAIN.length;finish(true,"Both three-node working routes completed in order. Score: "+state.score+". This is a diagramming game, not a title determination.");return;}
+      }
+    }else{
+      for(var i=state.targets.length-1;i>=0;i--){
+        if(dist(p,state.targets[i])<22){state.targets.splice(i,1);state.done++;state.score+=100;sfx(630,.07,"triangle",.02);}
+      }
+      if(state.done>=state.goal&&p.x>515&&p.y<108){
+        finish(true,"Five record fragments recovered and carried to the archive gate. Score: "+state.score+".");return;
+      }
+    }
+    if(state.pulse>0)state.pulse=Math.max(0,state.pulse-dt);
+    if(state.dash>0)state.dash=Math.max(0,state.dash-dt);
+    moveHazards(dt);
+    if(state.invuln<=0&&state.shield<=0){
+      for(var h=0;h<state.hazards.length;h++){
+        if(dist(p,state.hazards[h])<17){playerHit();break;}
+      }
+    }
+  }
+  function update(dt,pad){
+    var inp=inputFrom(pad);
+    state.time-=dt;state.fireCooldown=Math.max(0,state.fireCooldown-dt);
+    state.shield=Math.max(0,state.shield-dt);state.shieldCooldown=Math.max(0,state.shieldCooldown-dt);
+    state.invuln=Math.max(0,state.invuln-dt);
+    if(inp.shield&&!state.shieldHeld)activateShield();
+    state.shieldHeld=inp.shield;
+    if(selected==="bp-invaders")updateInvaders(dt,inp);else updateOther(dt,inp);
+    state.actionHeld=inp.action;
+    if(!state.running)return;
+    if(state.time<=0){finish(false,"Time ran out with "+state.score+" points. Try again.");return;}
+    updateHud();
+  }
+  function text(str,x,y,size,color,align){
+    ctx.font="700 "+size+"px Barlow,Arial,sans-serif";ctx.textAlign=align||"center";ctx.fillStyle=color;ctx.shadowColor=color;ctx.shadowBlur=7;ctx.fillText(str,x,y);ctx.shadowBlur=0;
+  }
   function drawGrid(t){
-    var g=ctx.createLinearGradient(0,0,0,H);g.addColorStop(0,"#07091a");g.addColorStop(.55,"#080d20");g.addColorStop(1,"#03040c");ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
-    stars.forEach(function(s){ctx.globalAlpha=.25+.4*(.5+.5*Math.sin(t*.0009+s.p));ctx.fillStyle="#aefaff";ctx.fillRect(s.x,s.y,s.r,s.r);});ctx.globalAlpha=1;
-    var horizon=206,shift=(t*.018)%26;ctx.lineWidth=1;ctx.strokeStyle="rgba(0,240,255,.21)";
+    var g=ctx.createLinearGradient(0,0,0,H);g.addColorStop(0,"#050917");g.addColorStop(.55,"#081224");g.addColorStop(1,"#03050c");ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+    stars.forEach(function(s){ctx.globalAlpha=.25+.4*(.5+.5*Math.sin(t*.0009+s.p));ctx.fillStyle="#b7f5ff";ctx.fillRect(s.x,s.y,s.r,s.r);});ctx.globalAlpha=1;
+    var horizon=206,shift=(t*.018)%26;ctx.lineWidth=1;ctx.strokeStyle="rgba(0,240,255,.18)";
     for(var i=-13;i<=13;i++){ctx.beginPath();ctx.moveTo(W/2+i*5,horizon);ctx.lineTo(W/2+i*34,H);ctx.stroke();}
     for(var y=0;y<8;y++){var yy=horizon+Math.pow(y/7,1.7)*(H-horizon)+shift%16;ctx.beginPath();ctx.moveTo(0,yy);ctx.lineTo(W,yy);ctx.stroke();}
-    var vg=ctx.createLinearGradient(0,horizon,0,H);vg.addColorStop(0,"rgba(255,61,219,0)");vg.addColorStop(1,"rgba(255,61,219,.09)");ctx.fillStyle=vg;ctx.fillRect(0,horizon,W,H-horizon);
   }
-  function drawHouse(t){
-    var x=96,y=89,w=156,h=100;ctx.save();ctx.shadowColor="#00f0ff";ctx.shadowBlur=10;ctx.lineWidth=2;ctx.strokeStyle="#00f0ff";
-    ctx.beginPath();ctx.moveTo(x-8,y+21);ctx.lineTo(x+w/2,y-20);ctx.lineTo(x+w+8,y+21);ctx.lineTo(x+w+8,y+100);ctx.lineTo(x-8,y+100);ctx.closePath();ctx.stroke();
-    ctx.strokeStyle="#ff3ddb";ctx.beginPath();ctx.moveTo(x+10,y+22);ctx.lineTo(x+w/2,y-9);ctx.lineTo(x+w-10,y+22);ctx.stroke();
-    ctx.strokeStyle="rgba(0,240,255,.65)";ctx.strokeRect(x+13,y+39,27,26);ctx.strokeRect(x+w-40,y+39,27,26);ctx.strokeStyle="#ffe94a";ctx.strokeRect(x+w/2-12,y+57,24,43);
-    ctx.shadowBlur=0;ctx.fillStyle="#0b152a";ctx.fillRect(x+1,y+25,w-2,74);ctx.fillStyle="rgba(0,240,255,.18)";ctx.fillRect(x+14,y+40,25,24);ctx.fillRect(x+w-39,y+40,25,24);ctx.strokeStyle="#ff3ddb";ctx.strokeRect(x+w/2-12,y+57,24,43);ctx.restore();text("TŶ MAWR",x+w/2,y+14,10,"#e6fbff");
-  }
-  function drawExit(){ctx.save();ctx.shadowColor="#ffe94a";ctx.shadowBlur=15;ctx.strokeStyle="#ffe94a";ctx.lineWidth=2;ctx.strokeRect(530,43,83,59);ctx.shadowBlur=0;ctx.fillStyle="rgba(255,233,74,.10)";ctx.fillRect(530,43,83,59);text("EXIT",571,68,13,"#ffe94a");text("ZONE",571,84,7,"#ffe94a");ctx.restore();}
-  function drawPickup(o,t){
-    var c=configs[selected],farm=c.kind==="attack",color=farm?"#ff3ddb":c.kind==="defend"?"#00f0ff":c.kind==="records"?"#ffe94a":"#a38bff";
-    var bob=Math.sin(t*.004+o.phase)*3,x=o.x,y=o.y+bob;ctx.save();ctx.translate(x,y);ctx.shadowColor=color;ctx.shadowBlur=13;ctx.strokeStyle=color;ctx.lineWidth=1.7;
-    if(farm){ctx.beginPath();ctx.moveTo(-8,-8);ctx.lineTo(0,-12);ctx.lineTo(8,-5);ctx.lineTo(7,8);ctx.lineTo(-7,8);ctx.closePath();ctx.stroke();text("F",0,4,9,color);}
-    else{ctx.strokeRect(-8,-10,16,20);ctx.beginPath();ctx.moveTo(-4,-4);ctx.lineTo(4,-4);ctx.moveTo(-4,0);ctx.lineTo(4,0);ctx.moveTo(-4,4);ctx.lineTo(2,4);ctx.stroke();}ctx.restore();
-  }
-  function drawHazard(h,t){
-    var c=configs[selected],color=c.kind==="attack"?"#a7f5ff":c.kind==="defend"?"#ff3d83":c.kind==="records"?"#9a8bff":"#ff6e53";
-    ctx.save();ctx.translate(h.x,h.y);ctx.rotate(t*.001+h.phase);ctx.shadowColor=color;ctx.shadowBlur=10;ctx.strokeStyle=color;ctx.fillStyle="rgba(255,61,219,.12)";ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(0,-10);ctx.lineTo(9,0);ctx.lineTo(0,10);ctx.lineTo(-9,0);ctx.closePath();ctx.fill();ctx.stroke();ctx.restore();
+  function drawShield(e,t){
+    var x=e.x,y=e.y;
+    ctx.save();ctx.translate(x,y);ctx.shadowColor="#39ff78";ctx.shadowBlur=8;ctx.fillStyle="#105b32";ctx.strokeStyle="#43ff84";ctx.lineWidth=1.5;
+    ctx.beginPath();ctx.moveTo(-15,-10);ctx.lineTo(0,-14);ctx.lineTo(15,-10);ctx.lineTo(13,7);ctx.lineTo(0,14);ctx.lineTo(-13,7);ctx.closePath();ctx.fill();ctx.stroke();
+    ctx.shadowBlur=0;ctx.strokeStyle="rgba(151,255,177,.55)";ctx.beginPath();ctx.moveTo(-9,-5);ctx.lineTo(0,-8);ctx.lineTo(9,-5);ctx.stroke();
+    text("BP",0,4,11,"#ffe94a");ctx.restore();
   }
   function drawPlayer(t){
-    var p=state.player,c=configs[selected],color=c.kind==="attack"?"#ffe94a":"#00f0ff";if(state.invuln>0&&Math.floor(t/90)%2===0)return;
-    ctx.save();ctx.translate(p.x,p.y);ctx.shadowColor=color;ctx.shadowBlur=14;ctx.fillStyle=color;ctx.strokeStyle="#f6fbff";ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(0,-12);ctx.lineTo(11,9);ctx.lineTo(0,5);ctx.lineTo(-11,9);ctx.closePath();ctx.fill();ctx.stroke();
-    if(state.shield>0){ctx.strokeStyle="#ffe94a";ctx.lineWidth=2;ctx.beginPath();ctx.arc(0,0,21,0,Math.PI*2);ctx.stroke();}
-    if(state.carried){ctx.strokeStyle="#ff3ddb";ctx.strokeRect(-11,-32,22,15);text("F",0,-21,9,"#ff3ddb");}ctx.restore();
+    var p=state.player;if(state.invuln>0&&Math.floor(t/80)%2===0)return;
+    ctx.save();ctx.translate(p.x,p.y);ctx.shadowColor="#00f0ff";ctx.shadowBlur=13;ctx.fillStyle="#00bcd4";ctx.strokeStyle="#d7fbff";ctx.lineWidth=1.2;
+    ctx.beginPath();ctx.moveTo(0,-13);ctx.lineTo(13,10);ctx.lineTo(0,5);ctx.lineTo(-13,10);ctx.closePath();ctx.fill();ctx.stroke();
+    ctx.fillStyle="#ffe94a";ctx.fillRect(-3,3,6,4);
+    if(state.shield>0){ctx.strokeStyle="#ffe94a";ctx.lineWidth=2;ctx.beginPath();ctx.arc(0,0,22,0,Math.PI*2);ctx.stroke();}
+    if(selected==="archive-run"&&state.done>0){ctx.fillStyle="#111b2a";ctx.strokeStyle="#ffe94a";ctx.strokeRect(-8,-31,16,12);text("+"+state.done,0,-22,7,"#ffe94a");}
+    ctx.restore();
   }
-  function draw(t){drawGrid(t);drawHouse(t);if(configs[selected].kind==="attack")drawExit();state.targets.forEach(function(o){drawPickup(o,t);});state.hazards.forEach(function(h){drawHazard(h,t);});if(state.running)drawPlayer(t);if(!state.running)text("FREE PLAY",W/2,286,10,"#4e6b96");if(state.paused){ctx.fillStyle="rgba(4,6,17,.8)";ctx.fillRect(0,0,W,H);text("PAUSED",W/2,H/2,24,"#00f0ff");}}
-  function frame(now){var dt=Math.min(.035,(now-(last||now))/1000);last=now;if(state.running&&!state.paused)update(dt);draw(now);requestAnimationFrame(frame);}
-  function action(){if(state.paused){state.paused=false;if(pauseBtn)pauseBtn.textContent="PAUSE";overlay.classList.add("hidden");return;}if(!state.running){startGame();return;}state.shield=.85;}
-  startBtn.addEventListener("click",action);
-  if(loadBtn)loadBtn.addEventListener("click",function(){chooseGame(selected);var cabinet=$("console");if(cabinet)cabinet.scrollIntoView({behavior:"smooth",block:"start"});});
-  Array.prototype.forEach.call(document.querySelectorAll("[data-game-select]"),function(b){b.addEventListener("click",function(){chooseGame(b.getAttribute("data-game-select"));});b.addEventListener("dblclick",function(){chooseGame(b.getAttribute("data-game-select"));startGame();});});
-  if(pauseBtn)pauseBtn.addEventListener("click",function(){if(!state.running){showOverlay(configs[selected].name,"Press start to begin this game.","PRESS START");return;}state.paused=!state.paused;pauseBtn.textContent=state.paused?"RESUME":"PAUSE";status.textContent=state.paused?"PAUSED":"PLAYING / "+configs[selected].genre;if(state.paused)showOverlay("PAUSED","Take a breath. Resume when ready.","RESUME");else overlay.classList.add("hidden");});
-  document.addEventListener("keydown",function(e){
-    if(["ArrowUp","ArrowDown","ArrowLeft","ArrowRight"," "].indexOf(e.key)>=0&&!(e.target&&/INPUT|TEXTAREA|SELECT/.test(e.target.tagName)))e.preventDefault();
-    if(e.key==="Enter"&&!state.running){startGame();return;}if(e.key.toLowerCase()==="p"){if(state.running){state.paused=!state.paused;if(pauseBtn)pauseBtn.textContent=state.paused?"RESUME":"PAUSE";if(state.paused)showOverlay("PAUSED","Resume when you're ready.","RESUME");else overlay.classList.add("hidden");}return;}
-    if(e.key===" "&&state.running){state.shield=.85;return;}keys[e.key]=true;keys[e.key.toLowerCase()]=true;
-  });
-  document.addEventListener("keyup",function(e){keys[e.key]=false;keys[e.key.toLowerCase()]=false;});
-  Array.prototype.forEach.call(document.querySelectorAll("[data-dir]"),function(b){
-    var d=b.getAttribute("data-dir");function on(){touch[d]=true;}function off(){touch[d]=false;}
-    b.addEventListener("pointerdown",function(e){e.preventDefault();on();try{b.setPointerCapture(e.pointerId);}catch(_e){}});
-    ["pointerup","pointercancel","pointerleave","lostpointercapture"].forEach(function(ev){b.addEventListener(ev,off);});
-  });
-  function musicLabel(){if(!musicBtn)return;musicBtn.textContent=musicEnabled?(musicLoop?"♫ MUSIC ON":"♫ MUSIC ON · TAP"):"♫ MUSIC OFF";musicBtn.setAttribute("aria-pressed",musicEnabled?"true":"false");}
+  function drawInvaders(t){
+    text("DEFEND THE ARCHIVE LINE",W/2,29,10,"#78a3c7");
+    state.enemies.forEach(function(e){if(e.alive)drawShield(e,t);});
+    ctx.save();ctx.shadowColor="#ffe94a";ctx.shadowBlur=8;ctx.fillStyle="#ffe94a";
+    state.bullets.forEach(function(b){ctx.fillRect(b.x-2,b.y-7,4,12);});
+    ctx.restore();
+    state.enemyBullets.forEach(function(b){ctx.save();ctx.shadowColor="#ff4b75";ctx.shadowBlur=8;ctx.fillStyle="#ff4b75";ctx.fillRect(b.x-2,b.y-4,4,9);ctx.restore();});
+    ctx.strokeStyle="rgba(255,233,74,.45)";ctx.setLineDash([5,5]);ctx.beginPath();ctx.moveTo(0,338);ctx.lineTo(W,338);ctx.stroke();ctx.setLineDash([]);
+    drawPlayer(t);
+  }
+  function drawHazard(h,t){
+    ctx.save();ctx.translate(h.x,h.y);ctx.rotate(t*.001+h.phase);ctx.shadowColor="#ff4d70";ctx.shadowBlur=9;ctx.fillStyle="rgba(255,60,93,.16)";ctx.strokeStyle="#ff4d70";ctx.lineWidth=1.5;
+    ctx.beginPath();ctx.moveTo(0,-10);ctx.lineTo(9,0);ctx.lineTo(0,10);ctx.lineTo(-9,0);ctx.closePath();ctx.fill();ctx.stroke();ctx.restore();
+  }
+  function drawChain(t){
+    text("TITLE CHAIN / ROUTE MODEL — NOT A TITLE FINDING",W/2,26,9,"#c9d8ed");
+    text("PARCEL A · WORKING MODEL · WILLIAMS BY 1924/28",W/2,49,10,"#45e4ff");
+    text("PARCEL B · WORKING MODEL · WGR 1938 → BP TRUST 1969",W/2,177,10,"#ffe94a");
+    ctx.lineWidth=2;
+    for(var r=0;r<2;r++){
+      var y=r===0?83:214, color=r===0?"rgba(69,228,255,.4)":"rgba(255,233,74,.4)";
+      ctx.strokeStyle=color;ctx.beginPath();ctx.moveTo(86,y);ctx.lineTo(554,y);ctx.stroke();
+      for(var c=0;c<3;c++){
+        var idx=r*3+c,node=CHAIN[idx],done=idx<state.chainIndex,current=idx===state.chainIndex;
+        ctx.save();ctx.shadowColor=current?"#ffffff":(done?"#72ff9b":color);ctx.shadowBlur=current?14:5;
+        ctx.fillStyle=done?"#164b38":current?"#574b16":"#0a1425";ctx.strokeStyle=done?"#72ff9b":current?"#ffe94a":color;ctx.lineWidth=current?3:1.5;
+        ctx.beginPath();ctx.arc(node.x,node.y,done?16:(current?19:15),0,Math.PI*2);ctx.fill();ctx.stroke();ctx.restore();
+        text(done?"✓":String(idx+1),node.x,node.y+4,9,done?"#72ff9b":current?"#ffe94a":"#7890ad");
+        if(node.sub){text(node.label,node.x,node.y+28,8,done?"#c7f6d4":current?"#fff0a4":"#8da7c4");text(node.sub,node.x,node.y+39,8,done?"#c7f6d4":current?"#fff0a4":"#8da7c4");}
+        else text(node.label,node.x,node.y+30,node.label.length>13?7:8,done?"#c7f6d4":current?"#fff0a4":"#8da7c4");
+      }
+    }
+    text("AVOID RULED-OUT LEADS: 1877 ROATH LEASE · CYDFIN 107 ac ≠ LLANDOUGH FARM 166 ac",W/2,347,7,"#ff6c86");
+    state.hazards.forEach(function(h){drawHazard(h,t);});
+    drawPlayer(t);
+    if(state.pulse>0){ctx.strokeStyle="rgba(255,233,74,"+(state.pulse*.55)+")";ctx.lineWidth=3;ctx.beginPath();ctx.arc(state.player.x,state.player.y,30+(1-state.pulse)*45,0,Math.PI*2);ctx.stroke();}
+  }
+  function drawHouse(){
+    var x=72,y=118,w=142,h=93;
+    ctx.save();ctx.shadowColor="#45e4ff";ctx.shadowBlur=8;ctx.lineWidth=2;ctx.strokeStyle="#45e4ff";
+    ctx.beginPath();ctx.moveTo(x-8,y+20);ctx.lineTo(x+w/2,y-18);ctx.lineTo(x+w+8,y+20);ctx.lineTo(x+w+8,y+93);ctx.lineTo(x-8,y+93);ctx.closePath();ctx.stroke();
+    ctx.fillStyle="rgba(10,28,50,.86)";ctx.fillRect(x+1,y+24,w-2,67);
+    ctx.strokeStyle="rgba(69,228,255,.6)";ctx.strokeRect(x+11,y+35,24,23);ctx.strokeRect(x+w-35,y+35,24,23);
+    ctx.strokeStyle="#ffe94a";ctx.strokeRect(x+w/2-10,y+54,20,37);ctx.restore();
+    text("TŶ MAWR",x+w/2,y+12,9,"#e6fbff");
+  }
+  function drawGate(open){
+    ctx.save();ctx.shadowColor=open?"#72ff9b":"#ffe94a";ctx.shadowBlur=11;ctx.lineWidth=2;ctx.strokeStyle=open?"#72ff9b":"#ffe94a";
+    ctx.fillStyle=open?"rgba(64,255,133,.12)":"rgba(255,233,74,.08)";ctx.strokeRect(526,42,86,62);ctx.fillRect(526,42,86,62);ctx.restore();
+    text(open?"ARCHIVE":"LOCKED",569,68,open?8:9,open?"#72ff9b":"#ffe94a");text(open?"GATE OPEN":"5 FILES",569,84,7,open?"#72ff9b":"#ffe94a");
+  }
+  function drawRecord(o,t){
+    var bob=Math.sin(t*.004+o.phase)*3,x=o.x,y=o.y+bob;
+    ctx.save();ctx.translate(x,y);ctx.shadowColor="#ffe94a";ctx.shadowBlur=9;ctx.fillStyle="#111b2a";ctx.strokeStyle="#ffe94a";ctx.lineWidth=1.5;
+    ctx.beginPath();ctx.moveTo(-8,-11);ctx.lineTo(4,-11);ctx.lineTo(9,-6);ctx.lineTo(9,11);ctx.lineTo(-8,11);ctx.closePath();ctx.fill();ctx.stroke();
+    ctx.beginPath();ctx.moveTo(4,-11);ctx.lineTo(4,-6);ctx.lineTo(9,-6);ctx.stroke();ctx.restore();
+    text(o.label,x,y+23,6,"#ffe94a");
+  }
+  function drawArchive(t){
+    drawHouse();drawGate(state.done>=state.goal);
+    state.targets.forEach(function(o){drawRecord(o,t);});
+    state.hazards.forEach(function(h){drawHazard(h,t);});
+    drawPlayer(t);
+    text("RECOVER FRAGMENTS · THEN REACH THE GATE",W/2,28,9,"#c9d8ed");
+  }
+  function draw(t){
+    drawGrid(t);
+    if(selected==="bp-invaders")drawInvaders(t);
+    else if(selected==="title-chain")drawChain(t);
+    else drawArchive(t);
+    if(!state.running&&!state.paused)text("FREE PLAY",W/2,H-12,8,"#6f87a8");
+    if(state.paused){ctx.fillStyle="rgba(2,5,14,.76)";ctx.fillRect(0,0,W,H);text("PAUSED",W/2,H/2,24,"#00f0ff");}
+  }
+  function frame(now){
+    var dt=Math.min(.035,(now-(last||now))/1000);last=now;
+    var pad={dx:0,dy:0,action:false,shield:false,pause:false,connected:false};
+    try{
+      var pads=navigator.getGamepads?navigator.getGamepads():[];
+      for(var i=0;i<pads.length;i++){
+        var g=pads[i];if(!g)continue;
+        pad.connected=true;
+        var ax=g.axes&&g.axes.length?g.axes[0]:0, ay=g.axes&&g.axes.length>1?g.axes[1]:0;
+        pad.dx=Math.abs(ax)>.22?ax:0;pad.dy=Math.abs(ay)>.22?ay:0;
+        var button=function(n){return !!(g.buttons&&g.buttons[n]&&(g.buttons[n].pressed||g.buttons[n].value>.5));};
+        if(button(14))pad.dx=-1;if(button(15))pad.dx=1;if(button(12))pad.dy=-1;if(button(13))pad.dy=1;
+        pad.action=button(0);pad.shield=button(1);pad.pause=button(9);break;
+      }
+    }catch(e){}
+    var ctl=pad.connected?"GAMEPAD CONNECTED · A ACTION / B SHIELD": "KEYBOARD + TOUCH READY";
+    if(controllerStatus&&controllerStatus.textContent!==ctl)controllerStatus.textContent=ctl;
+    if(pad.pause&&!padPauseWasDown)togglePause();padPauseWasDown=pad.pause;
+    if(state.running&&!state.paused)update(dt,pad);
+    draw(now);requestAnimationFrame(frame);
+  }
+  function nativeFullscreenElement(){return document.fullscreenElement||document.webkitFullscreenElement||document.mozFullScreenElement||document.msFullscreenElement||null;}
+function inFullscreen(){return !!(screenWrap&&(nativeFullscreenElement()===screenWrap||immersiveFallback));}
+function syncFullscreen(){
+  if(!screenWrap)return;
+  var nativeOn=nativeFullscreenElement()===screenWrap;
+  if(nativeOn)immersiveFallback=false;
+  var on=nativeOn||immersiveFallback;
+  screenWrap.classList.toggle("immersive",on);
+  if(fullscreenBtn){fullscreenBtn.textContent=on?"EXIT FULL SCREEN ⛶":"FULL SCREEN ⛶";fullscreenBtn.setAttribute("aria-pressed",on?"true":"false");}
+  if(fullscreenExit)fullscreenExit.textContent=on?"EXIT FULLSCREEN":"FULLSCREEN";
+  if(on&&window.matchMedia&&window.matchMedia("(pointer: coarse)").matches&&screen.orientation&&screen.orientation.lock&&nativeOn){try{var lp=screen.orientation.lock("landscape");if(lp&&lp.catch)lp.catch(function(){});}catch(e){}}
+}
+function enterFullscreen(){
+  if(!screenWrap)return;
+  if(inFullscreen()){exitFullscreen();return;}
+  var req=screenWrap.requestFullscreen||screenWrap.webkitRequestFullscreen||screenWrap.mozRequestFullScreen||screenWrap.msRequestFullscreen;
+  if(!req){immersiveFallback=true;syncFullscreen();return;}
+  try{var p=req.call(screenWrap);if(p&&p.then){p.then(function(){immersiveFallback=false;syncFullscreen();}).catch(function(){immersiveFallback=true;syncFullscreen();});}else{window.setTimeout(syncFullscreen,80);}}
+  catch(e){immersiveFallback=true;syncFullscreen();}
+}
+function exitFullscreen(){
+  if(immersiveFallback){immersiveFallback=false;if(screenWrap)screenWrap.classList.remove("immersive");syncFullscreen();return;}
+  var fs=nativeFullscreenElement();if(!fs)return;
+  var ex=document.exitFullscreen||document.webkitExitFullscreen||document.mozCancelFullScreen||document.msExitFullscreen;
+  try{if(ex){var p=ex.call(document);if(p&&p.catch)p.catch(function(){});}}catch(e){}
+}
+if(fullscreenBtn)fullscreenBtn.addEventListener("click",enterFullscreen);
+if(fullscreenExit)fullscreenExit.addEventListener("click",exitFullscreen);
+if(fullscreenPause)fullscreenPause.addEventListener("click",function(){if(!state.running&&!state.paused)startGame();else togglePause();});
+document.addEventListener("fullscreenchange",syncFullscreen);document.addEventListener("webkitfullscreenchange",syncFullscreen);document.addEventListener("mozfullscreenchange",syncFullscreen);document.addEventListener("MSFullscreenChange",syncFullscreen);
+if(fsStick&&fsKnob){
+  function moveFsStick(e){var r=fsStick.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2,dx=e.clientX-cx,dy=e.clientY-cy,m=r.width*.31,d=Math.hypot(dx,dy);if(d>m){dx*=m/d;dy*=m/d;}fsMove.x=dx/m;fsMove.y=dy/m;fsKnob.style.transform="translate("+dx+"px,"+dy+"px)";}
+  fsStick.addEventListener("pointerdown",function(e){e.preventDefault();fsMove.id=e.pointerId;try{fsStick.setPointerCapture(e.pointerId);}catch(err){}moveFsStick(e);});
+  fsStick.addEventListener("pointermove",function(e){if(fsMove.id===e.pointerId)moveFsStick(e);});
+  function resetFsStick(e){if(!e||fsMove.id===e.pointerId){fsMove.id=null;fsMove.x=fsMove.y=0;fsKnob.style.transform="";}}
+  ["pointerup","pointercancel","lostpointercapture"].forEach(function(ev){fsStick.addEventListener(ev,resetFsStick);});
+}
+window.addEventListener("blur",function(){keys={};touchActions.action=touchActions.shield=false;fsMove.id=null;fsMove.x=fsMove.y=0;if(fsKnob)fsKnob.style.transform="";});
+function actionClick(){
+    if(state.paused){togglePause();return;}
+    if(!state.running){startGame();return;}
+    if(selected==="bp-invaders"){touchActions.action=true;window.setTimeout(function(){touchActions.action=false;},150);}
+    else if(selected==="title-chain"){state.pulse=1.05;sfx(840,.09,"triangle",.024);}
+    else {state.dash=.48;sfx(430,.06,"square",.018);}
+  }
+  function wireHoldButtons(){
+    Array.prototype.forEach.call(document.querySelectorAll("[data-control]"),function(b){
+      var c=b.getAttribute("data-control");
+      function down(e){e.preventDefault();touchActions[c]=true;b.setAttribute("aria-pressed","true");try{b.setPointerCapture(e.pointerId);}catch(err){}}
+      function up(){touchActions[c]=false;b.setAttribute("aria-pressed","false");}
+      b.addEventListener("pointerdown",down);
+      ["pointerup","pointercancel","pointerleave","lostpointercapture"].forEach(function(ev){b.addEventListener(ev,up);});
+    });
+  }
+  function toggleMusic(){
+    if(musicLoop){musicEnabled=false;clearInterval(musicLoop);musicLoop=null;musicLabel();}
+    else{musicEnabled=true;startMusic();}
+  }
+  function musicLabel(){
+    if(!musicBtn)return;
+    musicBtn.textContent=musicEnabled?(musicLoop?"♫ MUSIC ON":"♫ MUSIC ON · TAP"):"♫ MUSIC OFF";
+    musicBtn.setAttribute("aria-pressed",musicEnabled?"true":"false");
+  }
   function tone(freq,when,dur,wave,vol){
-    if(!audioCtx)return;var osc=audioCtx.createOscillator(),gain=audioCtx.createGain();osc.type=wave;osc.frequency.setValueAtTime(freq,when);gain.gain.setValueAtTime(.0001,when);gain.gain.exponentialRampToValueAtTime(vol,when+.018);gain.gain.exponentialRampToValueAtTime(.0001,when+dur);osc.connect(gain);gain.connect(audioCtx.destination);osc.start(when);osc.stop(when+dur+.02);
+    if(!audioCtx)return;
+    var osc=audioCtx.createOscillator(),gain=audioCtx.createGain();osc.type=wave;osc.frequency.setValueAtTime(freq,when);
+    gain.gain.setValueAtTime(.0001,when);gain.gain.exponentialRampToValueAtTime(vol,when+.012);gain.gain.exponentialRampToValueAtTime(.0001,when+dur);
+    osc.connect(gain);gain.connect(audioCtx.destination);osc.start(when);osc.stop(when+dur+.02);
+  }
+  function sfx(freq,dur,wave,vol){
+    if(audioCtx&&audioCtx.state==="running")tone(freq,audioCtx.currentTime+.005,dur,wave,vol);
   }
   function scheduleMusic(){
-    if(musicLoop||!audioCtx||audioCtx.state!=="running"||!musicEnabled)return;var melody=[220,277.18,329.63,440,392,329.63,277.18,246.94,329.63,392,493.88,440,329.63,277.18,220,196],bass=[110,110,138.59,138.59,164.81,164.81,146.83,146.83];
-    musicLoop=window.setInterval(function(){if(!musicEnabled||!audioCtx||audioCtx.state!=="running")return;var t=audioCtx.currentTime+.025;tone(melody[beat%melody.length],t,.16,"square",.023);if(beat%2===0)tone(bass[Math.floor(beat/2)%bass.length],t,.24,"triangle",.035);if(beat%4===2)tone(880,t,.045,"square",.007);beat++;},190);musicLabel();
+    if(musicLoop||!audioCtx||audioCtx.state!=="running"||!musicEnabled)return;
+    var melody=[220,277.18,329.63,440,392,329.63,277.18,246.94,329.63,392,493.88,440,329.63,277.18,220,196];
+    musicLoop=window.setInterval(function(){
+      if(!musicEnabled||!audioCtx||audioCtx.state!=="running")return;
+      var t=audioCtx.currentTime+.025;tone(melody[beat%melody.length],t,.13,"square",.018);
+      if(beat%2===0)tone(melody[(beat+4)%melody.length]/2,t,.2,"triangle",.024);beat++;
+    },190);musicLabel();
   }
   function startMusic(){
-    if(!musicEnabled)return;try{var AC=window.AudioContext||window.webkitAudioContext;if(!AC){musicLabel();return;}if(!audioCtx)audioCtx=new AC();var r=audioCtx.state==="suspended"?audioCtx.resume():Promise.resolve();if(r&&r.then)r.then(scheduleMusic).catch(musicLabel);else scheduleMusic();if(audioCtx.state==="running")scheduleMusic();musicLabel();}catch(e){musicLabel();}
+    if(!musicEnabled)return;
+    try{
+      var AC=window.AudioContext||window.webkitAudioContext;if(!AC){musicLabel();return;}
+      if(!audioCtx)audioCtx=new AC();
+      var p=audioCtx.state==="suspended"?audioCtx.resume():Promise.resolve();
+      if(p&&p.then)p.then(scheduleMusic).catch(musicLabel);else scheduleMusic();
+      if(audioCtx.state==="running")scheduleMusic();musicLabel();
+    }catch(e){musicLabel();}
   }
-  function stopMusic(){if(musicLoop){clearInterval(musicLoop);musicLoop=null;}musicLabel();}
-  if(musicBtn)musicBtn.addEventListener("click",function(){if(musicLoop){musicEnabled=false;stopMusic();}else{musicEnabled=true;startMusic();}});
+  startBtn.addEventListener("click",function(){if(state.paused)togglePause();else if(!state.running)startGame();else actionClick();});
+  if(loadBtn)loadBtn.addEventListener("click",function(){chooseGame(selected);var cabinet=$("console");if(cabinet)cabinet.scrollIntoView({behavior:"smooth",block:"start"});startGame();});
+  Array.prototype.forEach.call(document.querySelectorAll("[data-game-select]"),function(b){
+    b.addEventListener("click",function(){chooseGame(b.getAttribute("data-game-select"));});
+    b.addEventListener("dblclick",function(){chooseGame(b.getAttribute("data-game-select"));startGame();});
+  });
+  if(pauseBtn)pauseBtn.addEventListener("click",function(){if(!state.running&&!state.paused){showOverlay(configs[selected].name,"Press start to begin this game.","PRESS START");return;}togglePause();});
+  if(musicBtn)musicBtn.addEventListener("click",toggleMusic);
+  document.addEventListener("keydown",function(e){
+    if(["ArrowUp","ArrowDown","ArrowLeft","ArrowRight"," "].indexOf(e.key)>=0&&!(e.target&&/INPUT|TEXTAREA|SELECT/.test(e.target.tagName)))e.preventDefault();
+    var k=(e.key||"").toLowerCase();
+    if((k==="p"||e.key==="Escape")&&!e.repeat){togglePause();return;}
+    if(e.key==="Enter"&&!e.repeat&&!state.running){if(state.paused)togglePause();else startGame();return;}
+    if(k==="r"&&!e.repeat){startGame();return;}
+    keys[e.key]=true;keys[k]=true;
+    if(e.key===" "||e.code==="Space")keys.action=true;
+    if(k==="x"||k==="shift")keys.shield=true;
+  });
+  document.addEventListener("keyup",function(e){
+    var k=(e.key||"").toLowerCase();keys[e.key]=false;keys[k]=false;
+    if(e.key===" "||e.code==="Space")keys.action=false;
+    if(k==="x"||k==="shift")keys.shield=false;
+  });
+  Array.prototype.forEach.call(document.querySelectorAll("[data-dir]"),function(b){
+    var d=b.getAttribute("data-dir");
+    function on(e){e.preventDefault();touch[d]=true;try{b.setPointerCapture(e.pointerId);}catch(err){}}
+    function off(){touch[d]=false;}
+    b.addEventListener("pointerdown",on);
+    ["pointerup","pointercancel","pointerleave","lostpointercapture"].forEach(function(ev){b.addEventListener(ev,off);});
+  });
+  wireHoldButtons();
+  canvas.addEventListener("pointermove",function(e){
+    if(e.pointerType!=="mouse"||selected!=="bp-invaders"||!state.running||!(e.buttons&1))return;
+    var rect=canvas.getBoundingClientRect();state.player.x=clamp((e.clientX-rect.left)*W/rect.width,22,W-22);
+  });
+  canvas.addEventListener("pointerdown",function(e){
+    if(selected!=="bp-invaders"||!state.running)return;
+    var rect=canvas.getBoundingClientRect();
+    if(e.pointerType==="mouse")state.player.x=clamp((e.clientX-rect.left)*W/rect.width,22,W-22);
+    touchActions.action=true;
+  });
+  ["pointerup","pointercancel","pointerleave"].forEach(function(ev){canvas.addEventListener(ev,function(){touchActions.action=false;});});
   window.addEventListener("pointerdown",function(e){if(e.target&&e.target.closest&&e.target.closest("#music-toggle"))return;startMusic();},{once:true});
   window.addEventListener("keydown",function(){startMusic();},{once:true});
-  chooseGame(selected);musicLabel();startMusic();requestAnimationFrame(frame);
-})();</script>
+  chooseGame(selected);musicLabel();requestAnimationFrame(frame);
+})();
+</script>
 <script>(function(){var d=document.querySelector(".drawer");if(!d)return;Array.prototype.forEach.call(d.querySelectorAll('a[href^="#"]'),function(a){a.addEventListener("click",function(){d.classList.remove("on");var b=document.getElementById("menu-btn");if(b)b.setAttribute("aria-expanded","false");});});})();</script>
 </body>
 </html>

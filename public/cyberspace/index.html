@@ -468,9 +468,8 @@ body.arcade .foot .px{font:400 8px/1.8 var(--px);letter-spacing:.1em;color:var(-
     }
   }
   function inputFrom(pad){
-    var dx=((keys.ArrowRight||keys.d?1:0)-(keys.ArrowLeft||keys.a?1:0))+(touch.right?1:0)-(touch.left?1:0)+(pad.dx||0)+(fsMove.x||0);
+    var dx=((keys.ArrowRight||keys.d?1:0)-(keys.ArrowLeft||keys.a?1:0))+(touch.right?1:0)-(touch.left?1:0)+(pad.dx||0);
     var dy=((keys.ArrowDown||keys.s?1:0)-(keys.ArrowUp||keys.w?1:0))+(touch.down?1:0)-(touch.up?1:0)+(pad.dy||0)+(fsMove.y||0);
-    dx += fsMove.x||0;
     return {dx:clamp(dx,-1,1),dy:clamp(dy,-1,1),action:!!(keys.action||touchActions.action||pad.action),shield:!!(keys.shield||touchActions.shield||pad.shield)};
   }
   function activateShield(){

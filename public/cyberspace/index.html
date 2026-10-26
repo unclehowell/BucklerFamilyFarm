@@ -208,6 +208,28 @@ body.arcade:after{animation:flick 7s steps(2) infinite;opacity:.3}
 .screen-overlay p.copy{max-width:420px;font-size:13px;color:#bfcee8;margin:0 0 4px}
 .screen-overlay .start{font:400 10px/1.5 var(--px)!important;letter-spacing:.08em;padding:12px 15px;border:1px solid var(--yl);box-shadow:0 0 18px rgba(0,240,255,.25);cursor:pointer}
 .screen-overlay.hidden{display:none}
+.screen-wrap.immersive,.screen-wrap:fullscreen,.screen-wrap:-webkit-full-screen{position:fixed!important;inset:0!important;width:100vw!important;height:100vh!important;height:100dvh!important;max-width:none!important;max-height:none!important;aspect-ratio:auto!important;margin:0!important;border:0!important;border-radius:0!important;z-index:99999!important;box-shadow:none!important;background:#03050c!important;}
+.screen-wrap.immersive #game-canvas,.screen-wrap:fullscreen #game-canvas,.screen-wrap:-webkit-full-screen #game-canvas{width:100%!important;height:100%!important;aspect-ratio:auto!important;image-rendering:pixelated;}
+.screen-wrap.immersive .screen-hud,.screen-wrap:fullscreen .screen-hud,.screen-wrap:-webkit-full-screen .screen-hud{font-size:clamp(8px,1.4vw,14px);padding:max(12px,env(safe-area-inset-top)) max(14px,env(safe-area-inset-right)) 16px max(14px,env(safe-area-inset-left));}
+#fs-controller{display:none;position:absolute;inset:0;z-index:8;pointer-events:none;color:#fff;font-family:Barlow,Arial,sans-serif;user-select:none;-webkit-user-select:none;}
+.screen-wrap.immersive #fs-controller,.screen-wrap:fullscreen #fs-controller,.screen-wrap:-webkit-full-screen #fs-controller{display:block;}
+.fs-controller-top{position:absolute;top:max(12px,env(safe-area-inset-top));right:max(14px,env(safe-area-inset-right));display:flex;align-items:center;gap:8px;pointer-events:auto;}
+.fs-controller-top span{font:400 8px/1.4 var(--px);letter-spacing:.08em;color:#83a0bd;margin-right:4px;text-shadow:0 1px 4px #000;}
+.fs-controller-top button{min-height:38px;padding:7px 10px;border:1px solid rgba(126,214,255,.65);border-radius:6px;background:rgba(4,12,27,.82);color:#dff9ff;font:400 8px/1.4 var(--px);pointer-events:auto;touch-action:manipulation;}
+.fs-controller-top #fs-exit{border-color:#d6bc50;color:#ffe94a;}
+.fs-stick{position:absolute;left:max(22px,env(safe-area-inset-left));bottom:max(22px,env(safe-area-inset-bottom));width:clamp(120px,19vh,172px);height:clamp(120px,19vh,172px);border-radius:50%;border:2px solid rgba(206,244,255,.55);background:radial-gradient(circle,rgba(29,84,109,.5),rgba(4,13,27,.55));box-shadow:inset 0 0 18px rgba(0,0,0,.7),0 0 0 5px rgba(6,20,36,.25);pointer-events:auto;touch-action:none;}
+#fs-knob{position:absolute;left:50%;top:50%;width:clamp(48px,7vh,66px);height:clamp(48px,7vh,66px);margin:calc(clamp(48px,7vh,66px)/-2) 0 0 calc(clamp(48px,7vh,66px)/-2);border-radius:50%;border:2px solid rgba(255,255,255,.75);background:linear-gradient(145deg,rgba(220,248,255,.88),rgba(79,159,190,.62));box-shadow:0 0 0 5px rgba(255,255,255,.12),0 0 18px rgba(0,240,255,.28);pointer-events:none;}
+.fs-stick-up,.fs-stick-down,.fs-stick-left,.fs-stick-right{position:absolute;color:rgba(228,250,255,.7);font-size:13px;pointer-events:none;}
+.fs-stick-up{top:7px;left:50%;transform:translateX(-50%)}.fs-stick-down{bottom:7px;left:50%;transform:translateX(-50%)}.fs-stick-left{left:7px;top:50%;transform:translateY(-50%)}.fs-stick-right{right:7px;top:50%;transform:translateY(-50%)}
+.fs-actions{position:absolute;right:max(24px,env(safe-area-inset-right));bottom:max(34px,env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:12px;align-items:center;pointer-events:auto;}
+.fs-actions button{min-width:clamp(86px,12vw,132px);min-height:clamp(54px,10vh,84px);padding:12px;border-radius:50px;border:2px solid #ffe94a;background:rgba(31,28,7,.74);color:#ffe94a;font:400 clamp(8px,1.1vw,12px)/1.4 var(--px);letter-spacing:.06em;box-shadow:0 0 18px rgba(255,233,74,.14);touch-action:none;pointer-events:auto;}
+.fs-actions #fs-shield{border-color:#55ff99;color:#7dffad;background:rgba(3,29,17,.8);}
+.fs-actions button:active,.fs-actions button[aria-pressed=true]{transform:scale(.96);background:rgba(80,79,22,.88);}
+.fs-help{position:absolute;left:50%;bottom:max(13px,env(safe-area-inset-bottom));transform:translateX(-50%);white-space:nowrap;color:rgba(216,239,255,.68);font:400 7px/1.6 var(--px);letter-spacing:.06em;text-shadow:0 1px 5px #000;pointer-events:none;}
+.fs-help span{color:#ffe94a;padding:0 5px}
+@media(max-width:850px){.screen-wrap.immersive .fs-controller-top span,.screen-wrap:fullscreen .fs-controller-top span,.screen-wrap:-webkit-full-screen .fs-controller-top span{display:none;}.screen-wrap.immersive .fs-controller-top button,.screen-wrap:fullscreen .fs-controller-top button,.screen-wrap:-webkit-full-screen .fs-controller-top button{min-height:42px;font-size:7px;padding:7px 8px;}}
+@media(orientation:portrait){.screen-wrap.immersive,.screen-wrap:fullscreen,.screen-wrap:-webkit-full-screen{background:#03050c}.screen-wrap.immersive #game-canvas,.screen-wrap:fullscreen #game-canvas,.screen-wrap:-webkit-full-screen #game-canvas{object-fit:contain;}}
+
 .control-deck{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:16px 8px 12px}
 .joystick-art{position:relative;flex:0 0 66px;height:66px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#353d60,#101425 60%,#04050c);border:2px solid #303b5b;box-shadow:inset 0 0 12px #000,0 0 0 2px #080b16}
 .joystick-art:before{content:"";position:absolute;width:11px;height:31px;left:26px;top:10px;border-radius:8px;background:linear-gradient(90deg,#464d70,#101426,#697395);transform:rotate(-14deg);box-shadow:0 0 8px rgba(0,240,255,.2)}
@@ -280,20 +302,21 @@ body.arcade .foot .px{font:400 8px/1.8 var(--px);letter-spacing:.1em;color:var(-
 <canvas id="game-canvas" width="640" height="360" aria-label="Playable neon grid arcade game">Your browser does not support the game canvas.</canvas>
 <div class="screen-hud" aria-live="polite"><span id="hud-game">BP INVADERS</span><span id="hud-score">SCORE 000000</span><span id="hud-time">TIME 75 · 3 ♥</span></div>
 <div class="screen-overlay" id="screen-overlay"><p class="screen-label">READY PLAYER ONE</p><h3 id="overlay-title">BP INVADERS</h3><p class="copy" id="overlay-copy">Classic wave defence: shoot the descending green shields stamped with yellow BP letters, dodge incoming notice pulses, and keep your archive ship alive.</p><button class="start" id="btn-start" type="button">PRESS START</button></div>
+<div id="fs-controller" aria-label="Fullscreen arcade controller"><div class="fs-controller-top"><span>CEDWYN ARCADE · PLAYER 1</span><button type="button" id="fs-pause">PAUSE</button><button type="button" id="fs-exit">EXIT FULLSCREEN</button></div><div class="fs-stick" id="fs-stick" role="application" aria-label="Virtual joystick. Drag to move."><div id="fs-knob"></div><span class="fs-stick-up">▲</span><span class="fs-stick-down">▼</span><span class="fs-stick-left">◀</span><span class="fs-stick-right">▶</span></div><div class="fs-actions"><button type="button" id="fs-action" data-control="action">FIRE</button><button type="button" id="fs-shield" data-control="shield">SHIELD</button></div><div class="fs-help">LEFT STICK / MOVE <span>·</span> ACTION <span>·</span> SHIELD</div></div>
 </div></div>
-<div class="control-deck"><div class="joystick-art" aria-hidden="true"></div><div class="controls-copy"><strong>PLAYER 1 · KEYBOARD / GAMEPAD</strong>Move: arrows / WASD / left stick · Action: SPACE / A · Shield: X / SHIFT / B · Pause: P / ESC / START <span id="controller-status" aria-live="polite">KEYBOARD + TOUCH READY</span></div><div class="deck-buttons"><button class="deck-btn" id="btn-action" type="button" data-control="action">FIRE</button><button class="deck-btn" id="btn-shield" type="button" data-control="shield">SHIELD</button><button class="deck-btn" id="btn-pause" type="button">PAUSE</button><button class="deck-btn" id="music-toggle" type="button" aria-pressed="true">♫ MUSIC ON · TAP</button></div></div>
+<div class="control-deck"><div class="joystick-art" aria-hidden="true"></div><div class="controls-copy"><strong>PLAYER 1 · KEYBOARD / GAMEPAD</strong>Move: arrows / WASD / left stick · Action: SPACE / A · Shield: X / SHIFT / B · Pause: P / ESC / START <span id="controller-status" aria-live="polite">KEYBOARD + TOUCH READY</span></div><div class="deck-buttons"><button class="deck-btn" id="btn-action" type="button" data-control="action">FIRE</button><button class="deck-btn" id="btn-shield" type="button" data-control="shield">SHIELD</button><button class="deck-btn" id="btn-pause" type="button">PAUSE</button><button class="deck-btn" id="btn-fullscreen" type="button" aria-pressed="false">FULL SCREEN ⛶</button><button class="deck-btn" id="music-toggle" type="button" aria-pressed="true">♫ MUSIC ON · TAP</button></div></div>
 <div class="touch-controls" aria-label="On-screen game controls"><div class="touch-pad" aria-label="Touch movement controls"><button type="button" data-dir="up" aria-label="Move up">▲</button><button type="button" data-dir="left" aria-label="Move left">◀</button><button type="button" data-dir="down" aria-label="Move down">▼</button><button type="button" data-dir="right" aria-label="Move right">▶</button></div><div class="touch-actions"><button type="button" id="touch-action" data-control="action" aria-label="Game action">FIRE</button><button type="button" id="touch-shield" data-control="shield" aria-label="Activate shield">SHIELD</button></div></div>
 <div class="machine-bottom"><span>ARCADE OS 87</span><span id="machine-status">READY / SELECT GAME</span><span>FREE PLAY</span></div>
 </section>
 <aside class="selector" id="game-select" aria-label="Game selector">
-<div class="selector-head"><p class="kicker">GAME SELECT / 01—03</p><h2>Choose your game</h2><p>Select a title, then load it into the cabinet.</p></div>
+<div class="selector-head"><p class="kicker">GAME SELECT / 01—03</p><h2>Choose your game</h2><p>Choose a title, then press LOAD SELECTED GAME to start. Use FULL SCREEN on the cabinet for an immersive view.</p></div>
 <div class="game-list" role="group" aria-label="Available games"><button class="game-option" type="button" data-game-select="bp-invaders" aria-pressed="true"><span class="game-index">01</span><span class="game-copy"><strong>BP INVADERS</strong><small>SHOOTER / SHIELD BREAKER</small><em>Space Invaders-style action. The invaders are green shields with yellow BP letters; shoot, dodge, protect three lives and clear three waves.</em></span><span aria-hidden="true">▶</span></button><button class="game-option" type="button" data-game-select="title-chain" aria-pressed="false"><span class="game-index">02</span><span class="game-copy"><strong>TITLE CHAIN</strong><small>RECORD ROUTE / PUZZLE</small><em>Trace the separate Parcel A and Parcel B working models in sequence. Avoid the ruled-out 1877 Roath lease and Cydfin 107-acre lead.</em></span><span aria-hidden="true">▶</span></button><button class="game-option" type="button" data-game-select="archive-run" aria-pressed="false"><span class="game-index">03</span><span class="game-copy"><strong>ARCHIVE RUN ’88</strong><small>COLLECT / ESCORT</small><em>Recover five record fragments, dodge the moving deadline pulses, then find the archive gate.</em></span><span aria-hidden="true">▶</span></button></div>
 <div class="selector-load"><span class="load-label">LOADED PROFILE</span><output id="loaded-profile">SHOOTER / SHIELD BREAKER</output><button class="load-game" id="load-game" type="button">LOAD SELECTED GAME ↗</button></div>
 </aside>
 </div>
-<section class="game-instructions" id="how-to-play" aria-label="How to play"><div class="instruction"><h2>01 / MOVE</h2><p>Arrow keys or W, A, S, D. A gamepad uses its D-pad or left stick. On phones, press and hold the on-screen directional pad.</p></div><div class="instruction"><h2>02 / ACTION</h2><p>SPACE or gamepad A; press and hold the ACTION button. It fires in BP Invaders, triggers a trace pulse in Title Chain, and gives a short dash in Archive Run ’88.</p></div><div class="instruction"><h2>03 / SHIELD & PAUSE</h2><p>X or SHIFT, gamepad B, or the SHIELD button gives a brief shield. Press P / ESC or gamepad START to pause. Touch buttons work by holding them down.</p></div></section>
+<section class="game-instructions" id="how-to-play" aria-label="How to play"><div class="instruction"><h2>01 / MOVE</h2><p>Arrow keys or W, A, S, D. Use a gamepad left stick, the phone directional pad, or the analog joystick that appears in full screen.</p></div><div class="instruction"><h2>02 / ACTION</h2><p>SPACE or gamepad A; press and hold the ACTION button. It fires in BP Invaders, triggers a trace pulse in Title Chain, and gives a short dash in Archive Run ’88.</p></div><div class="instruction"><h2>03 / SHIELD & PAUSE</h2><p>X or SHIFT, gamepad B, or the SHIELD button gives a brief shield. Press P / ESC or gamepad START to pause. Touch buttons work by holding them down.</p></div></section>
 <p class="game-disclaimer">Original browser arcade games inspired by the Great House Farm research. Gameplay is fictionalised and is not a finding about title, possession, wrongdoing or legal liability. The Parcel A and Parcel B routes are working models that still require documentary verification. No ROMs or downloads required.</p>
-<section class="arcade-log" aria-label="Agent page change log / guest book"><details><summary>AGENT PAGE CHANGE LOG / GUEST BOOK</summary><div class="log-scroll"><table><thead><tr><th>Version</th><th>Date (UTC)</th><th>Editor</th><th>Change / reason / source</th><th>Status</th></tr></thead><tbody><tr><td>1.1.0</td><td>2026-10-26</td><td>ChatGPT (GPT-6)</td><td>Reworked the arcade into three distinct games and improved keyboard, touch and standard gamepad controls, following the site owner’s request.</td><td>Submitted for owner review; not live until approved and rebuilt.</td></tr></tbody></table></div></details></section>
+<section class="arcade-log" aria-label="Agent page change log / guest book"><details><summary>AGENT PAGE CHANGE LOG / GUEST BOOK</summary><div class="log-scroll"><table><thead><tr><th>Version</th><th>Date (UTC)</th><th>Editor</th><th>Change / reason / source</th><th>Status</th></tr></thead><tbody><tr><td>1.1.1</td><td>2026-10-26</td><td>ChatGPT (GPT-6)</td><td>Fixed LOAD SELECTED GAME to start the selected game. Added fullscreen/immersive mode and a fullscreen virtual thumbstick, action/shield buttons, pause and exit controls modelled on the 3D world touch-controller pattern.</td><td>Submitted for owner review; not live until approved and rebuilt.</td></tr><tr><td>1.1.0</td><td>2026-10-26</td><td>ChatGPT (GPT-6)</td><td>Reworked the arcade into three distinct games and improved keyboard, touch and standard gamepad controls, following the site owner’s request.</td><td>Submitted for owner review; not live until approved and rebuilt.</td></tr></tbody></table></div></details></section>
 </main>
 <footer class="foot"><p class="px">THANKS FOR PLAYING</p><p>CEDWYN·NET ARCADE SYSTEM / FREE PLAY</p><p style="font-size:11px">Music is an original synthesised loop. A browser may require a tap before it allows playback.</p></footer>
 <script>
@@ -330,6 +353,8 @@ body.arcade .foot .px{font:400 8px/1.8 var(--px);letter-spacing:.1em;color:var(-
   var overlay=$("screen-overlay"), overlayTitle=$("overlay-title"), overlayCopy=$("overlay-copy"), startBtn=$("btn-start");
   var marquee=$("marquee-title"), hudGame=$("hud-game"), hudScore=$("hud-score"), hudTime=$("hud-time"), status=$("machine-status");
   var musicBtn=$("music-toggle"), pauseBtn=$("btn-pause"), loadBtn=$("load-game"), profileOut=$("loaded-profile"), controllerStatus=$("controller-status");
+  var screenWrap=document.querySelector(".screen-wrap"), fullscreenBtn=$("btn-fullscreen"), fullscreenPause=$("fs-pause"), fullscreenExit=$("fs-exit"), fsStick=$("fs-stick"), fsKnob=$("fs-knob"), fsAction=$("fs-action");
+  var fsMove={x:0,y:0,id:null}, immersiveFallback=false;
   var actionDeck=$("btn-action"), actionTouch=$("touch-action"), W=640, H=360;
   var selected="bp-invaders", keys={}, touch={}, touchActions={}, last=0, stars=[], audioCtx=null, musicLoop=null, musicEnabled=true, beat=0;
   var padPauseWasDown=false;
@@ -362,6 +387,7 @@ body.arcade .foot .px{font:400 8px/1.8 var(--px);letter-spacing:.1em;color:var(-
     if(actionDeck) actionDeck.textContent=label;
     if(actionTouch) actionTouch.textContent=label;
     if(actionTouch) actionTouch.setAttribute("aria-label",label+" action");
+    if(fsAction) fsAction.textContent=label;
   }
   function updateHud(){
     var c=configs[selected], time=String(Math.max(0,Math.ceil(state.time))).padStart(2,"0");
@@ -442,8 +468,9 @@ body.arcade .foot .px{font:400 8px/1.8 var(--px);letter-spacing:.1em;color:var(-
     }
   }
   function inputFrom(pad){
-    var dx=((keys.ArrowRight||keys.d?1:0)-(keys.ArrowLeft||keys.a?1:0))+(touch.right?1:0)-(touch.left?1:0)+(pad.dx||0);
-    var dy=((keys.ArrowDown||keys.s?1:0)-(keys.ArrowUp||keys.w?1:0))+(touch.down?1:0)-(touch.up?1:0)+(pad.dy||0);
+    var dx=((keys.ArrowRight||keys.d?1:0)-(keys.ArrowLeft||keys.a?1:0))+(touch.right?1:0)-(touch.left?1:0)+(pad.dx||0)+(fsMove.x||0);
+    var dy=((keys.ArrowDown||keys.s?1:0)-(keys.ArrowUp||keys.w?1:0))+(touch.down?1:0)-(touch.up?1:0)+(pad.dy||0)+(fsMove.y||0);
+    dx += fsMove.x||0;
     return {dx:clamp(dx,-1,1),dy:clamp(dy,-1,1),action:!!(keys.action||touchActions.action||pad.action),shield:!!(keys.shield||touchActions.shield||pad.shield)};
   }
   function activateShield(){
@@ -677,7 +704,45 @@ body.arcade .foot .px{font:400 8px/1.8 var(--px);letter-spacing:.1em;color:var(-
     if(state.running&&!state.paused)update(dt,pad);
     draw(now);requestAnimationFrame(frame);
   }
-  function actionClick(){
+  function nativeFullscreenElement(){return document.fullscreenElement||document.webkitFullscreenElement||document.mozFullScreenElement||document.msFullscreenElement||null;}
+function inFullscreen(){return !!(screenWrap&&(nativeFullscreenElement()===screenWrap||immersiveFallback));}
+function syncFullscreen(){
+  if(!screenWrap)return;
+  var nativeOn=nativeFullscreenElement()===screenWrap;
+  if(nativeOn)immersiveFallback=false;
+  var on=nativeOn||immersiveFallback;
+  screenWrap.classList.toggle("immersive",on);
+  if(fullscreenBtn){fullscreenBtn.textContent=on?"EXIT FULL SCREEN ⛶":"FULL SCREEN ⛶";fullscreenBtn.setAttribute("aria-pressed",on?"true":"false");}
+  if(fullscreenExit)fullscreenExit.textContent=on?"EXIT FULLSCREEN":"FULLSCREEN";
+  if(on&&window.matchMedia&&window.matchMedia("(pointer: coarse)").matches&&screen.orientation&&screen.orientation.lock&&nativeOn){try{var lp=screen.orientation.lock("landscape");if(lp&&lp.catch)lp.catch(function(){});}catch(e){}}
+}
+function enterFullscreen(){
+  if(!screenWrap)return;
+  if(inFullscreen()){exitFullscreen();return;}
+  var req=screenWrap.requestFullscreen||screenWrap.webkitRequestFullscreen||screenWrap.mozRequestFullScreen||screenWrap.msRequestFullscreen;
+  if(!req){immersiveFallback=true;syncFullscreen();return;}
+  try{var p=req.call(screenWrap);if(p&&p.then){p.then(function(){immersiveFallback=false;syncFullscreen();}).catch(function(){immersiveFallback=true;syncFullscreen();});}else{window.setTimeout(syncFullscreen,80);}}
+  catch(e){immersiveFallback=true;syncFullscreen();}
+}
+function exitFullscreen(){
+  if(immersiveFallback){immersiveFallback=false;if(screenWrap)screenWrap.classList.remove("immersive");syncFullscreen();return;}
+  var fs=nativeFullscreenElement();if(!fs)return;
+  var ex=document.exitFullscreen||document.webkitExitFullscreen||document.mozCancelFullScreen||document.msExitFullscreen;
+  try{if(ex){var p=ex.call(document);if(p&&p.catch)p.catch(function(){});}}catch(e){}
+}
+if(fullscreenBtn)fullscreenBtn.addEventListener("click",enterFullscreen);
+if(fullscreenExit)fullscreenExit.addEventListener("click",exitFullscreen);
+if(fullscreenPause)fullscreenPause.addEventListener("click",function(){if(!state.running&&!state.paused)startGame();else togglePause();});
+document.addEventListener("fullscreenchange",syncFullscreen);document.addEventListener("webkitfullscreenchange",syncFullscreen);document.addEventListener("mozfullscreenchange",syncFullscreen);document.addEventListener("MSFullscreenChange",syncFullscreen);
+if(fsStick&&fsKnob){
+  function moveFsStick(e){var r=fsStick.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2,dx=e.clientX-cx,dy=e.clientY-cy,m=r.width*.31,d=Math.hypot(dx,dy);if(d>m){dx*=m/d;dy*=m/d;}fsMove.x=dx/m;fsMove.y=dy/m;fsKnob.style.transform="translate("+dx+"px,"+dy+"px)";}
+  fsStick.addEventListener("pointerdown",function(e){e.preventDefault();fsMove.id=e.pointerId;try{fsStick.setPointerCapture(e.pointerId);}catch(err){}moveFsStick(e);});
+  fsStick.addEventListener("pointermove",function(e){if(fsMove.id===e.pointerId)moveFsStick(e);});
+  function resetFsStick(e){if(!e||fsMove.id===e.pointerId){fsMove.id=null;fsMove.x=fsMove.y=0;fsKnob.style.transform="";}}
+  ["pointerup","pointercancel","lostpointercapture"].forEach(function(ev){fsStick.addEventListener(ev,resetFsStick);});
+}
+window.addEventListener("blur",function(){keys={};touchActions.action=touchActions.shield=false;fsMove.id=null;fsMove.x=fsMove.y=0;if(fsKnob)fsKnob.style.transform="";});
+function actionClick(){
     if(state.paused){togglePause();return;}
     if(!state.running){startGame();return;}
     if(selected==="bp-invaders"){touchActions.action=true;window.setTimeout(function(){touchActions.action=false;},150);}
@@ -731,7 +796,7 @@ body.arcade .foot .px{font:400 8px/1.8 var(--px);letter-spacing:.1em;color:var(-
     }catch(e){musicLabel();}
   }
   startBtn.addEventListener("click",function(){if(state.paused)togglePause();else if(!state.running)startGame();else actionClick();});
-  if(loadBtn)loadBtn.addEventListener("click",function(){chooseGame(selected);var cabinet=$("console");if(cabinet)cabinet.scrollIntoView({behavior:"smooth",block:"start"});});
+  if(loadBtn)loadBtn.addEventListener("click",function(){chooseGame(selected);var cabinet=$("console");if(cabinet)cabinet.scrollIntoView({behavior:"smooth",block:"start"});startGame();});
   Array.prototype.forEach.call(document.querySelectorAll("[data-game-select]"),function(b){
     b.addEventListener("click",function(){chooseGame(b.getAttribute("data-game-select"));});
     b.addEventListener("dblclick",function(){chooseGame(b.getAttribute("data-game-select"));startGame();});

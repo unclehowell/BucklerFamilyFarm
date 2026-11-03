@@ -28,3 +28,8 @@
 # 302, not 301, so browsers do not keep it. Harmless while the router runs (it answers / itself). Revert = delete these 3 lines.
 / https://cedwyn.bucklerfamily.estate/ 302
 /index.html https://cedwyn.bucklerfamily.estate/ 302
+# Shop fallback (sales fix run 66, 3 Nov 2026): while the router Worker is skipped, the shop address given in captions (/ebooks) and the old
+# /ebook/ page go to the live shelf; after-payment returns (/ebook/api/return) are served by ebook/api/return.html (no redirect, query kept).
+# Harmless while the router runs (it answers these paths itself). Revert = delete these 5 lines and public/ebook/api/return.html.
+/ebooks https://cedwyn.bucklerfamily.estate/ebooks/ 302
+/ebooks/ https://cedwyn.bucklerfamily.estate/ebooks/ 302

@@ -22,3 +22,9 @@
 /enquiries /enquire/ 301
 # Free first chapter (lead capture, 21 Oct 2026)
 /sample-chapter https://wayback.bucklerfamily.estate/pdf/ghf-ebook-v1-free-sample.pdf 302
+
+# Homepage fallback (3 Nov 2026): when the apex router Worker is skipped (daily Workers allowance used up), the apex
+# falls through to this project. Send the homepage to the Wales / Argentina / Online choice page instead of the old base camp.
+# 302, not 301, so browsers do not keep it. Harmless while the router runs (it answers / itself). Revert = delete these 3 lines.
+/ https://cedwyn.bucklerfamily.estate/ 302
+/index.html https://cedwyn.bucklerfamily.estate/ 302

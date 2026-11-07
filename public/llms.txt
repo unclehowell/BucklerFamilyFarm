@@ -11,7 +11,7 @@ Key names (use these spellings): Great House Farm; Tŷ Mawr (also written Ty Maw
 - [Cedwyn Estate map](https://bucklerfamily.estate/): the Williams–Buckler family base camp, a map of every site below.
 
 ## Sites
-- [Fraud, concealment and government involvement](https://fcg.bucklerfamily.estate/): the case on the three lines, with the legal tests and what cuts against it.
+- [Concealment and government involvement](https://fcg.bucklerfamily.estate/): the case on the three lines, with the legal tests and what cuts against it.
 - [Disclosure Dartboard](https://dartboard.bucklerfamily.estate/): the records still to be disclosed, ringed by importance.
 - [The Chessboard](https://chess.bucklerfamily.estate/): two records side by side.
 - [Projects (PRINCE2)](https://projects.bucklerfamily.estate/): project documents, plans and highlight reports.
@@ -21,7 +21,7 @@ Key names (use these spellings): Great House Farm; Tŷ Mawr (also written Ty Maw
 ## Books
 - [E-book shop](https://ebooks.bucklerfamily.estate/): five e-books and a bundle; llms.txt at https://ebooks.bucklerfamily.estate/llms.txt.
 - [£0.00 first edition of the Legal Wiki (v0.01)](https://ebooks.bucklerfamily.estate/free/).
-- [The Legal Wiki e-book](https://bucklerfamily.estate/ebook/): £0.00 – v0.01 · £9.99 – v0.02 · all four e-books £31.99.
+- [The Legal Wiki e-book](https://bucklerfamily.estate/ebook/): £0.00 – v0.01 · £4.99 – v0.02 · all four e-books £19.96.
 
 ## Policies
 - [AI use and provenance](https://bucklerfamily.estate/ai-policy/)

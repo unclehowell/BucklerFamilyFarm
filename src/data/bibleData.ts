@@ -1319,7 +1319,7 @@ export const BIBLE_PARTS: BiblePart[] = [
       exile: {
         title: '[RED] Exile / Dispossession',
         owner: 'Williams-Buckler Family Title Dispossessed',
-        occupier: 'Billy Buckler (died 1992); Family living in forced exile',
+        occupier: 'Billy Buckler (died 1990); Family living in forced exile',
       },
     },
     runningTablePost: {
@@ -1378,11 +1378,11 @@ export const BIBLE_PARTS: BiblePart[] = [
         eraTableId: 'part-5-pre',
         establishedPoints: [
           '13 March 1990: Outline planning permission approved for residential estate.',
-          '15 May 1992: Death of William ("Billy") Buckler at Llandough Hospital following a fatal heart attack at age 58.',
+          '29 April 1990: Death of William ("Billy") Buckler at Llandough Hospital following a fatal heart attack (date: probate calendar).',
           '3 Sept 1992: Full planning permission granted for 20 detached houses (Church View Close).',
         ],
         content: [
-          'Billy Buckler died heartbroken just months before construction commenced over the rubble of his ancestral home.',
+          'Billy Buckler died heartbroken before construction commenced over the rubble of his ancestral home.',
         ],
       },
       {

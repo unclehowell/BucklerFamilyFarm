@@ -1678,11 +1678,11 @@ export const THREE_PLOT_CHRONOLOGY_SECTIONS: ChronologySection[] = [
       {
         id: '1992-full-planning-billy-death',
         year: '1992',
-        title: 'Full Planning Permission & Death of Billy Buckler',
+        title: 'Full Planning Permission (after Billy Buckler’s death on 29 April 1990)',
         textCitation:
-          '"15 May 1992. Death of William (\'Billy\') Buckler at Llandough Hospital following a heart attack. 3 September 1992. Full planning permission granted for 20 detached houses (Church View Close)."',
+          '"29 April 1990. Death of William (\'Billy\') Buckler at Llandough Hospital following a heart attack. 3 September 1992. Full planning permission granted for 20 detached houses (Church View Close)."',
         propertyArrangement:
-          'Full planning permission was granted for 20 houses. Billy Buckler died.',
+          'Full planning permission was granted for 20 houses. Billy Buckler had died on 29 April 1990.',
         table: {
           farmLand: {
             status: 'BP land: Farmland',

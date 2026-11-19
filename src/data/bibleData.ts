@@ -1378,7 +1378,7 @@ export const BIBLE_PARTS: BiblePart[] = [
         eraTableId: 'part-5-pre',
         establishedPoints: [
           '13 March 1990: Outline planning permission approved for residential estate.',
-          '29 May 1990: William (Billy) Buckler died at Llandough Hospital, aged about 41 (family date). The 1991 probate calendar separately records a William Beverley Buckler of Penarth as dying on 29 April 1990; the identity match is probable but not fully reconciled (EV-0274).',
+          '29 May 1990: the family chronology reports that William (Billy) Buckler died at Llandough Hospital, aged about 41. A 2 June 1990 South Wales Echo snippet says he died “this week”, consistent with late May but not stating the exact day (EV-0290). The 1991 probate calendar separately records a William Beverley Buckler of Penarth as dying on 29 April 1990; whether that entry is Billy is not established (EV-0274). His death certificate has not been obtained; no reliable dated wake notice or record has been identified.',
           '3 Sept 1992: Full planning permission granted for 20 detached houses (Church View Close).',
         ],
         content: [

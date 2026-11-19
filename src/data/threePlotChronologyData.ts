@@ -1678,11 +1678,11 @@ export const THREE_PLOT_CHRONOLOGY_SECTIONS: ChronologySection[] = [
       {
         id: '1992-full-planning-billy-death',
         year: '1992',
-        title: 'Full Planning Permission (after Billy Buckler’s death on 29 May 1990)',
+        title: 'Full Planning Permission (after Billy Buckler’s family-reported death date of 29 May 1990)',
         textCitation:
-          '"29 April 1990. Death of William (\'Billy\') Buckler at Llandough Hospital following a heart attack. 3 September 1992. Full planning permission granted for 20 detached houses (Church View Close)."',
+          '"3 September 1992. Full planning permission granted for 20 detached houses (Church View Close)."',
         propertyArrangement:
-          'Full planning permission was granted for 20 houses. Billy Buckler had died on 29 May 1990 at Llandough Hospital, aged about 41 (family date). The 29 April 1990 probate-calendar entry is a probable but not fully reconciled identity match (EV-0274).',
+          'Full planning permission was granted for 20 houses. The family chronology reports that Billy Buckler died on 29 May 1990 at Llandough Hospital, aged about 41. A South Wales Echo snippet dated 2 June 1990 says that Billy died “this week”, consistent with late May but not stating the exact day (EV-0290). The 1991 probate calendar records a William Beverley Buckler of Penarth as having died on 29 April 1990; whether this is Billy is not established (EV-0274). The death certificate has not been obtained, and no dated wake notice or reliable wake record has been identified.',
         table: {
           farmLand: {
             status: 'BP land: Farmland',
